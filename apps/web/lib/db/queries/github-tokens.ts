@@ -11,6 +11,16 @@ export type UpsertInstallationTokenParams = {
   expiresAt: Date;
 };
 
+export async function upsertInstallationLink(params: { userId: string; installationId: bigint }): Promise<void> {
+  await db
+    .insert(githubTokens)
+    .values({ userId: params.userId, installationId: params.installationId })
+    .onConflictDoUpdate({
+      target: githubTokens.installationId,
+      set: { userId: params.userId },
+    });
+}
+
 export async function upsertInstallationToken(params: UpsertInstallationTokenParams): Promise<void> {
   await db
     .insert(githubTokens)
@@ -95,4 +105,3 @@ export async function getOrRefreshInstallationToken(params: {
 
   return { token: refreshed.token, expiresAt };
 }
-

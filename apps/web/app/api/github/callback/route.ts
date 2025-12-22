@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getUserFromRequest } from "../../../../lib/auth/get-user";
-import { getOrRefreshInstallationToken } from "../../../../lib/db/queries/github-tokens";
+import { getOrRefreshInstallationToken, upsertInstallationLink } from "../../../../lib/db/queries/github-tokens";
 
 function redirect(request: Request, path: string): Response {
   return NextResponse.redirect(new URL(path, request.url));
@@ -21,7 +21,11 @@ export async function GET(request: Request): Promise<Response> {
   const installationId = parseInstallationId(request);
   if (installationId === null) return redirect(request, "/dashboard");
 
-  await getOrRefreshInstallationToken({ userId: user.id, installationId });
+  await upsertInstallationLink({ userId: user.id, installationId });
+  try {
+    await getOrRefreshInstallationToken({ userId: user.id, installationId });
+  } catch (error) {
+    console.error("GitHub installation callback: failed to fetch installation token", error);
+  }
   return redirect(request, "/dashboard");
 }
-

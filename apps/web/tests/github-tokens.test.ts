@@ -17,6 +17,24 @@ vi.mock("../lib/db/client", () => ({
 }));
 
 describe("github token queries", () => {
+  it("upsertInstallationLink creates or updates a github_tokens row with installationId", async () => {
+    vi.resetModules();
+
+    const onConflictDoUpdateSpy = vi.fn().mockResolvedValue(undefined);
+    const valuesSpy = vi.fn(() => ({ onConflictDoUpdate: onConflictDoUpdateSpy }));
+    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+
+    const { upsertInstallationLink } = await import("../lib/db/queries/github-tokens");
+
+    const userId = "11111111-1111-1111-1111-111111111111";
+    const installationId = 123n;
+
+    await upsertInstallationLink({ userId, installationId });
+
+    expect(valuesSpy).toHaveBeenCalledWith(expect.objectContaining({ userId, installationId }));
+    expect(onConflictDoUpdateSpy).toHaveBeenCalledTimes(1);
+  });
+
   it("upsertInstallationToken stores an installation token and expiry", async () => {
     vi.resetModules();
 
@@ -78,7 +96,10 @@ describe("github token queries", () => {
     const valuesSpy = vi.fn(() => ({ onConflictDoUpdate: onConflictDoUpdateSpy }));
     insertSpy = vi.fn(() => ({ values: valuesSpy }));
 
-    const refreshSpy = vi.fn().mockResolvedValue({ token: "t2", expiresAt: new Date("2030-01-01T00:00:00.000Z").toISOString() });
+    const refreshSpy = vi.fn().mockResolvedValue({
+      token: "t2",
+      expiresAt: new Date("2030-01-01T00:00:00.000Z").toISOString(),
+    });
 
     const { getOrRefreshInstallationToken } = await import("../lib/db/queries/github-tokens");
 
@@ -105,4 +126,3 @@ describe("github token queries", () => {
     );
   });
 });
-
