@@ -81,11 +81,11 @@ Initialize the pnpm workspace monorepo with root package.json, workspace configu
 Create the Next.js 14 app in `apps/web/` with App Router, TypeScript, and Tailwind CSS.
 
 **Acceptance Criteria:**
-- [ ] Next.js 14+ app exists in `apps/web/`
-- [ ] TypeScript configured with path aliases (`@/*`)
-- [ ] Tailwind CSS configured
-- [ ] Root layout renders
-- [ ] `pnpm dev` starts server; `pnpm build` succeeds
+- [x] Next.js 14+ app exists in `apps/web/`
+- [x] TypeScript configured with path aliases (`@/*`)
+- [x] Tailwind CSS configured
+- [x] Root layout renders
+- [x] `pnpm dev` starts server; `pnpm build` succeeds
 
 **Files to Create:**
 - `apps/web/package.json`
