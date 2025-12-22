@@ -1,0 +1,63 @@
+import { and, eq, inArray } from "drizzle-orm";
+import crypto from "node:crypto";
+
+import { db } from "../client";
+import { projects } from "../schema";
+
+function createProjectId(): string {
+  return `proj_${crypto.randomBytes(12).toString("base64url").slice(0, 15)}`;
+}
+
+export type GitHubRepoRef = { id: number; fullName: string };
+
+export async function upsertProjectsForRepos(params: {
+  userId: string;
+  installationId: bigint;
+  repositories: GitHubRepoRef[];
+}): Promise<void> {
+  if (params.repositories.length === 0) return;
+
+  const values = params.repositories.map((repo) => ({
+    id: createProjectId(),
+    userId: params.userId,
+    githubRepoId: BigInt(repo.id),
+    githubRepoFullName: repo.fullName,
+    githubInstallationId: params.installationId,
+  }));
+
+  await db
+    .insert(projects)
+    .values(values)
+    .onConflictDoUpdate({
+      target: projects.githubRepoId,
+      set: {
+        userId: params.userId,
+        githubInstallationId: params.installationId,
+      },
+    });
+}
+
+export async function deleteProjectsByInstallationId(installationId: bigint): Promise<void> {
+  await db.delete(projects).where(eq(projects.githubInstallationId, installationId));
+}
+
+export async function deleteProjectsByInstallationAndRepoIds(params: {
+  installationId: bigint;
+  repoIds: bigint[];
+}): Promise<void> {
+  if (params.repoIds.length === 0) return;
+  await db
+    .delete(projects)
+    .where(and(eq(projects.githubInstallationId, params.installationId), inArray(projects.githubRepoId, params.repoIds)));
+}
+
+export async function updateProjectStatusForPullRequestClosed(params: {
+  repoId: bigint;
+  prNumber: number;
+  status: "active" | "pr_closed";
+}): Promise<void> {
+  await db
+    .update(projects)
+    .set({ status: params.status })
+    .where(and(eq(projects.githubRepoId, params.repoId), eq(projects.prNumber, params.prNumber)));
+}
