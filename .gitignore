@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+dist/
+out/
+build/
+
+# Environment files
+.env*
+!.env.example
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Private keys
+*.pem
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+
+# Turbo
+.turbo/
+
+# Vercel
+.vercel/
+
+# TypeScript
+*.tsbuildinfo
+
+# Local Tinybird
+.tinyb/
