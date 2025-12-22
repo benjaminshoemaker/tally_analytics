@@ -116,10 +116,10 @@ Create the Next.js 14 app in `apps/web/` with App Router, TypeScript, and Tailwi
 Define Drizzle ORM schema for all tables: users, sessions, magic_links, projects, github_tokens, waitlist.
 
 **Acceptance Criteria:**
-- [ ] All 6 tables defined with correct types and constraints
-- [ ] Foreign keys with CASCADE delete
-- [ ] All indexes from spec defined
-- [ ] TypeScript types exported
+- [x] All 6 tables defined with correct types and constraints
+- [x] Foreign keys with CASCADE delete
+- [x] All indexes from spec defined
+- [x] TypeScript types exported
 
 **Files to Create:**
 - `apps/web/lib/db/schema.ts`
@@ -140,9 +140,9 @@ Define Drizzle ORM schema for all tables: users, sessions, magic_links, projects
 Configure Neon serverless client with Drizzle ORM integration.
 
 **Acceptance Criteria:**
-- [ ] Neon client configured with DATABASE_URL
-- [ ] Drizzle instance exported
-- [ ] Environment validation with clear error messages
+- [x] Neon client configured with DATABASE_URL
+- [x] Drizzle instance exported
+- [x] Environment validation with clear error messages
 
 **Files to Create:**
 - `apps/web/lib/db/client.ts`
@@ -163,10 +163,10 @@ Configure Neon serverless client with Drizzle ORM integration.
 Set up Drizzle Kit and create initial migration with triggers.
 
 **Acceptance Criteria:**
-- [ ] drizzle.config.ts configured
-- [ ] Initial migration generated
+- [x] drizzle.config.ts configured
+- [x] Initial migration generated
 - [ ] `pnpm db:push` applies migrations
-- [ ] `update_updated_at_column()` trigger included
+- [x] `update_updated_at_column()` trigger included
 
 **Files to Create:**
 - `apps/web/drizzle.config.ts`
@@ -193,10 +193,10 @@ Set up Drizzle Kit and create initial migration with triggers.
 Implement magic link creation with secure tokens, database storage, and 15-minute expiry.
 
 **Acceptance Criteria:**
-- [ ] `createMagicLink(email)` generates 64-char random token
-- [ ] Token stored with 15-minute expiry
-- [ ] Returns full verification URL
-- [ ] Email normalized to lowercase
+- [x] `createMagicLink(email)` generates 64-char random token
+- [x] Token stored with 15-minute expiry
+- [x] Returns full verification URL
+- [x] Email normalized to lowercase
 
 **Files to Create:**
 - `apps/web/lib/auth/magic-link.ts`
@@ -215,11 +215,11 @@ Implement magic link creation with secure tokens, database storage, and 15-minut
 Create POST /api/auth/magic-link endpoint that generates link and sends email via Resend.
 
 **Acceptance Criteria:**
-- [ ] Accepts `{ email: string }`, validates with Zod
-- [ ] Generates and stores magic link
-- [ ] Sends email via Resend
-- [ ] Returns success response
-- [ ] Rate limits: 3 per email per 15 minutes
+- [x] Accepts `{ email: string }`, validates with Zod
+- [x] Generates and stores magic link
+- [x] Sends email via Resend
+- [x] Returns success response
+- [x] Rate limits: 3 per email per 15 minutes
 
 **Files to Create:**
 - `apps/web/app/api/auth/magic-link/route.ts`
@@ -240,9 +240,9 @@ Create POST /api/auth/magic-link endpoint that generates link and sends email vi
 Create magic link email template with React Email.
 
 **Acceptance Criteria:**
-- [ ] MagicLinkEmail component renders HTML
-- [ ] Includes login button and expiry notice
-- [ ] Includes disclaimer text
+- [x] MagicLinkEmail component renders HTML
+- [x] Includes login button and expiry notice
+- [x] Includes disclaimer text
 
 **Files to Create:**
 - `apps/web/lib/email/templates.tsx`
@@ -262,10 +262,10 @@ Create magic link email template with React Email.
 Implement session creation, validation, and destruction with HTTP-only cookies.
 
 **Acceptance Criteria:**
-- [ ] `createSession(userId)` creates session and sets cookie
-- [ ] `validateSession(request)` validates and returns session
-- [ ] `destroySession(sessionId)` removes session and clears cookie
-- [ ] Cookie: HTTP-only, Secure, SameSite=Lax, 30-day expiry
+- [x] `createSession(userId)` creates session and sets cookie
+- [x] `validateSession(request)` validates and returns session
+- [x] `destroySession(sessionId)` removes session and clears cookie
+- [x] Cookie: HTTP-only, Secure, SameSite=Lax, 30-day expiry
 
 **Files to Create:**
 - `apps/web/lib/auth/session.ts`
@@ -291,11 +291,11 @@ Implement session creation, validation, and destruction with HTTP-only cookies.
 Implement GET /api/auth/verify that validates token, creates user/session, and redirects.
 
 **Acceptance Criteria:**
-- [ ] Validates token from database
-- [ ] Invalid/expired redirects to /login?error=...
-- [ ] Creates user if not exists
-- [ ] Marks token as used
-- [ ] Creates session and redirects to /dashboard
+- [x] Validates token from database
+- [x] Invalid/expired redirects to /login?error=...
+- [x] Creates user if not exists
+- [x] Marks token as used
+- [x] Creates session and redirects to /dashboard
 
 **Files to Create:**
 - `apps/web/app/api/auth/verify/route.ts`
@@ -314,10 +314,10 @@ Implement GET /api/auth/verify that validates token, creates user/session, and r
 Create middleware to protect dashboard routes.
 
 **Acceptance Criteria:**
-- [ ] Runs on `/dashboard/*` and `/api/projects/*`
-- [ ] Valid session allows request
-- [ ] Invalid session redirects (pages) or returns 401 (API)
-- [ ] Marketing routes unprotected
+- [x] Runs on `/dashboard/*` and `/api/projects/*`
+- [x] Valid session allows request
+- [x] Invalid session redirects (pages) or returns 401 (API)
+- [x] Marketing routes unprotected
 
 **Files to Create:**
 - `apps/web/middleware.ts`
@@ -337,10 +337,10 @@ Create middleware to protect dashboard routes.
 Create login page UI and logout endpoint.
 
 **Acceptance Criteria:**
-- [ ] Login page with email form at /login
-- [ ] Form submits to magic link endpoint
-- [ ] Success/error states displayed
-- [ ] POST /api/auth/logout destroys session
+- [x] Login page with email form at /login
+- [x] Form submits to magic link endpoint
+- [x] Success/error states displayed
+- [x] POST /api/auth/logout destroys session
 
 **Files to Create:**
 - `apps/web/app/login/page.tsx`
