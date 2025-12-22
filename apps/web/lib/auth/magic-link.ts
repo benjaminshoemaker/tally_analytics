@@ -1,5 +1,7 @@
 import crypto from "node:crypto";
 
+import { and, eq, gte, sql } from "drizzle-orm";
+
 import { db } from "../db/client";
 import { magicLinks } from "../db/schema";
 
@@ -28,3 +30,14 @@ export async function createMagicLink(email: string): Promise<string> {
   return verifyUrl.toString();
 }
 
+export async function countRecentMagicLinks(email: string, since: Date): Promise<number> {
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const rows = await db
+    .select({ count: sql`count(*)` })
+    .from(magicLinks)
+    .where(and(eq(magicLinks.email, normalizedEmail), gte(magicLinks.createdAt, since)));
+
+  const count = rows[0]?.count;
+  return Number(count ?? 0);
+}
