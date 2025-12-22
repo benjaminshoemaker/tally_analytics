@@ -805,6 +805,9 @@ Orchestrate complete PR generation after detection.
 **Acceptance Criteria:**
 - [ ] Runs branch → files → PR sequence
 - [ ] Updates project status on success/failure
+- [ ] On pull_request.closed, update status only when projects.github_repo_id matches
+    and projects.pr_number === payload.pull_request.number (otherwise ignore).
+- [ ] If projects.pr_number is null, pull_request.closed must not transition the project to active.
 - [ ] Logs operations for debugging
 
 **Files to Create:**
