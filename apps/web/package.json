@@ -7,9 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit migrate",
+    "test": "vitest run"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "drizzle-orm": "^0.44.0",
     "next": "^14.2.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -19,10 +24,13 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "dotenv": "^16.6.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "drizzle-kit": "^0.31.4",
+    "vitest": "^3.2.4"
   }
 }
