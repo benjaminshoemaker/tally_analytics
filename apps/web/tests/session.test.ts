@@ -88,6 +88,78 @@ describe("auth sessions", () => {
     await expect(validateSession(request)).resolves.toEqual({ id: sessionId, userId, expiresAt });
   });
 
+  it("validateSession(request) returns null when there is no session cookie", async () => {
+    vi.resetModules();
+    selectSpy = vi.fn(() => {
+      throw new Error("db.select called unexpectedly");
+    });
+
+    const { validateSession } = await import("../lib/auth/session");
+    await expect(validateSession(new Request("http://localhost"))).resolves.toBeNull();
+  });
+
+  it("validateSession(request) returns null when no session row exists", async () => {
+    vi.resetModules();
+
+    const whereSpy = vi.fn().mockResolvedValue([]);
+    const fromSpy = vi.fn(() => ({ where: whereSpy }));
+    selectSpy = vi.fn(() => ({ from: fromSpy }));
+
+    const { SESSION_COOKIE_NAME } = await import("../lib/auth/cookies");
+    const { validateSession } = await import("../lib/auth/session");
+
+    const request = new Request("http://localhost", {
+      headers: { cookie: `${SESSION_COOKIE_NAME}=missing` },
+    });
+
+    await expect(validateSession(request)).resolves.toBeNull();
+  });
+
+  it("validateSession(request) returns null for an expired session", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-01-01T00:00:00.000Z"));
+
+    vi.resetModules();
+
+    const whereSpy = vi.fn().mockResolvedValue([
+      {
+        id: "sess",
+        userId: "user",
+        expiresAt: new Date("2024-12-31T23:59:59.000Z"),
+      },
+    ]);
+    const fromSpy = vi.fn(() => ({ where: whereSpy }));
+    selectSpy = vi.fn(() => ({ from: fromSpy }));
+
+    const { SESSION_COOKIE_NAME } = await import("../lib/auth/cookies");
+    const { validateSession } = await import("../lib/auth/session");
+
+    const request = new Request("http://localhost", {
+      headers: { cookie: `${SESSION_COOKIE_NAME}=sess` },
+    });
+
+    await expect(validateSession(request)).resolves.toBeNull();
+
+    vi.useRealTimers();
+  });
+
+  it("createSession(userId) throws when the database returns no created row", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-01-01T00:00:00.000Z"));
+
+    vi.resetModules();
+    cookieSetSpy = vi.fn();
+
+    const returningSpy = vi.fn().mockResolvedValue([]);
+    const valuesSpy = vi.fn(() => ({ returning: returningSpy }));
+    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+
+    const { createSession } = await import("../lib/auth/session");
+    await expect(createSession("user")).rejects.toThrow(/Failed to create session/);
+
+    vi.useRealTimers();
+  });
+
   it("destroySession(sessionId) removes session and clears cookie", async () => {
     vi.resetModules();
     cookieSetSpy = vi.fn();
@@ -111,4 +183,3 @@ describe("auth sessions", () => {
     );
   });
 });
-

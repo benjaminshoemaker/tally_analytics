@@ -34,12 +34,12 @@ Phase 1 (Foundation) ──► Phase 2 (Analysis Engine) ──► Phase 3 (SDK)
 ### Pre-Phase Setup
 
 Human must complete before starting:
-- [ ] Create GitHub App in Developer Settings (Permissions: Contents R/W, Pull Requests R/W, Metadata R)
-- [ ] Create Neon database instance
-- [ ] Create Tinybird workspace
-- [ ] Create Resend account and verify domain
-- [ ] Create Vercel account and project
-- [ ] Prepare environment variables
+- [x] Create GitHub App in Developer Settings (Permissions: Contents R/W, Pull Requests R/W, Metadata R)
+- [x] Create Neon database instance
+- [x] Create Tinybird workspace
+- [x] Create Resend account and verify domain
+- [x] Create Vercel account and project
+- [x] Prepare environment variables
 
 ### Step 1.1: Project Initialization
 
@@ -165,7 +165,7 @@ Set up Drizzle Kit and create initial migration with triggers.
 **Acceptance Criteria:**
 - [x] drizzle.config.ts configured
 - [x] Initial migration generated
-- [ ] `pnpm db:push` applies migrations
+- [x] `pnpm db:push` applies migrations
 - [x] `update_updated_at_column()` trigger included
 
 **Files to Create:**
@@ -366,10 +366,10 @@ Create login page UI and logout endpoint.
 Configure GitHub App client with JWT auth and installation token management.
 
 **Acceptance Criteria:**
-- [ ] GitHub App client with app ID and private key
-- [ ] JWT generation works
-- [ ] `getInstallationOctokit(installationId)` returns client
-- [ ] Tokens refresh before expiry
+- [x] GitHub App client with app ID and private key
+- [x] JWT generation works
+- [x] `getInstallationOctokit(installationId)` returns client
+- [x] Tokens refresh before expiry
 
 **Files to Create:**
 - `apps/web/lib/github/app.ts`
@@ -390,9 +390,9 @@ Configure GitHub App client with JWT auth and installation token management.
 Implement database operations for GitHub tokens.
 
 **Acceptance Criteria:**
-- [ ] Store installation tokens with expiry
-- [ ] Retrieve tokens, checking expiry
-- [ ] Refresh expired tokens
+- [x] Store installation tokens with expiry
+- [x] Retrieve tokens, checking expiry
+- [x] Refresh expired tokens
 
 **Files to Create:**
 - `apps/web/lib/db/queries/github-tokens.ts`
@@ -411,10 +411,10 @@ Implement database operations for GitHub tokens.
 Handle GitHub App installation callback.
 
 **Acceptance Criteria:**
-- [ ] GET /api/github/callback handles redirect
-- [ ] Links installation to authenticated user
-- [ ] Creates github_tokens record
-- [ ] Redirects to /dashboard
+- [x] GET /api/github/callback handles redirect
+- [x] Links installation to authenticated user
+- [x] Creates github_tokens record
+- [x] Redirects to /dashboard
 
 **Files to Create:**
 - `apps/web/app/api/github/callback/route.ts`
@@ -439,10 +439,10 @@ Handle GitHub App installation callback.
 Create webhook endpoint with HMAC-SHA256 signature verification.
 
 **Acceptance Criteria:**
-- [ ] POST /api/webhooks/github receives webhooks
-- [ ] Signature verified with GITHUB_WEBHOOK_SECRET
-- [ ] Invalid signatures return 401
-- [ ] Events routed to handlers
+- [x] POST /api/webhooks/github receives webhooks
+- [x] Signature verified with GITHUB_WEBHOOK_SECRET
+- [x] Invalid signatures return 401
+- [x] Events routed to handlers
 
 **Files to Create:**
 - `apps/web/app/api/webhooks/github/route.ts`
@@ -463,10 +463,10 @@ Create webhook endpoint with HMAC-SHA256 signature verification.
 Implement handlers for installation and PR webhook events.
 
 **Acceptance Criteria:**
-- [ ] `installation.created`: Create project records
-- [ ] `installation.deleted`: Remove projects
-- [ ] `installation_repositories.added/removed`: Update projects
-- [ ] `pull_request.closed`: Update status (merged → active)
+- [x] `installation.created`: Create project records
+- [x] `installation.deleted`: Remove projects
+- [x] `installation_repositories.added/removed`: Update projects
+- [x] `pull_request.closed`: Update status (merged → active)
 
 **Files to Create:**
 - `apps/web/lib/github/handlers/installation.ts`
@@ -485,15 +485,15 @@ Implement handlers for installation and PR webhook events.
 ### Phase 1 Checkpoint
 
 **Automated Checks:**
-- [ ] All tests pass
-- [ ] TypeScript compiles
-- [ ] Linting passes
+- [x] All tests pass
+- [x] TypeScript compiles
+- [x] Linting passes
 
 **Manual Verification:**
-- [ ] Magic link login flow works end-to-end
-- [ ] Session persists across reloads
-- [ ] GitHub App installs and creates project record
-- [ ] Webhooks update project status
+- [x] Magic link login flow works end-to-end
+- [x] Session persists across reloads
+- [x] GitHub App installs and creates project record
+- [x] Webhooks update project status
 
 ---
 

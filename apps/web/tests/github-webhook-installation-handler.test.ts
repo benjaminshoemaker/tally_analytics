@@ -56,7 +56,7 @@ describe("GitHub installation webhook handlers", () => {
     });
 
     expect(valuesSpy).toHaveBeenCalledTimes(1);
-    const inserted = valuesSpy.mock.calls[0]?.[0] as Array<Record<string, unknown>>;
+    const inserted = (valuesSpy.mock.calls as unknown[][])[0][0] as Array<Record<string, unknown>>;
     expect(Array.isArray(inserted)).toBe(true);
     expect(inserted).toHaveLength(2);
 
@@ -152,7 +152,7 @@ describe("GitHub installation webhook handlers", () => {
     });
 
     expect(valuesSpy).toHaveBeenCalledTimes(1);
-    const inserted = valuesSpy.mock.calls[0]?.[0] as Array<Record<string, unknown>>;
+    const inserted = (valuesSpy.mock.calls as unknown[][])[0][0] as Array<Record<string, unknown>>;
     expect(inserted).toHaveLength(1);
     expect(inserted[0]).toMatchObject({
       userId,

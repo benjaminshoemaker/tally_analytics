@@ -114,4 +114,54 @@ describe("github app client", () => {
     await expect(client.getInstallationOctokit(999)).resolves.toEqual({ ok: true });
     expect(createOctokitSpy).toHaveBeenCalledWith({ auth: "t1" });
   });
+
+  it("throws a clear error for an invalid GITHUB_APP_ID", async () => {
+    const previousAppId = process.env.GITHUB_APP_ID;
+    const previousPrivateKey = process.env.GITHUB_APP_PRIVATE_KEY;
+    process.env.GITHUB_APP_ID = "not-a-number";
+    process.env.GITHUB_APP_PRIVATE_KEY = "key";
+
+    vi.resetModules();
+    const { __testOnly_clearGitHubAppClient, getAppJwt } = await import("../lib/github/app");
+    __testOnly_clearGitHubAppClient();
+
+    await expect(getAppJwt()).rejects.toThrow(/Invalid GITHUB_APP_ID/);
+
+    if (previousAppId === undefined) delete process.env.GITHUB_APP_ID;
+    else process.env.GITHUB_APP_ID = previousAppId;
+    if (previousPrivateKey === undefined) delete process.env.GITHUB_APP_PRIVATE_KEY;
+    else process.env.GITHUB_APP_PRIVATE_KEY = previousPrivateKey;
+  });
+
+  it("throws when installation auth response is missing expiresAt", async () => {
+    vi.resetModules();
+    const { createGitHubAppClient } = await import("../lib/github/app");
+
+    const authSpy = vi.fn().mockResolvedValue({ token: "t1" });
+    const client = createGitHubAppClient({
+      appId: 123,
+      privateKey: "key",
+      auth: authSpy,
+      now: () => 0,
+      createOctokit: () => ({}) as never,
+    });
+
+    await expect(client.getInstallationAccessToken(1)).rejects.toThrow(/missing expiresAt/);
+  });
+
+  it("throws when installation auth response has an invalid expiresAt", async () => {
+    vi.resetModules();
+    const { createGitHubAppClient } = await import("../lib/github/app");
+
+    const authSpy = vi.fn().mockResolvedValue({ token: "t1", expiresAt: "not-a-date" });
+    const client = createGitHubAppClient({
+      appId: 123,
+      privateKey: "key",
+      auth: authSpy,
+      now: () => 0,
+      createOctokit: () => ({}) as never,
+    });
+
+    await expect(client.getInstallationAccessToken(1)).rejects.toThrow(/invalid expiresAt/);
+  });
 });

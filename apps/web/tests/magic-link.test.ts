@@ -40,4 +40,24 @@ describe("createMagicLink", () => {
 
     vi.useRealTimers();
   });
+
+  it("throws when NEXT_PUBLIC_APP_URL is missing", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-01-01T00:00:00.000Z"));
+
+    const previousAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+    delete process.env.NEXT_PUBLIC_APP_URL;
+
+    vi.resetModules();
+    const valuesSpy = vi.fn().mockResolvedValue(undefined);
+    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+
+    const { createMagicLink } = await import("../lib/auth/magic-link");
+    await expect(createMagicLink("test@example.com")).rejects.toThrow(/Missing required environment variable: NEXT_PUBLIC_APP_URL/);
+    expect(valuesSpy).toHaveBeenCalledTimes(1);
+
+    if (previousAppUrl === undefined) delete process.env.NEXT_PUBLIC_APP_URL;
+    else process.env.NEXT_PUBLIC_APP_URL = previousAppUrl;
+    vi.useRealTimers();
+  });
 });

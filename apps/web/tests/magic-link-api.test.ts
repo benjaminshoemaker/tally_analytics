@@ -23,6 +23,29 @@ vi.mock("../lib/email/send", () => ({
 }));
 
 describe("POST /api/auth/magic-link", () => {
+  it("returns 400 when JSON parsing fails", async () => {
+    vi.resetModules();
+    countRecentMagicLinksSpy = vi.fn();
+    createMagicLinkSpy = vi.fn();
+    sendMagicLinkEmailSpy = vi.fn();
+
+    const { POST } = await import("../app/api/auth/magic-link/route");
+
+    const response = await POST(
+      new Request("http://localhost/api/auth/magic-link", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: "{not_json",
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({ success: false, message: "Invalid JSON body" });
+    expect(countRecentMagicLinksSpy).not.toHaveBeenCalled();
+    expect(createMagicLinkSpy).not.toHaveBeenCalled();
+    expect(sendMagicLinkEmailSpy).not.toHaveBeenCalled();
+  });
+
   it("validates email, creates magic link, sends email, and returns success", async () => {
     vi.resetModules();
     countRecentMagicLinksSpy = vi.fn().mockResolvedValue(0);
