@@ -53,11 +53,11 @@ Human must complete before starting:
 Initialize the pnpm workspace monorepo with root package.json, workspace configuration, and shared TypeScript/ESLint settings.
 
 **Acceptance Criteria:**
-- [ ] Root `package.json` exists with workspace scripts
-- [ ] `pnpm-workspace.yaml` defines `apps/*` and `packages/*`
-- [ ] Root `tsconfig.base.json` provides shared config
-- [ ] `.gitignore` excludes node_modules, .env, .next, dist
-- [ ] `pnpm install` runs successfully from root
+- [x] Root `package.json` exists with workspace scripts
+- [x] `pnpm-workspace.yaml` defines `apps/*` and `packages/*`
+- [x] Root `tsconfig.base.json` provides shared config
+- [x] `.gitignore` excludes node_modules, .env, .next, dist
+- [x] `pnpm install` runs successfully from root
 
 **Files to Create:**
 - `package.json`
