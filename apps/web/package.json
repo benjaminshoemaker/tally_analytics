@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit migrate",
     "test": "vitest run"
   },
   "dependencies": {
@@ -27,6 +29,7 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.7.2",
+    "drizzle-kit": "^0.31.4",
     "vitest": "^3.2.4"
   }
 }
