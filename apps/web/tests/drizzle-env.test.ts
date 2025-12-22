@@ -17,6 +17,18 @@ describe("loadDrizzleEnv", () => {
     expect(env.DATABASE_URL).toBe("postgresql://example/db?sslmode=require");
   });
 
+  it("loads DATABASE_URL from a repo-root .env.local when configDir is nested", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "drizzle-env-"));
+    const configDir = path.join(tmp, "apps", "web");
+    fs.mkdirSync(configDir, { recursive: true });
+    fs.writeFileSync(path.join(tmp, ".env.local"), "DATABASE_URL=postgresql://from-root/db?sslmode=require\n");
+
+    const env: Record<string, string | undefined> = {};
+    loadDrizzleEnv({ configDir, env });
+
+    expect(env.DATABASE_URL).toBe("postgresql://from-root/db?sslmode=require");
+  });
+
   it("does not override an already-set DATABASE_URL", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "drizzle-env-"));
     fs.writeFileSync(path.join(tmp, ".env.local"), "DATABASE_URL=postgresql://from-file/db\n");

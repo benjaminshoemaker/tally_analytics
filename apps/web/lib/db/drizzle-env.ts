@@ -16,6 +16,8 @@ export function loadDrizzleEnv({ configDir, env = process.env as EnvLike }: Load
     path.join(configDir, ".env"),
     path.join(configDir, "..", ".env.local"),
     path.join(configDir, "..", ".env"),
+    path.join(configDir, "..", "..", ".env.local"),
+    path.join(configDir, "..", "..", ".env"),
   ];
 
   for (const candidatePath of candidatePaths) {
