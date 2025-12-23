@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNull, or } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import crypto from "node:crypto";
 
 import { db } from "../client";
@@ -9,6 +9,7 @@ function createProjectId(): string {
 }
 
 export type GitHubRepoRef = { id: number; fullName: string };
+export type ProjectStatus = "pending" | "analyzing" | "analysis_failed" | "pr_pending" | "pr_closed" | "active" | "unsupported";
 
 export async function upsertProjectsForRepos(params: {
   userId: string;
@@ -59,10 +60,36 @@ export async function updateProjectStatusForPullRequestClosed(params: {
   await db
     .update(projects)
     .set({ status: params.status })
-    .where(
-      and(
-        eq(projects.githubRepoId, params.repoId),
-        or(isNull(projects.prNumber), eq(projects.prNumber, params.prNumber)),
-      ),
-    );
+    .where(and(eq(projects.githubRepoId, params.repoId), eq(projects.prNumber, params.prNumber)));
+}
+
+export async function setProjectStatusByRepoId(params: { repoId: bigint; status: ProjectStatus }): Promise<void> {
+  await db.update(projects).set({ status: params.status }).where(eq(projects.githubRepoId, params.repoId));
+}
+
+export async function updateProjectDetectionByRepoId(params: {
+  repoId: bigint;
+  detectedFramework: string | null;
+  detectedAnalytics: string[];
+}): Promise<void> {
+  await db
+    .update(projects)
+    .set({ detectedFramework: params.detectedFramework, detectedAnalytics: params.detectedAnalytics })
+    .where(eq(projects.githubRepoId, params.repoId));
+}
+
+export async function setProjectPullRequestByRepoId(params: {
+  repoId: bigint;
+  prNumber: number;
+  prUrl: string;
+}): Promise<void> {
+  await db
+    .update(projects)
+    .set({ prNumber: params.prNumber, prUrl: params.prUrl, status: "pr_pending" })
+    .where(eq(projects.githubRepoId, params.repoId));
+}
+
+export async function getProjectIdByRepoId(repoId: bigint): Promise<string | null> {
+  const rows = await db.select({ id: projects.id }).from(projects).where(eq(projects.githubRepoId, repoId));
+  return rows[0]?.id ?? null;
 }

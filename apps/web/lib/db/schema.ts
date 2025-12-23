@@ -139,3 +139,21 @@ export const waitlist = pgTable(
   },
   (table) => [uniqueIndex("waitlist_email_framework_unique").on(table.email, table.framework)],
 );
+
+export const regenerateRequests = pgTable(
+  "regenerate_requests",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: varchar("project_id", { length: 20 })
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_regenerate_requests_project_id").on(table.projectId),
+    index("idx_regenerate_requests_created_at").on(table.createdAt),
+  ],
+);
