@@ -34,7 +34,7 @@ export async function analyzeRepository(params: {
   try {
     const installationId = toSafeNumber(params.installationId);
     const octokit = await getInstallationOctokit(installationId);
-    const result = await detectFramework(octokit as never, parsed.owner, parsed.repo);
+    const result = await detectFramework(octokit, parsed.owner, parsed.repo);
 
     await updateProjectDetectionByRepoId({
       repoId: params.repoId,
