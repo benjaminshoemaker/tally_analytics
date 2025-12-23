@@ -505,7 +505,7 @@ Implement handlers for installation and PR webhook events.
 ### Pre-Phase Setup
 
 - [ ] GitHub App installed on test repos (App Router, Pages Router, non-Next.js)
-- [ ] Webhook endpoint receiving events
+- [x] Webhook endpoint receiving events
 
 ### Step 2.1: Framework Detection
 
@@ -519,10 +519,10 @@ Implement handlers for installation and PR webhook events.
 Fetch and parse package.json to detect Next.js and existing analytics.
 
 **Acceptance Criteria:**
-- [ ] Fetches package.json via GitHub API
-- [ ] Returns null if not found
-- [ ] Detects Next.js presence and version
-- [ ] Identifies existing analytics packages
+- [x] Fetches package.json via GitHub API
+- [x] Returns null if not found
+- [x] Detects Next.js presence and version
+- [x] Identifies existing analytics packages
 
 **Files to Create:**
 - `apps/web/lib/github/detection.ts`
@@ -541,10 +541,10 @@ Fetch and parse package.json to detect Next.js and existing analytics.
 Detect App Router vs Pages Router by checking entry point files.
 
 **Acceptance Criteria:**
-- [ ] Checks app/layout.tsx, src/app/layout.tsx variants
-- [ ] Checks pages/_app.tsx, src/pages/_app.tsx variants
-- [ ] Returns framework type and entry point path
-- [ ] App Router takes precedence if both exist
+- [x] Checks app/layout.tsx, src/app/layout.tsx variants
+- [x] Checks pages/_app.tsx, src/pages/_app.tsx variants
+- [x] Returns framework type and entry point path
+- [x] App Router takes precedence if both exist
 
 **Files to Modify:**
 - `apps/web/lib/github/detection.ts`
@@ -561,10 +561,10 @@ Detect App Router vs Pages Router by checking entry point files.
 Detect monorepos (not supported in MVP).
 
 **Acceptance Criteria:**
-- [ ] Check for `workspaces` in package.json
-- [ ] Check for pnpm-workspace.yaml
-- [ ] Check for lerna.json
-- [ ] Returns `isMonorepo: true` if found
+- [x] Check for `workspaces` in package.json
+- [x] Check for pnpm-workspace.yaml
+- [x] Check for lerna.json
+- [x] Returns `isMonorepo: true` if found
 
 **Files to Modify:**
 - `apps/web/lib/github/detection.ts`
@@ -587,9 +587,9 @@ Detect monorepos (not supported in MVP).
 Main function that runs all detection checks and returns FrameworkDetectionResult.
 
 **Acceptance Criteria:**
-- [ ] Orchestrates checks in correct order
-- [ ] Returns appropriate error for each failure mode
-- [ ] Successful detection returns framework, entryPoint, existingAnalytics
+- [x] Orchestrates checks in correct order
+- [x] Returns appropriate error for each failure mode
+- [x] Successful detection returns framework, entryPoint, existingAnalytics
 
 **Files to Create:**
 - `apps/web/lib/github/detect-framework.ts`
@@ -608,10 +608,10 @@ Main function that runs all detection checks and returns FrameworkDetectionResul
 Background workflow that runs detection and updates project status.
 
 **Acceptance Criteria:**
-- [ ] Sets status to 'analyzing' at start
-- [ ] Stores detection results on success
-- [ ] Sets status to 'unsupported' or 'analysis_failed' on error
-- [ ] Triggered from webhook handler
+- [x] Sets status to 'analyzing' at start
+- [x] Stores detection results on success
+- [x] Sets status to 'unsupported' or 'analysis_failed' on error
+- [x] Triggered from webhook handler
 
 **Files to Create:**
 - `apps/web/lib/github/analyze.ts`
@@ -637,11 +637,11 @@ Background workflow that runs detection and updates project status.
 Generate analytics component for Next.js App Router.
 
 **Acceptance Criteria:**
-- [ ] Generates complete component with 'use client'
-- [ ] Tracks session_start and page_view
-- [ ] Uses usePathname/useSearchParams
-- [ ] Respects Do Not Track
-- [ ] Substitutes PROJECT_ID
+- [x] Generates complete component with 'use client'
+- [x] Tracks session_start and page_view
+- [x] Uses usePathname/useSearchParams
+- [x] Respects Do Not Track
+- [x] Substitutes PROJECT_ID
 
 **Files to Create:**
 - `apps/web/lib/github/templates/app-router.ts`
@@ -660,10 +660,10 @@ Generate analytics component for Next.js App Router.
 Generate analytics hook for Next.js Pages Router.
 
 **Acceptance Criteria:**
-- [ ] Generates hook using useRouter
-- [ ] Tracks session_start and page_view
-- [ ] Listens to routeChangeComplete
-- [ ] Cleans up on unmount
+- [x] Generates hook using useRouter
+- [x] Tracks session_start and page_view
+- [x] Listens to routeChangeComplete
+- [x] Cleans up on unmount
 
 **Files to Create:**
 - `apps/web/lib/github/templates/pages-router.ts`
@@ -688,10 +688,10 @@ Generate analytics hook for Next.js Pages Router.
 Modify layout files to import and use analytics component.
 
 **Acceptance Criteria:**
-- [ ] Inserts import at top of file
-- [ ] App Router: adds component before </body>
-- [ ] Pages Router: adds hook call in component
-- [ ] Preserves existing code structure
+- [x] Inserts import at top of file
+- [x] App Router: adds component before </body>
+- [x] Pages Router: adds hook call in component
+- [x] Preserves existing code structure
 
 **Files to Create:**
 - `apps/web/lib/github/templates/insert-analytics.ts`
@@ -710,9 +710,9 @@ Modify layout files to import and use analytics component.
 Resolve component paths based on repo structure.
 
 **Acceptance Criteria:**
-- [ ] Detects src/ vs root structure
-- [ ] Returns component file path and import path
-- [ ] Handles path aliases if present
+- [x] Detects src/ vs root structure
+- [x] Returns component file path and import path
+- [x] Handles path aliases if present
 
 **Files to Create:**
 - `apps/web/lib/github/templates/paths.ts`
@@ -737,9 +737,9 @@ Resolve component paths based on repo structure.
 Create feature branch for analytics integration.
 
 **Acceptance Criteria:**
-- [ ] Creates branch from default branch HEAD
-- [ ] If exists, appends incrementing suffix
-- [ ] Returns final branch name
+- [x] Creates branch from default branch HEAD
+- [x] If exists, appends incrementing suffix
+- [x] Returns final branch name
 
 **Files to Create:**
 - `apps/web/lib/github/pr-generator.ts`
@@ -758,10 +758,10 @@ Create feature branch for analytics integration.
 Commit generated files to feature branch.
 
 **Acceptance Criteria:**
-- [ ] Creates new component file
-- [ ] Modifies existing layout file (with SHA)
-- [ ] Content base64 encoded
-- [ ] Proper commit messages
+- [x] Creates new component file
+- [x] Modifies existing layout file (with SHA)
+- [x] Content base64 encoded
+- [x] Proper commit messages
 
 **Files to Modify:**
 - `apps/web/lib/github/pr-generator.ts`
@@ -778,9 +778,9 @@ Commit generated files to feature branch.
 Create pull request with description.
 
 **Acceptance Criteria:**
-- [ ] Creates PR with template description
-- [ ] Handles existing PR (link to it)
-- [ ] Updates project with pr_number, pr_url, status='pr_pending'
+- [x] Creates PR with template description
+- [x] Handles existing PR (link to it)
+- [x] Updates project with pr_number, pr_url, status='pr_pending'
 
 **Files to Modify:**
 - `apps/web/lib/github/pr-generator.ts`
@@ -803,12 +803,12 @@ Create pull request with description.
 Orchestrate complete PR generation after detection.
 
 **Acceptance Criteria:**
-- [ ] Runs branch → files → PR sequence
-- [ ] Updates project status on success/failure
-- [ ] On pull_request.closed, update status only when projects.github_repo_id matches
+- [x] Runs branch → files → PR sequence
+- [x] Updates project status on success/failure
+- [x] On pull_request.closed, update status only when projects.github_repo_id matches
     and projects.pr_number === payload.pull_request.number (otherwise ignore).
-- [ ] If projects.pr_number is null, pull_request.closed must not transition the project to active.
-- [ ] Logs operations for debugging
+- [x] If projects.pr_number is null, pull_request.closed must not transition the project to active.
+- [x] Logs operations for debugging
 
 **Files to Create:**
 - `apps/web/lib/github/generate.ts`
@@ -827,10 +827,10 @@ Orchestrate complete PR generation after detection.
 API endpoint to manually trigger regeneration.
 
 **Acceptance Criteria:**
-- [ ] POST /api/projects/[id]/regenerate
-- [ ] Only if status is 'analysis_failed' or 'pr_closed'
-- [ ] Requires authentication
-- [ ] Rate limited: 1 per 5 minutes
+- [x] POST /api/projects/[id]/regenerate
+- [x] Only if status is 'analysis_failed' or 'pr_closed'
+- [x] Requires authentication
+- [x] Rate limited: 1 per 5 minutes
 
 **Files to Create:**
 - `apps/web/app/api/projects/[id]/regenerate/route.ts`
@@ -846,16 +846,16 @@ API endpoint to manually trigger regeneration.
 ### Phase 2 Checkpoint
 
 **Automated Checks:**
-- [ ] All tests pass
-- [ ] TypeScript compiles
-- [ ] Linting passes
+- [x] All tests pass
+- [x] TypeScript compiles
+- [x] Linting passes
 
 **Manual Verification:**
-- [ ] App Router repo → correct PR created
-- [ ] Pages Router repo → correct PR created
-- [ ] Non-Next.js repo → shows unsupported
-- [ ] Monorepo → shows unsupported
-- [ ] Regenerate works for failed projects
+- [x] App Router repo → correct PR created
+- [x] Pages Router repo → correct PR created
+- [x] Non-Next.js repo → shows unsupported
+- [x] Monorepo → shows unsupported
+- [x] Regenerate works for failed projects
 
 ---
 

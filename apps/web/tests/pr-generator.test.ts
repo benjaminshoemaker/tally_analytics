@@ -115,15 +115,15 @@ describe("pr generator", () => {
     const { createAnalyticsBranch, commitAnalyticsFiles } = await import("../lib/github/pr-generator");
     const branch = await createAnalyticsBranch(octokit as never, { owner: "octo", repo: "repo" });
 
-    await commitAnalyticsFiles(octokit as never, {
-      owner: "octo",
-      repo: "repo",
-      branch,
-      defaultBranch,
-      projectId,
-      detection: { framework: "nextjs-app", entryPoint, existingAnalytics: [], isMonorepo: false, error: null },
-      eventsUrl: "https://events.example.com",
-    });
+	    await commitAnalyticsFiles(octokit as never, {
+	      owner: "octo",
+	      repo: "repo",
+	      branch,
+	      defaultBranch,
+	      projectId,
+	      detection: { framework: "nextjs-app", entryPoint },
+	      eventsUrl: "https://events.example.com",
+	    });
 
     const calls = createOrUpdateFileContents.mock.calls as unknown[][];
     expect(calls).toHaveLength(2);
