@@ -82,3 +82,14 @@ export async function updateProjectDetectionByRepoId(params: {
     .set({ detectedFramework: params.detectedFramework, detectedAnalytics: params.detectedAnalytics })
     .where(eq(projects.githubRepoId, params.repoId));
 }
+
+export async function setProjectPullRequestByRepoId(params: {
+  repoId: bigint;
+  prNumber: number;
+  prUrl: string;
+}): Promise<void> {
+  await db
+    .update(projects)
+    .set({ prNumber: params.prNumber, prUrl: params.prUrl, status: "pr_pending" })
+    .where(eq(projects.githubRepoId, params.repoId));
+}
