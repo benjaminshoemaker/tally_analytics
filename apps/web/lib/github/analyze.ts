@@ -1,7 +1,8 @@
-import { setProjectStatusByRepoId, updateProjectDetectionByRepoId } from "../db/queries/projects";
+import { getProjectIdByRepoId, setProjectStatusByRepoId, updateProjectDetectionByRepoId } from "../db/queries/projects";
 
 import { getInstallationOctokit } from "./app";
 import { detectFramework } from "./detect-framework";
+import { generatePullRequestForDetection } from "./generate";
 
 function toSafeNumber(value: bigint): number {
   const asNumber = Number(value);
@@ -50,8 +51,21 @@ export async function analyzeRepository(params: {
       await setProjectStatusByRepoId({ repoId: params.repoId, status: "analysis_failed" });
       return;
     }
+
+    const projectId = await getProjectIdByRepoId(params.repoId);
+    if (!projectId) {
+      await setProjectStatusByRepoId({ repoId: params.repoId, status: "analysis_failed" });
+      return;
+    }
+
+    await generatePullRequestForDetection({
+      repoId: params.repoId,
+      repoFullName: params.repoFullName,
+      installationId: params.installationId,
+      projectId,
+      detection: result,
+    });
   } catch {
     await setProjectStatusByRepoId({ repoId: params.repoId, status: "analysis_failed" });
   }
 }
-
