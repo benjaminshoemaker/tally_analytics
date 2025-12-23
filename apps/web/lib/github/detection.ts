@@ -138,6 +138,8 @@ const PAGES_ROUTER_ENTRYPOINT_CANDIDATES = [
   "src/pages/_app.js",
 ];
 
+const MONOREPO_SENTINELS = ["pnpm-workspace.yaml", "lerna.json"] as const;
+
 export async function detectNextRouter(
   octokit: OctokitLike,
   owner: string,
@@ -163,4 +165,21 @@ export async function detectNextRouter(
   if (pagesEntryPoint) return { framework: "nextjs-pages", entryPoint: pagesEntryPoint };
 
   return { framework: null, entryPoint: null };
+}
+
+export async function detectMonorepo(
+  octokit: OctokitLike,
+  owner: string,
+  repo: string,
+  packageJson: PackageJson,
+  options?: { ref?: string },
+): Promise<boolean> {
+  const analysis = analyzePackageJson(packageJson);
+  if (analysis.hasWorkspaces) return true;
+
+  for (const sentinel of MONOREPO_SENTINELS) {
+    if (await fileExists(octokit, owner, repo, sentinel, options)) return true;
+  }
+
+  return false;
 }

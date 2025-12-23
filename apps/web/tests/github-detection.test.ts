@@ -94,3 +94,41 @@ describe("github detection - router detection", () => {
     });
   });
 });
+
+describe("github detection - monorepo detection", () => {
+  it("detectMonorepo returns true when package.json has workspaces", async () => {
+    vi.resetModules();
+
+    const getContent = vi.fn();
+    const octokit = { repos: { getContent } };
+
+    const { detectMonorepo } = await import("../lib/github/detection");
+    await expect(detectMonorepo(octokit, "octo", "repo", { workspaces: ["packages/*"] })).resolves.toBe(true);
+    expect(getContent).not.toHaveBeenCalled();
+  });
+
+  it("detectMonorepo returns true when pnpm-workspace.yaml exists", async () => {
+    vi.resetModules();
+
+    const getContent = vi.fn(async ({ path }: { path: string }) => {
+      if (path === "pnpm-workspace.yaml") return { data: { type: "file", content: "", encoding: "base64" } };
+      throw { status: 404 };
+    });
+    const octokit = { repos: { getContent } };
+
+    const { detectMonorepo } = await import("../lib/github/detection");
+    await expect(detectMonorepo(octokit, "octo", "repo", {})).resolves.toBe(true);
+  });
+
+  it("detectMonorepo returns false when no indicators are present", async () => {
+    vi.resetModules();
+
+    const getContent = vi.fn(async () => {
+      throw { status: 404 };
+    });
+    const octokit = { repos: { getContent } };
+
+    const { detectMonorepo } = await import("../lib/github/detection");
+    await expect(detectMonorepo(octokit, "octo", "repo", {})).resolves.toBe(false);
+  });
+});
