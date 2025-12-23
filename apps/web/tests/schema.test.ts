@@ -2,17 +2,27 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 
 import { getTableConfig } from "drizzle-orm/pg-core";
 
-import { githubTokens, magicLinks, projects, sessions, users, waitlist } from "../lib/db/schema";
-import type { GithubToken, MagicLink, NewProject, Project, Session, User, WaitlistEntry } from "../types/database";
+import { githubTokens, magicLinks, projects, regenerateRequests, sessions, users, waitlist } from "../lib/db/schema";
+import type {
+  GithubToken,
+  MagicLink,
+  NewProject,
+  Project,
+  RegenerateRequest,
+  Session,
+  User,
+  WaitlistEntry,
+} from "../types/database";
 
 describe("db schema", () => {
-  it("defines all 6 tables with expected core columns", () => {
+  it("defines all tables with expected core columns", () => {
     expect(getTableConfig(users).name).toBe("users");
     expect(getTableConfig(sessions).name).toBe("sessions");
     expect(getTableConfig(magicLinks).name).toBe("magic_links");
     expect(getTableConfig(projects).name).toBe("projects");
     expect(getTableConfig(githubTokens).name).toBe("github_tokens");
     expect(getTableConfig(waitlist).name).toBe("waitlist");
+    expect(getTableConfig(regenerateRequests).name).toBe("regenerate_requests");
 
     const userColumns = getTableConfig(users).columns;
     expect(userColumns.find((c) => c.name === "email")?.notNull).toBe(true);
@@ -32,6 +42,7 @@ describe("db schema", () => {
     expect(getTableConfig(sessions).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
     expect(getTableConfig(projects).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
     expect(getTableConfig(githubTokens).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
+    expect(getTableConfig(regenerateRequests).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
   });
 
   it("defines all indexes from the spec", () => {
@@ -52,6 +63,10 @@ describe("db schema", () => {
     expect(getTableConfig(githubTokens).indexes.map((i) => i.config.name)).toEqual(
       expect.arrayContaining(["idx_github_tokens_user_id", "idx_github_tokens_installation_id"]),
     );
+
+    expect(getTableConfig(regenerateRequests).indexes.map((i) => i.config.name)).toEqual(
+      expect.arrayContaining(["idx_regenerate_requests_project_id", "idx_regenerate_requests_created_at"]),
+    );
   });
 
   it("exports TypeScript types derived from the schema", () => {
@@ -61,6 +76,7 @@ describe("db schema", () => {
     expectTypeOf<Project>().toMatchTypeOf<{ id: string; userId: string; githubRepoId: bigint }>();
     expectTypeOf<GithubToken>().toMatchTypeOf<{ id: string; userId: string; installationId: bigint }>();
     expectTypeOf<WaitlistEntry>().toMatchTypeOf<{ id: string; email: string }>();
+    expectTypeOf<RegenerateRequest>().toMatchTypeOf<{ id: string; projectId: string; userId: string }>();
 
     expectTypeOf<NewProject>().toMatchTypeOf<{ id: string; userId: string; githubRepoId: bigint }>();
   });
