@@ -9,6 +9,7 @@ function createProjectId(): string {
 }
 
 export type GitHubRepoRef = { id: number; fullName: string };
+export type ProjectStatus = "pending" | "analyzing" | "analysis_failed" | "pr_pending" | "pr_closed" | "active" | "unsupported";
 
 export async function upsertProjectsForRepos(params: {
   userId: string;
@@ -65,4 +66,19 @@ export async function updateProjectStatusForPullRequestClosed(params: {
         or(isNull(projects.prNumber), eq(projects.prNumber, params.prNumber)),
       ),
     );
+}
+
+export async function setProjectStatusByRepoId(params: { repoId: bigint; status: ProjectStatus }): Promise<void> {
+  await db.update(projects).set({ status: params.status }).where(eq(projects.githubRepoId, params.repoId));
+}
+
+export async function updateProjectDetectionByRepoId(params: {
+  repoId: bigint;
+  detectedFramework: string | null;
+  detectedAnalytics: string[];
+}): Promise<void> {
+  await db
+    .update(projects)
+    .set({ detectedFramework: params.detectedFramework, detectedAnalytics: params.detectedAnalytics })
+    .where(eq(projects.githubRepoId, params.repoId));
 }

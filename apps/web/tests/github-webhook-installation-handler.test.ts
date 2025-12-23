@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 let selectSpy: ReturnType<typeof vi.fn> | undefined;
 let insertSpy: ReturnType<typeof vi.fn> | undefined;
 let deleteSpy: ReturnType<typeof vi.fn> | undefined;
+let analyzeRepositorySpy: ReturnType<typeof vi.fn> | undefined;
 
 vi.mock("../lib/db/client", () => ({
   db: {
@@ -21,9 +22,18 @@ vi.mock("../lib/db/client", () => ({
   },
 }));
 
+vi.mock("../lib/github/analyze", () => ({
+  analyzeRepository: (...args: unknown[]) => {
+    if (!analyzeRepositorySpy) throw new Error("analyzeRepositorySpy not initialized");
+    return analyzeRepositorySpy(...args);
+  },
+}));
+
 describe("GitHub installation webhook handlers", () => {
   it("installation.created creates project records for repositories", async () => {
     vi.resetModules();
+
+    analyzeRepositorySpy = vi.fn().mockResolvedValue(undefined);
 
     const schema = await import("../lib/db/schema");
     const userId = "11111111-1111-1111-1111-111111111111";
@@ -71,10 +81,13 @@ describe("GitHub installation webhook handlers", () => {
     }
 
     expect(onConflictDoUpdateSpy).toHaveBeenCalledTimes(1);
+    expect(analyzeRepositorySpy).toHaveBeenCalledTimes(2);
   });
 
   it("installation.deleted removes projects for the installation", async () => {
     vi.resetModules();
+
+    analyzeRepositorySpy = vi.fn().mockResolvedValue(undefined);
 
     const schema = await import("../lib/db/schema");
 
@@ -100,6 +113,8 @@ describe("GitHub installation webhook handlers", () => {
   it("installation_repositories.removed deletes projects for removed repos", async () => {
     vi.resetModules();
 
+    analyzeRepositorySpy = vi.fn().mockResolvedValue(undefined);
+
     const schema = await import("../lib/db/schema");
     selectSpy = vi.fn();
     insertSpy = vi.fn();
@@ -123,6 +138,8 @@ describe("GitHub installation webhook handlers", () => {
 
   it("installation_repositories.added creates project records for added repos", async () => {
     vi.resetModules();
+
+    analyzeRepositorySpy = vi.fn().mockResolvedValue(undefined);
 
     const schema = await import("../lib/db/schema");
     const userId = "11111111-1111-1111-1111-111111111111";
@@ -161,5 +178,6 @@ describe("GitHub installation webhook handlers", () => {
       githubRepoFullName: "octo/repo-1",
     });
     expect(onConflictDoUpdateSpy).toHaveBeenCalledTimes(1);
+    expect(analyzeRepositorySpy).toHaveBeenCalledTimes(1);
   });
 });

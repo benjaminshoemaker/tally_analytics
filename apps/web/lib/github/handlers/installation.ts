@@ -8,6 +8,7 @@ import {
   upsertProjectsForRepos,
   type GitHubRepoRef,
 } from "../../db/queries/projects";
+import { analyzeRepository } from "../analyze";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -58,6 +59,11 @@ export async function handleInstallationWebhook(payload: unknown): Promise<void>
 
     const repositories = readRepoList(payload, "repositories");
     await upsertProjectsForRepos({ userId, installationId, repositories });
+    await Promise.all(
+      repositories.map((repo) =>
+        analyzeRepository({ repoId: BigInt(repo.id), repoFullName: repo.fullName, installationId }),
+      ),
+    );
     return;
   }
 
@@ -80,6 +86,11 @@ export async function handleInstallationRepositoriesWebhook(payload: unknown): P
 
     const repositories = readRepoList(payload, "repositories_added");
     await upsertProjectsForRepos({ userId, installationId, repositories });
+    await Promise.all(
+      repositories.map((repo) =>
+        analyzeRepository({ repoId: BigInt(repo.id), repoFullName: repo.fullName, installationId }),
+      ),
+    );
     return;
   }
 
@@ -89,4 +100,3 @@ export async function handleInstallationRepositoriesWebhook(payload: unknown): P
     await deleteProjectsByInstallationAndRepoIds({ installationId, repoIds });
   }
 }
-
