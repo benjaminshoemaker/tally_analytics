@@ -24,6 +24,13 @@ export type PackageJsonAnalysis = {
   hasWorkspaces: boolean;
 };
 
+export type DetectedFramework = "nextjs-app" | "nextjs-pages" | null;
+
+export type RouterDetectionResult = {
+  framework: DetectedFramework;
+  entryPoint: string | null;
+};
+
 const ANALYTICS_PACKAGES = [
   "posthog-js",
   "posthog-node",
@@ -83,3 +90,77 @@ export function analyzePackageJson(packageJson: PackageJson): PackageJsonAnalysi
   return { nextVersion, existingAnalytics: [...existingAnalytics], hasWorkspaces: Boolean(hasWorkspaces) };
 }
 
+export async function fileExists(
+  octokit: OctokitLike,
+  owner: string,
+  repo: string,
+  path: string,
+  options?: { ref?: string },
+): Promise<boolean> {
+  try {
+    const response = await octokit.repos.getContent({ owner, repo, path, ref: options?.ref });
+    const data = response.data;
+    return isRecord(data) && data.type === "file";
+  } catch (error) {
+    if (isNotFoundError(error)) return false;
+    throw error;
+  }
+}
+
+export async function findFirstExistingPath(
+  octokit: OctokitLike,
+  owner: string,
+  repo: string,
+  paths: string[],
+  options?: { ref?: string },
+): Promise<string | null> {
+  for (const path of paths) {
+    if (await fileExists(octokit, owner, repo, path, options)) return path;
+  }
+  return null;
+}
+
+const APP_ROUTER_ENTRYPOINT_CANDIDATES = [
+  "app/layout.tsx",
+  "app/layout.jsx",
+  "app/layout.js",
+  "src/app/layout.tsx",
+  "src/app/layout.jsx",
+  "src/app/layout.js",
+];
+
+const PAGES_ROUTER_ENTRYPOINT_CANDIDATES = [
+  "pages/_app.tsx",
+  "pages/_app.jsx",
+  "pages/_app.js",
+  "src/pages/_app.tsx",
+  "src/pages/_app.jsx",
+  "src/pages/_app.js",
+];
+
+export async function detectNextRouter(
+  octokit: OctokitLike,
+  owner: string,
+  repo: string,
+  options?: { ref?: string },
+): Promise<RouterDetectionResult> {
+  const appEntryPoint = await findFirstExistingPath(
+    octokit,
+    owner,
+    repo,
+    APP_ROUTER_ENTRYPOINT_CANDIDATES,
+    options,
+  );
+  if (appEntryPoint) return { framework: "nextjs-app", entryPoint: appEntryPoint };
+
+  const pagesEntryPoint = await findFirstExistingPath(
+    octokit,
+    owner,
+    repo,
+    PAGES_ROUTER_ENTRYPOINT_CANDIDATES,
+    options,
+  );
+  if (pagesEntryPoint) return { framework: "nextjs-pages", entryPoint: pagesEntryPoint };
+
+  return { framework: null, entryPoint: null };
+}

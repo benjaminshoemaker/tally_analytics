@@ -44,3 +44,53 @@ describe("github detection - package.json analysis", () => {
   });
 });
 
+describe("github detection - router detection", () => {
+  it("detects App Router when app/layout exists", async () => {
+    vi.resetModules();
+
+    const getContent = vi.fn(async ({ path }: { path: string }) => {
+      if (path === "src/app/layout.tsx") return { data: { type: "file", content: "", encoding: "base64" } };
+      throw { status: 404 };
+    });
+    const octokit = { repos: { getContent } };
+
+    const { detectNextRouter } = await import("../lib/github/detection");
+    await expect(detectNextRouter(octokit, "octo", "repo")).resolves.toEqual({
+      framework: "nextjs-app",
+      entryPoint: "src/app/layout.tsx",
+    });
+  });
+
+  it("detects Pages Router when pages/_app exists and app router does not", async () => {
+    vi.resetModules();
+
+    const getContent = vi.fn(async ({ path }: { path: string }) => {
+      if (path === "pages/_app.tsx") return { data: { type: "file", content: "", encoding: "base64" } };
+      throw { status: 404 };
+    });
+    const octokit = { repos: { getContent } };
+
+    const { detectNextRouter } = await import("../lib/github/detection");
+    await expect(detectNextRouter(octokit, "octo", "repo")).resolves.toEqual({
+      framework: "nextjs-pages",
+      entryPoint: "pages/_app.tsx",
+    });
+  });
+
+  it("prefers App Router when both app/layout and pages/_app exist", async () => {
+    vi.resetModules();
+
+    const getContent = vi.fn(async ({ path }: { path: string }) => {
+      if (path === "app/layout.tsx") return { data: { type: "file", content: "", encoding: "base64" } };
+      if (path === "pages/_app.tsx") return { data: { type: "file", content: "", encoding: "base64" } };
+      throw { status: 404 };
+    });
+    const octokit = { repos: { getContent } };
+
+    const { detectNextRouter } = await import("../lib/github/detection");
+    await expect(detectNextRouter(octokit, "octo", "repo")).resolves.toEqual({
+      framework: "nextjs-app",
+      entryPoint: "app/layout.tsx",
+    });
+  });
+});
