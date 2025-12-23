@@ -9,17 +9,12 @@ type OctokitResponse<T> = { data: T };
 type RepoResponse = OctokitResponse<{ default_branch: string }>;
 type RefResponse = OctokitResponse<{ object: { sha: string } }>;
 
-type ContentFileResponse = OctokitResponse<{
-  type: "file";
-  sha: string;
-  encoding?: string;
-  content?: string;
-}>;
+type ContentResponse = OctokitResponse<unknown>;
 
 export type PrOctokitLike = {
   repos: {
     get: (params: { owner: string; repo: string }) => Promise<RepoResponse>;
-    getContent: (params: { owner: string; repo: string; path: string; ref?: string }) => Promise<ContentFileResponse>;
+    getContent: (params: { owner: string; repo: string; path: string; ref?: string }) => Promise<ContentResponse>;
     createOrUpdateFileContents: (params: {
       owner: string;
       repo: string;
@@ -90,7 +85,7 @@ async function fetchJsonFileIfExists(
   try {
     const response = await octokit.repos.getContent(params);
     const file = response.data;
-    if (file.type !== "file" || !file.content) return null;
+    if (!isRecord(file) || file.type !== "file" || typeof file.content !== "string") return null;
     const text = Buffer.from(file.content, "base64").toString("utf8");
     return JSON.parse(text) as unknown;
   } catch (error) {
@@ -105,7 +100,13 @@ async function fetchTextFile(
 ): Promise<{ sha: string; content: string }> {
   const response = await octokit.repos.getContent(params);
   const file = response.data;
-  const content = file.content ? Buffer.from(file.content, "base64").toString("utf8") : "";
+  if (!isRecord(file) || file.type !== "file") {
+    throw new Error(`Expected GitHub content at ${params.path} to be a file`);
+  }
+  if (typeof file.sha !== "string" || file.sha.length === 0) {
+    throw new Error(`Expected GitHub content at ${params.path} to include a sha`);
+  }
+  const content = typeof file.content === "string" ? Buffer.from(file.content, "base64").toString("utf8") : "";
   return { sha: file.sha, content };
 }
 

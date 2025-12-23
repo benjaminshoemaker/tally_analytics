@@ -63,11 +63,11 @@ export async function generatePullRequestForDetection(params: {
     const installationId = toSafeNumber(params.installationId);
     const octokit = await getInstallationOctokit(installationId);
 
-    const branch = await createAnalyticsBranch(octokit as never, { owner: repo.owner, repo: repo.repo });
-    const { data: repoData } = await (octokit as never).repos.get({ owner: repo.owner, repo: repo.repo });
+    const branch = await createAnalyticsBranch(octokit, { owner: repo.owner, repo: repo.repo });
+    const { data: repoData } = await octokit.repos.get({ owner: repo.owner, repo: repo.repo });
     const defaultBranch = repoData.default_branch as string;
 
-    await commitAnalyticsFiles(octokit as never, {
+    await commitAnalyticsFiles(octokit, {
       owner: repo.owner,
       repo: repo.repo,
       branch,
@@ -77,7 +77,7 @@ export async function generatePullRequestForDetection(params: {
       eventsUrl: getEventsUrl(),
     });
 
-    await openAnalyticsPullRequest(octokit as never, {
+    await openAnalyticsPullRequest(octokit, {
       repoId: params.repoId,
       owner: repo.owner,
       repo: repo.repo,
@@ -93,4 +93,3 @@ export async function generatePullRequestForDetection(params: {
     await setProjectStatusByRepoId({ repoId: params.repoId, status: "analysis_failed" });
   }
 }
-
