@@ -1335,9 +1335,9 @@ Tinybird pipe for recent events.
 Tinybird pipe for page views over time.
 
 **Acceptance Criteria:**
-- [ ] Returns daily counts
-- [ ] Accepts date range
-- [ ] Ordered by date
+- [x] Returns daily counts
+- [x] Accepts date range
+- [x] Ordered by date
 
 **Files to Create:**
 - `tinybird/pipes/page_views_timeseries.pipe`
