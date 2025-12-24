@@ -1412,8 +1412,8 @@ Tinybird pipe for top referrers.
 
 ### Pre-Phase Setup
 
-- [ ] Tinybird endpoints working
-- [ ] Test project with events
+- [x] Tinybird endpoints working
+- [x] Test project with events
 
 ### Step 5.1: Layout
 
@@ -1721,9 +1721,9 @@ Basic account settings page.
 ### Phase 5 Checkpoint
 
 **Automated Checks:**
-- [ ] All tests pass
-- [ ] TypeScript compiles
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] TypeScript compiles
+- [x] Build succeeds
 
 **Manual Verification:**
 - [ ] Projects list loads
