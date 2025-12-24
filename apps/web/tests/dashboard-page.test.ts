@@ -1,13 +1,21 @@
-import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import DashboardPage from "../app/dashboard/page";
+let redirectSpy: ReturnType<typeof vi.fn> | undefined;
+
+vi.mock("next/navigation", () => ({
+  redirect: (...args: unknown[]) => {
+    if (!redirectSpy) throw new Error("redirectSpy not initialized");
+    return redirectSpy(...args);
+  },
+}));
 
 describe("/dashboard page", () => {
-  it("renders a dashboard heading", () => {
-    const html = renderToStaticMarkup(React.createElement(DashboardPage));
-    expect(html).toContain("Dashboard");
+  it("redirects to /projects", async () => {
+    vi.resetModules();
+    redirectSpy = vi.fn();
+
+    const { default: DashboardPage } = await import("../app/dashboard/page");
+    DashboardPage();
+    expect(redirectSpy).toHaveBeenCalledWith("/projects");
   });
 });
-
