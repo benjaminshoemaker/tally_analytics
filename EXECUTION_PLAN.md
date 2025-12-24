@@ -1654,9 +1654,9 @@ Main analytics overview with charts.
 Session analytics page.
 
 **Acceptance Criteria:**
-- [ ] Sessions over time chart
-- [ ] New vs returning breakdown
-- [ ] Summary stats
+- [x] Sessions over time chart
+- [x] New vs returning breakdown
+- [x] Summary stats
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/[id]/sessions/page.tsx`
