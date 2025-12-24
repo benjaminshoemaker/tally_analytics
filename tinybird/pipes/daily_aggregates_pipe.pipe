@@ -1,0 +1,14 @@
+NODE daily_stats
+SQL >
+    SELECT
+        project_id,
+        toDate(timestamp) as date,
+        countIf(event_type = 'page_view') as page_views,
+        countIf(event_type = 'session_start') as sessions,
+        uniqExact(session_id) as unique_visitors
+    FROM events
+    GROUP BY project_id, date
+
+TYPE materialized
+DATASOURCE daily_aggregates
+

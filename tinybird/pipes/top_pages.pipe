@@ -1,0 +1,15 @@
+NODE top_pages_query
+SQL >
+    %
+    SELECT
+        path,
+        count() as views,
+        round(count() * 100.0 / sum(count()) OVER (), 2) as percentage
+    FROM events
+    WHERE project_id = {{String(project_id, '')}}
+    AND event_type = 'page_view'
+    AND timestamp >= {{DateTime(start_date)}}
+    AND timestamp < {{DateTime(end_date)}}
+    GROUP BY path
+    ORDER BY views DESC
+    LIMIT 10

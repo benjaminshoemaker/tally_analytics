@@ -1186,11 +1186,11 @@ Create client for sending events to Tinybird.
 POST /v1/track endpoint for receiving events.
 
 **Acceptance Criteria:**
-- [ ] Accepts `{ events: AnalyticsEvent[] }`
-- [ ] Validates with Zod
-- [ ] Accepts 1-10 events per batch
-- [ ] Returns `{ success: true, received: N }`
-- [ ] Forwards to Tinybird
+- [x] Accepts `{ events: AnalyticsEvent[] }`
+- [x] Validates with Zod
+- [x] Accepts 1-10 events per batch
+- [x] Returns `{ success: true, received: N }`
+- [x] Forwards to Tinybird
 
 **Files to Create:**
 - `apps/events/app/v1/track/route.ts`
@@ -1209,10 +1209,10 @@ POST /v1/track endpoint for receiving events.
 Configure CORS for all origins.
 
 **Acceptance Criteria:**
-- [ ] OPTIONS returns CORS headers
-- [ ] Access-Control-Allow-Origin: *
-- [ ] Allow POST, OPTIONS
-- [ ] Allow Content-Type header
+- [x] OPTIONS returns CORS headers
+- [x] Access-Control-Allow-Origin: *
+- [x] Allow POST, OPTIONS
+- [x] Allow Content-Type header
 
 **Files to Modify:**
 - `apps/events/app/v1/track/route.ts`
@@ -1235,10 +1235,10 @@ Configure CORS for all origins.
 Validate project_id against database.
 
 **Acceptance Criteria:**
-- [ ] Validates against projects table
-- [ ] Only 'active' projects accept events
-- [ ] Invalid IDs silently dropped
-- [ ] Project lookup cached (30s)
+- [x] Validates against projects table
+- [x] Only 'active' projects accept events
+- [x] Invalid IDs silently dropped
+- [x] Project lookup cached (30s)
 
 **Files to Modify:**
 - `apps/events/app/v1/track/route.ts`
@@ -1264,10 +1264,10 @@ Validate project_id against database.
 Create Tinybird events data source.
 
 **Acceptance Criteria:**
-- [ ] Schema matches spec
-- [ ] Partitioned by month
-- [ ] Sorted by project_id, timestamp
-- [ ] 90-day TTL
+- [x] Schema matches spec
+- [x] Partitioned by month
+- [x] Sorted by project_id, timestamp
+- [x] 90-day TTL
 
 **Files to Create:**
 - `tinybird/datasources/events.datasource`
@@ -1286,9 +1286,9 @@ Create Tinybird events data source.
 Create materialized view for daily stats.
 
 **Acceptance Criteria:**
-- [ ] Computes page_views, sessions, unique_visitors
-- [ ] Per project per day
-- [ ] Uses SummingMergeTree
+- [x] Computes page_views, sessions, unique_visitors
+- [x] Per project per day
+- [x] Uses SummingMergeTree
 
 **Files to Create:**
 - `tinybird/datasources/daily_aggregates.datasource`
@@ -1314,9 +1314,9 @@ Create materialized view for daily stats.
 Tinybird pipe for recent events.
 
 **Acceptance Criteria:**
-- [ ] Returns recent events
-- [ ] Accepts project_id, limit, since
-- [ ] Formats relative_time
+- [x] Returns recent events
+- [x] Accepts project_id, limit, since
+- [x] Formats relative_time
 
 **Files to Create:**
 - `tinybird/pipes/live_feed.pipe`
@@ -1335,9 +1335,9 @@ Tinybird pipe for recent events.
 Tinybird pipe for page views over time.
 
 **Acceptance Criteria:**
-- [ ] Returns daily counts
-- [ ] Accepts date range
-- [ ] Ordered by date
+- [x] Returns daily counts
+- [x] Accepts date range
+- [x] Ordered by date
 
 **Files to Create:**
 - `tinybird/pipes/page_views_timeseries.pipe`
@@ -1356,8 +1356,8 @@ Tinybird pipe for page views over time.
 Tinybird pipe for top pages.
 
 **Acceptance Criteria:**
-- [ ] Returns top 10 pages
-- [ ] Includes percentage
+- [x] Returns top 10 pages
+- [x] Includes percentage
 
 **Files to Create:**
 - `tinybird/pipes/top_pages.pipe`
@@ -1376,9 +1376,9 @@ Tinybird pipe for top pages.
 Tinybird pipe for top referrers.
 
 **Acceptance Criteria:**
-- [ ] Extracts host from URL
-- [ ] Empty = "Direct"
-- [ ] Top 10 with percentage
+- [x] Extracts host from URL
+- [x] Empty = "Direct"
+- [x] Top 10 with percentage
 
 **Files to Create:**
 - `tinybird/pipes/top_referrers.pipe`
@@ -1394,8 +1394,8 @@ Tinybird pipe for top referrers.
 ### Phase 4 Checkpoint
 
 **Automated Checks:**
-- [ ] Events app builds
-- [ ] Tinybird sources validate
+- [x] Events app builds
+- [x] Tinybird sources validate
 
 **Manual Verification:**
 - [ ] POST to /v1/track succeeds

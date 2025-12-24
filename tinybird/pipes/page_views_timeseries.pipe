@@ -1,0 +1,13 @@
+NODE page_views
+SQL >
+    %
+    SELECT
+        toDate(timestamp) as date,
+        count() as count
+    FROM events
+    WHERE project_id = {{String(project_id, '')}}
+    AND event_type = 'page_view'
+    AND timestamp >= {{DateTime(start_date)}}
+    AND timestamp < {{DateTime(end_date)}}
+    GROUP BY date
+    ORDER BY date
