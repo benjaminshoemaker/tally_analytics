@@ -10,7 +10,7 @@ describe("tinybird top_pages pipe (Task 4.5.C)", () => {
     expect(fs.existsSync(pipePath)).toBe(true);
     const contents = fs.readFileSync(pipePath, "utf8");
 
-    expect(contents).toContain("NODE top_pages");
+    expect(contents).toContain("NODE top_pages_query");
     expect(contents).toContain("path,");
     expect(contents).toContain("count() as views");
     expect(contents).toContain("percentage");
@@ -20,4 +20,3 @@ describe("tinybird top_pages pipe (Task 4.5.C)", () => {
     expect(contents).toContain("LIMIT 10");
   });
 });
-

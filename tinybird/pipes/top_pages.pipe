@@ -1,4 +1,4 @@
-NODE top_pages
+NODE top_pages_query
 SQL >
     %
     SELECT

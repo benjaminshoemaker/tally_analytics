@@ -10,8 +10,8 @@ describe("tinybird top_referrers pipe (Task 4.5.D)", () => {
     expect(fs.existsSync(pipePath)).toBe(true);
     const contents = fs.readFileSync(pipePath, "utf8");
 
-    expect(contents).toContain("NODE top_referrers");
-    expect(contents).toContain("extractURLHost(referrer)");
+    expect(contents).toContain("NODE top_referrers_query");
+    expect(contents).toContain("domain(referrer)");
     expect(contents).toContain("if(referrer = '', 'Direct'");
     expect(contents).toContain("percentage");
     expect(contents).toContain("GROUP BY referrer_host");
@@ -19,4 +19,3 @@ describe("tinybird top_referrers pipe (Task 4.5.D)", () => {
     expect(contents).toContain("LIMIT 10");
   });
 });
-

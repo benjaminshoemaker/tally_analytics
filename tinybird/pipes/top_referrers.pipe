@@ -1,9 +1,9 @@
-NODE top_referrers
+NODE top_referrers_query
 SQL >
     %
     SELECT
         if(referrer = '', 'Direct', 
-           extractURLHost(referrer)) as referrer_host,
+           domain(referrer)) as referrer_host,
         count() as count,
         round(count() * 100.0 / sum(count()) OVER (), 2) as percentage
     FROM events
