@@ -1578,9 +1578,9 @@ API route for analytics overview.
 API route for session analytics.
 
 **Acceptance Criteria:**
-- [ ] GET /api/projects/[id]/analytics/sessions
-- [ ] Returns total, new, returning
-- [ ] Time series data
+- [x] GET /api/projects/[id]/analytics/sessions
+- [x] Returns total, new, returning
+- [x] Time series data
 
 **Files to Create:**
 - `apps/web/app/api/projects/[id]/analytics/sessions/route.ts`
