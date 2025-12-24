@@ -1605,10 +1605,10 @@ API route for session analytics.
 Real-time event feed page.
 
 **Acceptance Criteria:**
-- [ ] Shows recent events
-- [ ] Polls every 5s
-- [ ] New events animate in
-- [ ] Empty state
+- [x] Shows recent events
+- [x] Polls every 5s
+- [x] New events animate in
+- [x] Empty state
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/[id]/live/page.tsx`
