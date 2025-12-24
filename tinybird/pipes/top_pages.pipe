@@ -1,5 +1,6 @@
 NODE top_pages
 SQL >
+    %
     SELECT
         path,
         count() as views,
@@ -12,4 +13,3 @@ SQL >
     GROUP BY path
     ORDER BY views DESC
     LIMIT 10
-

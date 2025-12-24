@@ -1394,8 +1394,8 @@ Tinybird pipe for top referrers.
 ### Phase 4 Checkpoint
 
 **Automated Checks:**
-- [ ] Events app builds
-- [ ] Tinybird sources validate
+- [x] Events app builds
+- [x] Tinybird sources validate
 
 **Manual Verification:**
 - [ ] POST to /v1/track succeeds

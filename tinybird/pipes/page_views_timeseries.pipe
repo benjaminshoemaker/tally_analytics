@@ -1,5 +1,6 @@
 NODE page_views
 SQL >
+    %
     SELECT
         toDate(timestamp) as date,
         count() as count
@@ -10,4 +11,3 @@ SQL >
     AND timestamp < {{DateTime(end_date)}}
     GROUP BY date
     ORDER BY date
-

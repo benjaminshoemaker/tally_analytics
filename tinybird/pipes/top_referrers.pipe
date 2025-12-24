@@ -1,5 +1,6 @@
 NODE top_referrers
 SQL >
+    %
     SELECT
         if(referrer = '', 'Direct', 
            extractURLHost(referrer)) as referrer_host,
@@ -13,4 +14,3 @@ SQL >
     GROUP BY referrer_host
     ORDER BY count DESC
     LIMIT 10
-
