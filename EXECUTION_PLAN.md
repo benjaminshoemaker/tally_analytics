@@ -1682,9 +1682,9 @@ Session analytics page.
 Show quota usage with warnings.
 
 **Acceptance Criteria:**
-- [ ] Progress bar: used / limit
-- [ ] Warning at 80%
-- [ ] Over quota banner
+- [x] Progress bar: used / limit
+- [x] Warning at 80%
+- [x] Over quota banner
 
 **Files to Create:**
 - `apps/web/components/dashboard/quota-display.tsx`

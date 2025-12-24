@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 
 import OnboardingChecklist from "../../../../components/dashboard/onboarding-checklist";
+import QuotaDisplay from "../../../../components/dashboard/quota-display";
 import { useProject } from "../../../../lib/hooks/use-project";
 
 type RegenerateState = { status: "idle" | "loading" | "success" | "error"; message: string };
@@ -51,6 +52,9 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const repoName = String(project?.githubRepoFullName ?? projectId);
   const prUrl = typeof project?.prUrl === "string" ? (project.prUrl as string) : null;
   const lastEventAt = typeof project?.lastEventAt === "string" ? (project.lastEventAt as string) : null;
+  const quotaLimit = Number((projectQuery.data as Record<string, unknown>)?.quotaLimit ?? 0);
+  const quotaUsed = Number((projectQuery.data as Record<string, unknown>)?.quotaUsed ?? 0);
+  const isOverQuota = Boolean((projectQuery.data as Record<string, unknown>)?.isOverQuota);
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -93,8 +97,9 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         </a>
       </nav>
 
+      <QuotaDisplay used={quotaUsed} limit={quotaLimit} isOverQuota={isOverQuota} />
+
       {status !== "active" ? <OnboardingChecklist project={{ status, prUrl, lastEventAt }} /> : null}
     </div>
   );
 }
-
