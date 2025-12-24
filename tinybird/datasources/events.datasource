@@ -1,0 +1,19 @@
+SCHEMA >
+    `project_id` String,
+    `session_id` String,
+    `event_type` LowCardinality(String),
+    `timestamp` DateTime64(3),
+    `url` Nullable(String),
+    `path` Nullable(String),
+    `referrer` Nullable(String),
+    `user_agent` Nullable(String),
+    `screen_width` Nullable(UInt16),
+    `user_id` Nullable(String),
+    `country` Nullable(String),
+    `city` Nullable(String)
+
+ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYYYYMM(timestamp)"
+ENGINE_SORTING_KEY "project_id, timestamp"
+ENGINE_TTL "timestamp + INTERVAL 90 DAY"
+

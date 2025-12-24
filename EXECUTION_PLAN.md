@@ -1264,10 +1264,10 @@ Validate project_id against database.
 Create Tinybird events data source.
 
 **Acceptance Criteria:**
-- [ ] Schema matches spec
-- [ ] Partitioned by month
-- [ ] Sorted by project_id, timestamp
-- [ ] 90-day TTL
+- [x] Schema matches spec
+- [x] Partitioned by month
+- [x] Sorted by project_id, timestamp
+- [x] 90-day TTL
 
 **Files to Create:**
 - `tinybird/datasources/events.datasource`
