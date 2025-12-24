@@ -16,7 +16,7 @@ describe("auth middleware", () => {
 
     const { config } = await import("../middleware");
 
-    expect(config).toEqual({ matcher: ["/dashboard/:path*", "/api/projects/:path*"] });
+    expect(config).toEqual({ matcher: ["/dashboard/:path*", "/projects/:path*", "/settings/:path*", "/api/projects/:path*"] });
   });
 
   it("allows requests when session is valid", async () => {
@@ -54,4 +54,3 @@ describe("auth middleware", () => {
     expect(response.status).toBe(401);
   });
 });
-

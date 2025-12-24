@@ -1480,11 +1480,11 @@ Set up React Query for dashboard data.
 Page showing all user's projects.
 
 **Acceptance Criteria:**
-- [ ] Lists all projects
-- [ ] Shows status, last event
-- [ ] Links to detail
-- [ ] Empty state
-- [ ] Polls every 10s
+- [x] Lists all projects
+- [x] Shows status, last event
+- [x] Links to detail
+- [x] Empty state
+- [x] Polls every 10s
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/page.tsx`
