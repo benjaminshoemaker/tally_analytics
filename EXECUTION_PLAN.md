@@ -1135,9 +1135,9 @@ Configure for npm publishing.
 Create minimal Next.js app for event ingestion.
 
 **Acceptance Criteria:**
-- [ ] apps/events/ with minimal Next.js
-- [ ] Only v1/track route
-- [ ] Configured for Vercel
+- [x] apps/events/ with minimal Next.js
+- [x] Only v1/track route
+- [x] Configured for Vercel
 
 **Files to Create:**
 - `apps/events/package.json`
