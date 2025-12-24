@@ -2,6 +2,7 @@ import React from "react";
 
 import DashboardHeader from "../../components/dashboard/header";
 import DashboardSidebar from "../../components/dashboard/sidebar";
+import Providers from "../../lib/providers";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,10 +14,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <div className="flex min-w-0 flex-1 flex-col">
           <DashboardHeader />
-          <main className="flex-1 px-6 py-8">{children}</main>
+          <Providers>
+            <main className="flex-1 px-6 py-8">{children}</main>
+          </Providers>
         </div>
       </div>
     </div>
   );
 }
-

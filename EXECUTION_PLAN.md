@@ -1451,9 +1451,9 @@ Create dashboard layout with navigation.
 Set up React Query for dashboard data.
 
 **Acceptance Criteria:**
-- [ ] React Query provider configured
-- [ ] `useProject(id)` hook
-- [ ] Loading and error states
+- [x] React Query provider configured
+- [x] `useProject(id)` hook
+- [x] Loading and error states
 
 **Files to Create:**
 - `apps/web/lib/providers.tsx`
