@@ -1,18 +1,18 @@
 SCHEMA >
-    `project_id` String,
-    `session_id` String,
-    `event_type` LowCardinality(String),
-    `timestamp` DateTime64(3),
-    `url` Nullable(String),
-    `path` Nullable(String),
-    `referrer` Nullable(String),
-    `user_agent` Nullable(String),
-    `screen_width` Nullable(UInt16),
-    `user_id` Nullable(String),
-    `country` Nullable(String),
-    `city` Nullable(String)
+    `project_id` String `json:$.project_id`,
+    `session_id` String `json:$.session_id`,
+    `event_type` LowCardinality(String) `json:$.event_type`,
+    `timestamp` DateTime64(3) `json:$.timestamp`,
+    `url` Nullable(String) `json:$.url`,
+    `path` Nullable(String) `json:$.path`,
+    `referrer` Nullable(String) `json:$.referrer`,
+    `user_agent` Nullable(String) `json:$.user_agent`,
+    `screen_width` Nullable(UInt16) `json:$.screen_width`,
+    `user_id` Nullable(String) `json:$.user_id`,
+    `country` Nullable(String) `json:$.country`,
+    `city` Nullable(String) `json:$.city`
 
-ENGINE "MergeTree"
-ENGINE_PARTITION_KEY "toYYYYMM(timestamp)"
-ENGINE_SORTING_KEY "project_id, timestamp"
-ENGINE_TTL "toDateTime(timestamp) + INTERVAL 90 DAY"
+ENGINE MergeTree
+ENGINE_PARTITION_KEY toYYYYMM(timestamp)
+ENGINE_SORTING_KEY project_id, timestamp
+ENGINE_TTL toDateTime(timestamp) + INTERVAL 90 DAY
