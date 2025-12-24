@@ -1314,9 +1314,9 @@ Create materialized view for daily stats.
 Tinybird pipe for recent events.
 
 **Acceptance Criteria:**
-- [ ] Returns recent events
-- [ ] Accepts project_id, limit, since
-- [ ] Formats relative_time
+- [x] Returns recent events
+- [x] Accepts project_id, limit, since
+- [x] Formats relative_time
 
 **Files to Create:**
 - `tinybird/pipes/live_feed.pipe`
