@@ -1534,9 +1534,9 @@ Project detail page with status and navigation.
 API route proxying to Tinybird live feed.
 
 **Acceptance Criteria:**
-- [ ] GET /api/projects/[id]/analytics/live
-- [ ] Verifies ownership
-- [ ] Proxies to Tinybird
+- [x] GET /api/projects/[id]/analytics/live
+- [x] Verifies ownership
+- [x] Proxies to Tinybird
 
 **Files to Create:**
 - `apps/web/app/api/projects/[id]/analytics/live/route.ts`
