@@ -1356,8 +1356,8 @@ Tinybird pipe for page views over time.
 Tinybird pipe for top pages.
 
 **Acceptance Criteria:**
-- [ ] Returns top 10 pages
-- [ ] Includes percentage
+- [x] Returns top 10 pages
+- [x] Includes percentage
 
 **Files to Create:**
 - `tinybird/pipes/top_pages.pipe`
