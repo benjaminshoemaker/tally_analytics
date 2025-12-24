@@ -1,0 +1,16 @@
+NODE top_referrers
+SQL >
+    SELECT
+        if(referrer = '', 'Direct', 
+           extractURLHost(referrer)) as referrer_host,
+        count() as count,
+        round(count() * 100.0 / sum(count()) OVER (), 2) as percentage
+    FROM events
+    WHERE project_id = {{String(project_id, '')}}
+    AND event_type = 'page_view'
+    AND timestamp >= {{DateTime(start_date)}}
+    AND timestamp < {{DateTime(end_date)}}
+    GROUP BY referrer_host
+    ORDER BY count DESC
+    LIMIT 10
+

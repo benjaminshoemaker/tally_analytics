@@ -1376,9 +1376,9 @@ Tinybird pipe for top pages.
 Tinybird pipe for top referrers.
 
 **Acceptance Criteria:**
-- [ ] Extracts host from URL
-- [ ] Empty = "Direct"
-- [ ] Top 10 with percentage
+- [x] Extracts host from URL
+- [x] Empty = "Direct"
+- [x] Top 10 with percentage
 
 **Files to Create:**
 - `tinybird/pipes/top_referrers.pipe`
