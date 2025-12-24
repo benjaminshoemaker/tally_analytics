@@ -1504,11 +1504,11 @@ Page showing all user's projects.
 Project detail page with status and navigation.
 
 **Acceptance Criteria:**
-- [ ] Shows project details
-- [ ] PR status and link
-- [ ] Onboarding checklist for new projects
-- [ ] Regenerate button for failed
-- [ ] Polls during analysis (2s)
+- [x] Shows project details
+- [x] PR status and link
+- [x] Onboarding checklist for new projects
+- [x] Regenerate button for failed
+- [x] Polls during analysis (2s)
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/[id]/page.tsx`
