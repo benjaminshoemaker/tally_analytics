@@ -1159,9 +1159,9 @@ Create minimal Next.js app for event ingestion.
 Create client for sending events to Tinybird.
 
 **Acceptance Criteria:**
-- [ ] Configured with API URL and token
-- [ ] Sends events as NDJSON
-- [ ] Error handling and retry
+- [x] Configured with API URL and token
+- [x] Sends events as NDJSON
+- [x] Error handling and retry
 
 **Files to Create:**
 - `apps/events/lib/tinybird.ts`
