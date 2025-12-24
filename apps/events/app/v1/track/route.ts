@@ -2,8 +2,18 @@ import { z } from "zod";
 
 import { createTinybirdClientFromEnv } from "../../../lib/tinybird";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+} as const;
+
 export function GET() {
-  return new Response("Method Not Allowed", { status: 405 });
+  return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
+}
+
+export function OPTIONS() {
+  return new Response(null, { status: 204, headers: corsHeaders });
 }
 
 const analyticsEventSchema = z.object({
@@ -29,16 +39,16 @@ export async function POST(request: Request) {
   try {
     json = await request.json();
   } catch {
-    return Response.json({ success: false, error: "Invalid JSON body" }, { status: 400 });
+    return Response.json({ success: false, error: "Invalid JSON body" }, { status: 400, headers: corsHeaders });
   }
 
   const parsed = trackRequestSchema.safeParse(json);
   if (!parsed.success) {
-    return Response.json({ success: false, error: "Invalid request body" }, { status: 400 });
+    return Response.json({ success: false, error: "Invalid request body" }, { status: 400, headers: corsHeaders });
   }
 
   const client = createTinybirdClientFromEnv();
   await client.appendEvents(parsed.data.events);
 
-  return Response.json({ success: true, received: parsed.data.events.length });
+  return Response.json({ success: true, received: parsed.data.events.length }, { headers: corsHeaders });
 }

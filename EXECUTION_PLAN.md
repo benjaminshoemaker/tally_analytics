@@ -1209,10 +1209,10 @@ POST /v1/track endpoint for receiving events.
 Configure CORS for all origins.
 
 **Acceptance Criteria:**
-- [ ] OPTIONS returns CORS headers
-- [ ] Access-Control-Allow-Origin: *
-- [ ] Allow POST, OPTIONS
-- [ ] Allow Content-Type header
+- [x] OPTIONS returns CORS headers
+- [x] Access-Control-Allow-Origin: *
+- [x] Allow POST, OPTIONS
+- [x] Allow Content-Type header
 
 **Files to Modify:**
 - `apps/events/app/v1/track/route.ts`
