@@ -1286,9 +1286,9 @@ Create Tinybird events data source.
 Create materialized view for daily stats.
 
 **Acceptance Criteria:**
-- [ ] Computes page_views, sessions, unique_visitors
-- [ ] Per project per day
-- [ ] Uses SummingMergeTree
+- [x] Computes page_views, sessions, unique_visitors
+- [x] Per project per day
+- [x] Uses SummingMergeTree
 
 **Files to Create:**
 - `tinybird/datasources/daily_aggregates.datasource`

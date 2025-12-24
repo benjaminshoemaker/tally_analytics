@@ -1,0 +1,11 @@
+SCHEMA >
+    `project_id` String,
+    `date` Date,
+    `page_views` UInt64,
+    `sessions` UInt64,
+    `unique_visitors` UInt64
+
+ENGINE "SummingMergeTree"
+ENGINE_PARTITION_KEY "toYYYYMM(date)"
+ENGINE_SORTING_KEY "project_id, date"
+
