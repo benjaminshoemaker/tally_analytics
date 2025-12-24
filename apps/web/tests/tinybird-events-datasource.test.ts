@@ -21,7 +21,6 @@ describe("tinybird events datasource (Task 4.4.A)", () => {
     expect(contents).toContain('ENGINE "MergeTree"');
     expect(contents).toContain('ENGINE_PARTITION_KEY "toYYYYMM(timestamp)"');
     expect(contents).toContain('ENGINE_SORTING_KEY "project_id, timestamp"');
-    expect(contents).toContain('ENGINE_TTL "timestamp + INTERVAL 90 DAY"');
+    expect(contents).toContain('ENGINE_TTL "toDateTime(timestamp) + INTERVAL 90 DAY"');
   });
 });
-
