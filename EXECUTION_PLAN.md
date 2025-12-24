@@ -1704,8 +1704,8 @@ Show quota usage with warnings.
 Basic account settings page.
 
 **Acceptance Criteria:**
-- [ ] Shows email and plan
-- [ ] Logout button
+- [x] Shows email and plan
+- [x] Logout button
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/settings/page.tsx`
