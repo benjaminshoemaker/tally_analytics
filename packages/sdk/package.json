@@ -1,0 +1,32 @@
+{
+  "name": "@fast-pr-analytics/sdk",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "next": ">=13.0.0",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.24",
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.4"
+  }
+}
