@@ -1427,10 +1427,10 @@ Tinybird pipe for top referrers.
 Create dashboard layout with navigation.
 
 **Acceptance Criteria:**
-- [ ] Layout in app/(dashboard)/layout.tsx
-- [ ] Sidebar with navigation
-- [ ] Header with user menu
-- [ ] Responsive
+- [x] Layout in app/(dashboard)/layout.tsx
+- [x] Sidebar with navigation
+- [x] Header with user menu
+- [x] Responsive
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/layout.tsx`
