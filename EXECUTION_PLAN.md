@@ -1235,10 +1235,10 @@ Configure CORS for all origins.
 Validate project_id against database.
 
 **Acceptance Criteria:**
-- [ ] Validates against projects table
-- [ ] Only 'active' projects accept events
-- [ ] Invalid IDs silently dropped
-- [ ] Project lookup cached (30s)
+- [x] Validates against projects table
+- [x] Only 'active' projects accept events
+- [x] Invalid IDs silently dropped
+- [x] Project lookup cached (30s)
 
 **Files to Modify:**
 - `apps/events/app/v1/track/route.ts`

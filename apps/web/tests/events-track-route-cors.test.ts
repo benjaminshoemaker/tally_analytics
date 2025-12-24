@@ -1,9 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
 const appendEvents = vi.fn(async () => undefined);
+const isProjectActive = vi.fn(async () => true);
 
 vi.mock("../../events/lib/tinybird", () => ({
   createTinybirdClientFromEnv: () => ({ appendEvents }),
+}));
+
+vi.mock("../../events/lib/project-cache", () => ({
+  createProjectCacheFromEnv: () => ({ isProjectActive }),
 }));
 
 describe("events track route CORS (Task 4.2.B)", () => {
@@ -31,6 +36,7 @@ describe("events track route CORS (Task 4.2.B)", () => {
   it("includes Access-Control-Allow-Origin on POST responses", async () => {
     vi.resetModules();
     appendEvents.mockClear();
+    isProjectActive.mockClear();
 
     const { POST } = await import("../../events/app/v1/track/route");
     const request = new Request("http://localhost/v1/track", {
@@ -53,4 +59,3 @@ describe("events track route CORS (Task 4.2.B)", () => {
     expect(response.headers.get("Access-Control-Allow-Origin")).toBe("*");
   });
 });
-

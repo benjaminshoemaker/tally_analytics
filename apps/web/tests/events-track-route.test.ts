@@ -1,9 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
 const appendEvents = vi.fn(async () => undefined);
+const isProjectActive = vi.fn(async () => true);
 
 vi.mock("../../events/lib/tinybird", () => ({
   createTinybirdClientFromEnv: () => ({ appendEvents }),
+}));
+
+vi.mock("../../events/lib/project-cache", () => ({
+  createProjectCacheFromEnv: () => ({ isProjectActive }),
 }));
 
 describe("events track route (Task 4.2.A)", () => {
@@ -19,6 +24,7 @@ describe("events track route (Task 4.2.A)", () => {
   it("accepts 1-10 events and forwards them to Tinybird", async () => {
     vi.resetModules();
     appendEvents.mockClear();
+    isProjectActive.mockClear();
 
     const { POST } = await import("../../events/app/v1/track/route");
     const request = new Request("http://localhost/v1/track", {
@@ -32,11 +38,13 @@ describe("events track route (Task 4.2.A)", () => {
     expect(await response.json()).toEqual({ success: true, received: 1 });
     expect(appendEvents).toHaveBeenCalledTimes(1);
     expect(appendEvents).toHaveBeenCalledWith([validEvent]);
+    expect(isProjectActive).toHaveBeenCalledTimes(1);
   });
 
   it("rejects invalid payloads via Zod validation", async () => {
     vi.resetModules();
     appendEvents.mockClear();
+    isProjectActive.mockClear();
 
     const { POST } = await import("../../events/app/v1/track/route");
     const request = new Request("http://localhost/v1/track", {
@@ -48,11 +56,13 @@ describe("events track route (Task 4.2.A)", () => {
     const response = await POST(request);
     expect(response.status).toBe(400);
     expect(appendEvents).toHaveBeenCalledTimes(0);
+    expect(isProjectActive).toHaveBeenCalledTimes(0);
   });
 
   it("rejects empty batches and batches over 10", async () => {
     vi.resetModules();
     appendEvents.mockClear();
+    isProjectActive.mockClear();
 
     const { POST } = await import("../../events/app/v1/track/route");
 
@@ -73,6 +83,6 @@ describe("events track route (Task 4.2.A)", () => {
     expect(tooManyResponse.status).toBe(400);
 
     expect(appendEvents).toHaveBeenCalledTimes(0);
+    expect(isProjectActive).toHaveBeenCalledTimes(0);
   });
 });
-

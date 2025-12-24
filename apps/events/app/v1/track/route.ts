@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTinybirdClientFromEnv } from "../../../lib/tinybird";
+import { createProjectCacheFromEnv } from "../../../lib/project-cache";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -33,6 +34,13 @@ const trackRequestSchema = z.object({
   events: z.array(analyticsEventSchema).min(1).max(10),
 });
 
+let projectCache: ReturnType<typeof createProjectCacheFromEnv> | null = null;
+function getProjectCache() {
+  if (projectCache) return projectCache;
+  projectCache = createProjectCacheFromEnv();
+  return projectCache;
+}
+
 export async function POST(request: Request) {
   let json: unknown;
 
@@ -47,8 +55,24 @@ export async function POST(request: Request) {
     return Response.json({ success: false, error: "Invalid request body" }, { status: 400, headers: corsHeaders });
   }
 
+  let activeEvents = parsed.data.events;
+  try {
+    const cache = getProjectCache();
+    const uniqueProjectIds = Array.from(new Set(parsed.data.events.map((event) => event.project_id)));
+    const pairs = await Promise.all(
+      uniqueProjectIds.map(async (projectId) => [projectId, await cache.isProjectActive(projectId)] as const),
+    );
+    const activeByProjectId = new Map(pairs);
+
+    activeEvents = parsed.data.events.filter((event) => activeByProjectId.get(event.project_id));
+  } catch {
+    return Response.json({ success: false, error: "Project validation failed" }, { status: 500, headers: corsHeaders });
+  }
+
   const client = createTinybirdClientFromEnv();
-  await client.appendEvents(parsed.data.events);
+  if (activeEvents.length > 0) {
+    await client.appendEvents(activeEvents);
+  }
 
   return Response.json({ success: true, received: parsed.data.events.length }, { headers: corsHeaders });
 }
