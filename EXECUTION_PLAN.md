@@ -1555,10 +1555,10 @@ API route proxying to Tinybird live feed.
 API route for analytics overview.
 
 **Acceptance Criteria:**
-- [ ] GET /api/projects/[id]/analytics/overview
-- [ ] Accepts period param
-- [ ] Aggregates multiple Tinybird queries
-- [ ] Calculates change percentages
+- [x] GET /api/projects/[id]/analytics/overview
+- [x] Accepts period param
+- [x] Aggregates multiple Tinybird queries
+- [x] Calculates change percentages
 
 **Files to Create:**
 - `apps/web/app/api/projects/[id]/analytics/overview/route.ts`
