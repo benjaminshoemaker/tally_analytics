@@ -1186,11 +1186,11 @@ Create client for sending events to Tinybird.
 POST /v1/track endpoint for receiving events.
 
 **Acceptance Criteria:**
-- [ ] Accepts `{ events: AnalyticsEvent[] }`
-- [ ] Validates with Zod
-- [ ] Accepts 1-10 events per batch
-- [ ] Returns `{ success: true, received: N }`
-- [ ] Forwards to Tinybird
+- [x] Accepts `{ events: AnalyticsEvent[] }`
+- [x] Validates with Zod
+- [x] Accepts 1-10 events per batch
+- [x] Returns `{ success: true, received: N }`
+- [x] Forwards to Tinybird
 
 **Files to Create:**
 - `apps/events/app/v1/track/route.ts`
