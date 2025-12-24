@@ -1628,11 +1628,11 @@ Real-time event feed page.
 Main analytics overview with charts.
 
 **Acceptance Criteria:**
-- [ ] Page views chart (Recharts)
-- [ ] Period selector (24h, 7d, 30d)
-- [ ] Summary cards with change %
-- [ ] Top pages and referrers
-- [ ] Responsive
+- [x] Page views chart (Recharts)
+- [x] Period selector (24h, 7d, 30d)
+- [x] Summary cards with change %
+- [x] Top pages and referrers
+- [x] Responsive
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/[id]/overview/page.tsx`
