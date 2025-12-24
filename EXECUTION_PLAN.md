@@ -1398,10 +1398,10 @@ Tinybird pipe for top referrers.
 - [x] Tinybird sources validate
 
 **Manual Verification:**
-- [ ] POST to /v1/track succeeds
-- [ ] Events appear in Tinybird
-- [ ] Query endpoints return data
-- [ ] CORS works from browser
+- [x] POST to /v1/track succeeds
+- [x] Events appear in Tinybird
+- [x] Query endpoints return data
+- [x] CORS works from browser
 
 ---
 
