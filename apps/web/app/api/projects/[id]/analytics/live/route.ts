@@ -3,6 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { getUserFromRequest } from "../../../../../../lib/auth/get-user";
 import { db } from "../../../../../../lib/db/client";
 import { projects } from "../../../../../../lib/db/schema";
+import { createTinybirdClientFromEnv, tinybirdSql } from "../../../../../../lib/tinybird/client";
 
 type LiveFeedResponse = {
   events: Array<{
@@ -16,14 +17,25 @@ type LiveFeedResponse = {
   hasMore: boolean;
 };
 
-function readRequiredEnv(name: string): string {
-  const value = process.env[name];
-  if (typeof value === "string" && value.length > 0) return value;
-  throw new Error(`Missing required environment variable: ${name}`);
-}
-
 function clamp(n: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
+}
+
+function escapeSqlString(value: string): string {
+  return value.replaceAll("'", "''");
+}
+
+function toTinybirdDateTime64String(date: Date): string {
+  return date.toISOString().replace("T", " ").replace("Z", "");
+}
+
+function normalizeTimestamp(value: unknown): string {
+  const raw = String(value ?? "");
+  if (!raw) return "";
+  if (raw.includes("T")) return raw;
+
+  const iso = raw.replace(" ", "T");
+  return iso.endsWith("Z") ? iso : `${iso}Z`;
 }
 
 export async function GET(
@@ -47,30 +59,42 @@ export async function GET(
   const url = new URL(request.url);
   const limitRaw = url.searchParams.get("limit");
   const limit = clamp(Number.parseInt(limitRaw ?? "20", 10) || 20, 1, 100);
-  const since = url.searchParams.get("since") ?? "";
+  const sinceRaw = url.searchParams.get("since") ?? "";
+  const sinceDate = sinceRaw ? new Date(sinceRaw) : null;
+  const since = sinceDate && !Number.isNaN(sinceDate.getTime()) ? toTinybirdDateTime64String(sinceDate) : "";
+  const sinceFilter = since || "2024-01-01 00:00:00.000";
 
-  const apiUrl = readRequiredEnv("TINYBIRD_API_URL").replace(/\/+$/, "");
-  const token = readRequiredEnv("TINYBIRD_ADMIN_TOKEN");
+  const client = createTinybirdClientFromEnv();
+  const projectIdSql = escapeSqlString(projectId);
+  const sinceSql = escapeSqlString(sinceFilter);
 
-  const tinybirdUrl = new URL(`${apiUrl}/v0/pipes/live_feed.json`);
-  tinybirdUrl.searchParams.set("project_id", projectId);
-  tinybirdUrl.searchParams.set("limit", String(limit));
-  if (since) tinybirdUrl.searchParams.set("since", since);
+  const result = await tinybirdSql<{
+    event_type: string;
+    path: string;
+    referrer: string;
+    timestamp: string;
+    relative_time: string;
+  }>(
+    client,
+    `
+      SELECT
+        event_type,
+        ifNull(path, '') AS path,
+        ifNull(referrer, '') AS referrer,
+        toString(e.timestamp) AS timestamp,
+        formatReadableTimeDelta(now() - toDateTime(e.timestamp)) AS relative_time
+      FROM events AS e
+      WHERE e.project_id = '${projectIdSql}'
+      AND e.timestamp > toDateTime64('${sinceSql}', 3)
+      ORDER BY e.timestamp DESC
+      LIMIT ${limit}
+    `.trim(),
+  );
 
-  const tinybirdResponse = await fetch(tinybirdUrl.toString(), {
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  const tinybirdJson = (await tinybirdResponse.json().catch(() => null)) as null | { data?: unknown[] };
-  if (!tinybirdResponse.ok || !tinybirdJson) {
-    return Response.json({ error: "Tinybird request failed" }, { status: 502 });
-  }
-
-  const data = Array.isArray(tinybirdJson.data) ? tinybirdJson.data : [];
+  const data = result.data;
   const events: LiveFeedResponse["events"] = data.map((row, index) => {
     const typed = row as Record<string, unknown>;
-    const timestamp = String(typed.timestamp ?? "");
+    const timestamp = normalizeTimestamp(typed.timestamp);
     const referrer = typeof typed.referrer === "string" && typed.referrer.length > 0 ? typed.referrer : null;
 
     return {

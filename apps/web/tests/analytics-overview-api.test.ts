@@ -4,7 +4,6 @@ let getUserFromRequestSpy: ReturnType<typeof vi.fn> | undefined;
 let selectSpy: ReturnType<typeof vi.fn> | undefined;
 
 let createTinybirdClientFromEnvSpy: ReturnType<typeof vi.fn> | undefined;
-let tinybirdPipeSpy: ReturnType<typeof vi.fn> | undefined;
 let tinybirdSqlSpy: ReturnType<typeof vi.fn> | undefined;
 
 vi.mock("../lib/auth/get-user", () => ({
@@ -28,10 +27,6 @@ vi.mock("../lib/tinybird/client", () => ({
     if (!createTinybirdClientFromEnvSpy) throw new Error("createTinybirdClientFromEnvSpy not initialized");
     return createTinybirdClientFromEnvSpy(...args);
   },
-  tinybirdPipe: (...args: unknown[]) => {
-    if (!tinybirdPipeSpy) throw new Error("tinybirdPipeSpy not initialized");
-    return tinybirdPipeSpy(...args);
-  },
   tinybirdSql: (...args: unknown[]) => {
     if (!tinybirdSqlSpy) throw new Error("tinybirdSqlSpy not initialized");
     return tinybirdSqlSpy(...args);
@@ -44,7 +39,6 @@ describe("GET /api/projects/[id]/analytics/overview", () => {
     getUserFromRequestSpy = vi.fn().mockResolvedValue(null);
     selectSpy = vi.fn();
     createTinybirdClientFromEnvSpy = vi.fn();
-    tinybirdPipeSpy = vi.fn();
     tinybirdSqlSpy = vi.fn();
 
     const { GET } = await import("../app/api/projects/[id]/analytics/overview/route");
@@ -60,7 +54,6 @@ describe("GET /api/projects/[id]/analytics/overview", () => {
     getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "u1", email: "u1@example.com" });
     selectSpy = vi.fn(() => ({ from: () => ({ where: vi.fn().mockResolvedValue([]) }) }));
     createTinybirdClientFromEnvSpy = vi.fn();
-    tinybirdPipeSpy = vi.fn();
     tinybirdSqlSpy = vi.fn();
 
     const { GET } = await import("../app/api/projects/[id]/analytics/overview/route");
@@ -78,7 +71,7 @@ describe("GET /api/projects/[id]/analytics/overview", () => {
 
     createTinybirdClientFromEnvSpy = vi.fn().mockReturnValue({ apiUrl: "x", token: "y" });
 
-    tinybirdPipeSpy = vi
+    tinybirdSqlSpy = vi
       .fn()
       // current page views timeseries
       .mockResolvedValueOnce({
@@ -91,6 +84,10 @@ describe("GET /api/projects/[id]/analytics/overview", () => {
       .mockResolvedValueOnce({
         data: [{ date: "2024-12-31", count: 15 }],
       })
+      // current sessions total
+      .mockResolvedValueOnce({ data: [{ total: 5 }] })
+      // previous sessions total
+      .mockResolvedValueOnce({ data: [{ total: 10 }] })
       // top pages
       .mockResolvedValueOnce({
         data: [{ path: "/", views: 20, percentage: 66.67 }],
@@ -99,13 +96,6 @@ describe("GET /api/projects/[id]/analytics/overview", () => {
       .mockResolvedValueOnce({
         data: [{ referrer_host: "Direct", count: 5, percentage: 100 }],
       });
-
-    tinybirdSqlSpy = vi
-      .fn()
-      // current sessions total
-      .mockResolvedValueOnce({ data: [{ total: 5 }] })
-      // previous sessions total
-      .mockResolvedValueOnce({ data: [{ total: 10 }] });
 
     const { GET } = await import("../app/api/projects/[id]/analytics/overview/route");
     const response = await GET(new Request("http://localhost/api/projects/proj_123/analytics/overview?period=7d"), {
@@ -132,4 +122,3 @@ describe("GET /api/projects/[id]/analytics/overview", () => {
     });
   });
 });
-

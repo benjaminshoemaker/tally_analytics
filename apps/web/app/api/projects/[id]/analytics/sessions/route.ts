@@ -32,6 +32,14 @@ function periodMs(period: Period): number {
   }
 }
 
+function escapeSqlString(value: string): string {
+  return value.replaceAll("'", "''");
+}
+
+function toTinybirdDateTime64String(date: Date): string {
+  return date.toISOString().replace("T", " ").replace("Z", "");
+}
+
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> | { id: string } },
@@ -55,6 +63,9 @@ export async function GET(
 
   const now = new Date();
   const start = new Date(now.getTime() - periodMs(period));
+  const projectIdSql = escapeSqlString(projectId);
+  const startSql = escapeSqlString(toTinybirdDateTime64String(start));
+  const endSql = escapeSqlString(toTinybirdDateTime64String(now));
 
   const client = createTinybirdClientFromEnv();
   const result = await tinybirdSql<{ date: string; sessions: number }>(
@@ -64,9 +75,9 @@ export async function GET(
         toDate(timestamp) AS date,
         countIf(event_type = 'session_start') AS sessions
       FROM events
-      WHERE project_id = '${projectId}'
-      AND timestamp >= toDateTime64('${start.toISOString()}', 3)
-      AND timestamp < toDateTime64('${now.toISOString()}', 3)
+      WHERE project_id = '${projectIdSql}'
+      AND timestamp >= toDateTime64('${startSql}', 3)
+      AND timestamp < toDateTime64('${endSql}', 3)
       GROUP BY date
       ORDER BY date
     `.trim(),
@@ -90,4 +101,3 @@ export async function GET(
 
   return Response.json(responseBody, { status: 200 });
 }
-

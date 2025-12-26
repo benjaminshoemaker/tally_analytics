@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { getUserFromRequest } from "../../../../../../lib/auth/get-user";
 import { db } from "../../../../../../lib/db/client";
 import { projects } from "../../../../../../lib/db/schema";
-import { createTinybirdClientFromEnv, tinybirdPipe, tinybirdSql } from "../../../../../../lib/tinybird/client";
+import { createTinybirdClientFromEnv, tinybirdSql } from "../../../../../../lib/tinybird/client";
 
 type Period = "24h" | "7d" | "30d";
 
@@ -37,6 +37,14 @@ function percentChange(current: number, previous: number): number {
   return Math.round(((current - previous) / previous) * 100);
 }
 
+function escapeSqlString(value: string): string {
+  return value.replaceAll("'", "''");
+}
+
+function toTinybirdDateTime64String(date: Date): string {
+  return date.toISOString().replace("T", " ").replace("Z", "");
+}
+
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> | { id: string } },
@@ -65,55 +73,111 @@ export async function GET(
   const previousEnd = start;
 
   const client = createTinybirdClientFromEnv();
+  const projectIdSql = escapeSqlString(projectId);
+  const startSql = escapeSqlString(toTinybirdDateTime64String(start));
+  const endSql = escapeSqlString(toTinybirdDateTime64String(now));
+  const previousStartSql = escapeSqlString(toTinybirdDateTime64String(previousStart));
+  const previousEndSql = escapeSqlString(toTinybirdDateTime64String(previousEnd));
 
-  const currentPageViews = await tinybirdPipe<{ date: string; count: number }>(client, "page_views_timeseries", {
-    project_id: projectId,
-    start_date: start.toISOString(),
-    end_date: now.toISOString(),
-  });
-  const previousPageViews = await tinybirdPipe<{ date: string; count: number }>(client, "page_views_timeseries", {
-    project_id: projectId,
-    start_date: previousStart.toISOString(),
-    end_date: previousEnd.toISOString(),
-  });
+  const [
+    currentPageViews,
+    previousPageViews,
+    currentSessionsResult,
+    previousSessionsResult,
+    topPages,
+    topReferrers,
+  ] = await Promise.all([
+    tinybirdSql<{ date: string; count: number }>(
+      client,
+      `
+        SELECT
+          toDate(timestamp) AS date,
+          count() AS count
+        FROM events
+        WHERE project_id = '${projectIdSql}'
+        AND event_type = 'page_view'
+        AND timestamp >= toDateTime64('${startSql}', 3)
+        AND timestamp < toDateTime64('${endSql}', 3)
+        GROUP BY date
+        ORDER BY date
+      `.trim(),
+    ),
+    tinybirdSql<{ date: string; count: number }>(
+      client,
+      `
+        SELECT
+          toDate(timestamp) AS date,
+          count() AS count
+        FROM events
+        WHERE project_id = '${projectIdSql}'
+        AND event_type = 'page_view'
+        AND timestamp >= toDateTime64('${previousStartSql}', 3)
+        AND timestamp < toDateTime64('${previousEndSql}', 3)
+        GROUP BY date
+        ORDER BY date
+      `.trim(),
+    ),
+    tinybirdSql<{ total: number }>(
+      client,
+      `
+        SELECT countIf(event_type = 'session_start') AS total
+        FROM events
+        WHERE project_id = '${projectIdSql}'
+        AND timestamp >= toDateTime64('${startSql}', 3)
+        AND timestamp < toDateTime64('${endSql}', 3)
+      `.trim(),
+    ),
+    tinybirdSql<{ total: number }>(
+      client,
+      `
+        SELECT countIf(event_type = 'session_start') AS total
+        FROM events
+        WHERE project_id = '${projectIdSql}'
+        AND timestamp >= toDateTime64('${previousStartSql}', 3)
+        AND timestamp < toDateTime64('${previousEndSql}', 3)
+      `.trim(),
+    ),
+    tinybirdSql<{ path: string; views: number; percentage: number }>(
+      client,
+      `
+        SELECT
+          ifNull(path, '') AS path,
+          count() AS views,
+          ifNull(round(count() * 100.0 / nullIf(sum(count()) OVER (), 0), 2), 0) AS percentage
+        FROM events
+        WHERE project_id = '${projectIdSql}'
+        AND event_type = 'page_view'
+        AND timestamp >= toDateTime64('${startSql}', 3)
+        AND timestamp < toDateTime64('${endSql}', 3)
+        GROUP BY path
+        ORDER BY views DESC
+        LIMIT 10
+      `.trim(),
+    ),
+    tinybirdSql<{ referrer_host: string; count: number; percentage: number }>(
+      client,
+      `
+        SELECT
+          if(ifNull(referrer, '') = '', 'Direct', domain(ifNull(referrer, ''))) AS referrer_host,
+          count() AS count,
+          ifNull(round(count() * 100.0 / nullIf(sum(count()) OVER (), 0), 2), 0) AS percentage
+        FROM events
+        WHERE project_id = '${projectIdSql}'
+        AND event_type = 'page_view'
+        AND timestamp >= toDateTime64('${startSql}', 3)
+        AND timestamp < toDateTime64('${endSql}', 3)
+        GROUP BY referrer_host
+        ORDER BY count DESC
+        LIMIT 10
+      `.trim(),
+    ),
+  ]);
 
   const currentPageViewsTotal = currentPageViews.data.reduce((sum, row) => sum + Number(row.count), 0);
   const previousPageViewsTotal = previousPageViews.data.reduce((sum, row) => sum + Number(row.count), 0);
 
-  const currentSessionsResult = await tinybirdSql<{ total: number }>(
-    client,
-    `
-      SELECT countIf(event_type = 'session_start') AS total
-      FROM events
-      WHERE project_id = '${projectId}'
-      AND timestamp >= toDateTime64('${start.toISOString()}', 3)
-      AND timestamp < toDateTime64('${now.toISOString()}', 3)
-    `.trim(),
-  );
-  const previousSessionsResult = await tinybirdSql<{ total: number }>(
-    client,
-    `
-      SELECT countIf(event_type = 'session_start') AS total
-      FROM events
-      WHERE project_id = '${projectId}'
-      AND timestamp >= toDateTime64('${previousStart.toISOString()}', 3)
-      AND timestamp < toDateTime64('${previousEnd.toISOString()}', 3)
-    `.trim(),
-  );
-
   const currentSessionsTotal = Number(currentSessionsResult.data[0]?.total ?? 0);
   const previousSessionsTotal = Number(previousSessionsResult.data[0]?.total ?? 0);
-
-  const topPages = await tinybirdPipe<{ path: string; views: number; percentage: number }>(client, "top_pages", {
-    project_id: projectId,
-    start_date: start.toISOString(),
-    end_date: now.toISOString(),
-  });
-  const topReferrers = await tinybirdPipe<{ referrer_host: string; count: number; percentage: number }>(
-    client,
-    "top_referrers",
-    { project_id: projectId, start_date: start.toISOString(), end_date: now.toISOString() },
-  );
 
   const responseBody: OverviewResponse = {
     period,
@@ -140,4 +204,3 @@ export async function GET(
 
   return Response.json(responseBody, { status: 200 });
 }
-

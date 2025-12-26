@@ -34,7 +34,12 @@ export async function tinybirdPipe<T>(
 
 export async function tinybirdSql<T>(client: TinybirdClient, query: string): Promise<{ data: T[] }> {
   const url = new URL(`${client.apiUrl}/v0/sql`);
-  const body = new URLSearchParams({ q: query });
+  const normalizedQuery = query.trim().replace(/;\s*$/, "");
+  const formattedQuery = /\bFORMAT\b/i.test(normalizedQuery)
+    ? normalizedQuery
+    : `${normalizedQuery}\nFORMAT JSON`;
+
+  const body = new URLSearchParams({ q: formattedQuery });
 
   const response = await fetch(url.toString(), {
     method: "POST",
@@ -47,4 +52,3 @@ export async function tinybirdSql<T>(client: TinybirdClient, query: string): Pro
 
   return { data: json.data };
 }
-
