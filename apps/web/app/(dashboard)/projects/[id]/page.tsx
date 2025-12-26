@@ -59,7 +59,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   return (
     <div className="flex w-full flex-col gap-6">
       <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{repoName}</h1>
+        <h1 className="break-words text-2xl font-semibold tracking-tight text-slate-900">{repoName}</h1>
         <p className="text-sm text-slate-600">Status: {status || "unknown"}</p>
 
         {prUrl ? (

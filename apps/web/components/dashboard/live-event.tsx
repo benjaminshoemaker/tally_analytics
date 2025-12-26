@@ -6,20 +6,19 @@ export default function LiveEvent({ event, isNew }: { event: LiveFeedEvent; isNe
   return (
     <div
       className={[
-        "flex items-start justify-between gap-4 rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm",
+        "flex flex-col gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm sm:flex-row sm:items-start sm:justify-between sm:gap-4",
         isNew ? "animate-pulse" : "",
       ].join(" ")}
     >
       <div className="min-w-0">
-        <p className="truncate text-sm font-medium text-slate-900">
-          {event.eventType} <span className="text-slate-600">—</span>{" "}
-          <span className="text-slate-700">{event.path}</span>
+        <p className="text-sm font-medium text-slate-900">
+          <span className="font-mono">{event.eventType}</span>
         </p>
+        <p className="truncate text-xs text-slate-700">{event.path}</p>
         {event.referrer ? <p className="truncate text-xs text-slate-600">Referrer: {event.referrer}</p> : null}
       </div>
 
-      <span className="whitespace-nowrap text-xs text-slate-600">{event.relativeTime}</span>
+      <span className="text-xs text-slate-600 sm:whitespace-nowrap">{event.relativeTime}</span>
     </div>
   );
 }
-

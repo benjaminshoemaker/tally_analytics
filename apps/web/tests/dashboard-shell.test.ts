@@ -12,6 +12,7 @@ describe("dashboard shell layout", () => {
       }),
     );
 
+    expect(html).toContain("overflow-x-hidden");
     expect(html).toContain("Projects");
     expect(html).toContain('href="/projects"');
     expect(html).toContain("Settings");
@@ -21,4 +22,3 @@ describe("dashboard shell layout", () => {
     expect(html).toContain("Hello dashboard");
   });
 });
-
