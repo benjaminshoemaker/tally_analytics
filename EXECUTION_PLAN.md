@@ -1726,11 +1726,11 @@ Basic account settings page.
 - [x] Build succeeds
 
 **Manual Verification:**
-- [ ] Projects list loads
-- [ ] Live feed updates
-- [ ] Charts render with data
-- [ ] Period selector works
-- [ ] Mobile responsive
+- [x] Projects list loads
+- [x] Live feed updates
+- [x] Charts render with data
+- [x] Period selector works
+- [x] Mobile responsive
 
 ---
 
