@@ -18,10 +18,12 @@
     "@octokit/rest": "^22.0.1",
     "@octokit/webhooks": "^13.9.1",
     "@react-email/components": "^0.5.4",
+    "@tanstack/react-query": "^5.28.0",
     "drizzle-orm": "^0.44.0",
     "next": "^14.2.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "recharts": "^2.12.0",
     "resend": "^6.1.0",
     "zod": "^3.25.76"
   },

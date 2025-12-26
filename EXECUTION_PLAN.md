@@ -1412,8 +1412,8 @@ Tinybird pipe for top referrers.
 
 ### Pre-Phase Setup
 
-- [ ] Tinybird endpoints working
-- [ ] Test project with events
+- [x] Tinybird endpoints working
+- [x] Test project with events
 
 ### Step 5.1: Layout
 
@@ -1427,10 +1427,10 @@ Tinybird pipe for top referrers.
 Create dashboard layout with navigation.
 
 **Acceptance Criteria:**
-- [ ] Layout in app/(dashboard)/layout.tsx
-- [ ] Sidebar with navigation
-- [ ] Header with user menu
-- [ ] Responsive
+- [x] Layout in app/(dashboard)/layout.tsx
+- [x] Sidebar with navigation
+- [x] Header with user menu
+- [x] Responsive
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/layout.tsx`
@@ -1451,9 +1451,9 @@ Create dashboard layout with navigation.
 Set up React Query for dashboard data.
 
 **Acceptance Criteria:**
-- [ ] React Query provider configured
-- [ ] `useProject(id)` hook
-- [ ] Loading and error states
+- [x] React Query provider configured
+- [x] `useProject(id)` hook
+- [x] Loading and error states
 
 **Files to Create:**
 - `apps/web/lib/providers.tsx`
@@ -1480,11 +1480,11 @@ Set up React Query for dashboard data.
 Page showing all user's projects.
 
 **Acceptance Criteria:**
-- [ ] Lists all projects
-- [ ] Shows status, last event
-- [ ] Links to detail
-- [ ] Empty state
-- [ ] Polls every 10s
+- [x] Lists all projects
+- [x] Shows status, last event
+- [x] Links to detail
+- [x] Empty state
+- [x] Polls every 10s
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/page.tsx`
@@ -1504,11 +1504,11 @@ Page showing all user's projects.
 Project detail page with status and navigation.
 
 **Acceptance Criteria:**
-- [ ] Shows project details
-- [ ] PR status and link
-- [ ] Onboarding checklist for new projects
-- [ ] Regenerate button for failed
-- [ ] Polls during analysis (2s)
+- [x] Shows project details
+- [x] PR status and link
+- [x] Onboarding checklist for new projects
+- [x] Regenerate button for failed
+- [x] Polls during analysis (2s)
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/[id]/page.tsx`
@@ -1534,9 +1534,9 @@ Project detail page with status and navigation.
 API route proxying to Tinybird live feed.
 
 **Acceptance Criteria:**
-- [ ] GET /api/projects/[id]/analytics/live
-- [ ] Verifies ownership
-- [ ] Proxies to Tinybird
+- [x] GET /api/projects/[id]/analytics/live
+- [x] Verifies ownership
+- [x] Proxies to Tinybird
 
 **Files to Create:**
 - `apps/web/app/api/projects/[id]/analytics/live/route.ts`
@@ -1555,10 +1555,10 @@ API route proxying to Tinybird live feed.
 API route for analytics overview.
 
 **Acceptance Criteria:**
-- [ ] GET /api/projects/[id]/analytics/overview
-- [ ] Accepts period param
-- [ ] Aggregates multiple Tinybird queries
-- [ ] Calculates change percentages
+- [x] GET /api/projects/[id]/analytics/overview
+- [x] Accepts period param
+- [x] Aggregates multiple Tinybird queries
+- [x] Calculates change percentages
 
 **Files to Create:**
 - `apps/web/app/api/projects/[id]/analytics/overview/route.ts`
@@ -1578,9 +1578,9 @@ API route for analytics overview.
 API route for session analytics.
 
 **Acceptance Criteria:**
-- [ ] GET /api/projects/[id]/analytics/sessions
-- [ ] Returns total, new, returning
-- [ ] Time series data
+- [x] GET /api/projects/[id]/analytics/sessions
+- [x] Returns total, new, returning
+- [x] Time series data
 
 **Files to Create:**
 - `apps/web/app/api/projects/[id]/analytics/sessions/route.ts`
@@ -1605,10 +1605,10 @@ API route for session analytics.
 Real-time event feed page.
 
 **Acceptance Criteria:**
-- [ ] Shows recent events
-- [ ] Polls every 5s
-- [ ] New events animate in
-- [ ] Empty state
+- [x] Shows recent events
+- [x] Polls every 5s
+- [x] New events animate in
+- [x] Empty state
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/[id]/live/page.tsx`
@@ -1628,11 +1628,11 @@ Real-time event feed page.
 Main analytics overview with charts.
 
 **Acceptance Criteria:**
-- [ ] Page views chart (Recharts)
-- [ ] Period selector (24h, 7d, 30d)
-- [ ] Summary cards with change %
-- [ ] Top pages and referrers
-- [ ] Responsive
+- [x] Page views chart (Recharts)
+- [x] Period selector (24h, 7d, 30d)
+- [x] Summary cards with change %
+- [x] Top pages and referrers
+- [x] Responsive
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/[id]/overview/page.tsx`
@@ -1654,9 +1654,9 @@ Main analytics overview with charts.
 Session analytics page.
 
 **Acceptance Criteria:**
-- [ ] Sessions over time chart
-- [ ] New vs returning breakdown
-- [ ] Summary stats
+- [x] Sessions over time chart
+- [x] New vs returning breakdown
+- [x] Summary stats
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/projects/[id]/sessions/page.tsx`
@@ -1682,9 +1682,9 @@ Session analytics page.
 Show quota usage with warnings.
 
 **Acceptance Criteria:**
-- [ ] Progress bar: used / limit
-- [ ] Warning at 80%
-- [ ] Over quota banner
+- [x] Progress bar: used / limit
+- [x] Warning at 80%
+- [x] Over quota banner
 
 **Files to Create:**
 - `apps/web/components/dashboard/quota-display.tsx`
@@ -1704,8 +1704,8 @@ Show quota usage with warnings.
 Basic account settings page.
 
 **Acceptance Criteria:**
-- [ ] Shows email and plan
-- [ ] Logout button
+- [x] Shows email and plan
+- [x] Logout button
 
 **Files to Create:**
 - `apps/web/app/(dashboard)/settings/page.tsx`
@@ -1721,16 +1721,16 @@ Basic account settings page.
 ### Phase 5 Checkpoint
 
 **Automated Checks:**
-- [ ] All tests pass
-- [ ] TypeScript compiles
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] TypeScript compiles
+- [x] Build succeeds
 
 **Manual Verification:**
-- [ ] Projects list loads
-- [ ] Live feed updates
-- [ ] Charts render with data
-- [ ] Period selector works
-- [ ] Mobile responsive
+- [x] Projects list loads
+- [x] Live feed updates
+- [x] Charts render with data
+- [x] Period selector works
+- [x] Mobile responsive
 
 ---
 

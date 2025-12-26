@@ -16,16 +16,7 @@ describe("events track route CORS (Task 4.2.B)", () => {
     vi.resetModules();
 
     const { OPTIONS } = await import("../../events/app/v1/track/route");
-    const response = await OPTIONS(
-      new Request("http://localhost/v1/track", {
-        method: "OPTIONS",
-        headers: {
-          Origin: "https://example.com",
-          "Access-Control-Request-Method": "POST",
-          "Access-Control-Request-Headers": "Content-Type",
-        },
-      }),
-    );
+    const response = await OPTIONS();
 
     expect(response.status).toBe(204);
     expect(response.headers.get("Access-Control-Allow-Origin")).toBe("*");

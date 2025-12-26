@@ -32,7 +32,7 @@ vi.mock("next/headers", () => ({
 }));
 
 describe("GET /api/auth/verify", () => {
-  it("validates token, creates user/session, marks token used, and redirects to /dashboard", async () => {
+  it("validates token, creates user/session, marks token used, and redirects to /projects", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2025-01-01T00:00:00.000Z"));
 
@@ -92,7 +92,7 @@ describe("GET /api/auth/verify", () => {
     const location = response.headers.get("location");
     expect(location).toBeTruthy();
     const redirectUrl = new URL(location ?? "", "http://localhost");
-    expect(redirectUrl.pathname).toBe("/dashboard");
+    expect(redirectUrl.pathname).toBe("/projects");
 
     expect(updateSpy).toHaveBeenCalledTimes(1);
     expect(updateSetSpy).toHaveBeenCalledWith({ usedAt: expect.any(Date) });
@@ -109,7 +109,7 @@ describe("GET /api/auth/verify", () => {
     vi.useRealTimers();
   });
 
-  it("creates a session for existing user and redirects to /dashboard", async () => {
+  it("creates a session for existing user and redirects to /projects", async () => {
     vi.resetModules();
     cookieSetSpy = vi.fn();
 
@@ -155,7 +155,7 @@ describe("GET /api/auth/verify", () => {
     const { GET } = await import("../app/api/auth/verify/route");
     const response = await GET(new Request(`http://localhost/api/auth/verify?token=${token}`));
     const location = response.headers.get("location");
-    expect(new URL(location ?? "", "http://localhost").pathname).toBe("/dashboard");
+    expect(new URL(location ?? "", "http://localhost").pathname).toBe("/projects");
   });
 
   it("redirects to /login?error=invalid_token when token is missing or invalid", async () => {
@@ -222,4 +222,3 @@ describe("GET /api/auth/verify", () => {
     vi.useRealTimers();
   });
 });
-
