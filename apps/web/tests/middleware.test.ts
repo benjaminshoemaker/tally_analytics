@@ -1,38 +1,30 @@
 import { describe, expect, it, vi } from "vitest";
 
-let getUserFromRequestSpy: ReturnType<typeof vi.fn> | undefined;
-
-vi.mock("../lib/auth/get-user", () => ({
-  getUserFromRequest: (...args: unknown[]) => {
-    if (!getUserFromRequestSpy) throw new Error("getUserFromRequestSpy not initialized");
-    return getUserFromRequestSpy(...args);
-  },
-}));
-
 describe("auth middleware", () => {
   it("matches /dashboard/* and /api/projects/*", async () => {
     vi.resetModules();
-    getUserFromRequestSpy = vi.fn();
-
     const { config } = await import("../middleware");
 
     expect(config).toEqual({ matcher: ["/dashboard/:path*", "/projects/:path*", "/settings/:path*", "/api/projects/:path*"] });
   });
 
-  it("allows requests when session is valid", async () => {
+  it("allows requests when a session cookie is present", async () => {
     vi.resetModules();
-    getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "user", email: "user@example.com" });
 
     const { NextRequest } = await import("next/server");
     const { middleware } = await import("../middleware");
+    const { SESSION_COOKIE_NAME } = await import("../lib/auth/cookies");
 
-    const response = await middleware(new NextRequest("http://localhost/dashboard"));
+    const response = await middleware(
+      new NextRequest("http://localhost/dashboard", {
+        headers: { cookie: `${SESSION_COOKIE_NAME}=sess_123` },
+      }),
+    );
     expect(response.headers.get("x-middleware-next")).toBe("1");
   });
 
-  it("redirects dashboard requests to /login when session is invalid", async () => {
+  it("redirects dashboard requests to /login when no session cookie is present", async () => {
     vi.resetModules();
-    getUserFromRequestSpy = vi.fn().mockResolvedValue(null);
 
     const { NextRequest } = await import("next/server");
     const { middleware } = await import("../middleware");
@@ -43,9 +35,8 @@ describe("auth middleware", () => {
     expect(new URL(response.headers.get("location") ?? "", "http://localhost").pathname).toBe("/login");
   });
 
-  it("returns 401 for /api/projects/* when session is invalid", async () => {
+  it("returns 401 for /api/projects/* when no session cookie is present", async () => {
     vi.resetModules();
-    getUserFromRequestSpy = vi.fn().mockResolvedValue(null);
 
     const { NextRequest } = await import("next/server");
     const { middleware } = await import("../middleware");

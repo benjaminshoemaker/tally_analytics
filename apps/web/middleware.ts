@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getUserFromRequest } from "./lib/auth/get-user";
+import { getSessionIdFromRequest } from "./lib/auth/cookies";
 
 function redirectToLogin(request: NextRequest): NextResponse {
   const url = request.nextUrl.clone();
@@ -11,9 +11,9 @@ function redirectToLogin(request: NextRequest): NextResponse {
 
 export async function middleware(request: NextRequest): Promise<Response> {
   const pathname = request.nextUrl.pathname;
-  const user = await getUserFromRequest(request);
+  const sessionId = getSessionIdFromRequest(request);
 
-  if (user) return NextResponse.next();
+  if (sessionId) return NextResponse.next();
   if (pathname.startsWith("/api/")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   return redirectToLogin(request);
 }

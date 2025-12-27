@@ -52,6 +52,6 @@ describe("/projects page", () => {
 
     expect(html).toContain("octo/repo");
     expect(html).toContain('href="/projects/proj_123"');
-    expect(html).toContain("active");
+    expect(html).toContain("Active");
   });
 });

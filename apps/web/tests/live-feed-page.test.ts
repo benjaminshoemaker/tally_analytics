@@ -22,7 +22,7 @@ describe("/projects/[id]/live page", () => {
       }),
     );
 
-    expect(html).toContain("Live feed");
+    expect(html).toContain("Live Feed");
     expect(html).toContain("No events yet");
   });
 

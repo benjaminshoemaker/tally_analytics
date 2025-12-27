@@ -36,7 +36,7 @@ describe("/projects/[id] page", () => {
 
     expect(html).toContain("octo/repo");
     expect(html).toContain('href="https://github.com/octo/repo/pull/1"');
-    expect(html).toContain("Onboarding");
+    expect(html).toContain("Getting Started");
     expect(html).toContain("Regenerate PR");
   });
 });
