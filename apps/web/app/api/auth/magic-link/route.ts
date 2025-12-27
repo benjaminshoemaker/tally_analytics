@@ -34,7 +34,7 @@ export async function POST(request: Request): Promise<Response> {
 
   const loginUrl = await createMagicLink(normalizedEmail);
 
-  if (process.env.E2E_TEST_MODE === "1") {
+  if (process.env.E2E_TEST_MODE === "1" && process.env.NODE_ENV !== "production") {
     return Response.json({ ...successResponse, loginUrl });
   }
 
