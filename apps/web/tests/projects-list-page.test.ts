@@ -55,4 +55,3 @@ describe("/projects page", () => {
     expect(html).toContain("active");
   });
 });
-

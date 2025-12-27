@@ -12,8 +12,8 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "pnpm db:push && pnpm dev -- --port=3000",
-    url: "http://127.0.0.1:3000",
+    command: "pnpm db:push && pnpm dev:e2e",
+    url: "http://127.0.0.1:3000/login",
     reuseExistingServer: !process.env.CI,
     stdout: "pipe",
     stderr: "pipe",
@@ -24,6 +24,7 @@ export default defineConfig({
       RESEND_API_KEY: process.env.RESEND_API_KEY ?? "e2e",
       FROM_EMAIL: process.env.FROM_EMAIL ?? "e2e@example.com",
       E2E_TEST_MODE: "1",
+      WATCHPACK_POLLING: "true",
     },
   },
   projects: [
@@ -33,4 +34,3 @@ export default defineConfig({
     },
   ],
 });
-

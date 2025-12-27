@@ -54,4 +54,3 @@ describe("/projects/[id]/live page", () => {
     expect(html).toContain("3 seconds ago");
   });
 });
-

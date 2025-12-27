@@ -43,10 +43,9 @@ jobs:
         run: pnpm -C apps/web test
 
       - name: Install Playwright browsers
-        run: pnpm -C apps/web exec playwright install --with-deps chromium
+        run: pnpm -C apps/web e2e:install
 
       - name: E2E tests (apps/web)
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
         run: pnpm -C apps/web e2e
-
