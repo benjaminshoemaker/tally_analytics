@@ -83,6 +83,8 @@ Add to GitHub
 View Demo
 ```
 
+**Demo link (placeholder for now):** `/demo` (not implemented yet)
+
 ---
 
 ## Features List
@@ -297,9 +299,13 @@ No cookies, no config, no consent banner needed.
 | Purpose | URL |
 |---------|-----|
 | Marketing site | `https://usetally.xyz` |
-| Dashboard | `https://app.usetally.xyz` |
+| Dashboard (same domain) | `https://usetally.xyz/projects` (authenticated) |
 | Event ingestion | `https://events.usetally.xyz` |
 | Docs | `https://usetally.xyz/docs` |
+
+## GitHub App Install Link
+
+`https://github.com/apps/tally-analytics-agent`
 
 ---
 

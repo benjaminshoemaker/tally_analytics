@@ -18,22 +18,40 @@ function parseRepoFullName(repoFullName: string): { owner: string; repo: string 
   return { owner, repo };
 }
 
+export function deriveEventsUrlFromAppUrl(appUrl: string): string | null {
+  try {
+    const url = new URL(appUrl);
+
+    const hostname = url.hostname;
+    const labels = hostname.split(".").filter(Boolean);
+    if (labels.length < 2) return null;
+
+    if (!hostname.startsWith("events.")) {
+      if (labels.length === 2) {
+        url.hostname = `events.${hostname}`;
+      } else {
+        labels[0] = "events";
+        url.hostname = labels.join(".");
+      }
+    }
+
+    url.pathname = "";
+    url.search = "";
+    url.hash = "";
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return null;
+  }
+}
+
 function getEventsUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_EVENTS_URL;
-  if (explicit && explicit.length > 0) return explicit;
+  if (explicit && explicit.length > 0) return explicit.replace(/\/$/, "");
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   if (appUrl && appUrl.length > 0) {
-    try {
-      const url = new URL(appUrl);
-      url.host = url.host.replace(/^app\./, "events.");
-      url.pathname = "";
-      url.search = "";
-      url.hash = "";
-      return url.toString().replace(/\/$/, "");
-    } catch {
-      // fall through
-    }
+    const derived = deriveEventsUrlFromAppUrl(appUrl);
+    if (derived) return derived;
   }
 
   return "https://events.productname.com";
