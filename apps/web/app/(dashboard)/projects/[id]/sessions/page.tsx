@@ -5,6 +5,7 @@ import React, { useState } from "react";
 
 import SessionsChart from "../../../../../components/dashboard/sessions-chart";
 import StatCard from "../../../../../components/dashboard/stat-card";
+import { SkeletonStatCard, SkeletonChart } from "../../../../../components/dashboard/skeleton";
 
 type Period = "24h" | "7d" | "30d";
 
@@ -48,10 +49,10 @@ export default function SessionsPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <header className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Sessions</h1>
-          <p className="text-sm text-slate-600">Session analytics for this project.</p>
+      <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-lg font-semibold text-slate-900">Session Analytics</h2>
+          <p className="text-sm text-slate-600">Visitor sessions breakdown.</p>
         </div>
 
         <label className="flex items-center gap-2 text-sm text-slate-700">
@@ -59,19 +60,28 @@ export default function SessionsPage({ params }: { params: { id: string } }) {
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value as Period)}
-            className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm"
+            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm transition-colors focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
           >
-            <option value="24h">24h</option>
-            <option value="7d">7d</option>
-            <option value="30d">30d</option>
+            <option value="24h">Last 24 hours</option>
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
           </select>
         </label>
       </header>
 
       {sessionsQuery.isPending ? (
-        <p className="text-sm text-slate-700">Loading sessions…</p>
+        <>
+          <div className="grid gap-4 md:grid-cols-3">
+            <SkeletonStatCard />
+            <SkeletonStatCard />
+            <SkeletonStatCard />
+          </div>
+          <SkeletonChart />
+        </>
       ) : sessionsQuery.isError ? (
-        <p className="text-sm text-slate-700">Unable to load sessions.</p>
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="text-sm text-red-700">Unable to load sessions. Please try again.</p>
+        </div>
       ) : (
         <>
           <div className="grid gap-4 md:grid-cols-3">
