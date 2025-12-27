@@ -45,6 +45,15 @@ function toTinybirdDateTime64String(date: Date): string {
   return date.toISOString().replace("T", " ").replace("Z", "");
 }
 
+async function runTinybirdQuery<T>(client: ReturnType<typeof createTinybirdClientFromEnv>, name: string, query: string) {
+  try {
+    return await tinybirdSql<T>(client, query);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Tinybird query failed (${name}): ${message}`);
+  }
+}
+
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> | { id: string } },
@@ -87,8 +96,9 @@ export async function GET(
     topPages,
     topReferrers,
   ] = await Promise.all([
-    tinybirdSql<{ date: string; count: number }>(
+    runTinybirdQuery<{ date: string; count: number }>(
       client,
+      "current_page_views_timeseries",
       `
         SELECT
           toDate(timestamp) AS date,
@@ -102,8 +112,9 @@ export async function GET(
         ORDER BY date
       `.trim(),
     ),
-    tinybirdSql<{ date: string; count: number }>(
+    runTinybirdQuery<{ date: string; count: number }>(
       client,
+      "previous_page_views_timeseries",
       `
         SELECT
           toDate(timestamp) AS date,
@@ -117,8 +128,9 @@ export async function GET(
         ORDER BY date
       `.trim(),
     ),
-    tinybirdSql<{ total: number }>(
+    runTinybirdQuery<{ total: number }>(
       client,
+      "current_sessions_total",
       `
         SELECT countIf(event_type = 'session_start') AS total
         FROM events
@@ -127,8 +139,9 @@ export async function GET(
         AND timestamp < toDateTime64('${endSql}', 3)
       `.trim(),
     ),
-    tinybirdSql<{ total: number }>(
+    runTinybirdQuery<{ total: number }>(
       client,
+      "previous_sessions_total",
       `
         SELECT countIf(event_type = 'session_start') AS total
         FROM events
@@ -137,36 +150,56 @@ export async function GET(
         AND timestamp < toDateTime64('${previousEndSql}', 3)
       `.trim(),
     ),
-    tinybirdSql<{ path: string; views: number; percentage: number }>(
+    runTinybirdQuery<{ path: string; views: number; percentage: number }>(
       client,
+      "top_pages",
       `
+        WITH total AS (
+          SELECT count() AS total
+          FROM events
+          WHERE project_id = '${projectIdSql}'
+          AND event_type = 'page_view'
+          AND timestamp >= toDateTime64('${startSql}', 3)
+          AND timestamp < toDateTime64('${endSql}', 3)
+        )
         SELECT
-          ifNull(path, '') AS path,
+          ifNull(e.path, '') AS path,
           count() AS views,
-          ifNull(round(count() * 100.0 / nullIf(sum(count()) OVER (), 0), 2), 0) AS percentage
-        FROM events
-        WHERE project_id = '${projectIdSql}'
-        AND event_type = 'page_view'
-        AND timestamp >= toDateTime64('${startSql}', 3)
-        AND timestamp < toDateTime64('${endSql}', 3)
-        GROUP BY path
+          if(total.total = 0, 0, round(count() * 100.0 / total.total, 2)) AS percentage
+        FROM events AS e
+        CROSS JOIN total
+        WHERE e.project_id = '${projectIdSql}'
+        AND e.event_type = 'page_view'
+        AND e.timestamp >= toDateTime64('${startSql}', 3)
+        AND e.timestamp < toDateTime64('${endSql}', 3)
+        GROUP BY path, total.total
         ORDER BY views DESC
         LIMIT 10
       `.trim(),
     ),
-    tinybirdSql<{ referrer_host: string; count: number; percentage: number }>(
+    runTinybirdQuery<{ referrer_host: string; count: number; percentage: number }>(
       client,
+      "top_referrers",
       `
+        WITH total AS (
+          SELECT count() AS total
+          FROM events
+          WHERE project_id = '${projectIdSql}'
+          AND event_type = 'page_view'
+          AND timestamp >= toDateTime64('${startSql}', 3)
+          AND timestamp < toDateTime64('${endSql}', 3)
+        )
         SELECT
-          if(ifNull(referrer, '') = '', 'Direct', domain(ifNull(referrer, ''))) AS referrer_host,
+          if(ifNull(e.referrer, '') = '', 'Direct', domain(ifNull(e.referrer, ''))) AS referrer_host,
           count() AS count,
-          ifNull(round(count() * 100.0 / nullIf(sum(count()) OVER (), 0), 2), 0) AS percentage
-        FROM events
-        WHERE project_id = '${projectIdSql}'
-        AND event_type = 'page_view'
-        AND timestamp >= toDateTime64('${startSql}', 3)
-        AND timestamp < toDateTime64('${endSql}', 3)
-        GROUP BY referrer_host
+          if(total.total = 0, 0, round(count() * 100.0 / total.total, 2)) AS percentage
+        FROM events AS e
+        CROSS JOIN total
+        WHERE e.project_id = '${projectIdSql}'
+        AND e.event_type = 'page_view'
+        AND e.timestamp >= toDateTime64('${startSql}', 3)
+        AND e.timestamp < toDateTime64('${endSql}', 3)
+        GROUP BY referrer_host, total.total
         ORDER BY count DESC
         LIMIT 10
       `.trim(),

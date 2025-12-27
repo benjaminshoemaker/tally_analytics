@@ -54,5 +54,21 @@ describe("tinybirdSql()", () => {
       fetchSpy.mockRestore();
     }
   });
-});
 
+  it("includes response status and error details on failure", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+
+    try {
+      await expect(
+        tinybirdSql({ apiUrl: "https://api.example.tinybird.co", token: "tb_token" }, "SELECT 1"),
+      ).rejects.toThrow(/Tinybird SQL request failed \(403\): Forbidden/);
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
+});

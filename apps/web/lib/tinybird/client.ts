@@ -26,8 +26,19 @@ export async function tinybirdPipe<T>(
   }
 
   const response = await fetch(url.toString(), { headers: { Authorization: `Bearer ${client.token}` } });
-  const json = (await response.json().catch(() => null)) as null | { data?: T[] };
-  if (!response.ok || !json || !Array.isArray(json.data)) throw new Error("Tinybird pipe request failed");
+  const text = await response.text();
+  const json = ((): null | { data?: T[]; error?: unknown } => {
+    try {
+      return JSON.parse(text) as { data?: T[]; error?: unknown };
+    } catch {
+      return null;
+    }
+  })();
+
+  if (!response.ok || !json || !Array.isArray(json.data)) {
+    const detail = json?.error ? String(json.error) : text.slice(0, 500);
+    throw new Error(`Tinybird pipe request failed (${response.status}): ${detail}`);
+  }
 
   return { data: json.data };
 }
@@ -47,8 +58,19 @@ export async function tinybirdSql<T>(client: TinybirdClient, query: string): Pro
     body,
   });
 
-  const json = (await response.json().catch(() => null)) as null | { data?: T[] };
-  if (!response.ok || !json || !Array.isArray(json.data)) throw new Error("Tinybird SQL request failed");
+  const text = await response.text();
+  const json = ((): null | { data?: T[]; error?: unknown } => {
+    try {
+      return JSON.parse(text) as { data?: T[]; error?: unknown };
+    } catch {
+      return null;
+    }
+  })();
+
+  if (!response.ok || !json || !Array.isArray(json.data)) {
+    const detail = json?.error ? String(json.error) : text.slice(0, 500);
+    throw new Error(`Tinybird SQL request failed (${response.status}): ${detail}`);
+  }
 
   return { data: json.data };
 }
