@@ -1,10 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import './globals.css';
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'Fast PR Analytics',
-  description: 'Analytics SaaS platform'
+  title: "Tally Analytics",
+  description: "Analytics for Next.js, installed in one click.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
