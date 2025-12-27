@@ -93,3 +93,13 @@ export async function getProjectIdByRepoId(repoId: bigint): Promise<string | nul
   const rows = await db.select({ id: projects.id }).from(projects).where(eq(projects.githubRepoId, repoId));
   return rows[0]?.id ?? null;
 }
+
+export async function getProjectStatusByRepoId(params: { repoId: bigint }): Promise<ProjectStatus | null> {
+  const rows = await db
+    .select({ status: projects.status })
+    .from(projects)
+    .where(eq(projects.githubRepoId, params.repoId));
+  const status = rows[0]?.status;
+  if (typeof status !== "string") return null;
+  return status as ProjectStatus;
+}

@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 let handleInstallationWebhookSpy: ReturnType<typeof vi.fn> | undefined;
 let handleInstallationRepositoriesWebhookSpy: ReturnType<typeof vi.fn> | undefined;
 let handlePullRequestWebhookSpy: ReturnType<typeof vi.fn> | undefined;
+let handlePushWebhookSpy: ReturnType<typeof vi.fn> | undefined;
 
 vi.mock("../lib/github/handlers/installation", () => ({
   handleInstallationWebhook: (...args: unknown[]) => {
@@ -24,6 +25,13 @@ vi.mock("../lib/github/handlers/pull-request", () => ({
   },
 }));
 
+vi.mock("../lib/github/handlers/push", () => ({
+  handlePushWebhook: (...args: unknown[]) => {
+    if (!handlePushWebhookSpy) throw new Error("handlePushWebhookSpy not initialized");
+    return handlePushWebhookSpy(...args);
+  },
+}));
+
 function signBody(body: string, secret: string): string {
   const digest = crypto.createHmac("sha256", secret).update(body).digest("hex");
   return `sha256=${digest}`;
@@ -36,6 +44,7 @@ describe("POST /api/webhooks/github", () => {
     handleInstallationWebhookSpy = vi.fn();
     handleInstallationRepositoriesWebhookSpy = vi.fn();
     handlePullRequestWebhookSpy = vi.fn().mockResolvedValue(undefined);
+    handlePushWebhookSpy = vi.fn();
 
     const body = JSON.stringify({ hello: "world" });
     const signature = signBody(body, process.env.GITHUB_WEBHOOK_SECRET);
@@ -64,6 +73,7 @@ describe("POST /api/webhooks/github", () => {
     handleInstallationWebhookSpy = vi.fn();
     handleInstallationRepositoriesWebhookSpy = vi.fn();
     handlePullRequestWebhookSpy = vi.fn();
+    handlePushWebhookSpy = vi.fn();
 
     const body = JSON.stringify({ hello: "world" });
 
@@ -89,6 +99,7 @@ describe("POST /api/webhooks/github", () => {
     handleInstallationWebhookSpy = vi.fn();
     handleInstallationRepositoriesWebhookSpy = vi.fn();
     handlePullRequestWebhookSpy = vi.fn();
+    handlePushWebhookSpy = vi.fn();
 
     const body = JSON.stringify({ hello: "world" });
 
@@ -113,6 +124,7 @@ describe("POST /api/webhooks/github", () => {
     handleInstallationWebhookSpy = vi.fn();
     handleInstallationRepositoriesWebhookSpy = vi.fn();
     handlePullRequestWebhookSpy = vi.fn();
+    handlePushWebhookSpy = vi.fn();
 
     const body = "{not_json";
     const signature = signBody(body, process.env.GITHUB_WEBHOOK_SECRET);
@@ -139,6 +151,7 @@ describe("POST /api/webhooks/github", () => {
     handleInstallationWebhookSpy = vi.fn();
     handleInstallationRepositoriesWebhookSpy = vi.fn().mockResolvedValue(undefined);
     handlePullRequestWebhookSpy = vi.fn();
+    handlePushWebhookSpy = vi.fn();
 
     const payload = { action: "added", installation: { id: 123 }, repositories_added: [{ id: 1, full_name: "octo/repo" }] };
     const body = JSON.stringify(payload);
@@ -162,6 +175,36 @@ describe("POST /api/webhooks/github", () => {
     expect(handleInstallationRepositoriesWebhookSpy).toHaveBeenCalledWith(payload);
   });
 
+  it("routes push events to the correct handler", async () => {
+    vi.resetModules();
+    process.env.GITHUB_WEBHOOK_SECRET = "test_secret";
+    handleInstallationWebhookSpy = vi.fn();
+    handleInstallationRepositoriesWebhookSpy = vi.fn();
+    handlePullRequestWebhookSpy = vi.fn();
+    handlePushWebhookSpy = vi.fn().mockResolvedValue(undefined);
+
+    const payload = { ref: "refs/heads/main", repository: { id: 1, full_name: "octo/repo", default_branch: "main" }, installation: { id: 2 } };
+    const body = JSON.stringify(payload);
+    const signature = signBody(body, process.env.GITHUB_WEBHOOK_SECRET);
+
+    const { POST } = await import("../app/api/webhooks/github/route");
+    const response = await POST(
+      new Request("http://localhost/api/webhooks/github", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-github-event": "push",
+          "x-hub-signature-256": signature,
+        },
+        body,
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ ok: true, handledEvent: "push" });
+    expect(handlePushWebhookSpy).toHaveBeenCalledWith(payload);
+  });
+
   it("returns handledEvent=unknown for an unknown event", async () => {
     vi.resetModules();
     process.env.GITHUB_WEBHOOK_SECRET = "test_secret";
@@ -173,6 +216,9 @@ describe("POST /api/webhooks/github", () => {
     });
     handlePullRequestWebhookSpy = vi.fn(() => {
       throw new Error("handlePullRequestWebhook called unexpectedly");
+    });
+    handlePushWebhookSpy = vi.fn(() => {
+      throw new Error("handlePushWebhook called unexpectedly");
     });
 
     const payload = { hello: "world" };

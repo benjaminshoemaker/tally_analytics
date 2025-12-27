@@ -1,6 +1,7 @@
 import { verifyGitHubWebhookSignature } from "../../../../lib/github/webhook-verify";
 import { handleInstallationRepositoriesWebhook, handleInstallationWebhook } from "../../../../lib/github/handlers/installation";
 import { handlePullRequestWebhook } from "../../../../lib/github/handlers/pull-request";
+import { handlePushWebhook } from "../../../../lib/github/handlers/push";
 
 function readRequiredEnv(name: string): string {
   const value = process.env[name];
@@ -22,6 +23,9 @@ async function routeEvent(event: string | null, payload: unknown): Promise<strin
       return event;
     case "pull_request":
       await handlePullRequestWebhook(payload);
+      return event;
+    case "push":
+      await handlePushWebhook(payload);
       return event;
     default:
       return "unknown";
