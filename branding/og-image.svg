@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#f8fafc"/>
+  
+  <!-- Subtle grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Logo icon -->
+  <g transform="translate(100, 200)">
+    <rect width="96" height="96" rx="20" fill="#10b981"/>
+    <g fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round">
+      <line x1="24" y1="24" x2="24" y2="72"/>
+      <line x1="40" y1="24" x2="40" y2="72"/>
+      <line x1="56" y1="24" x2="56" y2="72"/>
+      <line x1="72" y1="24" x2="72" y2="72"/>
+      <line x1="16" y1="64" x2="80" y2="32"/>
+    </g>
+  </g>
+  
+  <!-- Wordmark -->
+  <text x="220" y="270" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="700" fill="#0f172a">tally</text>
+  
+  <!-- Tagline -->
+  <text x="100" y="380" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="500" fill="#0f172a">Analytics for Next.js,</text>
+  <text x="100" y="440" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="500" fill="#0f172a">installed in one click</text>
+  
+  <!-- URL -->
+  <text x="100" y="540" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#64748b">usetally.xyz</text>
+  
+  <!-- Decorative chart bars on right -->
+  <g transform="translate(850, 180)">
+    <rect x="0" y="180" width="60" height="100" rx="8" fill="#d1fae5"/>
+    <rect x="80" y="120" width="60" height="160" rx="8" fill="#a7f3d0"/>
+    <rect x="160" y="60" width="60" height="220" rx="8" fill="#6ee7b7"/>
+    <rect x="240" y="0" width="60" height="280" rx="8" fill="#10b981"/>
+  </g>
+</svg>

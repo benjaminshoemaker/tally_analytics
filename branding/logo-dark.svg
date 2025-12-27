@@ -1,0 +1,11 @@
+<svg width="160" height="48" viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="10" fill="#10b981"/>
+  <g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round">
+    <line x1="12" y1="12" x2="12" y2="36"/>
+    <line x1="20" y1="12" x2="20" y2="36"/>
+    <line x1="28" y1="12" x2="28" y2="36"/>
+    <line x1="36" y1="12" x2="36" y2="36"/>
+    <line x1="8" y1="32" x2="40" y2="16"/>
+  </g>
+  <text x="60" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600" fill="#ffffff">tally</text>
+</svg>
