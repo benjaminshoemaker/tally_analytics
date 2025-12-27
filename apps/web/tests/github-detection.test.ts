@@ -107,17 +107,36 @@ describe("github detection - monorepo detection", () => {
     expect(getContent).not.toHaveBeenCalled();
   });
 
-  it("detectMonorepo returns true when pnpm-workspace.yaml exists", async () => {
+  it("detectMonorepo returns true when pnpm-workspace.yaml lists multiple packages", async () => {
     vi.resetModules();
 
     const getContent = vi.fn(async ({ path }: { path: string }) => {
-      if (path === "pnpm-workspace.yaml") return { data: { type: "file", content: "", encoding: "base64" } };
+      if (path === "pnpm-workspace.yaml") {
+        const content = Buffer.from("packages:\n  - .\n  - packages/*\n", "utf8").toString("base64");
+        return { data: { type: "file", content, encoding: "base64" } };
+      }
       throw { status: 404 };
     });
     const octokit = { repos: { getContent } };
 
     const { detectMonorepo } = await import("../lib/github/detection");
     await expect(detectMonorepo(octokit, "octo", "repo", {})).resolves.toBe(true);
+  });
+
+  it("detectMonorepo returns false when pnpm-workspace.yaml only lists '.'", async () => {
+    vi.resetModules();
+
+    const getContent = vi.fn(async ({ path }: { path: string }) => {
+      if (path === "pnpm-workspace.yaml") {
+        const content = Buffer.from("packages:\n  - .\n", "utf8").toString("base64");
+        return { data: { type: "file", content, encoding: "base64" } };
+      }
+      throw { status: 404 };
+    });
+    const octokit = { repos: { getContent } };
+
+    const { detectMonorepo } = await import("../lib/github/detection");
+    await expect(detectMonorepo(octokit, "octo", "repo", {})).resolves.toBe(false);
   });
 
   it("detectMonorepo returns false when no indicators are present", async () => {

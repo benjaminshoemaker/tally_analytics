@@ -59,6 +59,24 @@ function decodeGitHubFileContent(file: GitHubContentFile): string | null {
   return null;
 }
 
+async function fetchTextFileIfExists(
+  octokit: OctokitLike,
+  owner: string,
+  repo: string,
+  path: string,
+  options?: { ref?: string },
+): Promise<string | null> {
+  try {
+    const response = await octokit.repos.getContent({ owner, repo, path, ref: options?.ref });
+    const data = response.data;
+    if (!isRecord(data) || data.type !== "file") return null;
+    return decodeGitHubFileContent(data as GitHubContentFile);
+  } catch (error) {
+    if (isNotFoundError(error)) return null;
+    throw error;
+  }
+}
+
 export async function fetchPackageJson(
   octokit: OctokitLike,
   owner: string,
@@ -140,6 +158,35 @@ const PAGES_ROUTER_ENTRYPOINT_CANDIDATES = [
 
 const MONOREPO_SENTINELS = ["pnpm-workspace.yaml", "lerna.json"] as const;
 
+function parsePnpmWorkspacePackages(yaml: string): string[] | null {
+  const lines = yaml
+    .split("\n")
+    .map((line) => line.replace(/\r$/, ""))
+    .map((line) => line.replace(/#.*$/, "").trimEnd());
+
+  const packagesIndex = lines.findIndex((line) => line.trim() === "packages:");
+  if (packagesIndex === -1) return null;
+
+  const result: string[] = [];
+  for (let index = packagesIndex + 1; index < lines.length; index += 1) {
+    const raw = lines[index];
+    if (!raw) continue;
+
+    const trimmed = raw.trim();
+    if (!trimmed) continue;
+    if (!trimmed.startsWith("-")) {
+      // We've exited the list (or hit another section).
+      if (result.length > 0) break;
+      continue;
+    }
+
+    const value = trimmed.replace(/^-+\s*/, "").trim();
+    if (value) result.push(value);
+  }
+
+  return result.length > 0 ? result : null;
+}
+
 export async function detectNextRouter(
   octokit: OctokitLike,
   owner: string,
@@ -177,7 +224,18 @@ export async function detectMonorepo(
   const analysis = analyzePackageJson(packageJson);
   if (analysis.hasWorkspaces) return true;
 
+  const pnpmWorkspace = await fetchTextFileIfExists(octokit, owner, repo, "pnpm-workspace.yaml", options);
+  if (pnpmWorkspace) {
+    const packages = parsePnpmWorkspacePackages(pnpmWorkspace);
+    // `create-next-app` can generate a workspace file with `packages: ['.']` even for single-package repos.
+    // Treat that case as non-monorepo to avoid incorrectly marking such repos as unsupported.
+    if (!packages) return true;
+    const nonRootPackages = packages.filter((entry) => entry !== "." && entry !== "./");
+    if (nonRootPackages.length > 0) return true;
+  }
+
   for (const sentinel of MONOREPO_SENTINELS) {
+    if (sentinel === "pnpm-workspace.yaml") continue;
     if (await fileExists(octokit, owner, repo, sentinel, options)) return true;
   }
 
