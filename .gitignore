@@ -36,6 +36,9 @@ pnpm-debug.log*
 
 # Testing
 coverage/
+playwright-report/
+test-results/
+.playwright-browsers/
 
 # Turbo
 .turbo/
