@@ -33,8 +33,12 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const loginUrl = await createMagicLink(normalizedEmail);
+
+  if (process.env.E2E_TEST_MODE === "1") {
+    return Response.json({ ...successResponse, loginUrl });
+  }
+
   await sendMagicLinkEmail({ to: normalizedEmail, loginUrl });
 
   return Response.json(successResponse);
 }
-

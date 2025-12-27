@@ -117,5 +117,35 @@ describe("POST /api/auth/magic-link", () => {
     expect(createMagicLinkSpy).not.toHaveBeenCalled();
     expect(sendMagicLinkEmailSpy).not.toHaveBeenCalled();
   });
-});
 
+  it("returns the login URL in E2E test mode without sending email", async () => {
+    const previousE2eTestMode = process.env.E2E_TEST_MODE;
+    process.env.E2E_TEST_MODE = "1";
+
+    vi.resetModules();
+    countRecentMagicLinksSpy = vi.fn().mockResolvedValue(0);
+    createMagicLinkSpy = vi.fn().mockResolvedValue("http://localhost:3000/api/auth/verify?token=abc");
+    sendMagicLinkEmailSpy = vi.fn().mockResolvedValue(undefined);
+
+    const { POST } = await import("../app/api/auth/magic-link/route");
+
+    const response = await POST(
+      new Request("http://localhost/api/auth/magic-link", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "test@example.com" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+      success: true,
+      message: expect.any(String),
+      loginUrl: "http://localhost:3000/api/auth/verify?token=abc",
+    });
+    expect(sendMagicLinkEmailSpy).not.toHaveBeenCalled();
+
+    if (previousE2eTestMode === undefined) delete process.env.E2E_TEST_MODE;
+    else process.env.E2E_TEST_MODE = previousE2eTestMode;
+  });
+});

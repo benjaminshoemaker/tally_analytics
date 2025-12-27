@@ -67,6 +67,44 @@ describe("auth sessions", () => {
     vi.useRealTimers();
   });
 
+  it("sets a non-secure cookie when NEXT_PUBLIC_APP_URL is http", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-01-01T00:00:00.000Z"));
+
+    const previousAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+    process.env.NEXT_PUBLIC_APP_URL = "http://localhost:3000";
+
+    vi.resetModules();
+    cookieSetSpy = vi.fn();
+
+    const sessionId = "99999999-9999-9999-9999-999999999999";
+    const userId = "88888888-8888-8888-8888-888888888888";
+    const expiresAt = new Date("2025-01-31T00:00:00.000Z");
+
+    const returningSpy = vi.fn().mockResolvedValue([{ id: sessionId, userId, expiresAt }]);
+    const valuesSpy = vi.fn(() => ({ returning: returningSpy }));
+    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+
+    const { SESSION_COOKIE_NAME } = await import("../lib/auth/cookies");
+    const { createSession } = await import("../lib/auth/session");
+
+    await createSession(userId);
+
+    expect(cookieSetSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: SESSION_COOKIE_NAME,
+        value: sessionId,
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+      }),
+    );
+
+    if (previousAppUrl === undefined) delete process.env.NEXT_PUBLIC_APP_URL;
+    else process.env.NEXT_PUBLIC_APP_URL = previousAppUrl;
+    vi.useRealTimers();
+  });
+
   it("validateSession(request) returns session when cookie is valid", async () => {
     vi.resetModules();
 

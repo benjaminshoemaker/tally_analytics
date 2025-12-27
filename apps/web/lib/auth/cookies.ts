@@ -3,12 +3,24 @@ import { cookies } from "next/headers";
 export const SESSION_COOKIE_NAME = "fpa_session";
 export const SESSION_COOKIE_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
 
+function shouldUseSecureCookies(): boolean {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (!appUrl) return true;
+
+  try {
+    return new URL(appUrl).protocol === "https:";
+  } catch {
+    return true;
+  }
+}
+
 export function setSessionCookie(sessionId: string): void {
+  const secure = shouldUseSecureCookies();
   cookies().set({
     name: SESSION_COOKIE_NAME,
     value: sessionId,
     httpOnly: true,
-    secure: true,
+    secure,
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_COOKIE_MAX_AGE_SECONDS,
@@ -16,11 +28,12 @@ export function setSessionCookie(sessionId: string): void {
 }
 
 export function clearSessionCookie(): void {
+  const secure = shouldUseSecureCookies();
   cookies().set({
     name: SESSION_COOKIE_NAME,
     value: "",
     httpOnly: true,
-    secure: true,
+    secure,
     sameSite: "lax",
     path: "/",
     maxAge: 0,
@@ -46,4 +59,3 @@ export function getSessionIdFromRequest(request: Request): string | null {
   const value = cookies[SESSION_COOKIE_NAME];
   return typeof value === "string" && value.length > 0 ? value : null;
 }
-

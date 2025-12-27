@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit migrate",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
@@ -31,6 +32,7 @@
     "@types/node": "^20.17.6",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@playwright/test": "^1.55.0",
     "@vitest/coverage-v8": "^3.2.4",
     "autoprefixer": "^10.4.20",
     "dotenv": "^16.6.1",
