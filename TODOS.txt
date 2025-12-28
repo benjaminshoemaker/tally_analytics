@@ -91,3 +91,4 @@ Docs:
 
 - Re-run detection on repo changes: add a “Re-run analysis” action (and/or auto re-run when repo contents change) so fixing a repo doesn’t require uninstall/reinstall or removing/adding repos in the GitHub App installation.
 - Logged-in marketing nav: show a “Dashboard” link on `usetally.xyz` when a valid session exists (routes to `/projects` or `/dashboard`).
+- Add functionality to poll for updates and make new PRs if necessary
