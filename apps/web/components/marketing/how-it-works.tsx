@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export type MarketingHowItWorksProps = {
   dashboardImageSrc: string;
@@ -13,9 +13,9 @@ type Step = {
 
 const STEPS: Step[] = [
   {
-    number: "1",
-    title: "Connect Repository",
-    description: "Log in with GitHub and select the Next.js repository you want to track.",
+    number: '1',
+    title: 'Connect Repository',
+    description: 'Log in with GitHub and select the Next.js repository you want to track.',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
         <path
@@ -26,9 +26,9 @@ const STEPS: Step[] = [
     ),
   },
   {
-    number: "2",
-    title: "Merge the PR",
-    description: "We automatically create a PR with the lightweight analytics hook. Merge it.",
+    number: '2',
+    title: 'Merge the PR',
+    description: 'We automatically create a PR with the lightweight analytics hook. Merge it.',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
         <path
@@ -39,15 +39,38 @@ const STEPS: Step[] = [
     ),
   },
   {
-    number: "3",
-    title: "See Insights",
-    description: "Data starts flowing immediately. View your dashboard for real-time insights.",
+    number: '3',
+    title: 'See Insights',
+    description: 'Data starts flowing immediately. View your dashboard for real-time insights.',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
         <path
           fill="currentColor"
           d="M4 19h16v2H2V3h2v16zm4-2H6V9h2v8zm4 0h-2V5h2v12zm4 0h-2v-6h2v6zm4 0h-2v-9h2v9z"
         />
+      </svg>
+    ),
+  },
+  {
+    number: '4',
+    title: 'Stay in Sync',
+    description:
+      'Add new pages or refactor your routes — we detect changes and keep your tracking up to date. No manual maintenance.',
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className="size-10 text-[#ec7f13]"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 12a9 9 0 0 0-15.5-6.4" />
+        <path d="M3 8V3h5" />
+        <path d="M3 12a9 9 0 0 0 15.5 6.4" />
+        <path d="M21 16v5h-5" />
       </svg>
     ),
   },
@@ -59,13 +82,23 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mb-16 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="mb-2 text-3xl font-semibold text-[#1b140d] dark:text-white">How it works</h2>
-            <p className="text-[#9a734c] dark:text-[#d0c0b0]">From zero to data in less than 2 minutes.</p>
+            <h2 className="mb-2 text-3xl font-semibold text-[#1b140d] dark:text-white">
+              How it works
+            </h2>
+            <p className="text-[#9a734c] dark:text-[#d0c0b0]">
+              From zero to data in less than 2 minutes.
+            </p>
           </div>
-          <a className="flex items-center gap-1 font-medium text-[#ec7f13] hover:text-orange-600" href="/docs">
+          <a
+            className="flex items-center gap-1 font-medium text-[#ec7f13] hover:text-orange-600"
+            href="/docs"
+          >
             View technical docs
             <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
-              <path fill="currentColor" d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6L13 5z" />
+              <path
+                fill="currentColor"
+                d="M13 5l7 7-7 7-1.4-1.4 4.6-4.6H4v-2h12.2l-4.6-4.6L13 5z"
+              />
             </svg>
           </a>
         </div>
@@ -73,7 +106,7 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
         <div className="relative">
           <div className="absolute left-[10%] right-[10%] top-12 hidden h-0.5 border-t border-dashed border-[#e8e0d9] dark:border-[#3e342b] md:block" />
 
-          <div className="relative z-10 grid grid-cols-1 gap-12 md:grid-cols-3">
+          <div className="relative z-10 grid grid-cols-1 gap-12 md:grid-cols-4">
             {STEPS.map((step) => (
               <div key={step.number} className="flex flex-col items-center text-center">
                 <div className="relative mb-6 flex size-24 items-center justify-center rounded-full border-4 border-[#f3ede7] bg-white text-[#9a734c] shadow-sm dark:border-[#2a221b] dark:bg-[#221910] dark:text-[#d0c0b0]">
@@ -82,8 +115,12 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
                   </span>
                   {step.icon}
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-[#1b140d] dark:text-white">{step.title}</h3>
-                <p className="max-w-[240px] text-sm text-[#9a734c] dark:text-[#d0c0b0]">{step.description}</p>
+                <h3 className="mb-2 text-lg font-semibold text-[#1b140d] dark:text-white">
+                  {step.title}
+                </h3>
+                <p className="max-w-[240px] text-sm text-[#9a734c] dark:text-[#d0c0b0]">
+                  {step.description}
+                </p>
               </div>
             ))}
           </div>
@@ -112,7 +149,11 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
             </div>
             <div className="flex justify-center border-t border-[#e8e0d9] bg-white p-3 dark:border-[#3e342b] dark:bg-[#221910]">
               <p className="flex items-center gap-2 text-sm font-semibold text-[#1b140d] dark:text-white">
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[18px] text-[#9a734c] dark:text-[#d0c0b0]">
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="size-[18px] text-[#9a734c] dark:text-[#d0c0b0]"
+                >
                   <path
                     fill="currentColor"
                     d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"
