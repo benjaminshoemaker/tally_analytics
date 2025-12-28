@@ -2,38 +2,77 @@ import React from "react";
 
 export type MarketingHeroProps = {
   installUrl: string;
-  demoUrl: string;
+  docsUrl: string;
+  dashboardImageSrc: string;
 };
 
-export default function MarketingHero({ installUrl, demoUrl }: MarketingHeroProps) {
+export default function MarketingHero({ installUrl, docsUrl, dashboardImageSrc }: MarketingHeroProps) {
   return (
-    <section className="py-16 sm:py-20">
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm font-semibold text-emerald-700">Tally Analytics</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-          Analytics for Next.js, installed in one click
+    <section className="relative overflow-hidden px-6 pb-16 pt-20 md:px-10 md:pb-24 md:pt-32 lg:px-40">
+      <div className="mx-auto flex max-w-[960px] flex-col items-center text-center">
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary-light px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-hover">
+          <span className="size-2 animate-pulse rounded-full bg-primary" />
+          V2.0 IS NOW LIVE
+        </div>
+
+        <h1 className="mb-6 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-text-main md:text-6xl">
+          Analytics for Next.js, installed in one click.
         </h1>
-        <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg">
-          Add Tally to your GitHub repo and get a PR with privacy-friendly analytics. No config, no SDK wrangling, no
-          cookies banner needed.
+
+        <p className="mb-10 max-w-2xl text-lg leading-relaxed text-text-muted md:text-xl">
+          Connect your GitHub repo. We send a PR. You get analytics.{" "}
+          <br className="hidden md:block" />
+          No cookies, no complex setup, just clean data.
         </p>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
           <a
+            className="flex h-12 items-center justify-center gap-2 rounded bg-primary px-8 text-base font-medium text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-primary-hover"
             href={installUrl}
-            className="inline-flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 sm:w-auto"
+            rel="noreferrer"
+            target="_blank"
           >
-            Add to GitHub
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
+              <path
+                fill="currentColor"
+                d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v4h4v2h-4v4h-2v-4H7v-2h4V7h2z"
+              />
+            </svg>
+            Connect GitHub
           </a>
           <a
-            href={demoUrl}
-            className="inline-flex w-full items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50 sm:w-auto"
+            className="flex h-12 items-center justify-center gap-2 rounded border border-stone-200 bg-white px-8 text-base font-medium text-text-main shadow-sm transition-all hover:scale-[0.98] hover:bg-stone-50"
+            href={docsUrl}
           >
-            View Demo
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 text-text-muted">
+              <path
+                fill="currentColor"
+                d="M6 2h9l3 3v17a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V6h2.5L14 3.5zM7 9h10V7H7v2zm0 4h10v-2H7v2zm0 4h6v-2H7v2z"
+              />
+            </svg>
+            Read the Docs
           </a>
+        </div>
+
+        <div className="group relative mt-16 w-full md:mt-24">
+          <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-primary/20 to-stone-200 blur opacity-25 transition duration-1000 group-hover:opacity-40 group-hover:duration-200" />
+          <div className="relative overflow-hidden rounded-lg border border-stone-100 bg-surface-light shadow-warm-lg">
+            <div className="flex items-center gap-1.5 border-b border-stone-100 bg-stone-50/50 px-4 py-3">
+              <div className="size-3 rounded-full bg-[#ff5f57]" />
+              <div className="size-3 rounded-full bg-[#febc2e]" />
+              <div className="size-3 rounded-full bg-[#28c840]" />
+            </div>
+            <div className="aspect-[16/9] w-full bg-stone-50">
+              <img
+                alt="Dashboard interface showing analytics graphs and data tables"
+                className="h-full w-full object-cover"
+                loading="lazy"
+                src={dashboardImageSrc}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
-
