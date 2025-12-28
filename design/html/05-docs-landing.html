@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tally Analytics Docs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#18d8be",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#11211f",
+                        "warm-white": "#fcfdfd", 
+                        "card-light": "#ffffff",
+                        "card-dark": "#1a2c29",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    boxShadow: {
+                        "warm": "0 4px 6px -1px rgba(24, 216, 190, 0.1), 0 2px 4px -1px rgba(24, 216, 190, 0.06)",
+                        "warm-hover": "0 10px 15px -3px rgba(24, 216, 190, 0.15), 0 4px 6px -2px rgba(24, 216, 190, 0.1)",
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0e1b19] dark:text-[#e0eaea] font-display min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e7f3f1] dark:border-[#2a3f3c] bg-warm-white/80 dark:bg-background-dark/80 backdrop-blur-md px-4 sm:px-10 py-3">
+<div class="flex items-center gap-4 text-[#0e1b19] dark:text-white">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_319)">
+<path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z" fill="currentColor"></path>
+</g>
+<defs>
+<clippath id="clip0_6_319"><rect fill="white" height="48" width="48"></rect></clippath>
+</defs>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight">Tally Analytics</h2>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-9 w-9 bg-transparent hover:bg-primary/10 text-[#0e1b19] dark:text-[#e0eaea] transition-colors">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-9 w-9 bg-transparent hover:bg-primary/10 text-[#0e1b19] dark:text-[#e0eaea] transition-colors">
+<span class="material-symbols-outlined text-[20px]">code</span>
+</button>
+<button class="hidden sm:flex h-9 items-center justify-center rounded-lg bg-primary text-[#0e1b19] text-sm font-bold px-4 hover:bg-primary/90 transition-colors shadow-sm">
+                Get Started
+            </button>
+</div>
+</header>
+<div class="layout-container flex grow w-full max-w-[1440px] mx-auto">
+<!-- Sidebar Navigation -->
+<aside class="hidden lg:flex w-72 flex-col border-r border-[#e7f3f1] dark:border-[#2a3f3c] bg-background-light dark:bg-background-dark h-[calc(100vh-65px)] sticky top-[65px] overflow-y-auto">
+<div class="flex flex-col gap-6 p-6">
+<!-- Section 1 -->
+<div class="flex flex-col gap-2">
+<p class="text-[#4e978e] dark:text-primary/70 text-xs font-bold uppercase tracking-wider px-3 mb-1">Guide</p>
+<a class="flex items-center gap-3 px-3 py-2 rounded-r-lg border-l-[3px] border-primary bg-primary/10 dark:bg-primary/5 transition-all group" href="#">
+<span class="text-[#0e1b19] dark:text-white text-sm font-medium leading-normal group-hover:text-primary transition-colors">Getting Started</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 border-l-[3px] border-transparent hover:bg-[#e7f3f1] dark:hover:bg-[#1a2c29] rounded-r-lg transition-all group" href="#">
+<span class="text-[#0e1b19] dark:text-[#a0b0b0] text-sm font-medium leading-normal group-hover:text-[#0e1b19] dark:group-hover:text-white transition-colors">Installation</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 border-l-[3px] border-transparent hover:bg-[#e7f3f1] dark:hover:bg-[#1a2c29] rounded-r-lg transition-all group" href="#">
+<span class="text-[#0e1b19] dark:text-[#a0b0b0] text-sm font-medium leading-normal group-hover:text-[#0e1b19] dark:group-hover:text-white transition-colors">Configuration</span>
+</a>
+</div>
+<!-- Section 2 -->
+<div class="flex flex-col gap-2">
+<p class="text-[#4e978e] dark:text-primary/70 text-xs font-bold uppercase tracking-wider px-3 mb-1">API Reference</p>
+<a class="flex items-center gap-3 px-3 py-2 border-l-[3px] border-transparent hover:bg-[#e7f3f1] dark:hover:bg-[#1a2c29] rounded-r-lg transition-all group" href="#">
+<span class="text-[#0e1b19] dark:text-[#a0b0b0] text-sm font-medium leading-normal group-hover:text-[#0e1b19] dark:group-hover:text-white transition-colors">SDK Reference</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 border-l-[3px] border-transparent hover:bg-[#e7f3f1] dark:hover:bg-[#1a2c29] rounded-r-lg transition-all group" href="#">
+<span class="text-[#0e1b19] dark:text-[#a0b0b0] text-sm font-medium leading-normal group-hover:text-[#0e1b19] dark:group-hover:text-white transition-colors">API Integration</span>
+</a>
+</div>
+<!-- Section 3 -->
+<div class="flex flex-col gap-2">
+<p class="text-[#4e978e] dark:text-primary/70 text-xs font-bold uppercase tracking-wider px-3 mb-1">Resources</p>
+<a class="flex items-center gap-3 px-3 py-2 border-l-[3px] border-transparent hover:bg-[#e7f3f1] dark:hover:bg-[#1a2c29] rounded-r-lg transition-all group" href="#">
+<span class="text-[#0e1b19] dark:text-[#a0b0b0] text-sm font-medium leading-normal group-hover:text-[#0e1b19] dark:group-hover:text-white transition-colors">Troubleshooting</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 border-l-[3px] border-transparent hover:bg-[#e7f3f1] dark:hover:bg-[#1a2c29] rounded-r-lg transition-all group" href="#">
+<span class="text-[#0e1b19] dark:text-[#a0b0b0] text-sm font-medium leading-normal group-hover:text-[#0e1b19] dark:group-hover:text-white transition-colors">Changelog</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark">
+<div class="w-full max-w-[960px] mx-auto px-6 py-8 md:px-12 md:py-12 flex flex-col gap-8">
+<!-- Search Bar & Breadcrumbs -->
+<div class="flex flex-col gap-4">
+<!-- Search -->
+<div class="relative w-full max-w-2xl group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-[#4e978e] group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input class="block w-full pl-10 pr-4 py-3 border-none rounded-lg leading-5 bg-card-light dark:bg-card-dark text-[#0e1b19] dark:text-[#e0eaea] placeholder-[#4e978e] dark:placeholder-[#4e978e]/70 focus:outline-none focus:ring-2 focus:ring-primary shadow-warm dark:shadow-none transition-all" placeholder="Search documentation (Press '/' to focus)" type="text"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+<kbd class="hidden sm:inline-block border border-[#e7f3f1] dark:border-[#2a3f3c] rounded px-2 py-0.5 text-xs font-medium text-[#4e978e] dark:text-[#4e978e]/80 bg-[#f8fcfb] dark:bg-[#11211f]">/</kbd>
+</div>
+</div>
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-sm">
+<a class="text-[#4e978e] hover:text-primary transition-colors font-medium" href="#">Home</a>
+<span class="text-[#4e978e] dark:text-[#2a3f3c]">/</span>
+<span class="text-[#0e1b19] dark:text-[#e0eaea] font-medium">Documentation</span>
+</div>
+</div>
+<!-- Page Header -->
+<div class="flex flex-col gap-4 pb-6 border-b border-[#e7f3f1] dark:border-[#2a3f3c]">
+<h1 class="text-[#0e1b19] dark:text-white text-4xl md:text-5xl font-black tracking-tight">Documentation</h1>
+<p class="text-[#4e978e] dark:text-[#a0b0b0] text-lg md:text-xl font-normal max-w-2xl leading-relaxed">
+                        Learn how to integrate privacy-friendly analytics into your Next.js application in minutes. Automated, clean, and developer-first.
+                    </p>
+<!-- Install Command Snippet -->
+<div class="mt-4 flex items-center justify-between bg-[#0e1b19] dark:bg-[#080f0e] rounded-lg px-4 py-3 max-w-md shadow-lg border border-[#2a3f3c]">
+<div class="flex items-center gap-3 font-mono text-sm text-[#e7f3f1]">
+<span class="text-primary select-none">$</span>
+<span class="select-all">npm install tally-analytics</span>
+</div>
+<button class="text-[#4e978e] hover:text-white transition-colors" title="Copy to clipboard">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Quick Start Grid -->
+<div class="flex flex-col gap-6">
+<h3 class="text-[#0e1b19] dark:text-white text-xl font-bold">Quick Start</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Card 1 -->
+<a class="group relative flex flex-col gap-4 p-6 bg-card-light dark:bg-card-dark rounded-xl shadow-warm hover:shadow-warm-hover border border-transparent hover:border-primary/20 transition-all duration-300" href="#">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-[#0e1b19] transition-colors">
+<span class="material-symbols-outlined text-[24px]">download</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-[#0e1b19] dark:text-white mb-1 group-hover:text-primary transition-colors">Installation</h4>
+<p class="text-sm text-[#4e978e] dark:text-[#a0b0b0]">Add the package to your project using your preferred package manager.</p>
+</div>
+<div class="absolute top-6 right-6 text-[#4e978e] group-hover:translate-x-1 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</a>
+<!-- Card 2 -->
+<a class="group relative flex flex-col gap-4 p-6 bg-card-light dark:bg-card-dark rounded-xl shadow-warm hover:shadow-warm-hover border border-transparent hover:border-primary/20 transition-all duration-300" href="#">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-[#0e1b19] transition-colors">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-[#0e1b19] dark:text-white mb-1 group-hover:text-primary transition-colors">Configuration</h4>
+<p class="text-sm text-[#4e978e] dark:text-[#a0b0b0]">Set up your API keys and environment variables securely.</p>
+</div>
+<div class="absolute top-6 right-6 text-[#4e978e] group-hover:translate-x-1 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</a>
+<!-- Card 3 -->
+<a class="group relative flex flex-col gap-4 p-6 bg-card-light dark:bg-card-dark rounded-xl shadow-warm hover:shadow-warm-hover border border-transparent hover:border-primary/20 transition-all duration-300" href="#">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-[#0e1b19] transition-colors">
+<span class="material-symbols-outlined text-[24px]">layers</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-[#0e1b19] dark:text-white mb-1 group-hover:text-primary transition-colors">Next.js Integration</h4>
+<p class="text-sm text-[#4e978e] dark:text-[#a0b0b0]">Configure middleware and wrap your app with our provider.</p>
+</div>
+<div class="absolute top-6 right-6 text-[#4e978e] group-hover:translate-x-1 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</a>
+<!-- Card 4 -->
+<a class="group relative flex flex-col gap-4 p-6 bg-card-light dark:bg-card-dark rounded-xl shadow-warm hover:shadow-warm-hover border border-transparent hover:border-primary/20 transition-all duration-300" href="#">
+<div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-[#0e1b19] transition-colors">
+<span class="material-symbols-outlined text-[24px]">autopay</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-[#0e1b19] dark:text-white mb-1 group-hover:text-primary transition-colors">GitHub Automation</h4>
+<p class="text-sm text-[#4e978e] dark:text-[#a0b0b0]">Automate PRs for analytics tracking updates directly in your repo.</p>
+</div>
+<div class="absolute top-6 right-6 text-[#4e978e] group-hover:translate-x-1 group-hover:text-primary transition-all">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</a>
+</div>
+</div>
+<!-- Footer (Simple) -->
+<footer class="mt-12 pt-8 border-t border-[#e7f3f1] dark:border-[#2a3f3c] flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-[#4e978e] dark:text-[#a0b0b0]">
+<p>© 2024 Tally Analytics. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Contact Support</a>
+</div>
+</footer>
+</div>
+</main>
+</div>
+</body></html>

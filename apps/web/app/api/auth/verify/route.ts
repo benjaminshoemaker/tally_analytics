@@ -38,8 +38,8 @@ export async function GET(request: Request): Promise<Response> {
 
   let userId = userRows[0]?.id;
   if (!userId) {
-    const createdRows = await db.insert(users).values({ email: normalizedEmail }).returning({ id: users.id });
-    userId = createdRows[0]?.id;
+    const createdRows = await db.insert(users).values({ email: normalizedEmail }).returning();
+    userId = createdRows[0]?.id ?? null;
     if (!userId) throw new Error("Failed to create user");
   }
 

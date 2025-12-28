@@ -18,13 +18,11 @@ export type AuthSession = {
 export async function createSession(userId: string): Promise<AuthSession> {
   const expiresAt = new Date(Date.now() + SESSION_COOKIE_MAX_AGE_SECONDS * 1000);
 
-  const rows = await db
-    .insert(sessions)
-    .values({ userId, expiresAt })
-    .returning({ id: sessions.id, userId: sessions.userId, expiresAt: sessions.expiresAt });
+  const rows = await db.insert(sessions).values({ userId, expiresAt }).returning();
 
-  const session = rows[0];
-  if (!session) throw new Error("Failed to create session");
+  const row = rows[0];
+  if (!row) throw new Error("Failed to create session");
+  const session: AuthSession = { id: row.id, userId: row.userId, expiresAt: row.expiresAt };
 
   setSessionCookie(session.id);
   return session;
@@ -50,4 +48,3 @@ export async function destroySession(sessionId: string): Promise<void> {
   await db.delete(sessions).where(eq(sessions.id, sessionId));
   clearSessionCookie();
 }
-
