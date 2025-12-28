@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tally Analytics Docs - Setup</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#fcfaf8", // Warm off-white
+                        "background-dark": "#1b140d", // Deep warm brown/black
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#2a221b",
+                        "text-main": "#1b140d",
+                        "text-muted": "#9a734c",
+                        "border-color": "#e8e0d9",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for code blocks */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #2a221b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4a3e35;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #5c4d42;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-[#ede0d4] transition-colors duration-200">
+<div class="flex min-h-screen w-full flex-col lg:flex-row overflow-hidden">
+<!-- Mobile Header -->
+<div class="lg:hidden flex items-center justify-between p-4 border-b border-border-color dark:border-[#3e342b] bg-background-light dark:bg-background-dark sticky top-0 z-20">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<span class="font-bold text-lg">Tally Docs</span>
+</div>
+<button class="text-text-main dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<!-- Sidebar Navigation -->
+<aside class="hidden lg:flex w-64 flex-col border-r border-border-color dark:border-[#3e342b] bg-background-light dark:bg-background-dark sticky top-0 h-screen overflow-y-auto">
+<div class="p-6 pb-2">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-3xl">analytics</span>
+<h1 class="text-text-main dark:text-white text-xl font-bold tracking-tight">Tally Docs</h1>
+</div>
+<p class="text-text-muted text-xs font-medium pl-1">v2.0.1</p>
+</div>
+<div class="flex flex-col gap-6 p-4">
+<div class="flex flex-col gap-1">
+<p class="px-3 py-2 text-xs font-bold text-text-muted uppercase tracking-wider">Introduction</p>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-main dark:text-[#d0c0b0] hover:bg-[#f3ede7] dark:hover:bg-[#2a221b] transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">waving_hand</span>
+<span class="text-sm font-medium">Welcome</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-main dark:text-[#d0c0b0] hover:bg-[#f3ede7] dark:hover:bg-[#2a221b] transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+<span class="text-sm font-medium">Getting Started</span>
+</a>
+</div>
+<div class="flex flex-col gap-1">
+<p class="px-3 py-2 text-xs font-bold text-text-muted uppercase tracking-wider">Installation</p>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary dark:text-primary font-semibold" href="#">
+<span class="material-symbols-outlined text-[20px] fill-1">build</span>
+<span class="text-sm">Setup</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-main dark:text-[#d0c0b0] hover:bg-[#f3ede7] dark:hover:bg-[#2a221b] transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm font-medium">Configuration</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-main dark:text-[#d0c0b0] hover:bg-[#f3ede7] dark:hover:bg-[#2a221b] transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+<span class="text-sm font-medium">Troubleshooting</span>
+</a>
+</div>
+<div class="flex flex-col gap-1">
+<p class="px-3 py-2 text-xs font-bold text-text-muted uppercase tracking-wider">Resources</p>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-main dark:text-[#d0c0b0] hover:bg-[#f3ede7] dark:hover:bg-[#2a221b] transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">code</span>
+<span class="text-sm font-medium">API Reference</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-main dark:text-[#d0c0b0] hover:bg-[#f3ede7] dark:hover:bg-[#2a221b] transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span class="text-sm font-medium">Changelog</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark">
+<div class="w-full max-w-4xl mx-auto px-6 py-8 md:px-12 md:py-12">
+<!-- Breadcrumbs -->
+<nav class="flex items-center flex-wrap gap-2 text-sm text-text-muted mb-8">
+<a class="hover:text-primary transition-colors" href="#">Docs</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Installation</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-text-main dark:text-white font-medium">Setup</span>
+</nav>
+<!-- Page Header -->
+<div class="flex flex-col gap-4 mb-12">
+<h1 class="text-4xl md:text-5xl font-black text-text-main dark:text-white tracking-tight leading-[1.1]">Setting up Tally Analytics</h1>
+<div class="flex flex-wrap items-center gap-4">
+<p class="text-lg text-text-muted leading-relaxed max-w-2xl">Follow this step-by-step guide to integrate privacy-friendly analytics into your Next.js application using our automated GitHub bot.</p>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#f3ede7] dark:bg-[#2a221b] border border-[#e8e0d9] dark:border-[#3e342b]">
+<span class="material-symbols-outlined text-sm text-primary">schedule</span>
+<span class="text-sm font-medium text-text-main dark:text-[#d0c0b0]">Estimated read time: 5 min</span>
+</div>
+</div>
+</div>
+<!-- Content Sections -->
+<div class="flex flex-col gap-16">
+<!-- Section 1: Prerequisites -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">1</div>
+<h2 class="text-2xl font-bold text-text-main dark:text-white">Prerequisites</h2>
+</div>
+<div class="bg-surface-light dark:bg-[#221910] border border-border-color dark:border-[#3e342b] rounded-xl p-6 shadow-sm">
+<p class="mb-4 text-text-main dark:text-[#d0c0b0]">Before we begin, please ensure your project meets the following requirements:</p>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-green-600 mt-0.5">check_circle</span>
+<span class="text-text-main dark:text-[#d0c0b0]">Next.js version 13.4 or later (App Router recommended)</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-green-600 mt-0.5">check_circle</span>
+<span class="text-text-main dark:text-[#d0c0b0]">A GitHub repository connected to your Vercel deployment</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-green-600 mt-0.5">check_circle</span>
+<span class="text-text-main dark:text-[#d0c0b0]">Admin access to the GitHub repository</span>
+</li>
+</ul>
+</div>
+</section>
+<!-- Section 2: Install GitHub App -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">2</div>
+<h2 class="text-2xl font-bold text-text-main dark:text-white">Install GitHub App</h2>
+</div>
+<div class="prose dark:prose-invert max-w-none text-text-main dark:text-[#d0c0b0]">
+<p class="mb-6 leading-relaxed">
+                            Tally Analytics uses a GitHub App to automatically configure your project. This ensures that your analytics setup is always up-to-date with our latest privacy features.
+                        </p>
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<h3 class="font-semibold text-lg text-text-main dark:text-white">Step 2.1: Authorize the App</h3>
+<p class="text-text-muted text-sm mb-3">Click the button below to redirect to GitHub and select the repository you want to instrument.</p>
+<a class="inline-flex items-center justify-center w-fit gap-2 px-5 py-2.5 bg-[#24292f] hover:bg-[#1b1f23] text-white rounded-lg font-medium transition-colors" href="#">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+                                    Install Tally on GitHub
+                                </a>
+</div>
+<div class="rounded-xl overflow-hidden border border-border-color dark:border-[#3e342b] bg-[#f3ede7] dark:bg-[#2a221b]">
+<div class="px-4 py-2 border-b border-border-color dark:border-[#3e342b] bg-white/50 dark:bg-black/20 flex gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+</div>
+<div class="relative w-full aspect-video bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+<img alt="GitHub App installation screen placeholder" class="w-full h-full object-cover opacity-80 mix-blend-overlay" data-alt="Abstract representation of GitHub permissions interface screen with code blocks and a green install button" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK8Pd4EOKS2T6FqG_-DbyvHlA-8H9-C1dOklDTcYd4jF0EVr2ic3DBnFWKdS5qZ5AYiHgDq-2dotAq_TEFoPU45j9-OLFUC_dH1SUptQaHUIDWQ0Qcyx6PxRSH2esDUzm-O7bnl93ooG7A_NvT_GuNQKJtW9doVa9BBKJx4yxziA6udijpDY0yYyd1FgUSeVFn89j6CMUbjxP1kJx7cp2sKa4BoCqz0bwrEb3oAw4G7vUrLS_KyvHUBwUbWJK_nuZgNikhj2ZLFzJO"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white/90 dark:bg-black/80 px-4 py-2 rounded-lg shadow-sm backdrop-blur-sm">
+<p class="text-xs font-mono text-text-muted">Screenshot: GitHub Permissions Screen</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Review Pull Request -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">3</div>
+<h2 class="text-2xl font-bold text-text-main dark:text-white">Review Pull Request</h2>
+</div>
+<div class="flex flex-col gap-6">
+<p class="text-text-main dark:text-[#d0c0b0] leading-relaxed">
+                            Once installed, Tally will automatically open a Pull Request in your repository. This PR includes a configuration file at <code class="bg-[#f3ede7] dark:bg-[#3e342b] px-1.5 py-0.5 rounded text-sm text-primary font-mono">tally.config.ts</code>. You can customize the analytics behavior here.
+                        </p>
+<!-- Info Alert -->
+<div class="bg-primary/5 border border-primary/20 rounded-lg p-4 flex gap-3">
+<span class="material-symbols-outlined text-primary shrink-0">info</span>
+<div class="flex flex-col gap-1">
+<h4 class="text-sm font-bold text-text-main dark:text-white">Important</h4>
+<p class="text-sm text-text-muted">The default configuration is set to "Strict Privacy". This means no cookies are stored on the user's device by default.</p>
+</div>
+</div>
+<!-- Code Block -->
+<div class="rounded-xl overflow-hidden bg-[#2a221b] border border-[#3e342b] shadow-lg group/code">
+<div class="flex items-center justify-between px-4 py-3 border-b border-[#3e342b] bg-[#221910]">
+<span class="text-xs font-mono text-[#9a734c]">tally.config.ts</span>
+<button class="flex items-center gap-1.5 text-xs font-medium text-[#9a734c] hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+                                    Copy
+                                </button>
+</div>
+<div class="p-4 overflow-x-auto custom-scrollbar">
+<pre class="text-sm font-mono leading-relaxed text-[#d0c0b0]"><code><span class="text-[#ec7f13]">import</span> { defineConfig } <span class="text-[#ec7f13]">from</span> <span class="text-[#a5d6ff]">'@tally/core'</span>;
+
+<span class="text-[#ec7f13]">export default</span> defineConfig({
+  <span class="text-[#8b949e]">// Your unique project ID</span>
+  projectId: <span class="text-[#a5d6ff]">'pj_283849102'</span>,
+  
+  <span class="text-[#8b949e]">// Privacy settings</span>
+  privacy: {
+    mode: <span class="text-[#a5d6ff]">'strict'</span>, <span class="text-[#8b949e]">// 'strict' | 'standard' | 'loose'</span>
+    ignoreLocalhost: <span class="text-[#ec7f13]">true</span>,
+  },
+  
+  <span class="text-[#8b949e]">// Optional: Exclude specific paths</span>
+  exclude: [
+    <span class="text-[#a5d6ff]">'/admin/**'</span>,
+    <span class="text-[#a5d6ff]">'/api/**'</span>
+  ]
+});</code></pre>
+</div>
+</div>
+<p class="text-text-main dark:text-[#d0c0b0] text-sm">
+                            Merge the Pull Request to deploy the configuration to your main branch. Vercel will trigger a redeploy automatically.
+                        </p>
+</div>
+</section>
+<!-- Section 4: Verify Installation -->
+<section class="mb-8">
+<div class="flex items-center gap-3 mb-6">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold text-sm">4</div>
+<h2 class="text-2xl font-bold text-text-main dark:text-white">Verify Installation</h2>
+</div>
+<div class="bg-surface-light dark:bg-[#221910] border border-border-color dark:border-[#3e342b] rounded-xl p-6 shadow-sm">
+<p class="mb-4 text-text-main dark:text-[#d0c0b0]">
+                            Visit your deployed application and navigate through a few pages. Then, return to the Tally Dashboard.
+                        </p>
+<div class="flex items-center gap-4 mt-4">
+<a class="inline-flex items-center gap-2 text-primary hover:text-orange-600 font-semibold transition-colors" href="#">
+                                Open Dashboard
+                                <span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+<span class="text-xs text-text-muted">It may take up to 2 minutes for the first event to appear.</span>
+</div>
+</div>
+</section>
+<!-- Feedback Section -->
+<div class="py-8 border-t border-border-color dark:border-[#3e342b] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<p class="text-sm text-text-muted font-medium">Was this guide helpful?</p>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-color dark:border-[#3e342b] hover:bg-[#f3ede7] dark:hover:bg-[#2a221b] transition-colors text-sm text-text-main dark:text-[#d0c0b0]">
+<span class="material-symbols-outlined text-[18px]">thumb_up</span>
+                            Yes
+                        </button>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-color dark:border-[#3e342b] hover:bg-[#f3ede7] dark:hover:bg-[#2a221b] transition-colors text-sm text-text-main dark:text-[#d0c0b0]">
+<span class="material-symbols-outlined text-[18px]">thumb_down</span>
+                            No
+                        </button>
+</div>
+</div>
+<!-- Footer Navigation -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+<a class="group flex flex-col gap-1 p-6 rounded-xl border border-border-color dark:border-[#3e342b] bg-surface-light dark:bg-[#221910] hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-md transition-all" href="#">
+<span class="text-xs font-semibold text-text-muted group-hover:text-primary transition-colors">Previous</span>
+<div class="flex items-center gap-2 text-text-main dark:text-white font-bold text-lg">
+<span class="material-symbols-outlined transition-transform group-hover:-translate-x-1">arrow_back</span>
+                            Introduction
+                        </div>
+</a>
+<a class="group flex flex-col gap-1 p-6 rounded-xl border border-border-color dark:border-[#3e342b] bg-surface-light dark:bg-[#221910] hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-md transition-all text-right" href="#">
+<span class="text-xs font-semibold text-text-muted group-hover:text-primary transition-colors">Next</span>
+<div class="flex items-center justify-end gap-2 text-text-main dark:text-white font-bold text-lg">
+                            Configuration
+                            <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</div>
+</a>
+</div>
+<!-- Footer -->
+<footer class="mt-20 pt-8 border-t border-border-color dark:border-[#3e342b] text-center md:text-left">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-sm text-text-muted">© 2023 Tally Analytics Inc. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-sm text-text-muted hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-sm text-text-muted hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-sm text-text-muted hover:text-primary transition-colors" href="#">GitHub</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</main>
+</div>
+</body></html>

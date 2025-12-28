@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tally Analytics Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#14b8a6", // Teal 500
+                        "primary-hover": "#0d9488", // Teal 600
+                        "primary-light": "#ccfbf1", // Teal 100
+                        "background-light": "#fafaf8", // Warm White
+                        "background-dark": "#1c1917", // Stone 900
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#292524", // Stone 800
+                        "text-main": "#292524", // Stone 800 (Warm Black)
+                        "text-muted": "#57534e", // Stone 600 (Warm Gray)
+                        "border-color": "#e7e5e4", // Stone 200
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "4px",
+                        "sm": "2px",
+                        "md": "4px",
+                        "lg": "6px",
+                        "xl": "8px",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "warm": "0 2px 8px 0 rgba(40, 30, 20, 0.04), 0 1px 2px -1px rgba(40, 30, 20, 0.04)",
+                        "warm-lg": "0 10px 15px -3px rgba(40, 30, 20, 0.05), 0 4px 6px -2px rgba(40, 30, 20, 0.025)"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e7e5e4;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d6d3d1;
+        }
+        
+        /* Subtle noise texture simulation using multiple backgrounds if needed, 
+           but sticking to clean warm colors as per strict asset rules */
+        .bg-noise {
+            background-color: #fafaf8;
+        }
+        
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main font-display antialiased h-screen flex overflow-hidden selection:bg-primary-light selection:text-primary-hover">
+<!-- Sidebar -->
+<aside class="w-64 bg-background-light dark:bg-background-dark border-r border-border-color flex flex-col justify-between shrink-0 h-full">
+<div class="p-6 flex flex-col gap-8">
+<!-- Logo area -->
+<div class="flex items-center gap-2">
+<div class="size-8 rounded bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">bar_chart</span>
+</div>
+<h1 class="text-text-main text-lg font-bold tracking-tight">Tally Analytics</h1>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-2">
+<div class="px-3 py-2 rounded bg-primary/10 text-primary flex items-center gap-3 cursor-pointer transition-colors">
+<span class="material-symbols-outlined fill-1" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</div>
+<div class="px-3 py-2 rounded text-text-muted hover:bg-stone-100 dark:hover:bg-surface-dark hover:text-text-main flex items-center gap-3 cursor-pointer transition-colors">
+<span class="material-symbols-outlined">schedule</span>
+<span class="text-sm font-medium">Realtime</span>
+</div>
+<div class="px-3 py-2 rounded text-text-muted hover:bg-stone-100 dark:hover:bg-surface-dark hover:text-text-main flex items-center gap-3 cursor-pointer transition-colors">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium">Reports</span>
+</div>
+<div class="px-3 py-2 rounded text-text-muted hover:bg-stone-100 dark:hover:bg-surface-dark hover:text-text-main flex items-center gap-3 cursor-pointer transition-colors">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</div>
+</nav>
+</div>
+<!-- Upgrade / Plan -->
+<div class="p-6 border-t border-border-color">
+<div class="bg-white dark:bg-surface-dark p-4 rounded shadow-warm border border-border-color flex flex-col gap-3">
+<div class="flex flex-col">
+<p class="text-text-main text-sm font-semibold">Basic Plan</p>
+<p class="text-text-muted text-xs">12k / 50k events</p>
+</div>
+<div class="w-full bg-stone-100 rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 24%"></div>
+</div>
+<button class="w-full py-2 bg-text-main text-white text-xs font-bold rounded hover:bg-stone-800 transition-colors">
+                    Upgrade Plan
+                </button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark relative">
+<!-- Header -->
+<header class="h-16 px-8 flex items-center justify-between shrink-0 border-b border-transparent">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="text-text-muted text-sm">Projects</span>
+<span class="text-text-muted text-sm">/</span>
+<h2 class="text-text-main text-base font-bold">my-nextjs-blog</h2>
+</div>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-primary text-xs font-medium">Live</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center h-9 px-3 rounded border border-border-color bg-white dark:bg-surface-dark text-text-main text-sm font-medium hover:bg-stone-50 transition-colors shadow-warm gap-2">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+<span class="hidden sm:inline">Refresh</span>
+</button>
+<!-- Date Picker Dropdown (Simulating interaction) -->
+<details class="relative group">
+<summary class="flex items-center justify-center h-9 px-3 rounded border border-border-color bg-white dark:bg-surface-dark text-text-main text-sm font-medium hover:bg-stone-50 transition-colors shadow-warm gap-2 cursor-pointer select-none">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span>Oct 2023</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</summary>
+<!-- Dropdown Content -->
+<div class="absolute right-0 top-full mt-2 z-50 w-[340px] p-4 bg-white dark:bg-surface-dark rounded-lg shadow-warm-lg border border-border-color">
+<!-- CalendarPicker Component Logic -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between p-1 mb-2">
+<button class="p-1 hover:bg-stone-100 rounded text-text-main">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<p class="text-text-main text-sm font-bold">October 2023</p>
+<button class="p-1 hover:bg-stone-100 rounded text-text-main">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-7 gap-y-1">
+<span class="text-center text-xs font-bold text-text-muted py-1">S</span>
+<span class="text-center text-xs font-bold text-text-muted py-1">M</span>
+<span class="text-center text-xs font-bold text-text-muted py-1">T</span>
+<span class="text-center text-xs font-bold text-text-muted py-1">W</span>
+<span class="text-center text-xs font-bold text-text-muted py-1">T</span>
+<span class="text-center text-xs font-bold text-text-muted py-1">F</span>
+<span class="text-center text-xs font-bold text-text-muted py-1">S</span>
+<!-- Placeholder days -->
+<button class="h-8 w-8 rounded-full flex items-center justify-center text-xs text-text-muted hover:bg-stone-50"></button>
+<button class="h-8 w-8 rounded-full flex items-center justify-center text-xs text-text-muted hover:bg-stone-50"></button>
+<button class="h-8 w-8 rounded-full flex items-center justify-center text-xs text-text-main hover:bg-stone-100 font-medium">1</button>
+<button class="h-8 w-8 rounded-full flex items-center justify-center text-xs text-text-main hover:bg-stone-100 font-medium">2</button>
+<button class="h-8 w-8 rounded-full flex items-center justify-center text-xs text-text-main hover:bg-stone-100 font-medium">3</button>
+<button class="h-8 w-8 rounded-full flex items-center justify-center text-xs text-text-main hover:bg-stone-100 font-medium">4</button>
+<!-- Range Start -->
+<button class="h-8 w-8 rounded-l-full bg-primary/10 flex items-center justify-center text-xs text-white font-bold relative z-10">
+<span class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">5</span>
+</button>
+<!-- Range Middle -->
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">6</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">7</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">8</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">9</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">10</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">11</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">12</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">13</button>
+<!-- ... more days simulated ... -->
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">14</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">15</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">16</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">17</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">18</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">19</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">20</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">21</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">22</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">23</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">24</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">25</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">26</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">27</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">28</button>
+<button class="h-8 w-full bg-primary/10 flex items-center justify-center text-xs text-text-main font-medium">29</button>
+<!-- Range End -->
+<button class="h-8 w-8 rounded-r-full bg-primary/10 flex items-center justify-center text-xs text-white font-bold relative z-10">
+<span class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">30</span>
+</button>
+</div>
+</div>
+</div>
+</details>
+</div>
+</header>
+<!-- Scrollable Dashboard Area -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-6xl mx-auto flex flex-col gap-6">
+<!-- Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Stat Card 1 -->
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded shadow-warm border border-border-color flex flex-col gap-1">
+<p class="text-text-muted text-sm font-medium">Total Visitors</p>
+<div class="flex items-baseline gap-3">
+<h3 class="text-text-main text-3xl font-bold tracking-tight">12.5k</h3>
+<span class="text-primary text-sm font-semibold flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                                12%
+                            </span>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded shadow-warm border border-border-color flex flex-col gap-1">
+<p class="text-text-muted text-sm font-medium">Pageviews</p>
+<div class="flex items-baseline gap-3">
+<h3 class="text-text-main text-3xl font-bold tracking-tight">45.2k</h3>
+<span class="text-primary text-sm font-semibold flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                                8.5%
+                            </span>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded shadow-warm border border-border-color flex flex-col gap-1">
+<p class="text-text-muted text-sm font-medium">Bounce Rate</p>
+<div class="flex items-baseline gap-3">
+<h3 class="text-text-main text-3xl font-bold tracking-tight">42%</h3>
+<span class="text-emerald-600 text-sm font-semibold flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+                                2.1%
+                            </span>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded shadow-warm border border-border-color flex flex-col gap-1">
+<p class="text-text-muted text-sm font-medium">Avg. Visit Time</p>
+<div class="flex items-baseline gap-3">
+<h3 class="text-text-main text-3xl font-bold tracking-tight">2m 14s</h3>
+<span class="text-primary text-sm font-semibold flex items-center">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                                5.4%
+                            </span>
+</div>
+</div>
+</div>
+<!-- Main Chart Section -->
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded shadow-warm border border-border-color">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-text-main text-lg font-bold">Visitor Growth</h3>
+<p class="text-text-muted text-sm">Unique visitors over the last 30 days</p>
+</div>
+<div class="flex gap-2">
+<span class="px-2 py-1 rounded bg-stone-100 dark:bg-stone-800 text-xs font-medium text-text-muted">Daily</span>
+<span class="px-2 py-1 rounded text-xs font-medium text-text-muted hover:bg-stone-50 dark:hover:bg-stone-800 cursor-pointer">Weekly</span>
+</div>
+</div>
+<div class="w-full h-[300px] relative">
+<!-- Chart SVG (Responsive logic via width 100%) -->
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 800 300">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#14b8a6" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#14b8a6" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid lines (Dotted) -->
+<line stroke="#e7e5e4" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="225" y2="225"></line>
+<line stroke="#e7e5e4" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<line stroke="#e7e5e4" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="75" y2="75"></line>
+<line stroke="#e7e5e4" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="0" y2="0"></line>
+<!-- Area Path -->
+<path d="M0 220 C 50 200, 100 250, 150 180 C 200 110, 250 130, 300 90 C 350 50, 400 100, 450 80 C 500 60, 550 40, 600 50 C 650 60, 700 30, 750 20 L 800 10 L 800 300 L 0 300 Z" fill="url(#chartGradient)"></path>
+<!-- Line Path -->
+<path d="M0 220 C 50 200, 100 250, 150 180 C 200 110, 250 130, 300 90 C 350 50, 400 100, 450 80 C 500 60, 550 40, 600 50 C 650 60, 700 30, 750 20 L 800 10" fill="none" stroke="#14b8a6" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Tooltip Dot (Static example) -->
+<circle cx="450" cy="80" fill="#14b8a6" r="5" stroke="#fff" stroke-width="2"></circle>
+<!-- Tooltip Box -->
+<g transform="translate(420, 30)">
+<rect fill="#292524" height="36" rx="4" width="90"></rect>
+<text fill="#fff" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle" x="45" y="22">4,231 Visitors</text>
+</g>
+</svg>
+</div>
+<!-- X-Axis Labels -->
+<div class="flex justify-between mt-4 px-2 text-xs text-text-muted font-medium">
+<span>Oct 1</span>
+<span>Oct 5</span>
+<span>Oct 10</span>
+<span>Oct 15</span>
+<span>Oct 20</span>
+<span>Oct 25</span>
+<span>Oct 30</span>
+</div>
+</div>
+<!-- Bottom Grid: Tables -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
+<!-- Top Pages Table -->
+<div class="bg-surface-light dark:bg-surface-dark rounded shadow-warm border border-border-color overflow-hidden flex flex-col h-full">
+<div class="p-4 border-b border-border-color flex justify-between items-center bg-stone-50/50">
+<h4 class="text-text-main text-sm font-bold">Top Pages</h4>
+<button class="text-primary text-xs font-semibold hover:underline">View All</button>
+</div>
+<div class="flex-1 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-text-muted text-xs border-b border-border-color">
+<th class="p-4 font-medium">Page</th>
+<th class="p-4 font-medium text-right w-24">Visitors</th>
+<th class="p-4 font-medium text-right w-24">Views</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="border-b border-stone-50 hover:bg-stone-50/50">
+<td class="p-4 text-text-main font-medium truncate max-w-[200px]" title="/">/</td>
+<td class="p-4 text-right text-text-muted">4,120</td>
+<td class="p-4 text-right text-text-main font-semibold">12.1k</td>
+</tr>
+<tr class="border-b border-stone-50 hover:bg-stone-50/50">
+<td class="p-4 text-text-main font-medium truncate max-w-[200px]" title="/blog/introducing-tally">/blog/introducing-tally</td>
+<td class="p-4 text-right text-text-muted">2,845</td>
+<td class="p-4 text-right text-text-main font-semibold">8.2k</td>
+</tr>
+<tr class="border-b border-stone-50 hover:bg-stone-50/50">
+<td class="p-4 text-text-main font-medium truncate max-w-[200px]" title="/pricing">/pricing</td>
+<td class="p-4 text-right text-text-muted">1,520</td>
+<td class="p-4 text-right text-text-main font-semibold">3.8k</td>
+</tr>
+<tr class="hover:bg-stone-50/50">
+<td class="p-4 text-text-main font-medium truncate max-w-[200px]" title="/features">/features</td>
+<td class="p-4 text-right text-text-muted">980</td>
+<td class="p-4 text-right text-text-main font-semibold">2.1k</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Top Referrers Table -->
+<div class="bg-surface-light dark:bg-surface-dark rounded shadow-warm border border-border-color overflow-hidden flex flex-col h-full">
+<div class="p-4 border-b border-border-color flex justify-between items-center bg-stone-50/50">
+<h4 class="text-text-main text-sm font-bold">Top Sources</h4>
+<button class="text-primary text-xs font-semibold hover:underline">View All</button>
+</div>
+<div class="flex-1 overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-text-muted text-xs border-b border-border-color">
+<th class="p-4 font-medium">Source</th>
+<th class="p-4 font-medium text-right w-24">Visitors</th>
+<th class="p-4 font-medium text-right w-24">Chart</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="border-b border-stone-50 hover:bg-stone-50/50">
+<td class="p-4 flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center text-[10px] font-bold">G</div>
+<span class="text-text-main font-medium">google.com</span>
+</td>
+<td class="p-4 text-right text-text-main font-semibold">5,230</td>
+<td class="p-4 text-right">
+<div class="w-full bg-stone-100 rounded-full h-1.5">
+<div class="bg-primary h-full rounded-full" style="width: 65%"></div>
+</div>
+</td>
+</tr>
+<tr class="border-b border-stone-50 hover:bg-stone-50/50">
+<td class="p-4 flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-stone-500/10 text-stone-500 flex items-center justify-center text-[10px] font-bold">D</div>
+<span class="text-text-main font-medium">Direct</span>
+</td>
+<td class="p-4 text-right text-text-main font-semibold">3,105</td>
+<td class="p-4 text-right">
+<div class="w-full bg-stone-100 rounded-full h-1.5">
+<div class="bg-primary h-full rounded-full" style="width: 40%"></div>
+</div>
+</td>
+</tr>
+<tr class="border-b border-stone-50 hover:bg-stone-50/50">
+<td class="p-4 flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-sky-500/10 text-sky-500 flex items-center justify-center text-[10px] font-bold">T</div>
+<span class="text-text-main font-medium">t.co</span>
+</td>
+<td class="p-4 text-right text-text-main font-semibold">1,890</td>
+<td class="p-4 text-right">
+<div class="w-full bg-stone-100 rounded-full h-1.5">
+<div class="bg-primary h-full rounded-full" style="width: 25%"></div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-stone-50/50">
+<td class="p-4 flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-gray-800/10 text-gray-800 flex items-center justify-center text-[10px] font-bold">G</div>
+<span class="text-text-main font-medium">github.com</span>
+</td>
+<td class="p-4 text-right text-text-main font-semibold">840</td>
+<td class="p-4 text-right">
+<div class="w-full bg-stone-100 rounded-full h-1.5">
+<div class="bg-primary h-full rounded-full" style="width: 15%"></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
