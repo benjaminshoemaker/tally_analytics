@@ -6,10 +6,10 @@ export type MarketingFooterProps = {
 
 export default function MarketingFooter({ githubUrl }: MarketingFooterProps) {
   return (
-    <footer className="border-t border-stone-100 bg-white py-12">
+    <footer className="border-t border-[#e8e0d9] bg-white py-12 dark:border-[#3e342b] dark:bg-[#1b140d]">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-8 px-6 md:flex-row md:px-10 lg:px-40">
         <div className="flex items-center gap-2">
-          <div className="flex size-6 items-center justify-center rounded bg-primary/20 text-primary">
+          <div className="flex size-6 items-center justify-center rounded bg-[#ec7f13]/20 text-[#ec7f13]">
             <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
               <path
                 fill="currentColor"
@@ -17,19 +17,19 @@ export default function MarketingFooter({ githubUrl }: MarketingFooterProps) {
               />
             </svg>
           </div>
-          <span className="font-bold text-text-main">Tally</span>
-          <span className="ml-2 text-sm text-text-muted">© {new Date().getFullYear()}</span>
+          <span className="font-bold text-[#1b140d] dark:text-white">Tally</span>
+          <span className="ml-2 text-sm text-[#9a734c] dark:text-[#d0c0b0]">© {new Date().getFullYear()}</span>
         </div>
 
         <div className="flex flex-wrap justify-center gap-8">
-          <a className="text-sm text-text-muted transition-colors hover:text-primary" href="#">
+          <a className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]" href="#">
             Privacy Policy
           </a>
-          <a className="text-sm text-text-muted transition-colors hover:text-primary" href="#">
+          <a className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]" href="#">
             Terms of Service
           </a>
           <a
-            className="text-sm text-text-muted transition-colors hover:text-primary"
+            className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]"
             href="https://x.com"
             rel="noreferrer"
             target="_blank"
@@ -37,7 +37,7 @@ export default function MarketingFooter({ githubUrl }: MarketingFooterProps) {
             Twitter
           </a>
           <a
-            className="text-sm text-text-muted transition-colors hover:text-primary"
+            className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]"
             href={githubUrl}
             rel="noreferrer"
             target="_blank"
@@ -49,4 +49,3 @@ export default function MarketingFooter({ githubUrl }: MarketingFooterProps) {
     </footer>
   );
 }
-
