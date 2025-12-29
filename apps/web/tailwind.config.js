@@ -49,7 +49,7 @@ module.exports = {
       },
       fontFamily: {
         display: ["var(--font-lora)", "Georgia", "serif"],
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"]
+        sans: ["var(--font-lora)", "Georgia", "serif"]
       },
       borderRadius: {
         DEFAULT: "4px",

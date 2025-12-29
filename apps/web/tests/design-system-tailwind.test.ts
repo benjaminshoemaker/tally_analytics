@@ -25,7 +25,7 @@ describe("design system tailwind extension", () => {
 
     expect(config.theme.extend.fontFamily).toMatchObject({
       display: ["var(--font-lora)", "Georgia", "serif"],
-      sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+      sans: ["var(--font-lora)", "Georgia", "serif"],
     });
 
     expect(config.theme.extend.borderRadius).toMatchObject({
@@ -43,13 +43,14 @@ describe("design system tailwind extension", () => {
     });
   });
 
-  it("loads the Inter font in the Next.js app layout", () => {
+  it("loads the Lora font in the Next.js app layout", () => {
     const layoutPath = path.join(__dirname, "..", "app", "layout.tsx");
     const contents = fs.readFileSync(layoutPath, "utf8");
 
     expect(contents).toContain('from "next/font/google"');
-    expect(contents).toContain("Inter(");
-    expect(contents).toContain('variable: "--font-inter"');
-    expect(contents).toContain("inter.variable");
+    expect(contents).toContain("Lora(");
+    expect(contents).toContain('variable: "--font-lora"');
+    expect(contents).not.toContain("Inter(");
+    expect(contents).not.toContain("--font-inter");
   });
 });
