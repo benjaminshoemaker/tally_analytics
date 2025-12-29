@@ -8,6 +8,45 @@ body {
 }
 
 body {
-  background: white;
-  color: #0f172a;
+  background: #fcfaf8;
+  color: #1b140d;
+}
+
+/* Staggered animation delays for list items */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+
+/* Shimmer gradient for skeleton loaders */
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    #f3ede7 0%,
+    #faf7f4 50%,
+    #f3ede7 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* Warm gradient background for sections */
+.warm-gradient-bg {
+  background: linear-gradient(180deg, #fcfaf8 0%, #f3ede7 100%);
+}
+
+/* Accent bar for cards */
+.accent-bar-left {
+  position: relative;
+}
+.accent-bar-left::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #ec7f13 0%, #fb923c 100%);
+  border-radius: 3px 0 0 3px;
 }

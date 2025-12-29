@@ -60,7 +60,7 @@ export default function LiveFeedPage({ params }: { params: { id: string } }) {
   return (
     <div className="flex w-full flex-col gap-6">
       <header className="flex flex-col gap-1">
-        <h2 className="text-lg font-semibold text-slate-900">Live Feed</h2>
+        <h2 className="font-display text-lg font-semibold text-slate-900">Live Feed</h2>
         <p className="text-sm text-slate-600">Real-time events from your site.</p>
       </header>
 
@@ -77,7 +77,7 @@ export default function LiveFeedPage({ params }: { params: { id: string } }) {
       ) : feedQuery.data.events.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
           <ActivityIcon />
-          <h3 className="mt-4 text-sm font-semibold text-slate-900">No events yet</h3>
+          <h3 className="mt-4 font-display text-sm font-semibold text-slate-900">No events yet</h3>
           <p className="mt-1 text-sm text-slate-600">Events will appear here as visitors browse your site.</p>
         </div>
       ) : (

@@ -67,7 +67,7 @@ export default function ProjectLayout({ children, params }: { children: React.Re
               </>
             ) : (
               <>
-                <h1 className="break-words text-2xl font-semibold tracking-tight text-slate-900">
+                <h1 className="break-words font-display text-2xl font-semibold tracking-tight text-slate-900">
                   {repoName ?? projectId}
                 </h1>
                 {status && <StatusBadge status={status} />}

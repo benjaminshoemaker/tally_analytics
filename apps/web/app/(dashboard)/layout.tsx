@@ -6,9 +6,9 @@ import Providers from "../../lib/providers";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-slate-50">
+    <div className="min-h-screen overflow-x-hidden bg-warm-50">
       <div className="mx-auto flex w-full max-w-6xl flex-col md:flex-row">
-        <aside className="border-b border-slate-200 bg-white md:w-64 md:flex-shrink-0 md:border-b-0 md:border-r">
+        <aside className="border-b border-warm-200 bg-white md:w-64 md:flex-shrink-0 md:border-b-0 md:border-r">
           <DashboardSidebar />
         </aside>
 

@@ -38,6 +38,11 @@ function SettingsIcon({ className }: { className?: string }) {
   );
 }
 
+type NavSection = {
+  title?: string;
+  items: NavItem[];
+};
+
 type NavItem = {
   href: string;
   label: string;
@@ -45,18 +50,28 @@ type NavItem = {
   matchPattern?: RegExp;
 };
 
-const NAV_ITEMS: NavItem[] = [
+const NAV_SECTIONS: NavSection[] = [
   {
-    href: "/projects",
-    label: "Projects",
-    icon: FolderIcon,
-    matchPattern: /^\/projects/,
+    title: "Main",
+    items: [
+      {
+        href: "/projects",
+        label: "Projects",
+        icon: FolderIcon,
+        matchPattern: /^\/projects/,
+      },
+    ],
   },
   {
-    href: "/settings",
-    label: "Settings",
-    icon: SettingsIcon,
-    matchPattern: /^\/settings/,
+    title: "Account",
+    items: [
+      {
+        href: "/settings",
+        label: "Settings",
+        icon: SettingsIcon,
+        matchPattern: /^\/settings/,
+      },
+    ],
   },
 ];
 
@@ -64,27 +79,54 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center gap-1 px-4 py-4 sm:px-6 md:flex-col md:items-stretch md:gap-1 md:py-6">
-      {NAV_ITEMS.map((item) => {
-        const isActive = item.matchPattern ? item.matchPattern.test(pathname) : pathname === item.href;
-        const Icon = item.icon;
+    <nav className="flex items-center gap-1 px-4 py-4 sm:px-6 md:flex-col md:items-stretch md:gap-0 md:py-6">
+      {/* Logo for desktop */}
+      <a href="/" className="mb-6 hidden items-center gap-2 md:flex">
+        <div className="flex size-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500">
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
+            <path
+              fill="currentColor"
+              d="M3 3h18v18H3V3zm4 14h2V9H7v8zm4 0h2V5h-2v12zm4 0h2v-6h-2v6z"
+            />
+          </svg>
+        </div>
+        <span className="font-display text-lg font-bold tracking-tight text-warm-900">Tally</span>
+      </a>
 
-        return (
-          <a
-            key={item.href}
-            href={item.href}
-            className={[
-              "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-              isActive
-                ? "bg-slate-100 text-slate-900"
-                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-            ].join(" ")}
-          >
-            <Icon className={isActive ? "text-slate-900" : "text-slate-500"} />
-            {item.label}
-          </a>
-        );
-      })}
+      {NAV_SECTIONS.map((section, sectionIndex) => (
+        <div key={section.title || sectionIndex} className="md:mb-4">
+          {section.title && (
+            <p className="mb-2 hidden px-3 text-xs font-semibold uppercase tracking-wider text-warm-400 md:block">
+              {section.title}
+            </p>
+          )}
+          <div className="flex items-center gap-1 md:flex-col md:items-stretch md:gap-0.5">
+            {section.items.map((item) => {
+              const isActive = item.matchPattern ? item.matchPattern.test(pathname) : pathname === item.href;
+              const Icon = item.icon;
+
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={[
+                    "group relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
+                    isActive
+                      ? "bg-brand-500/10 text-brand-600"
+                      : "text-warm-600 hover:bg-warm-100 hover:text-warm-900",
+                  ].join(" ")}
+                >
+                  {isActive && (
+                    <span className="absolute left-0 top-1/2 hidden h-5 w-1 -translate-y-1/2 rounded-r-full bg-brand-500 md:block" />
+                  )}
+                  <Icon className={isActive ? "text-brand-500" : "text-warm-400 transition-colors group-hover:text-warm-600"} />
+                  {item.label}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </nav>
   );
 }

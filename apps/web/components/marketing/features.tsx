@@ -45,7 +45,7 @@ export default function MarketingFeatures() {
     <section className="bg-[#f3ede7]/60 py-20 dark:bg-[#2a221b]/40">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mx-auto mb-16 max-w-2xl md:text-center">
-          <h2 className="mb-4 text-3xl font-semibold text-[#1b140d] dark:text-white">Analytics without the headache</h2>
+          <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d] dark:text-white">Analytics without the headache</h2>
           <p className="text-lg text-[#9a734c] dark:text-[#d0c0b0]">
             Most analytics tools are overkill. Tally is designed to be invisible until you need it.
           </p>
@@ -60,7 +60,7 @@ export default function MarketingFeatures() {
               <div className="mb-6 flex size-12 items-center justify-center rounded bg-[#ec7f13]/10 text-[#ec7f13] transition-transform group-hover:scale-110">
                 {feature.icon}
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-[#1b140d] dark:text-white">{feature.title}</h3>
+              <h3 className="mb-3 font-display text-xl font-semibold text-[#1b140d] dark:text-white">{feature.title}</h3>
               <p className="leading-relaxed text-[#9a734c] dark:text-[#d0c0b0]">{feature.description}</p>
             </div>
           ))}

@@ -30,7 +30,7 @@ export default function LandingPage() {
 
       <section className="px-6 py-24 text-center md:px-10 lg:px-40">
         <div className="mx-auto max-w-2xl">
-          <h2 className="mb-6 text-4xl font-semibold text-[#1b140d] dark:text-white">
+          <h2 className="mb-6 font-display text-4xl font-semibold text-[#1b140d] dark:text-white">
             All the analytics, no hassle.
           </h2>
           <p className="mb-10 text-lg text-[#9a734c] dark:text-[#d0c0b0]">
