@@ -12,19 +12,20 @@ describe("design system tailwind extension", () => {
 
     const colors = config.theme.extend.colors;
     expect(colors).toMatchObject({
-      primary: "#14b8a6",
-      "primary-hover": "#0d9488",
-      "primary-light": "#ccfbf1",
-      "background-light": "#fafaf8",
+      primary: "#ec7f13",
+      "primary-hover": "#ea580c",
+      "primary-light": "#fff7ed",
+      "background-light": "#fcfaf8",
       "surface-light": "#ffffff",
       "surface-dark": "#292524",
-      "text-main": "#292524",
-      "text-muted": "#57534e",
-      "border-color": "#e7e5e4",
+      "text-main": "#1b140d",
+      "text-muted": "#9a734c",
+      "border-color": "#e8e0d9",
     });
 
     expect(config.theme.extend.fontFamily).toMatchObject({
-      display: ["Inter", "sans-serif"],
+      display: ["var(--font-lora)", "Georgia", "serif"],
+      sans: ["var(--font-inter)", "system-ui", "sans-serif"],
     });
 
     expect(config.theme.extend.borderRadius).toMatchObject({
@@ -48,7 +49,7 @@ describe("design system tailwind extension", () => {
 
     expect(contents).toContain('from "next/font/google"');
     expect(contents).toContain("Inter(");
-    expect(contents).toContain("className={inter.className}");
+    expect(contents).toContain('variable: "--font-inter"');
+    expect(contents).toContain("inter.variable");
   });
 });
-
