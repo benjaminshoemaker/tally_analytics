@@ -22,7 +22,10 @@ describe("marketing docs pages", () => {
 
   it("renders the SDK docs with code examples", () => {
     const html = renderToStaticMarkup(React.createElement(DocsSdkPage));
-    expect(html).toContain("SDK");
+    expect(html).toContain("SDK Reference");
+    expect(html).toContain("@tally-analytics/sdk");
+    expect(html).toContain("npm install @tally-analytics/sdk");
+    expect(html).toContain("tally_session");
     expect(html).toContain("init(");
     expect(html).toContain("trackPageView(");
     expect(html).toContain("identify(");
@@ -34,4 +37,3 @@ describe("marketing docs pages", () => {
     expect(sdkDynamic).toBe("force-static");
   });
 });
-
