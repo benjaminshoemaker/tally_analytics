@@ -59,7 +59,7 @@ export default function ProjectsPage() {
           </div>
           <h3 className="mt-6 font-display text-xl text-warm-900">No projects yet</h3>
           <p className="mt-2 max-w-sm text-sm text-warm-500">
-            Connect your first Next.js repository and we'll automatically set up analytics for you.
+            Connect your first Next.js repository and we&apos;ll automatically set up analytics for you.
           </p>
           <a
             href="https://github.com/apps/tally-analytics-agent"
@@ -85,4 +85,3 @@ export default function ProjectsPage() {
     </div>
   );
 }
-

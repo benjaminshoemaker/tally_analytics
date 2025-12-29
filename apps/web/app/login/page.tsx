@@ -88,7 +88,7 @@ export default function LoginPage() {
         >
           <div className="text-center">
             <p className="text-sm text-warm-600">
-              We'll email you a magic link that expires in 15 minutes.
+              We&apos;ll email you a magic link that expires in 15 minutes.
             </p>
           </div>
 
@@ -152,7 +152,7 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-sm text-warm-500 opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <a
             href="https://github.com/apps/tally-analytics-agent"
             target="_blank"
