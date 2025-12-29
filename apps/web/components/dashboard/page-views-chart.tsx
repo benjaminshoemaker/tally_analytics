@@ -8,7 +8,7 @@ type Point = { date: string; count: number };
 export default function PageViewsChart({ data }: { data: Point[] }) {
   return (
     <div className="rounded-lg border border-warm-200 bg-white p-4 shadow-warm transition-shadow hover:shadow-warm-md">
-      <h2 className="text-sm font-semibold text-warm-900">Page views</h2>
+      <h2 className="font-display text-sm font-semibold text-warm-900">Page views</h2>
       <div className="mt-3 h-52">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>

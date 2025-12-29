@@ -5,7 +5,7 @@ type TopListItem = { label: string; value: number; percentage: number };
 export default function TopList({ title, items }: { title: string; items: TopListItem[] }) {
   return (
     <section className="rounded-lg border border-warm-200 bg-white p-4 shadow-warm transition-shadow hover:shadow-warm-md">
-      <h2 className="text-sm font-semibold text-warm-900">{title}</h2>
+      <h2 className="font-display text-sm font-semibold text-warm-900">{title}</h2>
 
       {items.length === 0 ? (
         <p className="mt-3 text-sm text-warm-500">No data yet.</p>

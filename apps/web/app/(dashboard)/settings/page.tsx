@@ -30,7 +30,7 @@ export default async function SettingsPage() {
   return (
     <div className="flex w-full flex-col gap-6">
       <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Account settings</h1>
+        <h1 className="font-display text-2xl font-semibold tracking-tight text-slate-900">Account settings</h1>
         <p className="text-sm text-slate-600">Manage your account.</p>
       </header>
 

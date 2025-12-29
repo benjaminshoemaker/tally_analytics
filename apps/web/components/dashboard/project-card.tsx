@@ -29,7 +29,7 @@ export default function ProjectCard({ project }: { project: ProjectsListItem }) 
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-brand-500 to-brand-400 opacity-0 transition-opacity group-hover:opacity-100" />
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h2 className="truncate text-sm font-semibold text-warm-900 transition-colors group-hover:text-brand-600">
+          <h2 className="truncate font-display text-sm font-semibold text-warm-900 transition-colors group-hover:text-brand-600">
             {project.githubRepoFullName}
           </h2>
           <p className="mt-1 flex items-center gap-1.5 text-xs text-warm-500">

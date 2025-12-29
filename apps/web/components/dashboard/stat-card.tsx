@@ -10,7 +10,7 @@ export default function StatCard({ label, value, change }: { label: string; valu
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-brand-500 to-brand-400 opacity-0 transition-opacity group-hover:opacity-100" />
       <p className="text-sm font-medium text-warm-500">{label}</p>
       <div className="mt-2 flex items-baseline justify-between gap-3">
-        <p className="text-2xl font-semibold text-warm-900">{value}</p>
+        <p className="font-display text-2xl font-semibold text-warm-900">{value}</p>
         <p className={`flex items-center gap-1 text-sm font-medium ${
           isPositive ? "text-emerald-600" : isNegative ? "text-red-500" : "text-warm-500"
         }`}>

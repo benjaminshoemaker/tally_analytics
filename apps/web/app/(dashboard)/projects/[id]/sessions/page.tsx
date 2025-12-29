@@ -51,7 +51,7 @@ export default function SessionsPage({ params }: { params: { id: string } }) {
     <div className="flex w-full flex-col gap-6">
       <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-1">
-          <h2 className="text-lg font-semibold text-slate-900">Session Analytics</h2>
+          <h2 className="font-display text-lg font-semibold text-slate-900">Session Analytics</h2>
           <p className="text-sm text-slate-600">Visitor sessions breakdown.</p>
         </div>
 

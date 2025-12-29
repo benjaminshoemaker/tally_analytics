@@ -65,7 +65,7 @@ export default function OnboardingChecklist({ project }: { project: OnboardingPr
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-slate-900">Getting Started</h2>
+        <h2 className="font-display text-sm font-semibold text-slate-900">Getting Started</h2>
         <span className="text-xs font-medium text-slate-600">
           {completedCount}/{steps.length} complete
         </span>

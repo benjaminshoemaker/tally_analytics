@@ -90,7 +90,7 @@ export default function DashboardSidebar() {
             />
           </svg>
         </div>
-        <span className="text-lg font-bold tracking-tight text-warm-900">Tally</span>
+        <span className="font-display text-lg font-bold tracking-tight text-warm-900">Tally</span>
       </a>
 
       {NAV_SECTIONS.map((section, sectionIndex) => (
