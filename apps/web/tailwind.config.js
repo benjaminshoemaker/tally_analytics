@@ -48,7 +48,7 @@ module.exports = {
         "border-color": "#e8e0d9"
       },
       fontFamily: {
-        display: ["var(--font-instrument-serif)", "Georgia", "serif"],
+        display: ["var(--font-lora)", "Georgia", "serif"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"]
       },
       borderRadius: {

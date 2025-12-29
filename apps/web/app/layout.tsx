@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Inter, Lora } from "next/font/google";
 
 import "./globals.css";
 
@@ -10,11 +10,10 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const instrumentSerif = Instrument_Serif({
+const lora = Lora({
   subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-lora",
 });
 
 export const metadata: Metadata = {
@@ -44,7 +43,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${instrumentSerif.variable} font-sans`}>
+      <body className={`${inter.variable} ${lora.variable} font-sans`}>
         {children}
         <Analytics />
       </body>
