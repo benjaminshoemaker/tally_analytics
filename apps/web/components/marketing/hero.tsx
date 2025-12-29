@@ -15,7 +15,7 @@ export default function MarketingHero({ installUrl, docsUrl, dashboardImageSrc }
           V2.0 IS NOW LIVE
         </div>
 
-        <h1 className="mb-6 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-[#1b140d] md:text-6xl dark:text-white">
+        <h1 className="mb-6 max-w-3xl font-display text-4xl font-semibold leading-[1.1] tracking-tight text-[#1b140d] md:text-6xl dark:text-white">
           Analytics for Next.js, installed in one click.
         </h1>
 

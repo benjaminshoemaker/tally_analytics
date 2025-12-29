@@ -11,7 +11,7 @@ export default function MarketingSetAndForget() {
     <section className="border-y border-[#e8e0d9] bg-[#f3ede7]/60 py-20 dark:border-[#3e342b] dark:bg-[#2a221b]/40">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mx-auto max-w-3xl md:text-center">
-          <h2 className="mb-4 text-3xl font-semibold text-[#1b140d] dark:text-white">
+          <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d] dark:text-white">
             Your analytics evolve with your app
           </h2>
           <p className="text-lg text-[#9a734c] dark:text-[#d0c0b0]">

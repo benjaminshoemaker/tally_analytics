@@ -82,7 +82,7 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mb-16 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="mb-2 text-3xl font-semibold text-[#1b140d] dark:text-white">
+            <h2 className="mb-2 font-display text-3xl font-semibold text-[#1b140d] dark:text-white">
               How it works
             </h2>
             <p className="text-[#9a734c] dark:text-[#d0c0b0]">
@@ -115,7 +115,7 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
                   </span>
                   {step.icon}
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-[#1b140d] dark:text-white">
+                <h3 className="mb-2 font-display text-lg font-semibold text-[#1b140d] dark:text-white">
                   {step.title}
                 </h3>
                 <p className="max-w-[240px] text-sm text-[#9a734c] dark:text-[#d0c0b0]">

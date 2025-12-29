@@ -35,7 +35,7 @@ export default function PricingCard(props: PricingCardProps) {
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="text-lg font-semibold text-[#1b140d]">{props.name}</h3>
+          <h3 className="font-display text-lg font-semibold text-[#1b140d]">{props.name}</h3>
         </div>
 
         <div className="text-right">
