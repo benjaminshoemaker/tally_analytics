@@ -5,7 +5,7 @@ Client-side analytics SDK for automatic page view + session tracking.
 ## Installation
 
 ```bash
-pnpm add @fast-pr-analytics/sdk
+pnpm add @tally-analytics/sdk
 ```
 
 ## Quick start
@@ -17,7 +17,7 @@ Create a client component (example: `app/analytics.tsx`):
 ```tsx
 'use client';
 
-import { AnalyticsAppRouter, init } from '@fast-pr-analytics/sdk';
+import { AnalyticsAppRouter, init } from '@tally-analytics/sdk';
 
 init({ projectId: 'proj_abc123' });
 
@@ -49,7 +49,7 @@ In `pages/_app.tsx`:
 
 ```tsx
 import type { AppProps } from 'next/app';
-import { init, useAnalyticsPagesRouter } from '@fast-pr-analytics/sdk';
+import { init, useAnalyticsPagesRouter } from '@tally-analytics/sdk';
 
 init({ projectId: 'proj_abc123' });
 
@@ -82,4 +82,3 @@ init({ projectId: 'proj_abc123', respectDNT: false });
 ## Notes
 
 - The ingestion endpoint is currently hardcoded to `https://events.productname.com/v1/track` (placeholder); it will become configurable later.
-
