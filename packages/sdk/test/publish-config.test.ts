@@ -10,10 +10,10 @@ describe("Task 3.4.B - Publish config", () => {
       fs.readFileSync(path.join(packageRoot, "package.json"), "utf8"),
     ) as Record<string, unknown>;
 
+    expect(pkg.name).toBe("@tally-analytics/sdk");
     expect(pkg.version).toBe("0.1.0");
     expect(pkg.publishConfig).toBeTypeOf("object");
     expect(fs.existsSync(path.join(packageRoot, ".npmignore"))).toBe(true);
     expect(fs.existsSync(path.join(packageRoot, "CHANGELOG.md"))).toBe(true);
   });
 });
-

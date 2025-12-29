@@ -13,14 +13,14 @@ export default function DocsSdkPage() {
 
         <h2>Installation</h2>
         <pre>
-          <code>pnpm add @fast-pr-analytics/sdk</code>
+          <code>pnpm add @tally-analytics/sdk</code>
         </pre>
 
         <h2>Quick start (App Router)</h2>
         <pre>
           <code>{`'use client';
 
-import { AnalyticsAppRouter, init } from '@fast-pr-analytics/sdk';
+import { AnalyticsAppRouter, init } from '@tally-analytics/sdk';
 
 init({ projectId: 'proj_abc123' });
 
@@ -48,4 +48,3 @@ export function Analytics() {
     </main>
   );
 }
-
