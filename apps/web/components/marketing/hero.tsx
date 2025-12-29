@@ -22,7 +22,7 @@ export default function MarketingHero({ installUrl, docsUrl, dashboardImageSrc }
         <p className="mb-10 max-w-2xl text-lg leading-relaxed text-[#9a734c] md:text-xl dark:text-[#d0c0b0]">
           Connect your GitHub repo. We send a PR. You get analytics.{" "}
           <br className="hidden md:block" />
-          No cookies, no complex setup, just clean data.
+          No consent banner needed, no complex setup, just clean data.
         </p>
 
         <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">

@@ -55,7 +55,8 @@ describe("Task 3.2.C - Public API", () => {
     await trackPageView("/a?b=c");
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const [, initArg] = fetchSpy.mock.calls[0];
+    const [url, initArg] = fetchSpy.mock.calls[0];
+    expect(url).toBe("https://events.usetally.xyz/v1/track");
     const body = JSON.parse(initArg.body);
     expect(body.events.some((e: any) => e.event_type === "page_view")).toBe(true);
   });

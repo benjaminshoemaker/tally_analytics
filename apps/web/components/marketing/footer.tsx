@@ -22,11 +22,19 @@ export default function MarketingFooter({ githubUrl }: MarketingFooterProps) {
         </div>
 
         <div className="flex flex-wrap justify-center gap-8">
-          <a className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]" href="#">
+          <a className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]" href="/privacy">
             Privacy Policy
           </a>
-          <a className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]" href="#">
+          <a className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]" href="/terms">
             Terms of Service
+          </a>
+          <a
+            className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]"
+            href="https://github.com/your-org/tally-analytics/issues"
+            rel="noreferrer"
+            target="_blank"
+          >
+            Support
           </a>
           <a
             className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]"

@@ -18,7 +18,8 @@ const FEATURES: Feature[] = [
   },
   {
     title: "GDPR Compliant",
-    description: "We don't use cookies or track personal data. Fully anonymous and compliant by default.",
+    description:
+      "No third-party cookies or personal data. First-party session tracking that's fully anonymous and compliant by default.",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-7">
         <path
