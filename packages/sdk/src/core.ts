@@ -6,7 +6,7 @@ import {
   postEvents,
 } from "./tracker";
 
-const EVENTS_URL = "https://events.productname.com/v1/track";
+const EVENTS_URL = "https://events.usetally.xyz/v1/track";
 
 type SDKConfig = {
   projectId: string;
@@ -85,4 +85,3 @@ export async function trackPageView(path?: string): Promise<void> {
 
   await postEvents(EVENTS_URL, events, { respectDNT: config.respectDNT });
 }
-
