@@ -154,7 +154,7 @@ if (isEnabled()) {
 
         <h2>Do Not Track (DNT)</h2>
         <p>
-          By default, Tally respects the browser's Do Not Track setting. 
+          By default, Tally respects the browser&apos;s Do Not Track setting. 
           When DNT is enabled, no events are sent.
         </p>
         <p>To disable DNT respect (not recommended):</p>
@@ -175,7 +175,7 @@ if (isEnabled()) {
         </ul>
         <p>
           This approach is GDPR-friendly and does not require a consent banner 
-          in most jurisdictions, as it's first-party analytics with no personal 
+          in most jurisdictions, as it&apos;s first-party analytics with no personal 
           data collection.
         </p>
 
@@ -193,8 +193,8 @@ if (isEnabled()) {
         <h3>SSR/Hydration issues</h3>
         <p>
           The SDK is client-side only. Make sure the React components are used 
-          in a client component (add <code>'use client'</code> directive) or 
-          in a file that's only imported client-side.
+          in a client component (add <code>&apos;use client&apos;</code> directive) or 
+          in a file that&apos;s only imported client-side.
         </p>
       </div>
     </main>
