@@ -2,9 +2,10 @@ import React from "react";
 
 export type MarketingNavbarProps = {
   installUrl: string;
+  isLoggedIn: boolean;
 };
 
-export default function MarketingNavbar({ installUrl }: MarketingNavbarProps) {
+export default function MarketingNavbar({ installUrl, isLoggedIn }: MarketingNavbarProps) {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#e8e0d9] bg-[#fcfaf8]/80 backdrop-blur-md dark:border-[#3e342b] dark:bg-[#1b140d]/80">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-40">
@@ -47,9 +48,9 @@ export default function MarketingNavbar({ installUrl }: MarketingNavbarProps) {
           <div className="flex items-center gap-4">
             <a
               className="hidden h-9 items-center justify-center rounded border border-[#e8e0d9] bg-transparent px-4 text-sm font-medium text-[#1b140d] transition-colors hover:bg-[#f3ede7] dark:border-[#3e342b] dark:text-[#ede0d4] dark:hover:bg-[#2a221b] sm:flex"
-              href="/login"
+              href={isLoggedIn ? "/projects" : "/login"}
             >
-              Log in
+              {isLoggedIn ? "Dashboard" : "Log in"}
             </a>
             <a
               className="flex h-9 items-center justify-center rounded bg-[#ec7f13] px-4 text-sm font-medium text-white shadow-sm transition-colors hover:bg-orange-600"
