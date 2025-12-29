@@ -46,54 +46,67 @@ export default function PricingPage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-20">
       <div className="max-w-2xl">
-        <h1 className="text-4xl font-semibold tracking-tight text-slate-900">Pricing</h1>
-        <p className="mt-4 text-slate-600">
+        <h1 className="font-display text-4xl tracking-tight text-[#1b140d]">Pricing</h1>
+        <p className="mt-4 text-lg text-[#9a734c]">
           Start free in minutes. Upgrade when you need higher limits and retention.
         </p>
       </div>
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-3">
-        {TIERS.map((tier) => (
-          <PricingCard key={tier.name} {...tier} ctaHref={INSTALL_URL} />
+      <div className="mt-12 grid gap-8 lg:grid-cols-3">
+        {TIERS.map((tier, index) => (
+          <div
+            key={tier.name}
+            className="opacity-0 animate-fade-in-up"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <PricingCard {...tier} ctaHref={INSTALL_URL} />
+          </div>
         ))}
       </div>
 
-      <section className="mt-16 rounded-2xl border border-slate-200 bg-white p-6">
-        <h2 className="text-xl font-semibold tracking-tight text-slate-900">Compare plans</h2>
-        <div className="mt-6 overflow-x-auto">
+      <section className="mt-16 overflow-hidden rounded-xl border border-[#e8e0d9] bg-white shadow-warm">
+        <div className="border-b border-[#e8e0d9] bg-[#f3ede7]/50 px-6 py-4">
+          <h2 className="text-lg font-semibold tracking-tight text-[#1b140d]">Compare plans</h2>
+        </div>
+        <div className="overflow-x-auto p-6">
           <table className="w-full min-w-[520px] text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-slate-600">
-                <th className="py-3 pr-4 font-medium">Feature</th>
-                <th className="py-3 pr-4 font-medium">Free</th>
-                <th className="py-3 pr-4 font-medium">Pro</th>
-                <th className="py-3 font-medium">Team</th>
+              <tr className="border-b border-[#e8e0d9] text-[#9a734c]">
+                <th className="pb-4 pr-4 font-medium">Feature</th>
+                <th className="pb-4 pr-4 font-medium">Free</th>
+                <th className="pb-4 pr-4 font-medium">
+                  <span className="inline-flex items-center gap-1.5">
+                    Pro
+                    <span className="rounded bg-[#ec7f13]/10 px-1.5 py-0.5 text-xs font-semibold text-[#ec7f13]">Popular</span>
+                  </span>
+                </th>
+                <th className="pb-4 font-medium">Team</th>
               </tr>
             </thead>
-            <tbody className="text-slate-900">
-              <tr className="border-b border-slate-100">
-                <td className="py-3 pr-4 text-slate-600">Events</td>
-                <td className="py-3 pr-4">10,000/mo</td>
-                <td className="py-3 pr-4">100,000/mo</td>
-                <td className="py-3">1,000,000/mo</td>
+            <tbody className="text-[#1b140d]">
+              <tr className="border-b border-[#f3ede7]">
+                <td className="py-4 pr-4 text-[#9a734c]">Events</td>
+                <td className="py-4 pr-4">10,000/mo</td>
+                <td className="py-4 pr-4 font-medium">100,000/mo</td>
+                <td className="py-4">1,000,000/mo</td>
               </tr>
-              <tr className="border-b border-slate-100">
-                <td className="py-3 pr-4 text-slate-600">Projects</td>
-                <td className="py-3 pr-4">3</td>
-                <td className="py-3 pr-4">10</td>
-                <td className="py-3">Unlimited</td>
+              <tr className="border-b border-[#f3ede7] bg-[#f3ede7]/30">
+                <td className="py-4 pr-4 text-[#9a734c]">Projects</td>
+                <td className="py-4 pr-4">3</td>
+                <td className="py-4 pr-4 font-medium">10</td>
+                <td className="py-4">Unlimited</td>
               </tr>
-              <tr className="border-b border-slate-100">
-                <td className="py-3 pr-4 text-slate-600">Retention</td>
-                <td className="py-3 pr-4">90 days</td>
-                <td className="py-3 pr-4">Unlimited</td>
-                <td className="py-3">Unlimited</td>
+              <tr className="border-b border-[#f3ede7]">
+                <td className="py-4 pr-4 text-[#9a734c]">Retention</td>
+                <td className="py-4 pr-4">90 days</td>
+                <td className="py-4 pr-4 font-medium">Unlimited</td>
+                <td className="py-4">Unlimited</td>
               </tr>
-              <tr>
-                <td className="py-3 pr-4 text-slate-600">Support</td>
-                <td className="py-3 pr-4">Community</td>
-                <td className="py-3 pr-4">Email</td>
-                <td className="py-3">Priority</td>
+              <tr className="bg-[#f3ede7]/30">
+                <td className="py-4 pr-4 text-[#9a734c]">Support</td>
+                <td className="py-4 pr-4">Community</td>
+                <td className="py-4 pr-4 font-medium">Email</td>
+                <td className="py-4">Priority</td>
               </tr>
             </tbody>
           </table>

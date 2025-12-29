@@ -70,18 +70,18 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <header className="flex flex-col gap-3 opacity-0 animate-fade-in md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-1">
-          <h2 className="text-lg font-semibold text-slate-900">Analytics Overview</h2>
-          <p className="text-sm text-slate-600">Key metrics for this project.</p>
+          <h2 className="font-display text-xl text-warm-900">Analytics Overview</h2>
+          <p className="text-sm text-warm-500">Key metrics for this project.</p>
         </div>
 
-        <label className="flex items-center gap-2 text-sm text-slate-700">
+        <label className="flex items-center gap-2 text-sm text-warm-700">
           Period
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value as Period)}
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm shadow-sm transition-colors focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+            className="rounded-lg border border-warm-200 bg-white px-3 py-1.5 text-sm shadow-sm transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           >
             <option value="24h">Last 24 hours</option>
             <option value="7d">Last 7 days</option>
@@ -103,21 +103,31 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
           </div>
         </>
       ) : overviewQuery.isError ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 animate-fade-in">
           <p className="text-sm text-red-700">Unable to load analytics. Please try again.</p>
         </div>
       ) : (
         <>
           <div className="grid gap-4 md:grid-cols-2">
-            <StatCard label="Page views" value={String(overviewQuery.data.pageViews.total)} change={overviewQuery.data.pageViews.change} />
-            <StatCard label="Sessions" value={String(overviewQuery.data.sessions.total)} change={overviewQuery.data.sessions.change} />
+            <div className="opacity-0 animate-fade-in stagger-1">
+              <StatCard label="Page views" value={overviewQuery.data.pageViews.total.toLocaleString()} change={overviewQuery.data.pageViews.change} />
+            </div>
+            <div className="opacity-0 animate-fade-in stagger-2">
+              <StatCard label="Sessions" value={overviewQuery.data.sessions.total.toLocaleString()} change={overviewQuery.data.sessions.change} />
+            </div>
           </div>
 
-          <PageViewsChart data={overviewQuery.data.pageViews.timeSeries} />
+          <div className="opacity-0 animate-fade-in stagger-3">
+            <PageViewsChart data={overviewQuery.data.pageViews.timeSeries} />
+          </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <TopList title="Top pages" items={topPagesItems} />
-            <TopList title="Top referrers" items={topReferrersItems} />
+            <div className="opacity-0 animate-fade-in stagger-4">
+              <TopList title="Top pages" items={topPagesItems} />
+            </div>
+            <div className="opacity-0 animate-fade-in stagger-5">
+              <TopList title="Top referrers" items={topReferrersItems} />
+            </div>
           </div>
         </>
       )}
