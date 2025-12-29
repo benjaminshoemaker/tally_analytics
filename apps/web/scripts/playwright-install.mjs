@@ -1,10 +1,27 @@
 import { spawnSync } from "node:child_process";
+import os from "node:os";
 import fs from "node:fs";
 import path from "node:path";
 
 const browsersPath = path.resolve(process.cwd(), ".playwright-browsers");
 const pnpmCmd = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 const extraArgs = process.argv.slice(2);
+
+function playwrightHostPlatformOverride() {
+  if (process.env.PLAYWRIGHT_HOST_PLATFORM_OVERRIDE) return undefined;
+  if (process.platform !== "darwin") return undefined;
+  if (process.arch !== "arm64") return undefined;
+
+  const darwinMajor = Number.parseInt(os.release().split(".")[0] ?? "", 10);
+  if (!Number.isFinite(darwinMajor)) return undefined;
+
+  const hasAppleCpuModel = os.cpus().some((cpu) => typeof cpu.model === "string" && cpu.model.includes("Apple"));
+  if (hasAppleCpuModel) return undefined;
+
+  const LAST_STABLE_MACOS_MAJOR_VERSION = 15;
+  const macMajor = Math.min(darwinMajor - 9, LAST_STABLE_MACOS_MAJOR_VERSION);
+  return `mac${macMajor}-arm64`;
+}
 
 function removeMismatchedMacBrowserRevisions({ browsersPath, isDryRun }) {
   if (process.platform !== "darwin") return;
@@ -40,9 +57,14 @@ if (process.platform === "linux" && process.env.CI) args.push("--with-deps");
 args.push("chromium");
 args.push(...extraArgs);
 
+const hostPlatformOverride = playwrightHostPlatformOverride();
 const result = spawnSync(pnpmCmd, args, {
   stdio: "inherit",
-  env: { ...process.env, PLAYWRIGHT_BROWSERS_PATH: browsersPath },
+  env: {
+    ...process.env,
+    PLAYWRIGHT_BROWSERS_PATH: browsersPath,
+    ...(hostPlatformOverride ? { PLAYWRIGHT_HOST_PLATFORM_OVERRIDE: hostPlatformOverride } : {}),
+  },
 });
 
 process.exit(result.status ?? 1);

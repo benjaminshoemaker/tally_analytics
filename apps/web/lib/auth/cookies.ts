@@ -14,30 +14,46 @@ function shouldUseSecureCookies(): boolean {
   }
 }
 
-export function setSessionCookie(sessionId: string): void {
-  const secure = shouldUseSecureCookies();
-  cookies().set({
+export type SessionCookie = {
+  name: typeof SESSION_COOKIE_NAME;
+  value: string;
+  httpOnly: true;
+  secure: boolean;
+  sameSite: "lax";
+  path: "/";
+  maxAge: number;
+};
+
+export function buildSessionCookie(sessionId: string): SessionCookie {
+  return {
     name: SESSION_COOKIE_NAME,
     value: sessionId,
     httpOnly: true,
-    secure,
+    secure: shouldUseSecureCookies(),
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_COOKIE_MAX_AGE_SECONDS,
-  });
+  };
 }
 
-export function clearSessionCookie(): void {
-  const secure = shouldUseSecureCookies();
-  cookies().set({
+export function buildClearedSessionCookie(): SessionCookie {
+  return {
     name: SESSION_COOKIE_NAME,
     value: "",
     httpOnly: true,
-    secure,
+    secure: shouldUseSecureCookies(),
     sameSite: "lax",
     path: "/",
     maxAge: 0,
-  });
+  };
+}
+
+export function setSessionCookie(sessionId: string): void {
+  cookies().set(buildSessionCookie(sessionId));
+}
+
+export function clearSessionCookie(): void {
+  cookies().set(buildClearedSessionCookie());
 }
 
 function parseCookieHeader(cookieHeader: string): Record<string, string> {

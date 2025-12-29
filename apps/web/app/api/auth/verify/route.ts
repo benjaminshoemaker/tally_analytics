@@ -1,6 +1,7 @@
 import { and, eq, isNull } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
+import { buildSessionCookie } from "../../../../lib/auth/cookies";
 import { createSession } from "../../../../lib/auth/session";
 import { db } from "../../../../lib/db/client";
 import { magicLinks, users } from "../../../../lib/db/schema";
@@ -48,7 +49,9 @@ export async function GET(request: Request): Promise<Response> {
     .set({ usedAt: new Date() })
     .where(and(eq(magicLinks.id, link.id), isNull(magicLinks.usedAt)));
 
-  await createSession(userId);
+  const session = await createSession(userId);
 
-  return NextResponse.redirect(new URL("/projects", request.url));
+  const response = NextResponse.redirect(new URL("/projects", request.url));
+  response.cookies.set(buildSessionCookie(session.id));
+  return response;
 }

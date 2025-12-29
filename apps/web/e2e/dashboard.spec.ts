@@ -7,7 +7,7 @@ async function login(page: import("@playwright/test").Page) {
   const magicLinkResponsePromise = page.waitForResponse((res) => res.url().includes("/api/auth/magic-link") && res.ok());
 
   await page.getByLabel("Email").fill(email);
-  await page.getByRole("button", { name: "Send login link" }).click();
+  await page.getByRole("button", { name: "Send magic link" }).click();
 
   const magicLinkResponse = await magicLinkResponsePromise;
   const json = (await magicLinkResponse.json()) as { loginUrl?: string };
@@ -26,4 +26,3 @@ test("dashboard navigation", async ({ page }) => {
   await page.getByRole("link", { name: "Settings" }).click();
   await expect(page.getByRole("heading", { name: "Account settings" })).toBeVisible();
 });
-

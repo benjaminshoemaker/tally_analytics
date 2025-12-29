@@ -8,7 +8,7 @@ test("login flow", async ({ page }) => {
   const magicLinkResponsePromise = page.waitForResponse((res) => res.url().includes("/api/auth/magic-link") && res.ok());
 
   await page.getByLabel("Email").fill(email);
-  await page.getByRole("button", { name: "Send login link" }).click();
+  await page.getByRole("button", { name: "Send magic link" }).click();
 
   const magicLinkResponse = await magicLinkResponsePromise;
   const json = (await magicLinkResponse.json()) as { success: boolean; loginUrl?: string };
@@ -19,4 +19,3 @@ test("login flow", async ({ page }) => {
   await expect(page).toHaveURL(/\/projects/);
   await expect(page.getByRole("heading", { name: "Projects" })).toBeVisible();
 });
-
