@@ -27,6 +27,13 @@ describe("db schema", () => {
     const userColumns = getTableConfig(users).columns;
     expect(userColumns.find((c) => c.name === "email")?.notNull).toBe(true);
     expect(userColumns.find((c) => c.name === "email")?.isUnique).toBe(true);
+    expect(userColumns.some((c) => c.name === "stripe_subscription_id")).toBe(true);
+    expect(userColumns.some((c) => c.name === "stripe_subscription_status")).toBe(true);
+    expect(userColumns.some((c) => c.name === "stripe_price_id")).toBe(true);
+    expect(userColumns.some((c) => c.name === "stripe_current_period_end")).toBe(true);
+    expect(userColumns.some((c) => c.name === "stripe_cancel_at_period_end")).toBe(true);
+    expect(userColumns.some((c) => c.name === "stripe_last_webhook_event_id")).toBe(true);
+    expect(userColumns.some((c) => c.name === "stripe_last_webhook_event_created")).toBe(true);
 
     const sessionColumns = getTableConfig(sessions).columns;
     expect(sessionColumns.find((c) => c.name === "user_id")?.notNull).toBe(true);
@@ -47,6 +54,7 @@ describe("db schema", () => {
 
   it("defines all indexes from the spec", () => {
     expect(getTableConfig(users).indexes.map((i) => i.config.name)).toContain("idx_users_email");
+    expect(getTableConfig(users).indexes.map((i) => i.config.name)).toContain("idx_users_stripe_subscription_id");
 
     expect(getTableConfig(sessions).indexes.map((i) => i.config.name)).toEqual(
       expect.arrayContaining(["idx_sessions_user_id", "idx_sessions_expires_at"]),
