@@ -2,7 +2,7 @@ import Stripe from "stripe";
 
 import { readRequiredEnv } from "../env/read-required-env";
 
-export const STRIPE_API_VERSION = "2024-11-20.acacia";
+export const STRIPE_API_VERSION = "2025-12-15.clover";
 
 let stripeClient: Stripe | null = null;
 
@@ -14,4 +14,3 @@ export function getStripe(): Stripe {
   });
   return stripeClient;
 }
-

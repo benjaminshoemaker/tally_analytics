@@ -42,13 +42,13 @@ describe("POST /api/webhooks/stripe", () => {
     process.env.STRIPE_WEBHOOK_SECRET = "whsec_test";
     process.env.STRIPE_SECRET_KEY = "sk_test_dummy";
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2024-11-20.acacia" });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2025-12-15.clover" });
     const now = Math.floor(Date.now() / 1000);
 
     const payload = JSON.stringify({
       id: "evt_1",
       object: "event",
-      api_version: "2024-11-20.acacia",
+      api_version: "2025-12-15.clover",
       created: now,
       livemode: false,
       pending_webhooks: 1,

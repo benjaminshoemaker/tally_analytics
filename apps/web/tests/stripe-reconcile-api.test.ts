@@ -27,7 +27,7 @@ vi.mock("../lib/db/client", () => ({
 }));
 
 vi.mock("../lib/stripe/client", () => ({
-  STRIPE_API_VERSION: "2024-11-20.acacia",
+  STRIPE_API_VERSION: "2025-12-15.clover",
   getStripe: () => ({
     checkout: {
       sessions: {
@@ -141,4 +141,3 @@ describe("POST /api/stripe/reconcile", () => {
     else process.env.STRIPE_PRICE_PRO = previousPro;
   });
 });
-

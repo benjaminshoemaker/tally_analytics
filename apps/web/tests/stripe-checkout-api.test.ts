@@ -30,7 +30,7 @@ vi.mock("../lib/db/client", () => ({
 }));
 
 vi.mock("../lib/stripe/client", () => ({
-  STRIPE_API_VERSION: "2024-11-20.acacia",
+  STRIPE_API_VERSION: "2025-12-15.clover",
   getStripe: () => ({
     customers: {
       create: (...args: unknown[]) => {

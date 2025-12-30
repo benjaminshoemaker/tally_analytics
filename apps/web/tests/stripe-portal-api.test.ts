@@ -22,7 +22,7 @@ vi.mock("../lib/db/client", () => ({
 }));
 
 vi.mock("../lib/stripe/client", () => ({
-  STRIPE_API_VERSION: "2024-11-20.acacia",
+  STRIPE_API_VERSION: "2025-12-15.clover",
   getStripe: () => ({
     billingPortal: {
       sessions: {
@@ -87,4 +87,3 @@ describe("POST /api/stripe/portal", () => {
     else process.env.NEXT_PUBLIC_APP_URL = previousAppUrl;
   });
 });
-

@@ -94,7 +94,7 @@ export async function POST(request: Request): Promise<Response> {
       stripeCancelAtPeriodEnd: typeof subscription.cancel_at_period_end === "boolean" ? subscription.cancel_at_period_end : null,
     })
     .where(eq(users.id, user.id))
-    .returning({ plan: users.plan, stripeSubscriptionId: users.stripeSubscriptionId });
+    .returning();
 
   const updated = updatedRows[0];
   if (!updated) {
@@ -103,4 +103,3 @@ export async function POST(request: Request): Promise<Response> {
 
   return Response.json({ plan: updated.plan, stripeSubscriptionId: updated.stripeSubscriptionId });
 }
-
