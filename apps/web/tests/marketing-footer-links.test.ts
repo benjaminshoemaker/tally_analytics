@@ -14,7 +14,8 @@ describe("marketing footer links", () => {
 
     expect(html).toContain('href="/privacy"');
     expect(html).toContain('href="/terms"');
-    expect(html).toContain('href="https://github.com/your-org/tally-analytics/issues"');
+    expect(html).toContain('href="mailto:support@usetally.xyz"');
+    expect(html).toContain('href="https://github.com/apps/tally-analytics-agent"');
 
     const privacyIndex = html.indexOf("Privacy Policy");
     const termsIndex = html.indexOf("Terms of Service");
@@ -27,4 +28,3 @@ describe("marketing footer links", () => {
     expect(twitterIndex).toBeGreaterThan(supportIndex);
   });
 });
-
