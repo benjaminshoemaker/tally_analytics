@@ -1,8 +1,11 @@
 import React from "react";
+import { and, eq, gt } from "drizzle-orm";
+import { cookies } from "next/headers";
 
 import PricingCard from "../../../components/marketing/pricing-card";
-
-export const dynamic = "force-static";
+import { SESSION_COOKIE_NAME } from "../../../lib/auth/cookies";
+import { db } from "../../../lib/db/client";
+import { sessions, users } from "../../../lib/db/schema";
 
 const INSTALL_URL = "https://github.com/apps/tally-analytics-agent";
 
@@ -42,7 +45,32 @@ const TIERS = [
   },
 ] as const;
 
-export default function PricingPage() {
+type PricingCta =
+  | { kind: "link"; label: string; href: string }
+  | { kind: "checkout"; label: string; plan: "pro" | "team" }
+  | { kind: "portal"; label: string }
+  | { kind: "disabled"; label: string };
+
+async function getUserPlanFromCookies(): Promise<"free" | "pro" | "team" | null> {
+  const sessionId = cookies().get(SESSION_COOKIE_NAME)?.value ?? null;
+  if (!sessionId) return null;
+
+  const now = new Date();
+  const sessionRows = await db
+    .select({ userId: sessions.userId })
+    .from(sessions)
+    .where(and(eq(sessions.id, sessionId), gt(sessions.expiresAt, now)));
+
+  const userId = sessionRows[0]?.userId ?? null;
+  if (!userId) return null;
+
+  const userRows = await db.select({ plan: users.plan }).from(users).where(eq(users.id, userId));
+  return (userRows[0]?.plan as "free" | "pro" | "team" | undefined) ?? null;
+}
+
+export default async function PricingPage() {
+  const userPlan = await getUserPlanFromCookies();
+
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-20">
       <div className="max-w-2xl">
@@ -59,7 +87,41 @@ export default function PricingPage() {
             className="opacity-0 animate-fade-in-up"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <PricingCard {...tier} ctaHref={INSTALL_URL} />
+            {(() => {
+              let cta: PricingCta;
+
+              if (!userPlan) {
+                cta = { kind: "link", label: tier.ctaLabel, href: INSTALL_URL };
+              } else if (tier.name === "Free") {
+                cta = { kind: "disabled", label: userPlan === "free" ? "Current plan" : "Included" };
+              } else if (userPlan === "free") {
+                cta = { kind: "checkout", label: `Upgrade to ${tier.name}`, plan: tier.name === "Pro" ? "pro" : "team" };
+              } else {
+                cta = { kind: "portal", label: "Manage billing" };
+              }
+
+              if (cta.kind === "link") {
+                return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={cta.href} />;
+              }
+
+              if (cta.kind === "checkout") {
+                return (
+                  <PricingCard
+                    {...tier}
+                    ctaLabel={cta.label}
+                    ctaForm={{ action: "/api/stripe/checkout", method: "post", hiddenFields: { plan: cta.plan } }}
+                  />
+                );
+              }
+
+              if (cta.kind === "portal") {
+                return (
+                  <PricingCard {...tier} ctaLabel={cta.label} ctaForm={{ action: "/api/stripe/portal", method: "post" }} />
+                );
+              }
+
+              return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={INSTALL_URL} ctaDisabled />;
+            })()}
           </div>
         ))}
       </div>
@@ -115,4 +177,3 @@ export default function PricingPage() {
     </main>
   );
 }
-
