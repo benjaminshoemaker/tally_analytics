@@ -6,7 +6,7 @@ export type RenderAnalyticsTemplateOptions = {
 export function renderPagesRouterAnalyticsHook(options: RenderAnalyticsTemplateOptions): string {
   const eventsUrl = new URL("/v1/track", options.eventsUrl).toString().replace(/\/$/, "");
 
-  return `// GENERATED FILE: components/fast-pr-analytics.tsx
+  return `// GENERATED FILE: components/tally-analytics.tsx
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -20,7 +20,7 @@ function getSessionId(): string {
   if (typeof window === 'undefined') return '';
   if (sessionId) return sessionId;
 
-  const cookieName = 'fast_pr_analytics_sid';
+  const cookieName = 'tally_sid';
   const existing = document.cookie
     .split('; ')
     .find(row => row.startsWith(cookieName + '='))
@@ -60,7 +60,7 @@ function trackPageView(path: string) {
   }).catch(() => {});
 }
 
-export function useFastPrAnalytics() {
+export function useTallyAnalytics() {
   const router = useRouter();
 
   useEffect(() => {

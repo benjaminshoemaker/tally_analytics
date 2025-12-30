@@ -6,7 +6,7 @@ export type RenderAnalyticsTemplateOptions = {
 export function renderAppRouterAnalyticsComponent(options: RenderAnalyticsTemplateOptions): string {
   const eventsUrl = new URL("/v1/track", options.eventsUrl).toString().replace(/\/$/, "");
 
-  return `// GENERATED FILE: components/fast-pr-analytics.tsx
+  return `// GENERATED FILE: components/tally-analytics.tsx
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -22,7 +22,7 @@ function getSessionId(): string {
   if (typeof window === 'undefined') return '';
   if (sessionId) return sessionId;
 
-  const cookieName = 'fast_pr_analytics_sid';
+  const cookieName = 'tally_sid';
   const existing = document.cookie
     .split('; ')
     .find(row => row.startsWith(cookieName + '='))
@@ -92,7 +92,7 @@ function AnalyticsTracker() {
   return null;
 }
 
-export function FastPrAnalytics() {
+export function TallyAnalytics() {
   return (
     <Suspense fallback={null}>
       <AnalyticsTracker />
