@@ -23,6 +23,10 @@ vi.mock("../lib/db/client", () => ({
   },
 }));
 
+vi.mock("../app/(dashboard)/settings/stripe-reconcile-client", () => ({
+  StripeReconcileClient: () => null,
+}));
+
 describe("/settings page", () => {
   it("renders email, plan, and a logout form", async () => {
     vi.resetModules();
@@ -32,7 +36,15 @@ describe("/settings page", () => {
     const sessionWhereSpy = vi.fn().mockResolvedValue([{ userId: "u1", expiresAt: new Date("2030-01-01T00:00:00.000Z") }]);
     const sessionFromSpy = vi.fn(() => ({ where: sessionWhereSpy }));
 
-    const userWhereSpy = vi.fn().mockResolvedValue([{ email: "u1@example.com", plan: "free" }]);
+    const userWhereSpy = vi.fn().mockResolvedValue([
+      {
+        email: "u1@example.com",
+        plan: "free",
+        stripeSubscriptionStatus: null,
+        stripeCancelAtPeriodEnd: null,
+        stripeCurrentPeriodEnd: null,
+      },
+    ]);
     const userFromSpy = vi.fn(() => ({ where: userWhereSpy }));
 
     selectSpy = vi
@@ -48,7 +60,7 @@ describe("/settings page", () => {
     expect(html).toContain("Account settings");
     expect(html).toContain("u1@example.com");
     expect(html).toContain("free");
+    expect(html).toContain('action="/api/stripe/checkout"');
     expect(html).toContain('action="/api/auth/logout"');
   });
 });
-
