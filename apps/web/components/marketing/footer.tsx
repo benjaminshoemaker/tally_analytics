@@ -30,7 +30,7 @@ export default function MarketingFooter({ githubUrl }: MarketingFooterProps) {
           </a>
           <a
             className="text-sm text-[#9a734c] transition-colors hover:text-[#ec7f13] dark:text-[#d0c0b0]"
-            href="https://github.com/your-org/tally-analytics/issues"
+            href="mailto:support@usetally.xyz"
             rel="noreferrer"
             target="_blank"
           >
