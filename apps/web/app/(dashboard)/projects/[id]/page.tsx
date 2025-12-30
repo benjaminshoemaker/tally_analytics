@@ -6,6 +6,7 @@ import OnboardingChecklist from "../../../../components/dashboard/onboarding-che
 import QuotaDisplay from "../../../../components/dashboard/quota-display";
 import Skeleton, { SkeletonList } from "../../../../components/dashboard/skeleton";
 import { useProject } from "../../../../lib/hooks/use-project";
+import type { UserPlan } from "../../../../lib/stripe/plans";
 
 type RegenerateState = { status: "idle" | "loading" | "success" | "error"; message: string };
 
@@ -38,6 +39,11 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const project = useMemo(() => {
     const data = projectQuery.data as null | { project?: unknown };
     return (data?.project as null | Record<string, unknown>) ?? null;
+  }, [projectQuery.data]);
+
+  const userPlan: UserPlan = useMemo(() => {
+    const plan = (projectQuery.data as null | Record<string, unknown>)?.userPlan;
+    return plan === "free" || plan === "pro" || plan === "team" ? plan : "pro";
   }, [projectQuery.data]);
 
   async function onRegenerate() {
@@ -128,7 +134,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         </div>
       )}
 
-      <QuotaDisplay used={quotaUsed} limit={quotaLimit} isOverQuota={isOverQuota} />
+      <QuotaDisplay used={quotaUsed} limit={quotaLimit} isOverQuota={isOverQuota} userPlan={userPlan} />
 
       {status !== "active" && <OnboardingChecklist project={{ status, prUrl, lastEventAt }} />}
     </div>

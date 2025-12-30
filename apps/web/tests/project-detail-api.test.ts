@@ -107,6 +107,7 @@ describe("GET /api/projects/[id]", () => {
       quotaLimit: 10000,
       quotaUsed: 12,
       isOverQuota: false,
+      userPlan: "free",
     });
   });
 
@@ -162,6 +163,7 @@ describe("GET /api/projects/[id]", () => {
       quotaLimit: 10000,
       quotaUsed: 12,
       isOverQuota: false,
+      userPlan: "free",
     });
   });
 });

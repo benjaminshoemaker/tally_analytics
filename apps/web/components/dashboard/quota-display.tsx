@@ -1,6 +1,18 @@
 import React from "react";
 
-export default function QuotaDisplay({ used, limit, isOverQuota }: { used: number; limit: number; isOverQuota: boolean }) {
+import type { UserPlan } from "../../lib/stripe/plans";
+
+export default function QuotaDisplay({
+  used,
+  limit,
+  isOverQuota,
+  userPlan,
+}: {
+  used: number;
+  limit: number;
+  isOverQuota: boolean;
+  userPlan: UserPlan;
+}) {
   const safeLimit = limit > 0 ? limit : 1;
   const rawPercent = Math.round((used / safeLimit) * 100);
   const percent = Math.max(0, Math.min(100, rawPercent));
@@ -32,7 +44,15 @@ export default function QuotaDisplay({ used, limit, isOverQuota }: { used: numbe
       </div>
 
       <p className="mt-2 text-xs text-slate-600">{percent}%</p>
+
+      {userPlan === "free" ? (
+        <a
+          href="/settings"
+          className="mt-4 inline-flex w-fit items-center justify-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white"
+        >
+          Upgrade plan
+        </a>
+      ) : null}
     </section>
   );
 }
-
