@@ -24,11 +24,36 @@ export default function QuotaDisplay({
 
       {isOverQuota ? (
         <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-          <strong>Over quota.</strong> Events are still collected, but your dashboard may be limited until you upgrade.
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              <strong>Over quota.</strong> Events are still collected, but your dashboard may be limited until you
+              upgrade.
+            </span>
+            {userPlan === "free" && (
+              <a
+                href="/settings"
+                className="inline-flex w-fit shrink-0 items-center justify-center rounded-md bg-amber-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-800"
+              >
+                Upgrade plan
+              </a>
+            )}
+          </div>
         </div>
       ) : showWarning ? (
         <div className="mt-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900">
-          You’re at <strong>{percent}%</strong> of your monthly quota.
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              You're at <strong>{percent}%</strong> of your monthly quota.
+            </span>
+            {userPlan === "free" && (
+              <a
+                href="/settings"
+                className="inline-flex w-fit shrink-0 items-center justify-center rounded-md bg-slate-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
+              >
+                Upgrade plan
+              </a>
+            )}
+          </div>
         </div>
       ) : null}
 
@@ -45,10 +70,10 @@ export default function QuotaDisplay({
 
       <p className="mt-2 text-xs text-slate-600">{percent}%</p>
 
-      {userPlan === "free" ? (
+      {userPlan === "free" && !isOverQuota && !showWarning ? (
         <a
           href="/settings"
-          className="mt-4 inline-flex w-fit items-center justify-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white"
+          className="mt-4 inline-flex w-fit items-center justify-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
         >
           Upgrade plan
         </a>
