@@ -11,9 +11,9 @@ HUMAN (Orchestrator)
 ├── Merges worktrees at step boundaries
 └── Reviews at phase checkpoints
 
-AI AGENT (Claude Code)
+AI AGENT (Claude Code, Codex CLI)
 ├── Executes ONE task at a time
-├── Works in isolated worktree branch
+├── Works in git branch
 ├── Follows TDD: tests first, then implementation
 └── Reports completion or blockers
 ```

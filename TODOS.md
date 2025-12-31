@@ -17,16 +17,6 @@ Stripe billing is implemented; run these manual verifications before launch.
 
 ## 🟡 Product Polish
 
-### Sessions Page — Period-over-Period Change
-In `apps/web/app/(dashboard)/projects/[id]/sessions/page.tsx`, all StatCard components have hardcoded `change={0}`.
-
-**Action:** 
-1. Update sessions API to calculate previous period comparison
-2. Return `totalSessionsChange`, `newVisitorsChange`, `returningVisitorsChange`
-3. Use actual change values in StatCards
-
----
-
 ### Demo Page
 Create `/demo` route with static sample data so visitors can preview the dashboard without signing up.
 
@@ -50,6 +40,8 @@ Add testimonials/logos section to marketing landing page.
 ---
 
 ## 🔵 Feature Enhancements
+
+### Deeply investigate which metrics the app implements
 
 ### Re-run Detection on Repo Changes
 Add "Re-run analysis" action so fixing a repo doesn't require uninstall/reinstall.
