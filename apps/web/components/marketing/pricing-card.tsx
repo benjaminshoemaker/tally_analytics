@@ -9,11 +9,38 @@ export type PricingCardProps = {
   retentionLabel: string;
   supportLabel: string;
   ctaLabel: string;
-  ctaHref: string;
+  ctaHref?: string;
+  ctaForm?: {
+    action: string;
+    method: "post" | "get";
+    hiddenFields?: Record<string, string>;
+  };
+  ctaDisabled?: boolean;
   highlighted?: boolean;
 };
 
 export default function PricingCard(props: PricingCardProps) {
+  const ctaClassName = `mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all ${
+    props.highlighted
+      ? "bg-[#ec7f13] text-white shadow-warm hover:bg-orange-600 hover:shadow-warm-md"
+      : "border border-[#e8e0d9] bg-white text-[#1b140d] hover:border-[#d6cdc3] hover:bg-[#f3ede7]"
+  }`;
+
+  const ctaInner = (
+    <>
+      {props.ctaLabel}
+      <svg className="size-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 16 16" fill="none">
+        <path
+          d="M3 8h10M9 4l4 4-4 4"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </>
+  );
+
   return (
     <div
       className={`group relative rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1 ${
@@ -63,20 +90,22 @@ export default function PricingCard(props: PricingCardProps) {
         </div>
       </dl>
 
-      <a
-        href={props.ctaHref}
-        className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all ${
-          props.highlighted
-            ? "bg-[#ec7f13] text-white shadow-warm hover:bg-orange-600 hover:shadow-warm-md"
-            : "border border-[#e8e0d9] bg-white text-[#1b140d] hover:border-[#d6cdc3] hover:bg-[#f3ede7]"
-        }`}
-      >
-        {props.ctaLabel}
-        <svg className="size-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </a>
+      {props.ctaForm ? (
+        <form action={props.ctaForm.action} method={props.ctaForm.method}>
+          {props.ctaForm.hiddenFields
+            ? Object.entries(props.ctaForm.hiddenFields).map(([name, value]) => (
+                <input key={name} type="hidden" name={name} value={value} />
+              ))
+            : null}
+          <button type="submit" className={ctaClassName} disabled={props.ctaDisabled}>
+            {ctaInner}
+          </button>
+        </form>
+      ) : (
+        <a href={props.ctaHref} className={ctaClassName} aria-disabled={props.ctaDisabled}>
+          {ctaInner}
+        </a>
+      )}
     </div>
   );
 }
-

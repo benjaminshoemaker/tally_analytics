@@ -118,11 +118,11 @@ describe("POST /api/auth/magic-link", () => {
     expect(sendMagicLinkEmailSpy).not.toHaveBeenCalled();
   });
 
-  it("returns the login URL in E2E test mode without sending email", async () => {
-    const previousNodeEnv = process.env.NODE_ENV;
-    const previousE2eTestMode = process.env.E2E_TEST_MODE;
-    process.env.NODE_ENV = "test";
-    process.env.E2E_TEST_MODE = "1";
+	  it("returns the login URL in E2E test mode without sending email", async () => {
+	    const previousNodeEnv = process.env.NODE_ENV;
+	    const previousE2eTestMode = process.env.E2E_TEST_MODE;
+	    (process.env as any).NODE_ENV = "test";
+	    process.env.E2E_TEST_MODE = "1";
 
     vi.resetModules();
     countRecentMagicLinksSpy = vi.fn().mockResolvedValue(0);
@@ -150,15 +150,15 @@ describe("POST /api/auth/magic-link", () => {
     if (previousE2eTestMode === undefined) delete process.env.E2E_TEST_MODE;
     else process.env.E2E_TEST_MODE = previousE2eTestMode;
 
-    if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
-    else process.env.NODE_ENV = previousNodeEnv;
-  });
+	    if (previousNodeEnv === undefined) delete (process.env as any).NODE_ENV;
+	    else (process.env as any).NODE_ENV = previousNodeEnv;
+	  });
 
-  it("does not return the login URL in production even when E2E_TEST_MODE is set", async () => {
-    const previousNodeEnv = process.env.NODE_ENV;
-    const previousE2eTestMode = process.env.E2E_TEST_MODE;
-    process.env.NODE_ENV = "production";
-    process.env.E2E_TEST_MODE = "1";
+	  it("does not return the login URL in production even when E2E_TEST_MODE is set", async () => {
+	    const previousNodeEnv = process.env.NODE_ENV;
+	    const previousE2eTestMode = process.env.E2E_TEST_MODE;
+	    (process.env as any).NODE_ENV = "production";
+	    process.env.E2E_TEST_MODE = "1";
 
     vi.resetModules();
     countRecentMagicLinksSpy = vi.fn().mockResolvedValue(0);
@@ -184,7 +184,7 @@ describe("POST /api/auth/magic-link", () => {
 
     if (previousE2eTestMode === undefined) delete process.env.E2E_TEST_MODE;
     else process.env.E2E_TEST_MODE = previousE2eTestMode;
-    if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
-    else process.env.NODE_ENV = previousNodeEnv;
-  });
+	    if (previousNodeEnv === undefined) delete (process.env as any).NODE_ENV;
+	    else (process.env as any).NODE_ENV = previousNodeEnv;
+	  });
 });

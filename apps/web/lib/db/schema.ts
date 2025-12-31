@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   bigint,
+  boolean,
   check,
   index,
   inet,
@@ -23,11 +24,19 @@ export const users = pgTable(
 
     plan: varchar("plan", { length: 20 }).notNull().default("free"),
     stripeCustomerId: varchar("stripe_customer_id", { length: 255 }),
+    stripeSubscriptionId: varchar("stripe_subscription_id", { length: 255 }),
+    stripeSubscriptionStatus: varchar("stripe_subscription_status", { length: 32 }),
+    stripePriceId: varchar("stripe_price_id", { length: 255 }),
+    stripeCurrentPeriodEnd: timestamp("stripe_current_period_end", { withTimezone: true }),
+    stripeCancelAtPeriodEnd: boolean("stripe_cancel_at_period_end"),
+    stripeLastWebhookEventId: varchar("stripe_last_webhook_event_id", { length: 255 }),
+    stripeLastWebhookEventCreated: bigint("stripe_last_webhook_event_created", { mode: "bigint" }),
   },
   (table) => [
     check("email_lowercase", sql`${table.email} = lower(${table.email})`),
     check("users_plan_check", sql`${table.plan} in ('free','pro','team')`),
     index("idx_users_email").on(table.email),
+    index("idx_users_stripe_subscription_id").on(table.stripeSubscriptionId),
   ],
 );
 

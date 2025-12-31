@@ -60,6 +60,7 @@ type ProjectDetailResponse = {
   quotaLimit: number;
   quotaUsed: number;
   isOverQuota: boolean;
+  userPlan: string;
 };
 
 export async function GET(
@@ -123,6 +124,7 @@ export async function GET(
     quotaLimit,
     quotaUsed,
     isOverQuota,
+    userPlan: String(plan),
   };
 
   return Response.json(responseBody);

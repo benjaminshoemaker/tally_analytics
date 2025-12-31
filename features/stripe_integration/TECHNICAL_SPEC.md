@@ -126,6 +126,48 @@ Note: After implementation, refactor `apps/web/app/api/projects/[id]/route.ts` t
 
 ---
 
+## Local Webhook Testing (Stripe CLI)
+
+Use Stripe CLI to forward test-mode webhooks to your local dev server:
+
+```bash
+# Terminal 1
+pnpm -C apps/web dev
+
+# Terminal 2
+stripe listen --forward-to http://localhost:3000/api/webhooks/stripe
+```
+
+Then set `STRIPE_WEBHOOK_SECRET` in `apps/web/.env.local` to the `whsec_...` value printed by `stripe listen`.
+
+You can trigger test events (optional) with:
+
+```bash
+stripe trigger checkout.session.completed
+stripe trigger customer.subscription.updated
+stripe trigger customer.subscription.deleted
+stripe trigger invoice.payment_failed
+```
+
+---
+
+## Manual Recovery / Drift Fixes
+
+If a user’s DB plan drifts from Stripe (webhook delays, missed events, etc.):
+
+1. Prefer the post-checkout reconciliation flow:
+   - Redirect URL format: `/settings?success=true&checkout_session_id={CHECKOUT_SESSION_ID}`
+   - The Settings page calls `POST /api/stripe/reconcile` automatically when the `checkout_session_id` param is present.
+
+2. If you have a Checkout Session id (`cs_...`) and need to force reconciliation:
+   - `POST /api/stripe/reconcile` with JSON body `{ "checkout_session_id": "cs_..." }` while authenticated as that user.
+
+3. If you see logs like `stripe.webhook.unknown_price_id`:
+   - Check that `STRIPE_PRICE_PRO` / `STRIPE_PRICE_TEAM` match the actual Stripe price ids for this environment (test vs live).
+   - The webhook handler intentionally does **not** downgrade the user on unknown price ids; fix config drift and re-run reconciliation.
+
+---
+
 ## Database Migration
 
 ### Migration File

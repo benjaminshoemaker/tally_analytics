@@ -25,6 +25,7 @@ describe("/projects/[id] page", () => {
       quotaLimit: 10000,
       quotaUsed: 0,
       isOverQuota: false,
+      userPlan: "free",
     });
 
     const html = renderToStaticMarkup(

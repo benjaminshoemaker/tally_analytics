@@ -43,17 +43,15 @@ In `apps/web/components/marketing/footer.tsx`, the support link points to:
 ## 🟠 Revenue & Monetization
 
 ### Stripe Payment Integration
-No payment system exists. Users cannot upgrade from Free → Pro → Team.
+Stripe billing is implemented; run these manual verifications before launch.
 
-**Steps:**
-1. Create Stripe account, add products (Free $0, Pro $9/mo, Team $29/mo)
-2. Add env vars: `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET`
-3. Install: `pnpm -C apps/web add stripe @stripe/stripe-js`
-4. Create API routes:
-   - `POST /api/stripe/checkout` — create Checkout session
-   - `POST /api/stripe/portal` — create Billing Portal session
-   - `POST /api/webhooks/stripe` — handle subscription events
-5. Database already has `users.plan` and `users.stripeCustomerId` columns
+**Manual verification checklist (ranked):**
+1. [ ] Reconcile forbidden (security): User B calling `/api/stripe/reconcile` with User A’s `checkout_session_id` returns `403`.
+2. [ ] Multi-subscription prevention: paid user re-submitting `/api/stripe/checkout` returns `409` + `manageUrl` (or redirects to portal).
+3. [ ] Unknown price id safety: wrong `STRIPE_PRICE_*` does not downgrade user to `free` after a real `customer.subscription.updated`.
+4. [ ] Webhook secret rotation: restart `stripe listen` (new `whsec_...`), update `STRIPE_WEBHOOK_SECRET`, restart dev server; no signature failures.
+5. [ ] `/pricing` wiring: logged-out CTAs go to GitHub install; logged-in free → checkout; logged-in paid → portal.
+6. [ ] QuotaDisplay wiring: paid users never see “Upgrade plan”; free users do.
 
 ---
 

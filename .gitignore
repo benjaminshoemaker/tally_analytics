@@ -35,6 +35,7 @@ Thumbs.db
 *.log
 npm-debug.log*
 pnpm-debug.log*
+*.pid
 
 # Testing
 coverage/
