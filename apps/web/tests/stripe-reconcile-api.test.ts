@@ -120,7 +120,8 @@ describe("POST /api/stripe/reconcile", () => {
         id: "sub_123",
         status: "active",
         cancel_at_period_end: false,
-        current_period_end: "1750000000",
+        cancel_at: "1760000000",
+        current_period_end: undefined,
         items: { data: [{ price: { id: "price_pro_test" } }] },
         metadata: { userId: "u1" },
       },
@@ -139,7 +140,8 @@ describe("POST /api/stripe/reconcile", () => {
 
     expect(setSpy).toHaveBeenCalledWith(
       expect.objectContaining({
-        stripeCurrentPeriodEnd: new Date(1_750_000_000 * 1000),
+        stripeCancelAtPeriodEnd: true,
+        stripeCurrentPeriodEnd: new Date(1_760_000_000 * 1000),
       }),
     );
 

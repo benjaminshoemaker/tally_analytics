@@ -150,12 +150,18 @@ export async function POST(request: Request): Promise<Response> {
           console.error("stripe.webhook.unknown_price_id", { eventId, eventType, customerId, subscriptionId, priceId, userId: user.id });
         }
 
+        const cancelAtDate = toUnixSecondsDate(object?.cancel_at);
+        const currentPeriodEndDate = toUnixSecondsDate(object?.current_period_end) ?? cancelAtDate;
+        const hasScheduledCancellation = !!cancelAtDate && (object?.canceled_at === null || object?.canceled_at === undefined);
+        const cancelAtPeriodEnd =
+          hasScheduledCancellation || typeof object?.cancel_at_period_end !== "boolean" ? hasScheduledCancellation : object.cancel_at_period_end;
+
         const setValues: Record<string, unknown> = {
           stripeSubscriptionId: subscriptionId,
           stripeSubscriptionStatus: typeof object?.status === "string" ? object.status : null,
           stripePriceId: typeof priceId === "string" ? priceId : null,
-          stripeCurrentPeriodEnd: toUnixSecondsDate(object?.current_period_end),
-          stripeCancelAtPeriodEnd: typeof object?.cancel_at_period_end === "boolean" ? object.cancel_at_period_end : null,
+          stripeCurrentPeriodEnd: currentPeriodEndDate,
+          stripeCancelAtPeriodEnd: cancelAtPeriodEnd,
           stripeLastWebhookEventId: eventId,
           stripeLastWebhookEventCreated: eventCreated,
         };

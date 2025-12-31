@@ -99,6 +99,12 @@ export async function POST(request: Request): Promise<Response> {
 
   const newPlan = mappedPlan ?? user.plan;
 
+  const cancelAtDate = getUnixSecondsDate(subscription.cancel_at);
+  const currentPeriodEndDate = getUnixSecondsDate(subscription.current_period_end) ?? cancelAtDate;
+  const hasScheduledCancellation = !!cancelAtDate && (subscription.canceled_at === null || subscription.canceled_at === undefined);
+  const cancelAtPeriodEnd =
+    hasScheduledCancellation || typeof subscription.cancel_at_period_end !== "boolean" ? hasScheduledCancellation : subscription.cancel_at_period_end;
+
   const updatedRows = await db
     .update(users)
     .set({
@@ -106,8 +112,8 @@ export async function POST(request: Request): Promise<Response> {
       stripeSubscriptionId: subscriptionId,
       stripeSubscriptionStatus: typeof subscription.status === "string" ? subscription.status : null,
       stripePriceId: typeof priceId === "string" ? priceId : null,
-      stripeCurrentPeriodEnd: getUnixSecondsDate(subscription.current_period_end),
-      stripeCancelAtPeriodEnd: typeof subscription.cancel_at_period_end === "boolean" ? subscription.cancel_at_period_end : null,
+      stripeCurrentPeriodEnd: currentPeriodEndDate,
+      stripeCancelAtPeriodEnd: cancelAtPeriodEnd,
     })
     .where(eq(users.id, user.id))
     .returning();
