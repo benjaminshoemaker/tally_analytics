@@ -20,8 +20,24 @@ function getExpandedId(value: unknown): string | null {
 }
 
 function getUnixSecondsDate(value: unknown): Date | null {
-  if (typeof value !== "number" || !Number.isFinite(value)) return null;
-  return new Date(value * 1000);
+  let seconds: number | null = null;
+
+  if (typeof value === "number" && Number.isFinite(value)) {
+    seconds = Math.floor(value);
+  } else if (typeof value === "string" && value.trim().length > 0) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      seconds = Math.floor(parsed);
+    }
+  } else if (typeof value === "bigint") {
+    const parsed = Number(value);
+    if (Number.isSafeInteger(parsed)) {
+      seconds = parsed;
+    }
+  }
+
+  if (seconds === null) return null;
+  return new Date(seconds * 1000);
 }
 
 export async function POST(request: Request): Promise<Response> {

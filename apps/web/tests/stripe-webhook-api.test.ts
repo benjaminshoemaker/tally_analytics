@@ -60,7 +60,7 @@ describe("POST /api/webhooks/stripe", () => {
           customer: "cus_123",
           status: "active",
           cancel_at_period_end: false,
-          current_period_end: 1_750_000_000,
+          current_period_end: "1750000000",
           items: { data: [{ price: { id: "price_unknown" } }] },
         },
       },
@@ -106,6 +106,7 @@ describe("POST /api/webhooks/stripe", () => {
       expect.objectContaining({
         stripeSubscriptionId: "sub_123",
         stripePriceId: "price_unknown",
+        stripeCurrentPeriodEnd: new Date(1_750_000_000 * 1000),
       }),
     );
     expect(setSpy).not.toHaveBeenCalledWith(expect.objectContaining({ plan: "free" }));

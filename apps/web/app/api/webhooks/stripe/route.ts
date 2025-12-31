@@ -15,13 +15,26 @@ type UserForStripeWebhook = {
 };
 
 function toUnixSecondsBigint(value: unknown): bigint | null {
-  if (typeof value !== "number" || !Number.isFinite(value)) return null;
-  return BigInt(Math.floor(value));
+  if (typeof value === "number" && Number.isFinite(value)) return BigInt(Math.floor(value));
+  if (typeof value === "string" && value.trim().length > 0) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? BigInt(Math.floor(parsed)) : null;
+  }
+  if (typeof value === "bigint") return value;
+  return null;
 }
 
 function toUnixSecondsDate(value: unknown): Date | null {
-  if (typeof value !== "number" || !Number.isFinite(value)) return null;
-  return new Date(value * 1000);
+  if (typeof value === "number" && Number.isFinite(value)) return new Date(Math.floor(value) * 1000);
+  if (typeof value === "string" && value.trim().length > 0) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? new Date(Math.floor(parsed) * 1000) : null;
+  }
+  if (typeof value === "bigint") {
+    const parsed = Number(value);
+    return Number.isSafeInteger(parsed) ? new Date(parsed * 1000) : null;
+  }
+  return null;
 }
 
 function getExpandedId(value: unknown): string | null {
@@ -194,4 +207,3 @@ export async function POST(request: Request): Promise<Response> {
 
   return Response.json({ ok: true }, { status: 200 });
 }
-
