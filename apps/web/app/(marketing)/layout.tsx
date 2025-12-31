@@ -7,6 +7,9 @@ import { SESSION_COOKIE_NAME } from "../../lib/auth/cookies";
 
 const INSTALL_URL = "https://github.com/apps/tally-analytics-agent";
 
+// Force dynamic rendering to check session cookie on each request
+export const dynamic = "force-dynamic";
+
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   const isLoggedIn = cookies().get(SESSION_COOKIE_NAME) !== undefined;
 

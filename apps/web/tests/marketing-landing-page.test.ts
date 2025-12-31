@@ -21,11 +21,11 @@ async function renderLandingPage(options: { loggedIn: boolean }) {
     name === SESSION_COOKIE_NAME && options.loggedIn ? { value: "sess_123" } : undefined,
   );
 
-  const { default: MarketingLayout } = await import("../app/(marketing)/layout");
-  const { default: LandingPage, dynamic } = await import("../app/(marketing)/page");
+  const { default: MarketingLayout, dynamic: layoutDynamic } = await import("../app/(marketing)/layout");
+  const { default: LandingPage } = await import("../app/(marketing)/page");
 
   return {
-    dynamic,
+    layoutDynamic,
     html: renderToStaticMarkup(
       React.createElement(MarketingLayout, null, React.createElement(LandingPage)),
     ),
@@ -130,8 +130,8 @@ describe("marketing landing page", () => {
     expect(ctaIndex).toBeGreaterThan(setAndForgetIndex);
   });
 
-  it("is configured for static generation", async () => {
-    const { dynamic } = await renderLandingPage({ loggedIn: false });
-    expect(dynamic).toBe("force-static");
+  it("layout is configured for dynamic rendering to check session cookie", async () => {
+    const { layoutDynamic } = await renderLandingPage({ loggedIn: false });
+    expect(layoutDynamic).toBe("force-dynamic");
   });
 });

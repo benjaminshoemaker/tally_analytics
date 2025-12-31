@@ -6,7 +6,6 @@ import MarketingHowItWorks from '../../components/marketing/how-it-works';
 import MarketingSetAndForget from '../../components/marketing/set-and-forget';
 import MarketingWhatYouGet from '../../components/marketing/what-you-get';
 
-export const dynamic = 'force-static';
 
 const INSTALL_URL = 'https://github.com/apps/tally-analytics-agent';
 const DASHBOARD_IMAGE_SRC = '/marketing/dashboard.png';
