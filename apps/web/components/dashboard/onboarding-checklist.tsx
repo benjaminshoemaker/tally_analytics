@@ -63,18 +63,18 @@ export default function OnboardingChecklist({ project }: { project: OnboardingPr
   const progressPercent = Math.round((completedCount / steps.length) * 100);
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <section className="rounded-lg border border-warm-200 bg-white p-4 shadow-warm">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="font-display text-sm font-semibold text-slate-900">Getting Started</h2>
-        <span className="text-xs font-medium text-slate-600">
+        <h2 className="font-display text-sm font-semibold text-warm-900">Getting Started</h2>
+        <span className="text-xs font-medium text-warm-500">
           {completedCount}/{steps.length} complete
         </span>
       </div>
 
       {/* Progress Bar */}
-      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-warm-100">
         <div
-          className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+          className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-all duration-500"
           style={{ width: `${progressPercent}%` }}
         />
       </div>
@@ -88,12 +88,12 @@ export default function OnboardingChecklist({ project }: { project: OnboardingPr
               {/* Checkbox */}
               <div
                 className={[
-                  "mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full",
+                  "mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full transition-all duration-300",
                   step.done
                     ? "bg-emerald-500 text-white"
                     : isNextStep
-                      ? "border-2 border-slate-300 text-slate-300"
-                      : "border border-slate-200 text-slate-200",
+                      ? "border-2 border-brand-300 text-brand-300"
+                      : "border border-warm-200 text-warm-200",
                 ].join(" ")}
               >
                 {step.done ? <CheckIcon className="h-3 w-3" /> : <span className="h-2 w-2" />}
@@ -103,13 +103,13 @@ export default function OnboardingChecklist({ project }: { project: OnboardingPr
               <div className="flex-1 min-w-0">
                 <p
                   className={[
-                    "text-sm font-medium",
-                    step.done ? "text-slate-500 line-through" : "text-slate-900",
+                    "text-sm font-medium transition-colors",
+                    step.done ? "text-warm-400 line-through" : "text-warm-900",
                   ].join(" ")}
                 >
                   {step.label}
                 </p>
-                <p className="text-xs text-slate-500">{step.description}</p>
+                <p className="text-xs text-warm-500">{step.description}</p>
               </div>
 
               {/* Status */}
@@ -119,7 +119,7 @@ export default function OnboardingChecklist({ project }: { project: OnboardingPr
                 </span>
               )}
               {isNextStep && (
-                <span className="flex-shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+                <span className="flex-shrink-0 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-600">
                   Next
                 </span>
               )}

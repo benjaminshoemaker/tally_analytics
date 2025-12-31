@@ -78,19 +78,19 @@ const STEPS: Step[] = [
 
 export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowItWorksProps) {
   return (
-    <section className="bg-[#fcfaf8] py-24 dark:bg-[#1b140d]">
+    <section className="bg-[#fcfaf8] py-24">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mb-16 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="mb-2 font-display text-3xl font-semibold text-[#1b140d] dark:text-white">
+            <h2 className="mb-2 font-display text-3xl font-semibold text-[#1b140d]">
               How it works
             </h2>
-            <p className="text-[#9a734c] dark:text-[#d0c0b0]">
+            <p className="text-[#9a734c]">
               From zero to data in less than 2 minutes.
             </p>
           </div>
           <a
-            className="flex items-center gap-1 font-medium text-[#ec7f13] hover:text-orange-600"
+            className="flex items-center gap-1 font-medium text-[#ec7f13] transition-colors hover:text-orange-600"
             href="/docs"
           >
             View technical docs
@@ -104,21 +104,21 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
         </div>
 
         <div className="relative">
-          <div className="absolute left-[10%] right-[10%] top-12 hidden h-0.5 border-t border-dashed border-[#e8e0d9] dark:border-[#3e342b] md:block" />
+          <div className="absolute left-[10%] right-[10%] top-12 hidden h-0.5 border-t border-dashed border-[#e8e0d9] md:block" />
 
           <div className="relative z-10 grid grid-cols-1 gap-12 md:grid-cols-4">
             {STEPS.map((step) => (
               <div key={step.number} className="flex flex-col items-center text-center">
-                <div className="relative mb-6 flex size-24 items-center justify-center rounded-full border-4 border-[#f3ede7] bg-white text-[#9a734c] shadow-sm dark:border-[#2a221b] dark:bg-[#221910] dark:text-[#d0c0b0]">
+                <div className="relative mb-6 flex size-24 items-center justify-center rounded-full border-4 border-[#f3ede7] bg-white text-[#9a734c] shadow-sm">
                   <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-[#ec7f13] text-sm font-bold text-white shadow-sm">
                     {step.number}
                   </span>
                   {step.icon}
                 </div>
-                <h3 className="mb-2 font-display text-lg font-semibold text-[#1b140d] dark:text-white">
+                <h3 className="mb-2 font-display text-lg font-semibold text-[#1b140d]">
                   {step.title}
                 </h3>
-                <p className="max-w-[240px] text-sm text-[#9a734c] dark:text-[#d0c0b0]">
+                <p className="max-w-[240px] text-sm text-[#9a734c]">
                   {step.description}
                 </p>
               </div>
@@ -127,8 +127,8 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
         </div>
 
         <div className="mt-16 w-full">
-          <div className="rounded-xl border border-[#e8e0d9] bg-white shadow-warm-lg dark:border-[#3e342b] dark:bg-[#221910]">
-            <div className="flex items-center justify-between border-b border-[#e8e0d9] bg-stone-50/50 px-4 py-3 dark:border-[#3e342b] dark:bg-black/20">
+          <div className="rounded-xl border border-[#e8e0d9] bg-white shadow-warm-lg">
+            <div className="flex items-center justify-between border-b border-[#e8e0d9] bg-stone-50/50 px-4 py-3">
               <div className="flex items-center gap-2">
                 <div className="size-3 rounded-full bg-[#ff5f57]" />
                 <div className="size-3 rounded-full bg-[#febc2e]" />
@@ -137,8 +137,8 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
               <div className="text-xs font-medium text-stone-400">app.tally.so/dashboard</div>
               <div className="w-4" />
             </div>
-            <div className="bg-stone-50/50 p-4 md:p-6 dark:bg-[#2a221b]/20">
-              <div className="overflow-hidden rounded-lg border border-[#e8e0d9] bg-white dark:border-[#3e342b] dark:bg-[#2a221b]">
+            <div className="bg-stone-50/50 p-4 md:p-6">
+              <div className="overflow-hidden rounded-lg border border-[#e8e0d9] bg-white">
                 <img
                   alt="Dashboard preview showing analytics graphs and tables"
                   className="h-auto w-full"
@@ -147,12 +147,12 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
                 />
               </div>
             </div>
-            <div className="flex justify-center border-t border-[#e8e0d9] bg-white p-3 dark:border-[#3e342b] dark:bg-[#221910]">
-              <p className="flex items-center gap-2 text-sm font-semibold text-[#1b140d] dark:text-white">
+            <div className="flex justify-center border-t border-[#e8e0d9] bg-white p-3">
+              <p className="flex items-center gap-2 text-sm font-semibold text-[#1b140d]">
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
-                  className="size-[18px] text-[#9a734c] dark:text-[#d0c0b0]"
+                  className="size-[18px] text-[#9a734c]"
                 >
                   <path
                     fill="currentColor"

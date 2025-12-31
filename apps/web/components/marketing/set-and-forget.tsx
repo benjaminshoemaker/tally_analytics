@@ -8,13 +8,13 @@ const HIGHLIGHTS = [
 
 export default function MarketingSetAndForget() {
   return (
-    <section className="border-y border-[#e8e0d9] bg-[#f3ede7]/60 py-20 dark:border-[#3e342b] dark:bg-[#2a221b]/40">
+    <section className="border-y border-[#e8e0d9] bg-[#f3ede7]/60 py-20">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mx-auto max-w-3xl md:text-center">
-          <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d] dark:text-white">
+          <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d]">
             Your analytics evolve with your app
           </h2>
-          <p className="text-lg text-[#9a734c] dark:text-[#d0c0b0]">
+          <p className="text-lg text-[#9a734c]">
             Most analytics tools break when you ship changes. Tally doesn&apos;t.
           </p>
         </div>
@@ -23,7 +23,7 @@ export default function MarketingSetAndForget() {
           {HIGHLIGHTS.map((highlight) => (
             <div
               key={highlight}
-              className="flex items-start gap-4 rounded-lg border border-[#e8e0d9] bg-white p-6 shadow-warm dark:border-[#3e342b] dark:bg-[#221910]"
+              className="flex items-start gap-4 rounded-lg border border-[#e8e0d9] bg-white p-6 shadow-warm"
             >
               <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded bg-[#ec7f13]/10 text-[#ec7f13]">
                 <svg
@@ -39,14 +39,14 @@ export default function MarketingSetAndForget() {
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
               </div>
-              <p className="text-base leading-relaxed text-[#1b140d] dark:text-[#ede0d4]">
+              <p className="text-base leading-relaxed text-[#1b140d]">
                 {highlight}
               </p>
             </div>
           ))}
         </div>
 
-        <p className="mx-auto mt-10 max-w-3xl text-center text-lg font-medium text-[#1b140d] dark:text-white">
+        <p className="mx-auto mt-10 max-w-3xl text-center text-lg font-medium text-[#1b140d]">
           You focus on building. We&apos;ll keep the data flowing.
         </p>
       </div>

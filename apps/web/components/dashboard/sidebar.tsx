@@ -79,9 +79,9 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center gap-1 px-4 py-4 sm:px-6 md:flex-col md:items-stretch md:gap-0 md:py-6">
-      {/* Logo for desktop */}
-      <a href="/" className="mb-6 hidden items-center gap-2 md:flex">
+    <nav className="flex flex-col gap-0 px-4 py-6 sm:px-6">
+      {/* Logo */}
+      <a href="/" className="mb-6 flex items-center gap-2">
         <div className="flex size-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500">
           <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
             <path
@@ -94,13 +94,13 @@ export default function DashboardSidebar() {
       </a>
 
       {NAV_SECTIONS.map((section, sectionIndex) => (
-        <div key={section.title || sectionIndex} className="md:mb-4">
+        <div key={section.title || sectionIndex} className="mb-4">
           {section.title && (
-            <p className="mb-2 hidden px-3 text-xs font-semibold uppercase tracking-wider text-warm-400 md:block">
+            <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-warm-400">
               {section.title}
             </p>
           )}
-          <div className="flex items-center gap-1 md:flex-col md:items-stretch md:gap-0.5">
+          <div className="flex flex-col gap-0.5">
             {section.items.map((item) => {
               const isActive = item.matchPattern ? item.matchPattern.test(pathname) : pathname === item.href;
               const Icon = item.icon;
@@ -117,7 +117,7 @@ export default function DashboardSidebar() {
                   ].join(" ")}
                 >
                   {isActive && (
-                    <span className="absolute left-0 top-1/2 hidden h-5 w-1 -translate-y-1/2 rounded-r-full bg-brand-500 md:block" />
+                    <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-brand-500" />
                   )}
                   <Icon className={isActive ? "text-brand-500" : "text-warm-400 transition-colors group-hover:text-warm-600"} />
                   {item.label}

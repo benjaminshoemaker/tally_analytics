@@ -131,13 +131,13 @@ const FEATURES: Feature[] = [
 
 export default function MarketingWhatYouGet() {
   return (
-    <section className="bg-[#fcfaf8] py-24 dark:bg-[#1b140d]">
+    <section className="bg-[#fcfaf8] py-24">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mx-auto mb-16 max-w-2xl md:text-center">
-          <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d] dark:text-white">
+          <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d]">
             Everything you need, nothing you don&apos;t
           </h2>
-          <p className="text-lg text-[#9a734c] dark:text-[#d0c0b0]">
+          <p className="text-lg text-[#9a734c]">
             A clean dashboard with the metrics that actually matter for early-stage apps.
           </p>
         </div>
@@ -146,15 +146,15 @@ export default function MarketingWhatYouGet() {
           {FEATURES.map((feature) => (
             <div
               key={feature.title}
-              className="group rounded-lg border border-[#e8e0d9] bg-white p-8 shadow-warm transition-all duration-300 hover:-translate-y-1 hover:shadow-warm-lg dark:border-[#3e342b] dark:bg-[#221910]"
+              className="group rounded-lg border border-[#e8e0d9] bg-white p-8 shadow-warm transition-all duration-300 hover:-translate-y-1 hover:shadow-warm-lg"
             >
               <div className="mb-6 flex size-12 items-center justify-center rounded bg-[#ec7f13]/10 text-[#ec7f13] transition-transform group-hover:scale-110">
                 {feature.icon}
               </div>
-              <h3 className="mb-3 font-display text-xl font-semibold text-[#1b140d] dark:text-white">
+              <h3 className="mb-3 font-display text-xl font-semibold text-[#1b140d]">
                 {feature.title}
               </h3>
-              <p className="leading-relaxed text-[#9a734c] dark:text-[#d0c0b0]">
+              <p className="leading-relaxed text-[#9a734c]">
                 {feature.description}
               </p>
             </div>

@@ -68,6 +68,8 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
     );
   }, [overviewQuery.data]);
 
+  const isRefetching = overviewQuery.isFetching && !overviewQuery.isPending;
+
   return (
     <div className="flex w-full flex-col gap-6">
       <header className="flex flex-col gap-3 opacity-0 animate-fade-in md:flex-row md:items-center md:justify-between">
@@ -78,15 +80,30 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
 
         <label className="flex items-center gap-2 text-sm text-warm-700">
           Period
-          <select
-            value={period}
-            onChange={(e) => setPeriod(e.target.value as Period)}
-            className="rounded-lg border border-warm-200 bg-white px-3 py-1.5 text-sm shadow-sm transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
-          >
-            <option value="24h">Last 24 hours</option>
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-          </select>
+          <div className="relative">
+            <select
+              value={period}
+              onChange={(e) => setPeriod(e.target.value as Period)}
+              disabled={isRefetching}
+              className="appearance-none rounded-lg border border-warm-200 bg-white py-1.5 pl-3 pr-8 text-sm shadow-sm transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:opacity-60"
+            >
+              <option value="24h">Last 24 hours</option>
+              <option value="7d">Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+            </select>
+            <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
+              {isRefetching ? (
+                <svg className="size-4 animate-spin text-brand-500" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+              ) : (
+                <svg className="size-4 text-warm-400" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </div>
+          </div>
         </label>
       </header>
 
@@ -107,7 +124,7 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
           <p className="text-sm text-red-700">Unable to load analytics. Please try again.</p>
         </div>
       ) : (
-        <>
+        <div className={`flex flex-col gap-6 transition-opacity duration-300 ${isRefetching ? "opacity-60" : "opacity-100"}`}>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="opacity-0 animate-fade-in stagger-1">
               <StatCard label="Page views" value={overviewQuery.data.pageViews.total.toLocaleString()} change={overviewQuery.data.pageViews.change} />
@@ -129,7 +146,7 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
               <TopList title="Top referrers" items={topReferrersItems} />
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
