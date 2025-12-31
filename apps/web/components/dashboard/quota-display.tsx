@@ -43,7 +43,7 @@ export default function QuotaDisplay({
         <div className="mt-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <span>
-              You're at <strong>{percent}%</strong> of your monthly quota.
+              You&apos;re at <strong>{percent}%</strong> of your monthly quota.
             </span>
             {userPlan === "free" && (
               <a
