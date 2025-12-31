@@ -1,45 +1,5 @@
 # TODOs — Tally Analytics
 
-## 🔴 Pre-Launch Critical
-
-### OG Image PNG
-The root layout metadata references `/og-image.png` but the file doesn't exist in `apps/web/public/`.
-
-**Action:** Convert `branding/og-image.svg` to 1200×630 PNG and save to `apps/web/public/og-image.png`
-
-```bash
-# Using Inkscape
-inkscape branding/og-image.svg -w 1200 -h 630 -o apps/web/public/og-image.png
-
-# Or ImageMagick
-convert -background white -size 1200x630 branding/og-image.svg apps/web/public/og-image.png
-```
-
----
-
-### GitHub Templates — Update Branding
-The PR generation templates still use old "fast-pr-analytics" branding.
-
-**Files:**
-- `apps/web/lib/github/templates/app-router.ts`
-- `apps/web/lib/github/templates/pages-router.ts`
-
-**Changes needed:**
-- Generated file: `components/fast-pr-analytics.tsx` → `components/tally-analytics.tsx`
-- Cookie name: `fast_pr_analytics_sid` → `tally_sid`
-- Component name: `FastPrAnalytics` → `TallyAnalytics`
-- Hook name: `useFastPrAnalytics` → `useTallyAnalytics`
-
----
-
-### Footer Support Link — Fix Placeholder
-In `apps/web/components/marketing/footer.tsx`, the support link points to:
-`https://github.com/your-org/tally-analytics/issues`
-
-**Action:** Update to actual repo URL or change to `mailto:support@usetally.xyz`
-
----
-
 ## 🟠 Revenue & Monetization
 
 ### Stripe Payment Integration
@@ -52,13 +12,6 @@ Stripe billing is implemented; run these manual verifications before launch.
 4. [ ] Webhook secret rotation: restart `stripe listen` (new `whsec_...`), update `STRIPE_WEBHOOK_SECRET`, restart dev server; no signature failures.
 5. [ ] `/pricing` wiring: logged-out CTAs go to GitHub install; logged-in free → checkout; logged-in paid → portal.
 6. [ ] QuotaDisplay wiring: paid users never see “Upgrade plan”; free users do.
-
----
-
-### Quota Upgrade CTA
-In `apps/web/components/dashboard/quota-display.tsx`, add "Upgrade Plan" button when over quota or at 80%+.
-
-**Depends on:** Stripe integration
 
 ---
 
@@ -165,7 +118,6 @@ Docs: https://www.tinybird.co/docs/forward/monitoring/service-datasources
 ## ✅ Completed
 
 - [x] SDK Events URL — updated to `https://events.usetally.xyz/v1/track`
-- [x] Logged-in marketing nav — shows "Dashboard" when session cookie exists
 - [x] SDK package rename — now `@tally-analytics/sdk`
 - [x] Fix "no cookies" claim — updated to "no consent banner needed"
 - [x] OG meta tags — added openGraph and twitter metadata
@@ -175,6 +127,11 @@ Docs: https://www.tinybird.co/docs/forward/monitoring/service-datasources
 - [x] Feature icons — already existed
 - [x] Vercel Web Analytics — integrated in layout
 - [x] Comparison page research — saved to `design/comparison-page-research.md`
+- [x] OG Image PNG — exists at `apps/web/public/og-image.png`
+- [x] Logged-in marketing nav — navbar shows "Dashboard" when session cookie exists
+- [x] GitHub Templates — updated to Tally branding (`tally-analytics.tsx`, `tally_sid`, `TallyAnalytics`)
+- [x] Footer Support Link — updated to `mailto:support@usetally.xyz`
+- [x] Quota Upgrade CTA — inline upgrade button shown at 80%+ and over quota states
 
 ---
 
