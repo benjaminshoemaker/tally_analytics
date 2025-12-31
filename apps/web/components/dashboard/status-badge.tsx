@@ -52,12 +52,17 @@ const STATUS_MAP: Record<string, StatusConfig> = {
     className: "bg-emerald-50 text-emerald-700 border-emerald-200",
     icon: ActiveIcon,
   },
-  pending_pr: {
+  pending: {
+    label: "Pending",
+    className: "bg-slate-50 text-slate-600 border-slate-200",
+    icon: PendingIcon,
+  },
+  pr_pending: {
     label: "PR Pending",
     className: "bg-amber-50 text-amber-700 border-amber-200",
     icon: PendingIcon,
   },
-  pending_analysis: {
+  analyzing: {
     label: "Analyzing",
     className: "bg-blue-50 text-blue-700 border-blue-200",
     icon: AnalyzingIcon,
@@ -69,13 +74,13 @@ const STATUS_MAP: Record<string, StatusConfig> = {
   },
   pr_closed: {
     label: "PR Closed",
-    className: "bg-warm-100 text-warm-600 border-warm-200",
+    className: "bg-slate-100 text-slate-500 border-slate-200",
     icon: ClosedIcon,
   },
   unsupported: {
     label: "Unsupported",
-    className: "bg-warm-100 text-warm-600 border-warm-200",
-    icon: ClosedIcon,
+    className: "bg-amber-50 text-amber-700 border-amber-200",
+    icon: FailedIcon,
   },
 };
 

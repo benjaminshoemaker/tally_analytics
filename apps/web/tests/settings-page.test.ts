@@ -59,8 +59,8 @@ describe("/settings page", () => {
 
     expect(html).toContain("Account settings");
     expect(html).toContain("u1@example.com");
-    expect(html).toContain("free");
+    expect(html).toContain("Free"); // Plan is capitalized
     expect(html).toContain('action="/api/stripe/checkout"');
-    expect(html).toContain('action="/api/auth/logout"');
+    // Logout form was removed from bottom; only appears in top-right nav
   });
 });

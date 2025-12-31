@@ -171,5 +171,37 @@ describe("POST /api/projects/[id]/regenerate", () => {
     expect(createRegenerateRequestSpy).toHaveBeenCalledWith({ userId: "u1", projectId: "proj_123" });
     expect(analyzeRepositorySpy).toHaveBeenCalledWith({ repoId: 1n, repoFullName: "octo/repo", installationId: 2n });
   });
+
+  it("allows regeneration for unsupported projects", async () => {
+    vi.resetModules();
+
+    getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "u1", email: "u1@example.com" });
+    const whereSpy = vi.fn().mockResolvedValue([
+      {
+        id: "proj_123",
+        status: "unsupported",
+        repoId: 1n,
+        repoFullName: "octo/repo",
+        installationId: 2n,
+      },
+    ]);
+    const fromSpy = vi.fn(() => ({ where: whereSpy }));
+    selectSpy = vi.fn(() => ({ from: fromSpy }));
+
+    countRecentRegenerateRequestsSpy = vi.fn().mockResolvedValue(0);
+    createRegenerateRequestSpy = vi.fn().mockResolvedValue(undefined);
+    analyzeRepositorySpy = vi.fn().mockResolvedValue(undefined);
+
+    const { POST } = await import("../app/api/projects/[id]/regenerate/route");
+
+    const response = await POST(new Request("http://localhost/api/projects/proj_123/regenerate", { method: "POST" }), {
+      params: { id: "proj_123" },
+    });
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ success: true, message: expect.any(String) });
+    expect(createRegenerateRequestSpy).toHaveBeenCalledWith({ userId: "u1", projectId: "proj_123" });
+    expect(analyzeRepositorySpy).toHaveBeenCalledWith({ repoId: 1n, repoFullName: "octo/repo", installationId: 2n });
+  });
 });
 

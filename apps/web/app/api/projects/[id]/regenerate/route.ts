@@ -37,9 +37,10 @@ export async function POST(
     return Response.json({ success: false, message: "Project not found" } satisfies RegenerateResponse, { status: 404 });
   }
 
-  if (project.status !== "analysis_failed" && project.status !== "pr_closed") {
+  const allowedStatuses = ["analysis_failed", "pr_closed", "unsupported"];
+  if (!allowedStatuses.includes(project.status)) {
     return Response.json(
-      { success: false, message: "Regenerate is only allowed for failed or closed projects" } satisfies RegenerateResponse,
+      { success: false, message: "Re-run is only allowed for failed, closed, or unsupported projects" } satisfies RegenerateResponse,
       { status: 400 },
     );
   }

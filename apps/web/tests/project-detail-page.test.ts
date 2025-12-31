@@ -38,6 +38,7 @@ describe("/projects/[id] page", () => {
     expect(html).toContain("octo/repo");
     expect(html).toContain('href="https://github.com/octo/repo/pull/1"');
     expect(html).toContain("Getting Started");
-    expect(html).toContain("Regenerate PR");
+    expect(html).toContain("Re-run Analysis"); // Button text changed from "Regenerate PR"
+    expect(html).toContain("Analysis Failed"); // Status-specific card for failed state
   });
 });
