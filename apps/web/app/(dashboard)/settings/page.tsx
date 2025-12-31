@@ -53,12 +53,14 @@ export default async function SettingsPage() {
           </div>
           <div className="flex items-center justify-between gap-4">
             <dt className="text-slate-600">Plan</dt>
-            <dd className="font-medium text-slate-900">{user.plan}</dd>
+            <dd className="font-medium text-slate-900">{user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}</dd>
           </div>
           {user.stripeSubscriptionStatus ? (
             <div className="flex items-center justify-between gap-4">
               <dt className="text-slate-600">Billing status</dt>
-              <dd className="font-medium text-slate-900">{user.stripeSubscriptionStatus}</dd>
+              <dd className="font-medium text-slate-900">
+                {user.stripeSubscriptionStatus.charAt(0).toUpperCase() + user.stripeSubscriptionStatus.slice(1)}
+              </dd>
             </div>
           ) : null}
           {user.stripeCurrentPeriodEnd ? (
@@ -105,12 +107,6 @@ export default async function SettingsPage() {
           )}
         </div>
       </section>
-
-      <form action="/api/auth/logout" method="post">
-        <button type="submit" className="w-fit rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white">
-          Log out
-        </button>
-      </form>
     </div>
   );
 }
