@@ -17,6 +17,12 @@
       "when": 1767055855000,
       "tag": "0002_stripe_billing",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "when": 1767768789347,
+      "tag": "0003_github_oauth",
+      "breakpoints": true
     }
   ]
 }

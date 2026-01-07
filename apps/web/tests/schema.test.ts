@@ -27,6 +27,10 @@ describe("db schema", () => {
     const userColumns = getTableConfig(users).columns;
     expect(userColumns.find((c) => c.name === "email")?.notNull).toBe(true);
     expect(userColumns.find((c) => c.name === "email")?.isUnique).toBe(true);
+    expect(userColumns.some((c) => c.name === "github_user_id")).toBe(true);
+    expect(userColumns.some((c) => c.name === "github_username")).toBe(true);
+    expect(userColumns.some((c) => c.name === "github_avatar_url")).toBe(true);
+    expect(userColumns.find((c) => c.name === "github_user_id")?.isUnique).toBe(true);
     expect(userColumns.some((c) => c.name === "stripe_subscription_id")).toBe(true);
     expect(userColumns.some((c) => c.name === "stripe_subscription_status")).toBe(true);
     expect(userColumns.some((c) => c.name === "stripe_price_id")).toBe(true);
@@ -54,6 +58,7 @@ describe("db schema", () => {
 
   it("defines all indexes from the spec", () => {
     expect(getTableConfig(users).indexes.map((i) => i.config.name)).toContain("idx_users_email");
+    expect(getTableConfig(users).indexes.map((i) => i.config.name)).toContain("idx_users_github_user_id");
     expect(getTableConfig(users).indexes.map((i) => i.config.name)).toContain("idx_users_stripe_subscription_id");
 
     expect(getTableConfig(sessions).indexes.map((i) => i.config.name)).toEqual(
