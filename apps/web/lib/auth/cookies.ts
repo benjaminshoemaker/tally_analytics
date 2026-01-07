@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 export const SESSION_COOKIE_NAME = "fpa_session";
 export const SESSION_COOKIE_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
 
+export const OAUTH_STATE_COOKIE_NAME = "oauth_state";
+export const OAUTH_STATE_COOKIE_MAX_AGE_SECONDS = 10 * 60;
+
 function shouldUseSecureCookies(): boolean {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   if (!appUrl) return true;
@@ -16,6 +19,16 @@ function shouldUseSecureCookies(): boolean {
 
 export type SessionCookie = {
   name: typeof SESSION_COOKIE_NAME;
+  value: string;
+  httpOnly: true;
+  secure: boolean;
+  sameSite: "lax";
+  path: "/";
+  maxAge: number;
+};
+
+export type OAuthStateCookie = {
+  name: typeof OAUTH_STATE_COOKIE_NAME;
   value: string;
   httpOnly: true;
   secure: boolean;
@@ -39,6 +52,30 @@ export function buildSessionCookie(sessionId: string): SessionCookie {
 export function buildClearedSessionCookie(): SessionCookie {
   return {
     name: SESSION_COOKIE_NAME,
+    value: "",
+    httpOnly: true,
+    secure: shouldUseSecureCookies(),
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  };
+}
+
+export function buildOAuthStateCookie(state: string): OAuthStateCookie {
+  return {
+    name: OAUTH_STATE_COOKIE_NAME,
+    value: state,
+    httpOnly: true,
+    secure: shouldUseSecureCookies(),
+    sameSite: "lax",
+    path: "/",
+    maxAge: OAUTH_STATE_COOKIE_MAX_AGE_SECONDS,
+  };
+}
+
+export function buildClearedOAuthStateCookie(): OAuthStateCookie {
+  return {
+    name: OAUTH_STATE_COOKIE_NAME,
     value: "",
     httpOnly: true,
     secure: shouldUseSecureCookies(),
