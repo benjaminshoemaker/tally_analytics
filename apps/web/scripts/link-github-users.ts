@@ -44,7 +44,7 @@ export async function linkGitHubUsers(usersToLink: UserToLink[] = USERS_TO_LINK)
         updatedAt: new Date(),
       })
       .where(eq(users.id, user.userId))
-      .returning({ id: users.id });
+      .returning();
 
     if (result.length === 0) {
       console.error(`User not found: ${user.userId} (${user.githubUsername})`);
@@ -65,4 +65,3 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     process.exitCode = 1;
   });
 }
-

@@ -25,8 +25,7 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_123" } },
-          React.createElement("div", { "data-testid": "child" }, "Child content"),
+          { params: { id: "proj_123" }, children: React.createElement("div", { "data-testid": "child" }, "Child content") },
         ),
       }),
     );
@@ -50,8 +49,7 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_123" } },
-          React.createElement("div", null, "Child"),
+          { params: { id: "proj_123" }, children: React.createElement("div", null, "Child") },
         ),
       }),
     );
@@ -74,8 +72,7 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_123" } },
-          React.createElement("div", null, "Child"),
+          { params: { id: "proj_123" }, children: React.createElement("div", null, "Child") },
         ),
       }),
     );
@@ -98,8 +95,7 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_123" } },
-          React.createElement("div", null, "Child"),
+          { params: { id: "proj_123" }, children: React.createElement("div", null, "Child") },
         ),
       }),
     );
@@ -122,8 +118,7 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_456" } },
-          React.createElement("div", null, "Child"),
+          { params: { id: "proj_456" }, children: React.createElement("div", null, "Child") },
         ),
       }),
     );
@@ -146,8 +141,7 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_789" } },
-          React.createElement("div", null, "Child"),
+          { params: { id: "proj_789" }, children: React.createElement("div", null, "Child") },
         ),
       }),
     );
@@ -170,8 +164,10 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_123" } },
-          React.createElement("div", { className: "test-child" }, "My child content"),
+          {
+            params: { id: "proj_123" },
+            children: React.createElement("div", { className: "test-child" }, "My child content"),
+          },
         ),
       }),
     );
@@ -195,8 +191,7 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_123" } },
-          React.createElement("div", null, "Child"),
+          { params: { id: "proj_123" }, children: React.createElement("div", null, "Child") },
         ),
       }),
     );
@@ -219,8 +214,7 @@ describe("project layout", () => {
         client: queryClient,
         children: React.createElement(
           ProjectLayout,
-          { params: { id: "proj_analyzing" } },
-          React.createElement("div", null, "Child"),
+          { params: { id: "proj_analyzing" }, children: React.createElement("div", null, "Child") },
         ),
       }),
     );

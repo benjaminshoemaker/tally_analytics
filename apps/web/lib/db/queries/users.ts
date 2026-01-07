@@ -36,7 +36,7 @@ export async function findOrCreateUserByGitHub(params: FindOrCreateUserByGitHubP
       githubAvatarUrl: params.githubAvatarUrl,
       email: params.email,
     })
-    .returning({ id: users.id });
+    .returning();
 
   const id = created[0]?.id;
   if (!id) {
@@ -64,4 +64,3 @@ export async function getUserById(userId: string): Promise<{
 
   return rows[0] ?? null;
 }
-
