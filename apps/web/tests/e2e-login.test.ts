@@ -23,7 +23,7 @@ describe("POST /api/auth/e2e-login", () => {
     const previousEnv = process.env.NODE_ENV;
 
     process.env.E2E_TEST_MODE = "0";
-    process.env.NODE_ENV = "test";
+    (process.env as any).NODE_ENV = "test";
 
     vi.resetModules();
     createSessionSpy = vi.fn();
@@ -42,8 +42,8 @@ describe("POST /api/auth/e2e-login", () => {
 
     if (previousMode === undefined) delete process.env.E2E_TEST_MODE;
     else process.env.E2E_TEST_MODE = previousMode;
-    if (previousEnv === undefined) delete process.env.NODE_ENV;
-    else process.env.NODE_ENV = previousEnv;
+    if (previousEnv === undefined) delete (process.env as any).NODE_ENV;
+    else (process.env as any).NODE_ENV = previousEnv;
   });
 
   it("returns 404 in production even when E2E_TEST_MODE is enabled", async () => {
@@ -51,7 +51,7 @@ describe("POST /api/auth/e2e-login", () => {
     const previousEnv = process.env.NODE_ENV;
 
     process.env.E2E_TEST_MODE = "1";
-    process.env.NODE_ENV = "production";
+    (process.env as any).NODE_ENV = "production";
 
     vi.resetModules();
     createSessionSpy = vi.fn();
@@ -70,8 +70,8 @@ describe("POST /api/auth/e2e-login", () => {
 
     if (previousMode === undefined) delete process.env.E2E_TEST_MODE;
     else process.env.E2E_TEST_MODE = previousMode;
-    if (previousEnv === undefined) delete process.env.NODE_ENV;
-    else process.env.NODE_ENV = previousEnv;
+    if (previousEnv === undefined) delete (process.env as any).NODE_ENV;
+    else (process.env as any).NODE_ENV = previousEnv;
   });
 
   it("creates a session and sets a session cookie when enabled", async () => {
@@ -79,7 +79,7 @@ describe("POST /api/auth/e2e-login", () => {
     const previousEnv = process.env.NODE_ENV;
 
     process.env.E2E_TEST_MODE = "1";
-    process.env.NODE_ENV = "test";
+    (process.env as any).NODE_ENV = "test";
 
     vi.resetModules();
     createSessionSpy = vi
@@ -105,8 +105,7 @@ describe("POST /api/auth/e2e-login", () => {
 
     if (previousMode === undefined) delete process.env.E2E_TEST_MODE;
     else process.env.E2E_TEST_MODE = previousMode;
-    if (previousEnv === undefined) delete process.env.NODE_ENV;
-    else process.env.NODE_ENV = previousEnv;
+    if (previousEnv === undefined) delete (process.env as any).NODE_ENV;
+    else (process.env as any).NODE_ENV = previousEnv;
   });
 });
-

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { buildOAuthStateCookie } from "../../../../lib/auth/cookies";
 import { buildGitHubAuthUrl, generateOAuthState } from "../../../../lib/auth/github-oauth";
 
-export async function GET(): Promise<Response> {
+export async function GET(_request: Request): Promise<Response> {
   const state = generateOAuthState();
   const url = buildGitHubAuthUrl(state);
 
@@ -11,4 +11,3 @@ export async function GET(): Promise<Response> {
   response.cookies.set(buildOAuthStateCookie(state));
   return response;
 }
-
