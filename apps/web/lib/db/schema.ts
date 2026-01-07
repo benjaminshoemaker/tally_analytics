@@ -19,6 +19,9 @@ export const users = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     email: varchar("email", { length: 255 }).notNull().unique(),
+    githubUserId: bigint("github_user_id", { mode: "bigint" }).unique(),
+    githubUsername: varchar("github_username", { length: 39 }),
+    githubAvatarUrl: text("github_avatar_url"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 
@@ -36,6 +39,7 @@ export const users = pgTable(
     check("email_lowercase", sql`${table.email} = lower(${table.email})`),
     check("users_plan_check", sql`${table.plan} in ('free','pro','team')`),
     index("idx_users_email").on(table.email),
+    index("idx_users_github_user_id").on(table.githubUserId),
     index("idx_users_stripe_subscription_id").on(table.stripeSubscriptionId),
   ],
 );

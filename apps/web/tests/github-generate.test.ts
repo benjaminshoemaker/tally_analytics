@@ -127,7 +127,13 @@ describe("github generate", () => {
         repoFullName: "invalid-repo-name",
         installationId: BigInt(456),
         projectId: "proj_123",
-        detection: { framework: "nextjs-app", entryPoint: "app/layout.tsx" },
+        detection: {
+          framework: "nextjs-app",
+          entryPoint: "app/layout.tsx",
+          existingAnalytics: [],
+          isMonorepo: false,
+          error: null,
+        },
       });
 
       expect(setProjectStatusByRepoIdSpy).toHaveBeenCalledWith({
@@ -151,7 +157,13 @@ describe("github generate", () => {
         repoFullName: "owner/repo",
         installationId: BigInt(456),
         projectId: "proj_123",
-        detection: { framework: null, entryPoint: null },
+        detection: {
+          framework: null,
+          entryPoint: null,
+          existingAnalytics: [],
+          isMonorepo: false,
+          error: "unsupported_framework",
+        },
       });
 
       expect(setProjectStatusByRepoIdSpy).toHaveBeenCalledWith({
@@ -174,7 +186,13 @@ describe("github generate", () => {
         repoFullName: "owner/repo",
         installationId: BigInt(456),
         projectId: "proj_123",
-        detection: { framework: "nextjs-app", entryPoint: null },
+        detection: {
+          framework: "nextjs-app",
+          entryPoint: null,
+          existingAnalytics: [],
+          isMonorepo: false,
+          error: "entry_point_not_found",
+        },
       });
 
       expect(setProjectStatusByRepoIdSpy).toHaveBeenCalledWith({
@@ -205,7 +223,13 @@ describe("github generate", () => {
         repoFullName: "owner/repo",
         installationId: BigInt(456),
         projectId: "proj_123",
-        detection: { framework: "nextjs-app", entryPoint: "app/layout.tsx" },
+        detection: {
+          framework: "nextjs-app",
+          entryPoint: "app/layout.tsx",
+          existingAnalytics: [],
+          isMonorepo: false,
+          error: null,
+        },
       });
 
       expect(getInstallationOctokitSpy).toHaveBeenCalledWith(456);
@@ -218,7 +242,10 @@ describe("github generate", () => {
           branch: "add-fast-pr-analytics",
           defaultBranch: "main",
           projectId: "proj_123",
-          detection: { framework: "nextjs-app", entryPoint: "app/layout.tsx" },
+          detection: expect.objectContaining({
+            framework: "nextjs-app",
+            entryPoint: "app/layout.tsx",
+          }),
           eventsUrl: "https://events.example.com",
         }),
       );
@@ -241,7 +268,13 @@ describe("github generate", () => {
         repoFullName: "owner/repo",
         installationId: BigInt(456),
         projectId: "proj_123",
-        detection: { framework: "nextjs-app", entryPoint: "app/layout.tsx" },
+        detection: {
+          framework: "nextjs-app",
+          entryPoint: "app/layout.tsx",
+          existingAnalytics: [],
+          isMonorepo: false,
+          error: null,
+        },
       });
 
       expect(setProjectStatusByRepoIdSpy).toHaveBeenCalledWith({
@@ -264,7 +297,13 @@ describe("github generate", () => {
         repoFullName: "owner/repo/extra",
         installationId: BigInt(456),
         projectId: "proj_123",
-        detection: { framework: "nextjs-app", entryPoint: "app/layout.tsx" },
+        detection: {
+          framework: "nextjs-app",
+          entryPoint: "app/layout.tsx",
+          existingAnalytics: [],
+          isMonorepo: false,
+          error: null,
+        },
       });
 
       expect(setProjectStatusByRepoIdSpy).toHaveBeenCalledWith({
@@ -296,7 +335,13 @@ describe("github generate", () => {
         repoFullName: "owner/repo",
         installationId: BigInt(456),
         projectId: "proj_123",
-        detection: { framework: "nextjs-app", entryPoint: "app/layout.tsx" },
+        detection: {
+          framework: "nextjs-app",
+          entryPoint: "app/layout.tsx",
+          existingAnalytics: [],
+          isMonorepo: false,
+          error: null,
+        },
       });
 
       expect(commitAnalyticsFilesSpy).toHaveBeenCalledWith(
@@ -330,7 +375,13 @@ describe("github generate", () => {
         repoFullName: "owner/repo",
         installationId: BigInt(456),
         projectId: "proj_123",
-        detection: { framework: "nextjs-app", entryPoint: "app/layout.tsx" },
+        detection: {
+          framework: "nextjs-app",
+          entryPoint: "app/layout.tsx",
+          existingAnalytics: [],
+          isMonorepo: false,
+          error: null,
+        },
       });
 
       expect(commitAnalyticsFilesSpy).toHaveBeenCalledWith(
