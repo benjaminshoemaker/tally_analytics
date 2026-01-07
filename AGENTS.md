@@ -156,6 +156,35 @@ When a task is intentionally paused or skipped:
 
 ---
 
+## Follow-Up Items (TODOS.md)
+
+During development, you may discover items outside the current task scope: refactoring opportunities, edge cases, documentation needs, technical debt, etc.
+
+**When you identify a follow-up item:**
+
+1. If `TODOS.md` doesn't exist yet, ask the human if it should be created to track follow-ups.
+
+2. Add it to `TODOS.md` with context:
+   ```markdown
+   ## TODO: {Brief title}
+   - **Source:** Task {id} or {file:line}
+   - **Description:** {What needs to be done}
+   - **Priority:** {Suggested: High/Medium/Low}
+   - **Added:** {Date}
+   ```
+
+3. Prompt for prioritization at phase checkpoints:
+   ```
+   TODOS.md now has {N} items. Would you like to:
+   - Review and prioritize them?
+   - Add any to the current phase?
+   - Defer to a future phase?
+   ```
+
+Do not silently ignore discovered issues. Do not scope-creep by fixing them without approval. Track them in `TODOS.md` and let the human decide.
+
+---
+
 ## Git Rules
 
 | Rule | Details |
@@ -174,6 +203,52 @@ When a task is intentionally paused or skipped:
 - Never skip or disable tests to make them pass
 - If tests won't pass, report as a blocker
 - **Never claim "working" when any functionality is disabled or broken**
+
+---
+
+## Browser Verification
+
+For tasks marked **"Requires Browser Verification: Yes"**:
+
+1. Start dev server if not running: `pnpm dev`
+2. Navigate to relevant pages specified in acceptance criteria
+3. Verify each UI criterion visually:
+   - Elements render correctly
+   - Interactions work (clicks, hovers, dropdowns)
+   - Error states display properly
+4. Check browser console for errors
+5. Test responsive behavior if applicable (resize or device emulation)
+
+Report verification results:
+- Screenshot descriptions for visual changes
+- Any console errors encountered
+- Deviations from acceptance criteria
+
+If browser verification fails, continue debugging in the same conversation context (per existing workflow).
+
+---
+
+## Database Migrations
+
+For tasks involving database schema changes:
+
+1. Create migration file using Drizzle Kit patterns
+2. Update `schema.ts` to reflect new columns/tables
+3. Test migration locally:
+   - Apply: `pnpm drizzle-kit push` (or generate)
+   - Verify schema changes in database
+4. Verify existing tests pass — migrations should be additive/non-breaking when possible
+5. Document rollback if migration is destructive (e.g., dropping tables)
+
+For destructive migrations (DROP TABLE, DROP COLUMN):
+- Ensure all code references are removed first
+- Confirm in acceptance criteria that dependent code is deleted
+- Note that this is irreversible in the completion report
+
+One-time scripts (like user data migrations):
+- Place in `scripts/` directory
+- Make idempotent when possible
+- Log success/failure for each operation
 
 ---
 
