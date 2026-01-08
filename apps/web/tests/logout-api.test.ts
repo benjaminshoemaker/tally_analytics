@@ -29,6 +29,9 @@ describe("POST /api/auth/logout", () => {
     expect(response.status).toBeGreaterThanOrEqual(300);
     expect(response.status).toBeLessThan(400);
     expect(new URL(response.headers.get("location") ?? "", "http://localhost").pathname).toBe("/");
+
+    const setCookie = response.headers.get("set-cookie");
+    expect(setCookie).toContain(`${SESSION_COOKIE_NAME}=`);
+    expect(setCookie).toContain("Max-Age=0");
   });
 });
-
