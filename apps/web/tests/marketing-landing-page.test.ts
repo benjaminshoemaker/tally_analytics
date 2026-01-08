@@ -49,6 +49,21 @@ describe("marketing landing page", () => {
     expect(html).toContain(">Log in<");
   });
 
+  it("treats an empty session cookie value as logged out", async () => {
+    vi.resetModules();
+
+    const { SESSION_COOKIE_NAME } = await import("../lib/auth/cookies");
+    cookieGetSpy = vi.fn((name: unknown) => (name === SESSION_COOKIE_NAME ? { value: "" } : undefined));
+
+    const { default: MarketingLayout } = await import("../app/(marketing)/layout");
+    const { default: LandingPage } = await import("../app/(marketing)/page");
+
+    const html = renderToStaticMarkup(React.createElement(MarketingLayout, null, React.createElement(LandingPage)));
+    expect(html).toContain('href="/login"');
+    expect(html).toContain(">Log in<");
+    expect(html).not.toContain('href="/projects"');
+  });
+
   it("shows Dashboard when logged in", async () => {
     const { html } = await renderLandingPage({ loggedIn: true });
     expect(html).toContain('href="/projects"');

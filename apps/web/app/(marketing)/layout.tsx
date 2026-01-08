@@ -12,7 +12,8 @@ const GITHUB_APP_URL = "https://github.com/apps/tally-analytics-agent";
 export const dynamic = "force-dynamic";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
-  const isLoggedIn = cookies().get(SESSION_COOKIE_NAME) !== undefined;
+  const sessionId = cookies().get(SESSION_COOKIE_NAME)?.value;
+  const isLoggedIn = typeof sessionId === "string" && sessionId.length > 0;
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#fcfaf8] font-display text-[#1b140d] selection:bg-[#ec7f13]/20 selection:text-[#ec7f13] dark:bg-[#1b140d] dark:text-[#ede0d4]">

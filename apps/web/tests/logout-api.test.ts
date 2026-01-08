@@ -33,5 +33,6 @@ describe("POST /api/auth/logout", () => {
     const setCookie = response.headers.get("set-cookie");
     expect(setCookie).toContain(`${SESSION_COOKIE_NAME}=`);
     expect(setCookie).toContain("Max-Age=0");
+    expect(setCookie).toContain("Expires=");
   });
 });
