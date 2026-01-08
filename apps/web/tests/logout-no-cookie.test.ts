@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 let destroySessionSpy: ReturnType<typeof vi.fn> | undefined;
-let clearSessionCookieSpy: ReturnType<typeof vi.fn> | undefined;
-let getSessionIdFromRequestSpy: ReturnType<typeof vi.fn> | undefined;
 
 vi.mock("../lib/auth/session", () => ({
   destroySession: (...args: unknown[]) => {
@@ -11,31 +9,21 @@ vi.mock("../lib/auth/session", () => ({
   },
 }));
 
-vi.mock("../lib/auth/cookies", () => ({
-  getSessionIdFromRequest: (...args: unknown[]) => {
-    if (!getSessionIdFromRequestSpy) throw new Error("getSessionIdFromRequestSpy not initialized");
-    return getSessionIdFromRequestSpy(...args);
-  },
-  clearSessionCookie: (...args: unknown[]) => {
-    if (!clearSessionCookieSpy) throw new Error("clearSessionCookieSpy not initialized");
-    return clearSessionCookieSpy(...args);
-  },
-}));
-
 describe("POST /api/auth/logout (no cookie)", () => {
   it("clears cookie and redirects when there is no session cookie", async () => {
     vi.resetModules();
     destroySessionSpy = vi.fn();
-    clearSessionCookieSpy = vi.fn();
-    getSessionIdFromRequestSpy = vi.fn().mockReturnValue(null);
 
     const { POST } = await import("../app/api/auth/logout/route");
+    const { SESSION_COOKIE_NAME } = await import("../lib/auth/cookies");
     const response = await POST(new Request("http://localhost/api/auth/logout", { method: "POST" }));
 
-    expect(getSessionIdFromRequestSpy).toHaveBeenCalledTimes(1);
     expect(destroySessionSpy).not.toHaveBeenCalled();
-    expect(clearSessionCookieSpy).toHaveBeenCalledTimes(1);
     expect(new URL(response.headers.get("location") ?? "", "http://localhost").pathname).toBe("/");
+
+    const setCookie = response.headers.get("set-cookie");
+    expect(setCookie).toContain(`${SESSION_COOKIE_NAME}=`);
+    expect(setCookie).toContain("Max-Age=0");
+    expect(setCookie).toContain("Expires=");
   });
 });
-

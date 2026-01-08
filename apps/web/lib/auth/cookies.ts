@@ -25,6 +25,7 @@ export type SessionCookie = {
   sameSite: "lax";
   path: "/";
   maxAge: number;
+  expires?: Date;
 };
 
 export type OAuthStateCookie = {
@@ -35,6 +36,7 @@ export type OAuthStateCookie = {
   sameSite: "lax";
   path: "/";
   maxAge: number;
+  expires?: Date;
 };
 
 export function buildSessionCookie(sessionId: string): SessionCookie {
@@ -58,6 +60,7 @@ export function buildClearedSessionCookie(): SessionCookie {
     sameSite: "lax",
     path: "/",
     maxAge: 0,
+    expires: new Date(0),
   };
 }
 
@@ -82,6 +85,7 @@ export function buildClearedOAuthStateCookie(): OAuthStateCookie {
     sameSite: "lax",
     path: "/",
     maxAge: 0,
+    expires: new Date(0),
   };
 }
 

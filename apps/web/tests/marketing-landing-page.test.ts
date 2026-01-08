@@ -39,14 +39,29 @@ describe("marketing landing page", () => {
     expect(html).toContain("Documentation");
     expect(html).toContain("Pricing");
     expect(html).toContain("GitHub");
-    expect(html).toContain("Get Started");
-    expect(html).toContain('href="https://github.com/apps/tally-analytics-agent"');
+    expect(html).toContain("Sign in with GitHub");
+    expect(html).toContain('href="/api/auth/github"');
   });
 
   it("shows Log in when not logged in", async () => {
     const { html } = await renderLandingPage({ loggedIn: false });
     expect(html).toContain('href="/login"');
     expect(html).toContain(">Log in<");
+  });
+
+  it("treats an empty session cookie value as logged out", async () => {
+    vi.resetModules();
+
+    const { SESSION_COOKIE_NAME } = await import("../lib/auth/cookies");
+    cookieGetSpy = vi.fn((name: unknown) => (name === SESSION_COOKIE_NAME ? { value: "" } : undefined));
+
+    const { default: MarketingLayout } = await import("../app/(marketing)/layout");
+    const { default: LandingPage } = await import("../app/(marketing)/page");
+
+    const html = renderToStaticMarkup(React.createElement(MarketingLayout, null, React.createElement(LandingPage)));
+    expect(html).toContain('href="/login"');
+    expect(html).toContain(">Log in<");
+    expect(html).not.toContain('href="/projects"');
   });
 
   it("shows Dashboard when logged in", async () => {
@@ -61,9 +76,9 @@ describe("marketing landing page", () => {
 
     expect(html).toContain("V2.0 IS NOW LIVE");
     expect(html).toContain("Analytics for Next.js, installed in one click.");
-    expect(html).toContain("Connect GitHub");
+    expect(html).toContain("Sign in with GitHub");
     expect(html).toContain("Read the Docs");
-    expect(html).toContain('href="https://github.com/apps/tally-analytics-agent"');
+    expect(html).toContain('href="/api/auth/github"');
   });
 
   it("renders features, what-you-get, how-it-works, set-and-forget, and CTA sections", async () => {

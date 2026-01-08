@@ -1,11 +1,17 @@
 import React from "react";
 
 export type MarketingNavbarProps = {
-  installUrl: string;
+  authUrl: string;
+  githubUrl: string;
   isLoggedIn: boolean;
 };
 
-export default function MarketingNavbar({ installUrl, isLoggedIn }: MarketingNavbarProps) {
+function isExternalUrl(url: string): boolean {
+  return url.startsWith("http://") || url.startsWith("https://");
+}
+
+export default function MarketingNavbar({ authUrl, githubUrl, isLoggedIn }: MarketingNavbarProps) {
+  const authIsExternal = isExternalUrl(authUrl);
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#e8e0d9] bg-[#fcfaf8]/80 backdrop-blur-md">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-40">
@@ -37,7 +43,7 @@ export default function MarketingNavbar({ installUrl, isLoggedIn }: MarketingNav
             </a>
             <a
               className="text-sm font-medium text-[#9a734c] transition-colors hover:text-[#ec7f13]"
-              href={installUrl}
+              href={githubUrl}
               rel="noreferrer"
               target="_blank"
             >
@@ -54,11 +60,11 @@ export default function MarketingNavbar({ installUrl, isLoggedIn }: MarketingNav
             </a>
             <a
               className="flex h-9 items-center justify-center rounded-lg bg-[#ec7f13] px-4 text-sm font-medium text-white shadow-sm transition-all hover:bg-orange-600 active:scale-[0.98]"
-              href={installUrl}
-              rel="noreferrer"
-              target="_blank"
+              href={authUrl}
+              rel={authIsExternal ? "noreferrer" : undefined}
+              target={authIsExternal ? "_blank" : undefined}
             >
-              Get Started
+              Sign in with GitHub
             </a>
           </div>
         </div>

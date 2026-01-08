@@ -1,6 +1,13 @@
 import React from "react";
 
-export default function DashboardHeader() {
+import UserDropdown from "./user-dropdown";
+
+export type DashboardHeaderUser = {
+  username: string;
+  avatarUrl: string | null;
+};
+
+export default function DashboardHeader({ user }: { user?: DashboardHeaderUser }) {
   return (
     <header className="flex items-center justify-between border-b border-warm-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex items-center gap-3">
@@ -18,17 +25,21 @@ export default function DashboardHeader() {
         </a>
       </div>
 
-      <form action="/api/auth/logout" method="post">
-        <button
-          type="submit"
-          className="group flex items-center gap-2 rounded-lg border border-warm-200 bg-white px-3 py-1.5 text-sm font-medium text-warm-700 shadow-sm transition-all hover:border-warm-300 hover:bg-warm-50 hover:text-warm-900"
-        >
-          <svg className="size-4 text-warm-400 transition-colors group-hover:text-warm-600" viewBox="0 0 16 16" fill="none">
-            <path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          Log out
-        </button>
-      </form>
+      {user ? (
+        <UserDropdown username={user.username} avatarUrl={user.avatarUrl} />
+      ) : (
+        <form action="/api/auth/logout" method="post">
+          <button
+            type="submit"
+            className="group flex items-center gap-2 rounded-lg border border-warm-200 bg-white px-3 py-1.5 text-sm font-medium text-warm-700 shadow-sm transition-all hover:border-warm-300 hover:bg-warm-50 hover:text-warm-900"
+          >
+            <svg className="size-4 text-warm-400 transition-colors group-hover:text-warm-600" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Log out
+          </button>
+        </form>
+      )}
     </header>
   );
 }

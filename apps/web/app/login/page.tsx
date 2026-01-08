@@ -1,8 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
-
-type SubmitState = "idle" | "loading" | "success" | "error";
+import React from "react";
 
 function LogoMark() {
   return (
@@ -17,45 +13,27 @@ function LogoMark() {
   );
 }
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [state, setState] = useState<SubmitState>("idle");
-  const [message, setMessage] = useState<string>("");
+type LoginPageProps = {
+  searchParams?: { error?: string };
+};
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+function getLoginErrorMessage(error: string | undefined): string | null {
+  if (error === "oauth_cancelled") return "GitHub sign-in was cancelled. Please try again.";
+  if (error === "invalid_state") return "That sign-in attempt expired. Please try again.";
+  if (error === "github_error") return "GitHub sign-in failed. Please try again.";
+  return null;
+}
 
-    const normalizedEmail = email.trim().toLowerCase();
-    if (!normalizedEmail) {
-      setState("error");
-      setMessage("Enter your email address.");
-      return;
-    }
+function GitHubLogo() {
+  return (
+    <svg className="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+    </svg>
+  );
+}
 
-    setState("loading");
-    setMessage("");
-
-    try {
-      const response = await fetch("/api/auth/magic-link", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: normalizedEmail }),
-      });
-
-      const body = (await response.json().catch(() => null)) as null | { success?: boolean; message?: string };
-      if (!response.ok) {
-        setState("error");
-        setMessage(body?.message ?? "Unable to send magic link.");
-        return;
-      }
-
-      setState(body?.success ? "success" : "error");
-      setMessage(body?.message ?? "Check your email for a login link.");
-    } catch {
-      setState("error");
-      setMessage("Unable to send magic link.");
-    }
-  }
+export default function LoginPage({ searchParams }: LoginPageProps) {
+  const errorMessage = getLoginErrorMessage(searchParams?.error);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-warm-50">
@@ -74,94 +52,48 @@ export default function LoginPage() {
           <div>
             <h1 className="font-display text-3xl tracking-tight text-warm-900">Welcome back</h1>
             <p className="mt-2 text-sm text-warm-500">
-              Sign in to access your analytics dashboard
+              Sign in with GitHub to access your analytics dashboard
             </p>
           </div>
         </header>
 
-        <form
-          action="/api/auth/magic-link"
-          method="post"
-          onSubmit={onSubmit}
+        <div
           className="flex flex-col gap-5 rounded-xl border border-warm-200 bg-white p-6 shadow-warm-lg opacity-0 animate-fade-in-up"
           style={{ animationDelay: "0.1s" }}
         >
-          <div className="text-center">
-            <p className="text-sm text-warm-600">
-              We&apos;ll email you a magic link that expires in 15 minutes.
-            </p>
-          </div>
-
-          <label className="flex flex-col gap-2 text-sm font-medium text-warm-800">
-            Email address
-            <input
-              type="email"
-              name="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="rounded-lg border border-warm-200 bg-white px-4 py-2.5 text-warm-900 shadow-sm transition-all outline-none placeholder:text-warm-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-              placeholder="you@example.com"
-            />
-          </label>
-
-          <button
-            type="submit"
-            disabled={state === "loading"}
-            className="group relative flex h-11 items-center justify-center gap-2 overflow-hidden rounded-lg bg-brand-500 px-4 text-sm font-medium text-white shadow-warm transition-all hover:bg-brand-600 hover:shadow-warm-md disabled:opacity-50"
-          >
-            <span className={state === "loading" ? "opacity-0" : ""}>
-              Send magic link
-            </span>
-            {state === "loading" && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg className="size-5 animate-spin" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              </div>
-            )}
-            <svg
-              className={`size-4 transition-transform group-hover:translate-x-0.5 ${state === "loading" ? "opacity-0" : ""}`}
-              viewBox="0 0 16 16"
-              fill="none"
-            >
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-
-          {message && (
+          {errorMessage && (
             <p
               role="status"
               aria-live="polite"
-              className={`rounded-lg px-3 py-2 text-center text-sm ${
-                state === "success"
-                  ? "bg-emerald-50 text-emerald-700"
-                  : state === "error"
-                  ? "bg-red-50 text-red-700"
-                  : "text-warm-600"
-              }`}
+              className="rounded-lg bg-red-50 px-3 py-2 text-center text-sm text-red-700"
             >
-              {state === "success" && (
-                <span className="mr-1.5">&#10003;</span>
-              )}
-              {message}
+              {errorMessage}
             </p>
           )}
-        </form>
 
-        <p className="text-center text-sm text-warm-500 opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-          Don&apos;t have an account?{" "}
           <a
-            href="https://github.com/apps/tally-analytics-agent"
-            target="_blank"
-            rel="noreferrer"
-            className="font-medium text-brand-500 transition-colors hover:text-brand-600"
+            href="/api/auth/github"
+            className="group inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-warm-900 px-4 text-sm font-medium text-white shadow-warm transition-all hover:bg-warm-950 hover:shadow-warm-md"
           >
-            Install the GitHub App
+            <GitHubLogo />
+            Sign in with GitHub
+            <svg className="size-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </a>
-        </p>
+
+          <p className="text-center text-xs text-warm-500">
+            By continuing, you agree to our{" "}
+            <a href="/terms" className="font-medium text-warm-700 hover:text-warm-900">
+              Terms
+            </a>{" "}
+            and{" "}
+            <a href="/privacy" className="font-medium text-warm-700 hover:text-warm-900">
+              Privacy Policy
+            </a>
+            .
+          </p>
+        </div>
       </div>
     </main>
   );
