@@ -7,14 +7,14 @@ import MarketingSetAndForget from '../../components/marketing/set-and-forget';
 import MarketingWhatYouGet from '../../components/marketing/what-you-get';
 
 
-const INSTALL_URL = 'https://github.com/apps/tally-analytics-agent';
+const AUTH_URL = "/api/auth/github";
 const DASHBOARD_IMAGE_SRC = '/marketing/dashboard.png';
 
 export default function LandingPage() {
   return (
     <main className="flex-grow">
       <MarketingHero
-        installUrl={INSTALL_URL}
+        installUrl={AUTH_URL}
         docsUrl="/docs"
         dashboardImageSrc={DASHBOARD_IMAGE_SRC}
       />
@@ -38,11 +38,9 @@ export default function LandingPage() {
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <a
               className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#ec7f13] px-8 text-base font-bold text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-orange-600 hover:shadow-warm-md active:scale-[0.96]"
-              href={INSTALL_URL}
-              rel="noreferrer"
-              target="_blank"
+              href={AUTH_URL}
             >
-              Start for free
+              Sign in with GitHub
             </a>
             <a
               className="flex h-12 items-center justify-center gap-2 rounded-lg bg-transparent px-8 text-base font-medium text-[#9a734c] transition-colors hover:text-[#1b140d]"

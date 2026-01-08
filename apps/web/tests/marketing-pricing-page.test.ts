@@ -57,6 +57,19 @@ describe("marketing pricing page", () => {
     expect(html).toContain("Support");
   });
 
+  it("links logged-out users to /api/auth/github for sign in", async () => {
+    vi.resetModules();
+
+    cookieGetSpy = vi.fn().mockReturnValue(null);
+    selectSpy = vi.fn();
+
+    const { default: PricingPage } = await import("../app/(marketing)/pricing/page");
+    const element = await PricingPage();
+    const html = renderToStaticMarkup(element);
+
+    expect(html).toContain('href="/api/auth/github"');
+  });
+
   it("renders checkout CTAs when a free user is logged in", async () => {
     vi.resetModules();
 

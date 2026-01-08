@@ -7,7 +7,7 @@ import { SESSION_COOKIE_NAME } from "../../../lib/auth/cookies";
 import { db } from "../../../lib/db/client";
 import { sessions, users } from "../../../lib/db/schema";
 
-const INSTALL_URL = "https://github.com/apps/tally-analytics-agent";
+const AUTH_URL = "/api/auth/github";
 
 const TIERS = [
   {
@@ -91,7 +91,7 @@ export default async function PricingPage() {
               let cta: PricingCta;
 
               if (!userPlan) {
-                cta = { kind: "link", label: tier.ctaLabel, href: INSTALL_URL };
+                cta = { kind: "link", label: tier.ctaLabel, href: AUTH_URL };
               } else if (tier.name === "Free") {
                 cta = { kind: "disabled", label: userPlan === "free" ? "Current plan" : "Included" };
               } else if (userPlan === "free") {
@@ -120,7 +120,7 @@ export default async function PricingPage() {
                 );
               }
 
-              return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={INSTALL_URL} ctaDisabled />;
+              return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={AUTH_URL} ctaDisabled />;
             })()}
           </div>
         ))}

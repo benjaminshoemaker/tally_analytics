@@ -39,8 +39,8 @@ describe("marketing landing page", () => {
     expect(html).toContain("Documentation");
     expect(html).toContain("Pricing");
     expect(html).toContain("GitHub");
-    expect(html).toContain("Get Started");
-    expect(html).toContain('href="https://github.com/apps/tally-analytics-agent"');
+    expect(html).toContain("Sign in with GitHub");
+    expect(html).toContain('href="/api/auth/github"');
   });
 
   it("shows Log in when not logged in", async () => {
@@ -61,9 +61,9 @@ describe("marketing landing page", () => {
 
     expect(html).toContain("V2.0 IS NOW LIVE");
     expect(html).toContain("Analytics for Next.js, installed in one click.");
-    expect(html).toContain("Connect GitHub");
+    expect(html).toContain("Sign in with GitHub");
     expect(html).toContain("Read the Docs");
-    expect(html).toContain('href="https://github.com/apps/tally-analytics-agent"');
+    expect(html).toContain('href="/api/auth/github"');
   });
 
   it("renders features, what-you-get, how-it-works, set-and-forget, and CTA sections", async () => {

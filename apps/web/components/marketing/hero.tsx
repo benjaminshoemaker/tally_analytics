@@ -6,7 +6,12 @@ export type MarketingHeroProps = {
   dashboardImageSrc: string;
 };
 
+function isExternalUrl(url: string): boolean {
+  return url.startsWith("http://") || url.startsWith("https://");
+}
+
 export default function MarketingHero({ installUrl, docsUrl, dashboardImageSrc }: MarketingHeroProps) {
+  const installIsExternal = isExternalUrl(installUrl);
   return (
     <section className="relative overflow-hidden px-6 pb-16 pt-20 md:px-10 md:pb-24 md:pt-32 lg:px-40">
       <div className="mx-auto flex max-w-[960px] flex-col items-center text-center">
@@ -29,8 +34,8 @@ export default function MarketingHero({ installUrl, docsUrl, dashboardImageSrc }
           <a
             className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#ec7f13] px-8 text-base font-medium text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-orange-600 hover:shadow-warm-md active:scale-[0.96] active:shadow-none"
             href={installUrl}
-            rel="noreferrer"
-            target="_blank"
+            rel={installIsExternal ? "noreferrer" : undefined}
+            target={installIsExternal ? "_blank" : undefined}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
               <path
@@ -38,7 +43,7 @@ export default function MarketingHero({ installUrl, docsUrl, dashboardImageSrc }
                 d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v4h4v2h-4v4h-2v-4H7v-2h4V7h2z"
               />
             </svg>
-            Connect GitHub
+            Sign in with GitHub
           </a>
           <a
             className="flex h-12 items-center justify-center gap-2 rounded-lg border border-[#e8e0d9] bg-white px-8 text-base font-medium text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none"

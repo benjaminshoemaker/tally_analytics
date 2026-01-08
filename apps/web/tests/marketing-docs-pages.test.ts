@@ -17,7 +17,7 @@ describe("marketing docs pages", () => {
   it("renders the setup guide with the GitHub install link", () => {
     const html = renderToStaticMarkup(React.createElement(DocsSetupPage));
     expect(html).toContain("Getting started");
-    expect(html).toContain("https://github.com/apps/tally-analytics-agent");
+    expect(html).toContain("/api/auth/github");
   });
 
   it("renders the SDK docs with code examples", () => {
