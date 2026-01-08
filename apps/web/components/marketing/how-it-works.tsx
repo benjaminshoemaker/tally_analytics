@@ -78,7 +78,7 @@ const STEPS: Step[] = [
 
 export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowItWorksProps) {
   return (
-    <section className="bg-[#fcfaf8] py-24">
+    <section id="how-it-works" className="bg-[#fcfaf8] py-24">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mb-16 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>

@@ -17,6 +17,42 @@ Stripe billing is implemented; run these manual verifications before launch.
 
 ## 🟡 Product Polish
 
+### GitHub OAuth — Phase 4 Cleanup
+Complete Phase 4 from `features/github_oauth/EXECUTION_PLAN.md` (remove magic link auth + drop `magic_links` table).
+
+**Includes:**
+- Delete magic link routes + libraries + related unit tests
+- Add migration to drop `magic_links` table
+- Update Playwright E2E auth flow to use `POST /api/auth/e2e-login`
+
+---
+
+### Landing Page: Hero Secondary Link → "How it works"
+Change the hero secondary link to scroll to the "How it works" section.
+
+**Likely location:** `apps/web/components/marketing/hero.tsx`
+
+---
+
+### Landing Page: CTA Audit
+Audit all CTAs on the main landing page for consistency (copy, destination, logged-in vs logged-out behavior).
+
+**Likely locations:**
+- `apps/web/components/marketing/navbar.tsx`
+- `apps/web/components/marketing/hero.tsx`
+- `apps/web/app/(marketing)/page.tsx`
+
+---
+
+### Docs Section Formatting
+Improve formatting for the docs section (layout/typography/scanability).
+
+**Likely locations:**
+- `apps/web/app/(marketing)/docs/setup/page.tsx`
+- Any landing-page docs section component (if separate)
+
+---
+
 ### Demo Page
 Create `/demo` route with static sample data so visitors can preview the dashboard without signing up.
 
