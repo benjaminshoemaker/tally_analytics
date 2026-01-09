@@ -110,12 +110,12 @@ Create the engagement time tracking module that monitors user activity (scroll, 
 Create the scroll depth tracking module that calculates the maximum scroll depth reached on a page. Records the highest percentage scrolled, handling edge cases like pages that fit in the viewport.
 
 **Acceptance Criteria:**
-- [ ] `createScrollTracker()` returns an object with `getMaxScrollDepth()`, `reset()`, and `destroy()` methods
-- [ ] Scroll depth calculated as `scrollTop / (docHeight - viewportHeight) * 100`
-- [ ] Returns 100% if page fits entirely in viewport (no scrollbar)
-- [ ] Tracks maximum depth reached, not current position
-- [ ] Uses passive scroll event listener for performance
-- [ ] All tests pass: `pnpm --filter sdk test scroll`
+- [x] `createScrollTracker()` returns an object with `getMaxScrollDepth()`, `reset()`, and `destroy()` methods
+- [x] Scroll depth calculated as `scrollTop / (docHeight - viewportHeight) * 100`
+- [x] Returns 100% if page fits entirely in viewport (no scrollbar)
+- [x] Tracks maximum depth reached, not current position
+- [x] Uses passive scroll event listener for performance
+- [x] All tests pass: `pnpm --filter sdk test scroll`
 
 **Files to Create:**
 - `packages/sdk/src/scroll.ts` — scroll depth tracking module
