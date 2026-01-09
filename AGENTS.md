@@ -44,7 +44,31 @@ AGENT (Executor)
 2. **Write tests first** — One test per acceptance criterion
 3. **Implement** — Minimum code to pass tests
 4. **Run verification** — Use the code-verification skill against acceptance criteria
-5. **Commit** — Format: `task(1.1.A): brief description`
+5. **Update progress** — Mark acceptance criteria checkboxes as complete in EXECUTION_PLAN.md
+6. **Commit** — Format: `task(1.1.A): brief description`
+
+---
+
+## Progress Tracking
+
+When completing tasks from EXECUTION_PLAN.md, update checkboxes to track progress:
+
+### Acceptance Criteria
+```markdown
+# Before completing criterion
+- [ ] User can log in with email and password
+
+# After completing criterion
+- [x] User can log in with email and password
+```
+
+### Phase Checkpoints
+
+At phase checkpoint:
+1. Complete all automated checks (tests, typecheck, lint)
+2. Complete all manual verification steps
+3. Mark checkpoint items as complete
+4. Get human approval before proceeding to next phase
 
 ---
 
@@ -189,10 +213,27 @@ Do not silently ignore discovered issues. Do not scope-creep by fixing them with
 
 | Rule | Details |
 |------|---------|
-| Branch | `task-{id}` (e.g., `task-1.1.A`) |
+| Branch | `task-{id}` (e.g., `task-1.1.A`) or `phase-{N}` for feature work |
 | Commit | `task({id}): {description}` |
 | Scope | Only modify task-relevant files |
 | Ignore | Never commit `.env`, `node_modules`, build output |
+
+### Phase-Based Branching (Feature Work)
+
+For multi-phase features, use one branch per phase instead of per-task:
+
+```bash
+git checkout -b phase-1-foundation
+# All Phase 1 tasks committed to this branch
+# PR created at phase checkpoint
+```
+
+**Branch lifecycle:**
+1. Create branch from main before starting first task in phase
+2. Commit after each task completion
+3. Do not push until human reviews at checkpoint
+4. Create PR for review at phase checkpoint
+5. Merge after checkpoint approval
 
 ---
 
@@ -203,6 +244,32 @@ Do not silently ignore discovered issues. Do not scope-creep by fixing them with
 - Never skip or disable tests to make them pass
 - If tests won't pass, report as a blocker
 - **Never claim "working" when any functionality is disabled or broken**
+
+---
+
+## SDK Constraints
+
+### Bundle Size Limit
+
+The SDK must remain under **3KB gzipped**. Check after any SDK changes:
+
+```bash
+# Build and measure
+pnpm --filter sdk build
+gzip -c packages/sdk/dist/index.js | wc -c
+
+# Should output less than 3072 bytes
+```
+
+### Before SDK Changes
+
+1. Measure current bundle size
+2. Make changes
+3. Re-measure and compare
+4. If size increased significantly, consider:
+   - Tree-shaking unused code
+   - Moving optional features to separate entry points
+   - Reviewing dependencies
 
 ---
 
@@ -230,22 +297,42 @@ If browser verification fails, continue debugging in the same conversation conte
 
 ## Database Migrations
 
-For tasks involving database schema changes:
+### PostgreSQL (Drizzle)
 
-1. Create migration file using Drizzle Kit patterns
-2. Update `schema.ts` to reflect new columns/tables
-3. Test migration locally:
-   - Apply: `pnpm drizzle-kit push` (or generate)
-   - Verify schema changes in database
-4. Verify existing tests pass — migrations should be additive/non-breaking when possible
-5. Document rollback if migration is destructive (e.g., dropping tables)
+For tasks involving PostgreSQL schema changes:
+
+1. Update `apps/web/lib/db/schema.ts` to reflect new columns/tables
+2. Generate migration: `pnpm --filter web db:generate`
+3. Review generated SQL in `apps/web/drizzle/migrations/`
+4. Apply migration: `pnpm --filter web db:push`
+5. Verify existing tests pass — migrations should be additive/non-breaking when possible
+6. Document rollback if migration is destructive (e.g., dropping tables)
 
 For destructive migrations (DROP TABLE, DROP COLUMN):
 - Ensure all code references are removed first
 - Confirm in acceptance criteria that dependent code is deleted
 - Note that this is irreversible in the completion report
 
-One-time scripts (like user data migrations):
+### Tinybird
+
+For tasks involving Tinybird schema changes:
+
+1. **Test in staging first** using Tinybird workspace
+2. **Add columns using CLI**:
+   ```bash
+   tb datasource alter <datasource> --add-column "<column_definition>"
+   ```
+3. **Verify with query**:
+   ```bash
+   tb sql "SELECT * FROM <datasource> LIMIT 1"
+   ```
+4. **Document migration commands** in a script for reproducibility
+
+**Important:** Tinybird column additions are non-reversible. Test thoroughly before applying to production.
+
+### One-Time Scripts
+
+For data migrations or one-time operations:
 - Place in `scripts/` directory
 - Make idempotent when possible
 - Log success/failure for each operation
