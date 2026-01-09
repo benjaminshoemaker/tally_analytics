@@ -77,6 +77,14 @@ Add testimonials/logos section to marketing landing page.
 
 ## 🔵 Feature Enhancements
 
+### Fix top_pages.pipe SQL Error (Blocks V2 Tinybird Deployment)
+- **Source:** Phase 1 V2 Enhanced Metrics
+- **Description:** `top_pages.pipe` has SQL error: `Column total.total is not under aggregate function and not in GROUP BY keys`. This blocks Tinybird Local deployment and needs fixing before V2 schema can be deployed.
+- **Priority:** High (blocks V2 deployment)
+- **Added:** 2026-01-09
+
+---
+
 ### Deeply investigate which metrics the app implements
 
 ### Re-run Detection on Repo Changes
