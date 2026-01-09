@@ -141,12 +141,12 @@ Create the scroll depth tracking module that calculates the maximum scroll depth
 Create the visitor ID module that manages a persistent visitor cookie for detecting returning visitors. Creates a new UUID on first visit, returns existing ID on subsequent visits.
 
 **Acceptance Criteria:**
-- [ ] `getOrCreateVisitorId()` returns `{ visitorId: string; isReturning: boolean }`
-- [ ] Creates `tally_vid` cookie with UUID v4 value on first visit
-- [ ] Cookie has 1-year max-age, path=/`, SameSite=Lax, Secure on HTTPS
-- [ ] Returns `isReturning: true` when cookie already exists
-- [ ] Handles SSR gracefully (returns null/empty when `document` undefined)
-- [ ] All tests pass: `pnpm --filter sdk test visitor`
+- [x] `getOrCreateVisitorId()` returns `{ visitorId: string; isReturning: boolean }`
+- [x] Creates `tally_vid` cookie with UUID v4 value on first visit
+- [x] Cookie has 1-year max-age, path=/`, SameSite=Lax, Secure on HTTPS
+- [x] Returns `isReturning: true` when cookie already exists
+- [x] Handles SSR gracefully (returns null/empty when `document` undefined)
+- [x] All tests pass: `pnpm --filter sdk test visitor`
 
 **Files to Create:**
 - `packages/sdk/src/visitor.ts` — visitor ID cookie management
