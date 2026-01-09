@@ -78,12 +78,12 @@ Human must complete before starting:
 Create the engagement time tracking module that monitors user activity (scroll, click, keydown, mousemove) and visibility state. This module tracks how long users actively engage with each page, pausing when the tab is hidden or user goes idle.
 
 **Acceptance Criteria:**
-- [ ] `createEngagementTracker()` returns an object with `getEngagementTimeMs()`, `reset()`, and `destroy()` methods
-- [ ] Engagement time only accumulates when tab is visible AND user is active (activity within last 30 seconds)
-- [ ] Activity is detected via scroll, click, keydown, and mousemove events with passive listeners
-- [ ] `visibilitychange` event pauses/resumes tracking correctly
-- [ ] Idle timeout of 30 seconds stops time accumulation
-- [ ] All tests pass: `pnpm --filter sdk test engagement`
+- [x] `createEngagementTracker()` returns an object with `getEngagementTimeMs()`, `reset()`, and `destroy()` methods
+- [x] Engagement time only accumulates when tab is visible AND user is active (activity within last 30 seconds)
+- [x] Activity is detected via scroll, click, keydown, and mousemove events with passive listeners
+- [x] `visibilitychange` event pauses/resumes tracking correctly
+- [x] Idle timeout of 30 seconds stops time accumulation
+- [x] All tests pass: `pnpm --filter sdk test engagement`
 
 **Files to Create:**
 - `packages/sdk/src/engagement.ts` — engagement time tracking module
