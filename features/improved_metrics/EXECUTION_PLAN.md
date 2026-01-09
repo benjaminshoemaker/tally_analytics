@@ -172,12 +172,12 @@ Create the visitor ID module that manages a persistent visitor cookie for detect
 Create the UTM parameter capture module that parses URL query parameters on session start. Captures utm_source, utm_medium, utm_campaign, utm_term, and utm_content with truncation to 100 characters.
 
 **Acceptance Criteria:**
-- [ ] `captureUTMParams()` returns object with optional utm_source, utm_medium, utm_campaign, utm_term, utm_content
-- [ ] Parses parameters from current URL's query string
-- [ ] Truncates each value to 100 characters maximum
-- [ ] Returns empty object if no UTM params present
-- [ ] Handles SSR gracefully (returns empty object when `window` undefined)
-- [ ] All tests pass: `pnpm --filter sdk test utm`
+- [x] `captureUTMParams()` returns object with optional utm_source, utm_medium, utm_campaign, utm_term, utm_content
+- [x] Parses parameters from current URL's query string
+- [x] Truncates each value to 100 characters maximum
+- [x] Returns empty object if no UTM params present
+- [x] Handles SSR gracefully (returns empty object when `window` undefined)
+- [x] All tests pass: `pnpm --filter sdk test utm`
 
 **Files to Create:**
 - `packages/sdk/src/utm.ts` — UTM parameter parsing
