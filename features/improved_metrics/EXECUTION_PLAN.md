@@ -240,10 +240,10 @@ Create the CTA click tracking module that listens for clicks on conversion-inten
 Add new nullable columns to the Tinybird `events` data source for V2 metrics. Uses Tinybird CLI to alter the schema without downtime. All new columns are nullable for backward compatibility.
 
 **Acceptance Criteria:**
-- [ ] Tinybird `events` data source has new columns: `engagement_time_ms` (Nullable UInt32), `scroll_depth` (Nullable UInt8), `visitor_id` (Nullable String), `is_returning` (Nullable UInt8), `utm_source` (Nullable String), `utm_medium` (Nullable String), `utm_campaign` (Nullable String), `utm_term` (Nullable String), `utm_content` (Nullable String), `cta_clicks` (Nullable String)
-- [ ] Migration commands documented in a script or README
-- [ ] Existing events query correctly (historical data unaffected)
-- [ ] New columns can be queried with NULL handling
+- [x] Tinybird `events` data source has new columns: `engagement_time_ms` (Nullable UInt32), `scroll_depth` (Nullable UInt8), `visitor_id` (Nullable String), `is_returning` (Nullable UInt8), `utm_source` (Nullable String), `utm_medium` (Nullable String), `utm_campaign` (Nullable String), `utm_term` (Nullable String), `utm_content` (Nullable String), `cta_clicks` (Nullable String)
+- [x] Migration commands documented in a script or README
+- [ ] Existing events query correctly (historical data unaffected) **(verify after running migration)**
+- [ ] New columns can be queried with NULL handling **(verify after running migration)**
 
 **Files to Create:**
 - `scripts/tinybird-v2-migration.sh` — migration script with `tb datasource alter` commands

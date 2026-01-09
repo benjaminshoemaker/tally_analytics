@@ -10,7 +10,17 @@ SCHEMA >
     `screen_width` Nullable(UInt16) `json:$.screen_width`,
     `user_id` Nullable(String) `json:$.user_id`,
     `country` Nullable(String) `json:$.country`,
-    `city` Nullable(String) `json:$.city`
+    `city` Nullable(String) `json:$.city`,
+    `engagement_time_ms` Nullable(UInt32) `json:$.engagement_time_ms`,
+    `scroll_depth` Nullable(UInt8) `json:$.scroll_depth`,
+    `visitor_id` Nullable(String) `json:$.visitor_id`,
+    `is_returning` Nullable(UInt8) `json:$.is_returning`,
+    `utm_source` Nullable(String) `json:$.utm_source`,
+    `utm_medium` Nullable(String) `json:$.utm_medium`,
+    `utm_campaign` Nullable(String) `json:$.utm_campaign`,
+    `utm_term` Nullable(String) `json:$.utm_term`,
+    `utm_content` Nullable(String) `json:$.utm_content`,
+    `cta_clicks` Nullable(String) `json:$.cta_clicks`
 
 ENGINE MergeTree
 ENGINE_PARTITION_KEY toYYYYMM(timestamp)
