@@ -99,6 +99,12 @@ export const projects = pgTable(
     eventsThisMonth: bigint("events_this_month", { mode: "bigint" }).notNull().default(sql`0`),
     eventsMonthResetAt: timestamp("events_month_reset_at", { withTimezone: true }),
 
+    // V2 Conversion tracking fields
+    conversionPath: varchar("conversion_path", { length: 255 }),
+    conversionLabel: varchar("conversion_label", { length: 100 }),
+    conversionConfiguredAt: timestamp("conversion_configured_at", { withTimezone: true }),
+    conversionPromptDismissedAt: timestamp("conversion_prompt_dismissed_at", { withTimezone: true }),
+
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
     lastEventAt: timestamp("last_event_at", { withTimezone: true }),
