@@ -203,12 +203,12 @@ Create the UTM parameter capture module that parses URL query parameters on sess
 Create the CTA click tracking module that listens for clicks on conversion-intent elements (signup links, submit buttons, pricing links, etc.). Captures element type, truncated text, and href domain only for privacy.
 
 **Acceptance Criteria:**
-- [ ] `setupCTATracking()` returns object with `getAndClearClicks()` and `destroy()` methods
-- [ ] Detects clicks on selectors: `button[type="submit"]`, `a[href*="signup"]`, `a[href*="register"]`, `a[href*="pricing"]`, `a[href*="demo"]`, `a[href*="trial"]`, `a[href*="contact"]`, `a[href*="get-started"]`, `[data-tally-cta]`
-- [ ] Captures: element type (button/link), text (max 30 chars), href domain only (no full URL)
-- [ ] Uses capture phase listener to catch bubbled events
-- [ ] `getAndClearClicks()` returns array and clears internal queue
-- [ ] All tests pass: `pnpm --filter sdk test cta`
+- [x] `setupCTATracking()` returns object with `getAndClearClicks()` and `destroy()` methods
+- [x] Detects clicks on selectors: `button[type="submit"]`, `a[href*="signup"]`, `a[href*="register"]`, `a[href*="pricing"]`, `a[href*="demo"]`, `a[href*="trial"]`, `a[href*="contact"]`, `a[href*="get-started"]`, `[data-tally-cta]`
+- [x] Captures: element type (button/link), text (max 30 chars), href domain only (no full URL)
+- [x] Uses capture phase listener to catch bubbled events
+- [x] `getAndClearClicks()` returns array and clears internal queue
+- [x] All tests pass: `pnpm --filter sdk test cta`
 
 **Files to Create:**
 - `packages/sdk/src/cta.ts` — CTA click tracking
