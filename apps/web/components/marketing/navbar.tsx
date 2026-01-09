@@ -64,7 +64,7 @@ export default function MarketingNavbar({ authUrl, githubUrl, isLoggedIn }: Mark
               rel={authIsExternal ? "noreferrer" : undefined}
               target={authIsExternal ? "_blank" : undefined}
             >
-              Start Free
+              Sign in with GitHub
             </a>
           </div>
         </div>

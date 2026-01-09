@@ -40,7 +40,7 @@ export default function LandingPage() {
               className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#ec7f13] px-8 text-base font-bold text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-orange-600 hover:shadow-warm-md active:scale-[0.96]"
               href={AUTH_URL}
             >
-              Start Tracking Now
+              Sign in with GitHub
             </a>
             <a
               className="flex h-12 items-center justify-center gap-2 rounded-lg bg-transparent px-8 text-base font-medium text-[#9a734c] transition-colors hover:text-[#1b140d]"
