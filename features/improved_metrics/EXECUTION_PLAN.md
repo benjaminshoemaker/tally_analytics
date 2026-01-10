@@ -335,11 +335,11 @@ Human must complete before starting:
 Update the Zod validation schema in the events app track route to accept the new V2 event fields. All new fields are optional for backward compatibility with existing SDK versions.
 
 **Acceptance Criteria:**
-- [ ] Zod schema accepts new optional fields: `engagement_time_ms`, `scroll_depth`, `visitor_id`, `is_returning`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `cta_clicks`
-- [ ] Existing V1 events (without new fields) continue to validate successfully
-- [ ] V2 events with all new fields validate successfully
-- [ ] Invalid field values (wrong types) are rejected
-- [ ] All tests pass: `pnpm --filter web test events-track`
+- [x] Zod schema accepts new optional fields: `engagement_time_ms`, `scroll_depth`, `visitor_id`, `is_returning`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `cta_clicks`
+- [x] Existing V1 events (without new fields) continue to validate successfully
+- [x] V2 events with all new fields validate successfully
+- [x] Invalid field values (wrong types) are rejected
+- [x] All tests pass: `pnpm --filter web test events-track`
 
 **Files to Create:**
 - None

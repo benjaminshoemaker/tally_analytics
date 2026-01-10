@@ -28,6 +28,17 @@ const analyticsEventSchema = z.object({
   user_agent: z.string().optional(),
   screen_width: z.number().optional(),
   user_id: z.string().optional(),
+  // V2 Enhanced Metrics fields
+  engagement_time_ms: z.number().optional(),
+  scroll_depth: z.number().optional(),
+  visitor_id: z.string().optional(),
+  is_returning: z.number().optional(),
+  utm_source: z.string().optional(),
+  utm_medium: z.string().optional(),
+  utm_campaign: z.string().optional(),
+  utm_term: z.string().optional(),
+  utm_content: z.string().optional(),
+  cta_clicks: z.string().optional(),
 });
 
 const trackRequestSchema = z.object({
