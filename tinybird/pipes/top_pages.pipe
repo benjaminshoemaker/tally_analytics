@@ -4,7 +4,7 @@ SQL >
     SELECT
         ifNull(path, '') as path,
         count() as views,
-        round(count() * 100.0 / nullIf(total.total, 0), 2) as percentage
+        round(count() * 100.0 / nullIf(any(total.total), 0), 2) as percentage
     FROM events
     CROSS JOIN (
         SELECT count() AS total
