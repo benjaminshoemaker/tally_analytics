@@ -242,10 +242,8 @@ Add new nullable columns to the Tinybird `events` data source for V2 metrics. Us
 **Acceptance Criteria:**
 - [x] Tinybird `events` data source has new columns: `engagement_time_ms` (Nullable UInt32), `scroll_depth` (Nullable UInt8), `visitor_id` (Nullable String), `is_returning` (Nullable UInt8), `utm_source` (Nullable String), `utm_medium` (Nullable String), `utm_campaign` (Nullable String), `utm_term` (Nullable String), `utm_content` (Nullable String), `cta_clicks` (Nullable String)
 - [x] Migration commands documented in a script or README
-- [ ] Existing events query correctly (historical data unaffected) **(blocked: pre-existing bug in top_pages.pipe)**
-- [ ] New columns can be queried with NULL handling **(blocked: pre-existing bug in top_pages.pipe)**
-
-**Note:** Tinybird Local deployment blocked by SQL error in `top_pages.pipe`. Schema is correctly defined in `events.datasource`. For cloud deployment, fix `top_pages.pipe` first or deploy events datasource separately.
+- [x] Existing events query correctly (historical data unaffected)
+- [x] New columns can be queried with NULL handling
 
 **Files to Create:**
 - `scripts/tinybird-v2-migration.sh` — migration script with `tb datasource alter` commands
@@ -306,7 +304,7 @@ Add conversion configuration columns to the `projects` table in PostgreSQL using
 - [x] Existing database queries work (projects, users)
 
 **Manual Verification:**
-- [ ] Tinybird migration applied and queryable **(blocked by pre-existing top_pages.pipe bug - schema file is ready)**
+- [x] Tinybird migration applied and queryable (deployment #3 live on Tinybird Local)
 - [x] PostgreSQL migration applied, new columns visible
 - [x] SDK bundle size still under 3KB gzipped: **2,344 bytes** (limit: 3,072 bytes)
 
