@@ -17,5 +17,16 @@ export interface AnalyticsEvent {
   user_agent?: string;
   screen_width?: number;
   user_id?: string;
+  // V2 Enhanced Metrics fields
+  engagement_time_ms?: number;
+  scroll_depth?: number;
+  visitor_id?: string;
+  is_returning?: number;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+  cta_clicks?: string;
 }
 

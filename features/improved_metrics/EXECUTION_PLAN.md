@@ -370,10 +370,10 @@ Update the Zod validation schema in the events app track route to accept the new
 Update the SDK TypeScript types to include all V2 event fields. This ensures type safety when constructing events with the new metrics.
 
 **Acceptance Criteria:**
-- [ ] `AnalyticsEvent` interface includes optional V2 fields: `engagement_time_ms`, `scroll_depth`, `visitor_id`, `is_returning`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `cta_clicks`
-- [ ] Types are correctly exported from `packages/sdk/src/types.ts`
-- [ ] No type errors in existing code
-- [ ] All tests pass: `pnpm --filter sdk test types`
+- [x] `AnalyticsEvent` interface includes optional V2 fields: `engagement_time_ms`, `scroll_depth`, `visitor_id`, `is_returning`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `cta_clicks`
+- [x] Types are correctly exported from `packages/sdk/src/types.ts`
+- [x] No type errors in existing code
+- [x] All tests pass: `pnpm --filter sdk test types`
 
 **Files to Create:**
 - None
