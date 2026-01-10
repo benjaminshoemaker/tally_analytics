@@ -58,7 +58,9 @@ export function createScrollTracker(): ScrollTracker {
     },
 
     destroy(): void {
-      window.removeEventListener("scroll", onScroll);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("scroll", onScroll);
+      }
     },
   };
 }

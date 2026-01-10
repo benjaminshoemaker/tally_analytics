@@ -124,7 +124,9 @@ export function setupCTATracking(): CTATracker {
     },
 
     destroy(): void {
-      window.removeEventListener("click", onClick, { capture: true });
+      if (typeof window !== "undefined") {
+        window.removeEventListener("click", onClick, { capture: true });
+      }
     },
   };
 }

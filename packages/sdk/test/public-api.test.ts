@@ -10,6 +10,11 @@ function installCookieDocument() {
   Object.defineProperty(globalThis, "document", {
     value: {
       referrer: "https://referrer.example/",
+      visibilityState: "visible",
+      documentElement: { scrollHeight: 1000 },
+      body: { scrollHeight: 1000 },
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
       get cookie() {
         return Array.from(jar.entries())
           .map(([name, value]) => `${name}=${value}`)
@@ -25,6 +30,19 @@ function installCookieDocument() {
   });
 }
 
+function installWindow(overrides?: Record<string, unknown>) {
+  Object.defineProperty(globalThis, "window", {
+    value: {
+      location: { href: "https://example.com/", pathname: "/", search: "", protocol: "https:" },
+      innerHeight: 800,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      ...overrides,
+    },
+    configurable: true,
+  });
+}
+
 describe("Task 3.2.C - Public API", () => {
   it("exports public API from src/index.ts", () => {
     const indexPath = path.join(__dirname, "..", "src", "index.ts");
@@ -34,10 +52,7 @@ describe("Task 3.2.C - Public API", () => {
 
   it("init(options) stores configuration and trackPageView sends a page_view", async () => {
     installCookieDocument();
-    Object.defineProperty(globalThis, "window", {
-      value: { location: { href: "https://example.com/a?b=c" } },
-      configurable: true,
-    });
+    installWindow({ location: { href: "https://example.com/a?b=c", pathname: "/a", search: "?b=c", protocol: "https:" } });
     Object.defineProperty(globalThis, "navigator", {
       value: { doNotTrack: "0" },
       configurable: true,
@@ -63,10 +78,7 @@ describe("Task 3.2.C - Public API", () => {
 
   it("identify(userId) associates events with user", async () => {
     installCookieDocument();
-    Object.defineProperty(globalThis, "window", {
-      value: { location: { href: "https://example.com/" } },
-      configurable: true,
-    });
+    installWindow();
     Object.defineProperty(globalThis, "navigator", {
       value: { doNotTrack: "0" },
       configurable: true,
@@ -91,14 +103,12 @@ describe("Task 3.2.C - Public API", () => {
   });
 
   it("isEnabled() respects Do Not Track by default", () => {
+    installCookieDocument();
     Object.defineProperty(globalThis, "navigator", {
       value: { doNotTrack: "1" },
       configurable: true,
     });
-    Object.defineProperty(globalThis, "window", {
-      value: { location: { href: "https://example.com/" } },
-      configurable: true,
-    });
+    installWindow();
 
     init({ projectId: "proj_123" });
     expect(isEnabled()).toBe(false);

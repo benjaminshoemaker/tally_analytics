@@ -398,13 +398,13 @@ Update the SDK TypeScript types to include all V2 event fields. This ensures typ
 Wire up all new tracking modules into the main tracker. Initialize modules on `init()`, include V2 data in events, send final page data on unload. Respect DNT preference for all new tracking.
 
 **Acceptance Criteria:**
-- [ ] `init()` creates engagement, scroll, and CTA trackers (when DNT disabled)
-- [ ] `session_start` event includes visitor_id, is_returning, and UTM params
-- [ ] `page_view` events include engagement_time_ms, scroll_depth, and cta_clicks
-- [ ] `beforeunload` and `visibilitychange` events send final page data
-- [ ] DNT check (`navigator.doNotTrack === "1"`) skips V2 module initialization
-- [ ] All existing SDK tests still pass
-- [ ] All tests pass: `pnpm --filter sdk test tracker`
+- [x] `init()` creates engagement, scroll, and CTA trackers (when DNT disabled)
+- [x] `session_start` event includes visitor_id, is_returning, and UTM params
+- [x] `page_view` events include engagement_time_ms, scroll_depth, and cta_clicks
+- [x] `beforeunload` and `visibilitychange` events send final page data
+- [x] DNT check (`navigator.doNotTrack === "1"`) skips V2 module initialization
+- [x] All existing SDK tests still pass
+- [x] All tests pass: `pnpm --filter sdk test tracker`
 
 **Files to Create:**
 - None

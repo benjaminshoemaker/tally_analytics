@@ -78,11 +78,16 @@ export function createEngagementTracker(): EngagementTracker {
         tickInterval = null;
       }
 
-      for (const event of activityEvents) {
-        window.removeEventListener(event, onActivity);
+      // Guard for SSR or edge cases where window/document become undefined
+      if (typeof window !== "undefined") {
+        for (const event of activityEvents) {
+          window.removeEventListener(event, onActivity);
+        }
       }
 
-      document.removeEventListener("visibilitychange", onVisibilityChange);
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
     },
   };
 }
