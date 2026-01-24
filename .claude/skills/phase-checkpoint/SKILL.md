@@ -2,10 +2,53 @@
 name: phase-checkpoint
 description: Run checkpoint criteria after completing a phase
 argument-hint: [phase-number]
-allowed-tools: Bash, Read, Edit, Glob, Grep, AskUserQuestion
+allowed-tools: Bash, Read, Edit, Glob, Grep, AskUserQuestion, WebFetch, WebSearch
 ---
 
 Phase $1 is complete. Read EXECUTION_PLAN.md and run the checkpoint criteria.
+
+## External Tool Documentation Protocol
+
+**CRITICAL:** Before providing verification instructions for external integrations, you MUST read the latest official documentation first.
+
+### When to Fetch Docs
+
+Fetch documentation when ANY of these apply:
+- Checkpoint criteria involve verifying external service integration
+- Manual verification steps reference third-party dashboards or APIs
+- You need to guide users through external service verification (webhooks, API responses, etc.)
+
+### How to Fetch Docs
+
+1. **Identify external services** from checkpoint criteria
+2. **Fetch relevant docs** using WebFetch or WebSearch:
+   - Focus on testing/verification sections
+   - Look for troubleshooting guides for common issues
+3. **Cache per session** — Don't re-fetch docs already fetched in this session
+4. **Handle failures gracefully:**
+   - Retry with exponential backoff (2-3 attempts)
+   - If all retries fail: warn user and proceed with best available info
+
+### Documentation URLs by Service
+
+| Service | Verification/Testing Doc |
+|---------|-------------------------|
+| Supabase | https://supabase.com/docs/guides/getting-started |
+| Firebase | https://firebase.google.com/docs/web/setup |
+| Stripe | https://stripe.com/docs/testing |
+| Auth0 | https://auth0.com/docs/troubleshoot |
+| Vercel | https://vercel.com/docs/deployments/overview |
+| Resend | https://resend.com/docs/dashboard/emails/logs |
+
+For services not listed, use WebSearch: `{service name} testing verification documentation`
+
+### Integration with Verification
+
+When guiding manual verification of external integrations:
+1. Fetch docs FIRST to understand current testing procedures
+2. Provide accurate dashboard navigation (UI may have changed)
+3. Include expected responses/behaviors from official docs
+4. Reference troubleshooting steps for common failures
 
 ## Context Detection
 
@@ -456,13 +499,12 @@ Read `.claude/settings.local.json` for auto-advance configuration:
 ```json
 {
   "autoAdvance": {
-    "enabled": true,      // default: true
-    "delaySeconds": 15    // default: 15
+    "enabled": true      // default: true
   }
 }
 ```
 
-If `autoAdvance` is not configured, use defaults (`enabled: true`, `delaySeconds: 15`).
+If `autoAdvance` is not configured, use defaults (`enabled: true`).
 
 ### Auto-Advance Conditions
 
@@ -479,33 +521,18 @@ Auto-advance to `/phase-prep {N+1}` ONLY if ALL of these are true:
 
 ### If Auto-Advance Conditions Met
 
-1. **Show countdown:**
+1. **Show brief notification:**
    ```
    AUTO-ADVANCE
    ============
    All Phase $1 criteria verified (no truly manual items remain).
-
-   Auto-advancing to /phase-prep {N+1} in 15s...
-   (Press Enter to pause)
+   Proceeding to next phase...
    ```
 
-2. **Wait for delay or interrupt:**
-   - Wait `autoAdvance.delaySeconds` (default 15)
-   - If user presses Enter during countdown, cancel auto-advance
-   - Show countdown updates: `14s... 13s... 12s...`
-
-3. **If not interrupted:**
+2. **Execute immediately:**
    - Track this command in auto-advance session log
-   - Execute `/phase-prep {N+1}`
+   - Invoke `/phase-prep {N+1}` using the Skill tool
    - Continue auto-advance chain (phase-prep will continue if it passes)
-
-4. **If interrupted:**
-   ```
-   Auto-advance paused by user.
-
-   Ready for Phase {N+1}. Run manually when ready:
-     /phase-prep {N+1}
-   ```
 
 ### If Auto-Advance Conditions NOT Met
 

@@ -1,5 +1,22 @@
 # TODOs — Tally Analytics
 
+## 🔴 Bugs
+
+### Auto-Generated PRs: Export/Import Naming Mismatch
+The GitHub template generation exports `TallyAnalytics` but the generated import statement references `FastPrAnalytics`, causing build failures.
+
+**Likely locations:**
+- `apps/web/lib/github/templates/` — template generation code
+- Wherever PR content is assembled
+
+**Symptoms:**
+- Build fails on generated PR code
+- Manual fix required to change import name
+
+**Priority:** High — breaks generated PRs
+
+---
+
 ## 🟠 Revenue & Monetization
 
 ### Stripe Payment Integration

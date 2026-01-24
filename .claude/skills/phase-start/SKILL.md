@@ -2,10 +2,59 @@
 name: phase-start
 description: Execute all tasks in a phase autonomously
 argument-hint: [phase-number]
-allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task, WebFetch, WebSearch
 ---
 
 Execute all steps and tasks in Phase $1 from EXECUTION_PLAN.md.
+
+## External Tool Documentation Protocol
+
+**CRITICAL:** Before implementing code that integrates with external services, you MUST read the latest official documentation first.
+
+### When to Fetch Docs
+
+Fetch documentation when ANY of these apply:
+- Task involves integrating with a third-party API (Supabase, Stripe, Firebase, etc.)
+- You're writing code that calls external service endpoints
+- Task references SDK usage for an external service
+- You need to implement webhooks, authentication, or data sync with external services
+
+### How to Fetch Docs
+
+1. **Identify external services** from task description and acceptance criteria
+2. **Fetch relevant docs** using WebFetch or WebSearch:
+   - SDK/library installation and setup
+   - API reference for specific endpoints being used
+   - Code examples for the integration pattern
+3. **Cache per session** — Don't re-fetch docs already fetched in this session
+4. **Handle failures gracefully:**
+   - Retry with exponential backoff (2-3 attempts)
+   - If all retries fail: warn user and proceed with best available info
+
+### Documentation URLs by Service
+
+| Service | SDK/API Documentation |
+|---------|----------------------|
+| Supabase | https://supabase.com/docs/reference/javascript |
+| Firebase | https://firebase.google.com/docs/reference/js |
+| Stripe | https://stripe.com/docs/api |
+| Auth0 | https://auth0.com/docs/api |
+| Clerk | https://clerk.com/docs/references/javascript |
+| Resend | https://resend.com/docs/api-reference |
+| OpenAI | https://platform.openai.com/docs/api-reference |
+| Anthropic | https://docs.anthropic.com/en/api |
+| Trigger.dev | https://trigger.dev/docs |
+
+For services not listed, use WebSearch: `{service name} {language} SDK documentation`
+
+### Integration with Task Execution
+
+When implementing external service integrations:
+1. Fetch docs FIRST before writing integration code
+2. Use the official SDK patterns (not outdated examples)
+3. Follow current authentication methods from docs
+4. Reference error handling patterns from official documentation
+5. Check for breaking changes if using a newer SDK version
 
 ## Context Detection
 
@@ -80,8 +129,12 @@ Before starting, confirm the required files exist:
    After each task completion (sequential commits on same branch):
    ```bash
    git add -A
-   git commit -m "task({id}): {description}"
+   git commit -m "task({id}): {description} [REQ-XXX]"
    ```
+
+   **Requirement traceability:** Check the task's `Requirement:` field in EXECUTION_PLAN.md.
+   - If a REQ-ID exists (e.g., `REQ-002`), include it: `task(1.2.A): Add auth [REQ-002]`
+   - If no REQ-ID or "None", omit brackets: `task(1.1.A): Set up scaffolding`
 
    **Do NOT push.** Leave pushing to the human after manual verification at checkpoint.
 
@@ -242,13 +295,12 @@ Read `.claude/settings.local.json` for auto-advance configuration:
 ```json
 {
   "autoAdvance": {
-    "enabled": true,      // default: true
-    "delaySeconds": 15    // default: 15
+    "enabled": true      // default: true
   }
 }
 ```
 
-If `autoAdvance` is not configured, use defaults (`enabled: true`, `delaySeconds: 15`).
+If `autoAdvance` is not configured, use defaults (`enabled: true`).
 
 ### Pre-Check: Attempt Automation on Manual Items
 
@@ -274,33 +326,19 @@ Auto-advance to `/phase-checkpoint $1` ONLY if ALL of these are true:
 
 ### If Auto-Advance Conditions Met
 
-1. **Show countdown:**
+1. **Show brief notification:**
    ```
    AUTO-ADVANCE
    ============
    All Phase $1 tasks complete. No truly manual verification items.
    {N} checkpoint items can be auto-verified.
-
-   Auto-advancing to /phase-checkpoint $1 in 15s...
-   (Press Enter to pause)
+   Proceeding to checkpoint...
    ```
 
-2. **Wait for delay or interrupt:**
-   - Wait `autoAdvance.delaySeconds` (default 15)
-   - If user presses Enter during countdown, cancel auto-advance
-   - Show countdown updates: `14s... 13s... 12s...`
-
-3. **If not interrupted:**
+2. **Execute immediately:**
    - Track this command in auto-advance session log
-   - Execute `/phase-checkpoint $1`
+   - Invoke `/phase-checkpoint $1` using the Skill tool
    - Checkpoint will continue the chain if it passes
-
-4. **If interrupted:**
-   ```
-   Auto-advance paused by user.
-   Run manually when ready:
-     /phase-checkpoint $1
-   ```
 
 ### If Auto-Advance Conditions NOT Met
 
