@@ -742,10 +742,10 @@ Create a migration to drop the magic_links table that is no longer used.
 Update E2E tests to use the new E2E login bypass instead of magic links.
 
 **Acceptance Criteria:**
-- [ ] E2E tests use `POST /api/auth/e2e-login` to authenticate
-- [ ] E2E tests no longer reference magic link flow
-- [ ] E2E tests pass with new auth method
-- [ ] Auth spec tests OAuth login page UI elements
+- [x] E2E tests use `POST /api/auth/e2e-login` to authenticate
+- [x] E2E tests no longer reference magic link flow
+- [x] E2E tests pass with new auth method
+- [x] Auth spec tests OAuth login page UI elements
 
 **Files to Modify:**
 - `apps/web/e2e/auth.spec.ts` — update to use E2E login bypass

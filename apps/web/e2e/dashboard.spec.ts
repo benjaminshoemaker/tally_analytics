@@ -1,19 +1,35 @@
 import { expect, test } from "@playwright/test";
 
+import crypto from "node:crypto";
+
+import { Client } from "pg";
+
+const DEFAULT_DATABASE_URL = "postgres://postgres:postgres@127.0.0.1:5432/postgres";
+
+async function createUser({ email }: { email: string }): Promise<string> {
+  const userId = crypto.randomUUID();
+
+  const client = new Client({ connectionString: process.env.DATABASE_URL ?? DEFAULT_DATABASE_URL });
+  await client.connect();
+  try {
+    await client.query("INSERT INTO users (id, email) VALUES ($1, $2)", [userId, email]);
+  } finally {
+    await client.end();
+  }
+
+  return userId;
+}
+
 async function login(page: import("@playwright/test").Page) {
-  await page.goto("/login");
-
   const email = `e2e+${Date.now()}@example.com`;
-  const magicLinkResponsePromise = page.waitForResponse((res) => res.url().includes("/api/auth/magic-link") && res.ok());
+  const userId = await createUser({ email });
 
-  await page.getByLabel("Email").fill(email);
-  await page.getByRole("button", { name: "Send magic link" }).click();
+  const response = await page.request.post("/api/auth/e2e-login", {
+    data: { userId },
+  });
+  expect(response.ok()).toBe(true);
 
-  const magicLinkResponse = await magicLinkResponsePromise;
-  const json = (await magicLinkResponse.json()) as { loginUrl?: string };
-  if (!json.loginUrl) throw new Error("Expected loginUrl in /api/auth/magic-link response (E2E_TEST_MODE)");
-
-  await page.goto(json.loginUrl);
+  await page.goto("/projects");
   await expect(page).toHaveURL(/\/projects/);
 }
 

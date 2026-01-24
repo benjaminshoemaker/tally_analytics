@@ -1,21 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-test("login flow", async ({ page }) => {
+test("login page shows GitHub OAuth UI", async ({ page }) => {
   await page.goto("/login");
 
-  const email = `e2e+${Date.now()}@example.com`;
+  const githubLink = page.getByRole("link", { name: "Sign in with GitHub" });
+  await expect(githubLink).toBeVisible();
+  await expect(githubLink).toHaveAttribute("href", "/api/auth/github");
 
-  const magicLinkResponsePromise = page.waitForResponse((res) => res.url().includes("/api/auth/magic-link") && res.ok());
-
-  await page.getByLabel("Email").fill(email);
-  await page.getByRole("button", { name: "Send magic link" }).click();
-
-  const magicLinkResponse = await magicLinkResponsePromise;
-  const json = (await magicLinkResponse.json()) as { success: boolean; loginUrl?: string };
-  expect(json.success).toBe(true);
-  expect(json.loginUrl).toBeTruthy();
-
-  await page.goto(json.loginUrl!);
-  await expect(page).toHaveURL(/\/projects/);
-  await expect(page.getByRole("heading", { name: "Projects" })).toBeVisible();
+  await expect(page.getByLabel("Email")).toHaveCount(0);
 });
