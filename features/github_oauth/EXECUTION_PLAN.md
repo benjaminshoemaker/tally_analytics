@@ -652,11 +652,11 @@ Remove the magic link API routes that are no longer used.
 Remove the magic link helper library and email infrastructure.
 
 **Acceptance Criteria:**
-- [ ] `lib/auth/magic-link.ts` deleted
-- [ ] `lib/email/send.ts` deleted
-- [ ] `lib/email/templates.tsx` deleted
-- [ ] No imports reference these files
-- [ ] App builds successfully
+- [x] `lib/auth/magic-link.ts` deleted
+- [x] `lib/email/send.ts` deleted
+- [x] `lib/email/templates.tsx` deleted
+- [x] No imports reference these files
+- [x] App builds successfully
 
 **Files to Delete:**
 - `apps/web/lib/auth/magic-link.ts`
