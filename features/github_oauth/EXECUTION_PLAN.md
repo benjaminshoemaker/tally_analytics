@@ -765,16 +765,16 @@ Update E2E tests to use the new E2E login bypass instead of magic links.
 ### Phase 4 Checkpoint
 
 **Automated Checks:**
-- [ ] All tests pass
-- [ ] Type checking passes
-- [ ] Linting passes
-- [ ] E2E tests pass
-- [ ] No orphaned imports or references to deleted files
+- [x] All tests pass
+- [x] Type checking passes
+- [x] Linting passes
+- [x] E2E tests pass
+- [x] No orphaned imports or references to deleted files
 
 **Manual Verification:**
-- [ ] App builds successfully for production
-- [ ] Run migration to drop magic_links table
-- [ ] Verify database no longer has magic_links table
+- [x] App builds successfully for production
+- [x] Run migration to drop magic_links table
+- [x] Verify database no longer has magic_links table
 - [ ] Full end-to-end test of new user signup via OAuth
 
 **Final Verification:**
