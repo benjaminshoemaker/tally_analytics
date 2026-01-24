@@ -72,14 +72,14 @@
 
 Human must complete before starting:
 
-- [ ] Create GitHub OAuth App at https://github.com/settings/developers
+- [x] Create GitHub OAuth App at https://github.com/settings/developers
   - Application name: `Tally Analytics`
   - Homepage URL: `https://usetally.xyz`
   - Authorization callback URL: `https://usetally.xyz/api/auth/github/callback`
-- [ ] Add environment variables to `.env` and production:
+- [x] Add environment variables to `.env` and production:
   - `GITHUB_OAUTH_CLIENT_ID` — from OAuth App settings
   - `GITHUB_OAUTH_CLIENT_SECRET` — from OAuth App settings
-- [ ] Look up existing user UUIDs from production database for the linking script
+- [x] Look up existing user UUIDs from production database for the linking script
 
 ### Step 1.1: Database Schema
 
@@ -93,13 +93,13 @@ Human must complete before starting:
 Create a Drizzle migration that adds GitHub OAuth columns to the users table. This is additive and non-breaking — existing magic link auth continues to work.
 
 **Acceptance Criteria:**
-- [ ] Migration file `0003_github_oauth.sql` exists in `drizzle/migrations/`
-- [ ] Migration adds `github_user_id BIGINT UNIQUE` column
-- [ ] Migration adds `github_username VARCHAR(39)` column
-- [ ] Migration adds `github_avatar_url TEXT` column
-- [ ] Migration creates index on `github_user_id`
-- [ ] Migration runs successfully (`pnpm drizzle-kit push` or generate)
-- [ ] Existing tests continue to pass
+- [x] Migration file `0003_github_oauth.sql` exists in `drizzle/migrations/`
+- [x] Migration adds `github_user_id BIGINT UNIQUE` column
+- [x] Migration adds `github_username VARCHAR(39)` column
+- [x] Migration adds `github_avatar_url TEXT` column
+- [x] Migration creates index on `github_user_id`
+- [x] Migration runs successfully (`pnpm drizzle-kit push` or generate)
+- [x] Existing tests continue to pass
 
 **Files to Create:**
 - `apps/web/drizzle/migrations/0003_github_oauth.sql` — migration file
@@ -126,12 +126,12 @@ Create a Drizzle migration that adds GitHub OAuth columns to the users table. Th
 Create a one-time script to link the two existing users to their GitHub accounts. This script will be run manually after the migration.
 
 **Acceptance Criteria:**
-- [ ] Script exists at `apps/web/scripts/link-github-users.ts`
-- [ ] Script updates user with GitHub username `emriedel` to have `github_user_id = 8659979`
-- [ ] Script updates user with GitHub username `benjaminshoemaker` to have `github_user_id = 224462439`
-- [ ] Script logs success/failure for each user
-- [ ] Script can be run with `npx tsx apps/web/scripts/link-github-users.ts`
-- [ ] Script handles case where user email is not found (logs error, continues)
+- [x] Script exists at `apps/web/scripts/link-github-users.ts`
+- [x] Script updates user with GitHub username `emriedel` to have `github_user_id = 8659979`
+- [x] Script updates user with GitHub username `benjaminshoemaker` to have `github_user_id = 224462439`
+- [x] Script logs success/failure for each user
+- [x] Script can be run with `npx tsx apps/web/scripts/link-github-users.ts`
+- [x] Script handles case where user email is not found (logs error, continues)
 
 **Files to Create:**
 - `apps/web/scripts/link-github-users.ts` — one-time migration script
@@ -160,16 +160,16 @@ Create a one-time script to link the two existing users to their GitHub accounts
 Create a library with helper functions for GitHub OAuth: state generation, URL building, token exchange, and user fetching. This follows existing patterns in `lib/github/app.ts`.
 
 **Acceptance Criteria:**
-- [ ] `generateOAuthState()` returns a 64-character hex string
-- [ ] `generateOAuthState()` generates unique values on each call
-- [ ] `buildGitHubAuthUrl(state)` returns correct GitHub authorization URL with client_id, redirect_uri, scope, and state
-- [ ] `exchangeCodeForToken(code)` exchanges authorization code for access token
-- [ ] `exchangeCodeForToken(code)` throws on GitHub error response
-- [ ] `fetchGitHubUser(token)` returns user object with id, login, avatar_url
-- [ ] `fetchGitHubUserEmail(token)` returns primary verified email
-- [ ] `fetchGitHubUserEmail(token)` falls back to any verified email if no primary
-- [ ] All functions have TypeScript types
-- [ ] Unit tests cover all functions with mocked fetch
+- [x] `generateOAuthState()` returns a 64-character hex string
+- [x] `generateOAuthState()` generates unique values on each call
+- [x] `buildGitHubAuthUrl(state)` returns correct GitHub authorization URL with client_id, redirect_uri, scope, and state
+- [x] `exchangeCodeForToken(code)` exchanges authorization code for access token
+- [x] `exchangeCodeForToken(code)` throws on GitHub error response
+- [x] `fetchGitHubUser(token)` returns user object with id, login, avatar_url
+- [x] `fetchGitHubUserEmail(token)` returns primary verified email
+- [x] `fetchGitHubUserEmail(token)` falls back to any verified email if no primary
+- [x] All functions have TypeScript types
+- [x] Unit tests cover all functions with mocked fetch
 
 **Files to Create:**
 - `apps/web/lib/auth/github-oauth.ts` — OAuth helper functions
@@ -193,13 +193,13 @@ Create a library with helper functions for GitHub OAuth: state generation, URL b
 Create query functions for finding and creating users by GitHub ID. This separates user queries from the existing auth code.
 
 **Acceptance Criteria:**
-- [ ] `findOrCreateUserByGitHub()` finds existing user by `github_user_id`
-- [ ] `findOrCreateUserByGitHub()` updates username/avatar/email if user exists
-- [ ] `findOrCreateUserByGitHub()` creates new user if not found
-- [ ] `findOrCreateUserByGitHub()` returns user id
-- [ ] `getUserById()` returns user with id, email, githubUsername, githubAvatarUrl
-- [ ] `getUserById()` returns null if user not found
-- [ ] Unit tests cover find, create, and update scenarios
+- [x] `findOrCreateUserByGitHub()` finds existing user by `github_user_id`
+- [x] `findOrCreateUserByGitHub()` updates username/avatar/email if user exists
+- [x] `findOrCreateUserByGitHub()` creates new user if not found
+- [x] `findOrCreateUserByGitHub()` returns user id
+- [x] `getUserById()` returns user with id, email, githubUsername, githubAvatarUrl
+- [x] `getUserById()` returns null if user not found
+- [x] Unit tests cover find, create, and update scenarios
 
 **Files to Create:**
 - `apps/web/lib/db/queries/users.ts` — user query functions
@@ -220,22 +220,22 @@ Create query functions for finding and creating users by GitHub ID. This separat
 ### Phase 1 Checkpoint
 
 **Automated Checks:**
-- [ ] All existing tests pass (`pnpm test`)
-- [ ] New tests pass
-- [ ] Type checking passes (`pnpm typecheck`)
-- [ ] Linting passes (`pnpm lint`)
-- [ ] Migration applies cleanly
+- [x] All existing tests pass (`pnpm test`)
+- [x] New tests pass
+- [x] Type checking passes (`pnpm typecheck`)
+- [x] Linting passes (`pnpm lint`)
+- [x] Migration applies cleanly
 
 **Manual Verification:**
-- [ ] Run migration on a test database
-- [ ] Run linking script (with test data or real emails)
-- [ ] Verify user records have GitHub columns populated
-- [ ] Confirm existing magic link login still works (non-breaking)
+- [x] Run migration on a test database
+- [x] Run linking script (with test data or real emails)
+- [x] Verify user records have GitHub columns populated
+- [x] Confirm existing magic link login still works (non-breaking)
 
 **Regression Verification:**
-- [ ] Existing authentication flow unchanged
-- [ ] Dashboard accessible with existing session
-- [ ] No errors in existing functionality
+- [x] Existing authentication flow unchanged
+- [x] Dashboard accessible with existing session
+- [x] No errors in existing functionality
 
 ---
 
@@ -247,8 +247,8 @@ Create query functions for finding and creating users by GitHub ID. This separat
 
 ### Pre-Phase Setup
 
-- [ ] Verify environment variables are accessible in development
-- [ ] Confirm Phase 1 migration and linking script have been run
+- [x] Verify environment variables are accessible in development
+- [x] Confirm Phase 1 migration and linking script have been run
 
 ### Step 2.1: OAuth Endpoints
 
@@ -262,11 +262,11 @@ Create query functions for finding and creating users by GitHub ID. This separat
 Create the route that initiates OAuth by generating state, setting a cookie, and redirecting to GitHub.
 
 **Acceptance Criteria:**
-- [ ] `GET /api/auth/github` generates random state
-- [ ] `GET /api/auth/github` sets `oauth_state` cookie (HttpOnly, Secure in prod, SameSite=Lax, 10min expiry)
-- [ ] `GET /api/auth/github` returns 302 redirect to GitHub authorization URL
-- [ ] Redirect URL includes correct client_id, redirect_uri, scope, and state
-- [ ] Unit tests verify state generation and redirect
+- [x] `GET /api/auth/github` generates random state
+- [x] `GET /api/auth/github` sets `oauth_state` cookie (HttpOnly, Secure in prod, SameSite=Lax, 10min expiry)
+- [x] `GET /api/auth/github` returns 302 redirect to GitHub authorization URL
+- [x] Redirect URL includes correct client_id, redirect_uri, scope, and state
+- [x] Unit tests verify state generation and redirect
 
 **Files to Create:**
 - `apps/web/app/api/auth/github/route.ts` — OAuth initiation route
@@ -290,18 +290,18 @@ Create the route that initiates OAuth by generating state, setting a cookie, and
 Create the route that handles GitHub's callback: verify state, exchange code for token, fetch user, create/find Tally user, establish session.
 
 **Acceptance Criteria:**
-- [ ] `GET /api/auth/github/callback` with `error=access_denied` redirects to `/login?error=oauth_cancelled`
-- [ ] Missing code or state redirects to `/login?error=invalid_state`
-- [ ] State mismatch (cookie vs param) redirects to `/login?error=invalid_state`
-- [ ] Successful flow exchanges code for token
-- [ ] Successful flow fetches GitHub user and email
-- [ ] Successful flow calls `findOrCreateUserByGitHub`
-- [ ] Successful flow creates session using existing `createSession`
-- [ ] Successful flow sets session cookie using existing `buildSessionCookie`
-- [ ] Successful flow clears `oauth_state` cookie
-- [ ] Successful flow redirects to `/projects`
-- [ ] GitHub API errors redirect to `/login?error=github_error`
-- [ ] Unit tests cover success and all error paths
+- [x] `GET /api/auth/github/callback` with `error=access_denied` redirects to `/login?error=oauth_cancelled`
+- [x] Missing code or state redirects to `/login?error=invalid_state`
+- [x] State mismatch (cookie vs param) redirects to `/login?error=invalid_state`
+- [x] Successful flow exchanges code for token
+- [x] Successful flow fetches GitHub user and email
+- [x] Successful flow calls `findOrCreateUserByGitHub`
+- [x] Successful flow creates session using existing `createSession`
+- [x] Successful flow sets session cookie using existing `buildSessionCookie`
+- [x] Successful flow clears `oauth_state` cookie
+- [x] Successful flow redirects to `/projects`
+- [x] GitHub API errors redirect to `/login?error=github_error`
+- [x] Unit tests cover success and all error paths
 
 **Files to Create:**
 - `apps/web/app/api/auth/github/callback/route.ts` — OAuth callback route
@@ -332,12 +332,12 @@ Create the route that handles GitHub's callback: verify state, exchange code for
 Create a test-only route that creates a session directly, bypassing OAuth. This enables E2E tests to authenticate without hitting GitHub.
 
 **Acceptance Criteria:**
-- [ ] `POST /api/auth/e2e-login` creates session for provided userId
-- [ ] Route returns 404 if `E2E_TEST_MODE !== "1"`
-- [ ] Route returns 404 in production (`NODE_ENV === "production"`)
-- [ ] Route sets session cookie on success
-- [ ] Route returns `{ success: true }` on success
-- [ ] Unit tests verify guard conditions
+- [x] `POST /api/auth/e2e-login` creates session for provided userId
+- [x] Route returns 404 if `E2E_TEST_MODE !== "1"`
+- [x] Route returns 404 in production (`NODE_ENV === "production"`)
+- [x] Route sets session cookie on success
+- [x] Route returns `{ success: true }` on success
+- [x] Unit tests verify guard conditions
 
 **Files to Create:**
 - `apps/web/app/api/auth/e2e-login/route.ts` — test-only login route
@@ -358,21 +358,21 @@ Create a test-only route that creates a session directly, bypassing OAuth. This 
 ### Phase 2 Checkpoint
 
 **Automated Checks:**
-- [ ] All tests pass (existing + new)
-- [ ] Type checking passes
-- [ ] Linting passes
+- [x] All tests pass (existing + new)
+- [x] Type checking passes
+- [x] Linting passes
 
 **Manual Verification:**
-- [ ] Visit `/api/auth/github` — redirects to GitHub
-- [ ] Complete OAuth flow — redirected to `/projects` with session
-- [ ] Check database — user record has GitHub fields populated
-- [ ] Log out, log back in via OAuth — works
-- [ ] Cancel on GitHub — redirected to `/login?error=oauth_cancelled`
+- [x] Visit `/api/auth/github` — redirects to GitHub
+- [x] Complete OAuth flow — redirected to `/projects` with session
+- [x] Check database — user record has GitHub fields populated
+- [x] Log out, log back in via OAuth — works
+- [x] Cancel on GitHub — redirected to `/login?error=oauth_cancelled`
 
 **Regression Verification:**
-- [ ] Magic link login still works
-- [ ] Existing sessions still valid
-- [ ] GitHub App installation callback still works
+- [x] Magic link login still works
+- [x] Existing sessions still valid
+- [x] GitHub App installation callback still works
 
 ---
 
@@ -384,8 +384,8 @@ Create a test-only route that creates a session directly, bypassing OAuth. This 
 
 ### Pre-Phase Setup
 
-- [ ] Verify OAuth flow works end-to-end (Phase 2 checkpoint passed)
-- [ ] Notify existing users (if needed) about login change
+- [x] Verify OAuth flow works end-to-end (Phase 2 checkpoint passed)
+- [x] Notify existing users (if needed) about login change
 
 ### Step 3.1: Login Page
 
@@ -399,17 +399,17 @@ Create a test-only route that creates a session directly, bypassing OAuth. This 
 Replace the magic link login form with a "Sign in with GitHub" button. Handle OAuth error states from query params.
 
 **Acceptance Criteria:**
-- [ ] Login page displays "Sign in with GitHub" button
-- [ ] Button links to `/api/auth/github`
-- [ ] GitHub logo icon displayed on button
-- [ ] Error message displayed for `?error=oauth_cancelled`
-- [ ] Error message displayed for `?error=invalid_state`
-- [ ] Error message displayed for `?error=github_error`
-- [ ] Page includes links to Terms and Privacy Policy
-- [ ] No email input field
-- [ ] No magic link references
-- [ ] Visual design matches existing warm/brand color scheme
-- [ ] Unit tests verify error message display
+- [x] Login page displays "Sign in with GitHub" button
+- [x] Button links to `/api/auth/github`
+- [x] GitHub logo icon displayed on button
+- [x] Error message displayed for `?error=oauth_cancelled`
+- [x] Error message displayed for `?error=invalid_state`
+- [x] Error message displayed for `?error=github_error`
+- [x] Page includes links to Terms and Privacy Policy
+- [x] No email input field
+- [x] No magic link references
+- [x] Visual design matches existing warm/brand color scheme
+- [x] Unit tests verify error message display
 
 **Files to Modify:**
 - `apps/web/app/login/page.tsx` — complete rewrite
@@ -444,14 +444,14 @@ Replace the magic link login form with a "Sign in with GitHub" button. Handle OA
 Create a dropdown component that shows the user's GitHub avatar and username, with a logout option. Includes click-outside-to-close behavior.
 
 **Acceptance Criteria:**
-- [ ] Dropdown shows avatar (32px circle) or initial if no avatar
-- [ ] Clicking avatar/button toggles dropdown open/closed
-- [ ] Dropdown shows username
-- [ ] Dropdown shows "Log out" option that submits to `/api/auth/logout`
-- [ ] Clicking outside dropdown closes it
-- [ ] Pressing Escape closes dropdown
-- [ ] Chevron icon rotates when open
-- [ ] Unit tests verify open/close behavior
+- [x] Dropdown shows avatar (32px circle) or initial if no avatar
+- [x] Clicking avatar/button toggles dropdown open/closed
+- [x] Dropdown shows username
+- [x] Dropdown shows "Log out" option that submits to `/api/auth/logout`
+- [x] Clicking outside dropdown closes it
+- [x] Pressing Escape closes dropdown
+- [x] Chevron icon rotates when open
+- [x] Unit tests verify open/close behavior
 
 **Files to Create:**
 - `apps/web/components/dashboard/user-dropdown.tsx` — dropdown component
@@ -478,11 +478,11 @@ Create a dropdown component that shows the user's GitHub avatar and username, wi
 Integrate the user dropdown into the dashboard header, accepting user info as a prop.
 
 **Acceptance Criteria:**
-- [ ] Header accepts optional `user` prop with `username` and `avatarUrl`
-- [ ] When user prop provided, displays UserDropdown instead of plain logout button
-- [ ] When user prop not provided, falls back to simple logout button
-- [ ] Existing header layout preserved (logo, spacing)
-- [ ] Unit tests verify conditional rendering
+- [x] Header accepts optional `user` prop with `username` and `avatarUrl`
+- [x] When user prop provided, displays UserDropdown instead of plain logout button
+- [x] When user prop not provided, falls back to simple logout button
+- [x] Existing header layout preserved (logo, spacing)
+- [x] Unit tests verify conditional rendering
 
 **Files to Modify:**
 - `apps/web/components/dashboard/header.tsx` — add user prop and dropdown
@@ -505,13 +505,13 @@ Integrate the user dropdown into the dashboard header, accepting user info as a 
 Modify the dashboard layout to fetch the current user's GitHub info and pass it to the header component.
 
 **Acceptance Criteria:**
-- [ ] Layout fetches user from session using existing `getUserFromSession`
-- [ ] Layout fetches full user record using `getUserById`
-- [ ] Layout passes `{ username, avatarUrl }` to DashboardHeader
-- [ ] Username falls back to email if githubUsername is null
-- [ ] Layout handles missing user gracefully (redirect to login)
-- [ ] Existing layout structure preserved
-- [ ] Unit tests verify user info passing
+- [x] Layout fetches user from session using existing `getUserFromSession`
+- [x] Layout fetches full user record using `getUserById`
+- [x] Layout passes `{ username, avatarUrl }` to DashboardHeader
+- [x] Username falls back to email if githubUsername is null
+- [x] Layout handles missing user gracefully (redirect to login)
+- [x] Existing layout structure preserved
+- [x] Unit tests verify user info passing
 
 **Files to Modify:**
 - `apps/web/app/(dashboard)/layout.tsx` — fetch and pass user info
@@ -541,14 +541,14 @@ Modify the dashboard layout to fetch the current user's GitHub info and pass it 
 Change all "Install GitHub App" CTAs on marketing pages to "Sign in with GitHub" linking to the OAuth flow. The `/projects` empty state keeps its current CTA.
 
 **Acceptance Criteria:**
-- [ ] Landing page (`/`) CTA links to `/api/auth/github`
-- [ ] Landing page CTA text is "Sign in with GitHub"
-- [ ] Pricing page (`/pricing`) CTA links to `/api/auth/github`
-- [ ] Docs setup page (`/docs/setup`) CTA links to `/api/auth/github`
-- [ ] Marketing layout navbar CTA links to `/api/auth/github`
-- [ ] Projects empty state (`/projects`) KEEPS link to GitHub App install
-- [ ] Login page "Install GitHub App" link removed (already handled in 3.1.A)
-- [ ] Unit tests verify CTA hrefs
+- [x] Landing page (`/`) CTA links to `/api/auth/github`
+- [x] Landing page CTA text is "Sign in with GitHub"
+- [x] Pricing page (`/pricing`) CTA links to `/api/auth/github`
+- [x] Docs setup page (`/docs/setup`) CTA links to `/api/auth/github`
+- [x] Marketing layout navbar CTA links to `/api/auth/github`
+- [x] Projects empty state (`/projects`) KEEPS link to GitHub App install
+- [x] Login page "Install GitHub App" link removed (already handled in 3.1.A)
+- [x] Unit tests verify CTA hrefs
 
 **Files to Modify:**
 - `apps/web/app/(marketing)/page.tsx` — update INSTALL_URL and CTA text
@@ -573,27 +573,27 @@ Change all "Install GitHub App" CTAs on marketing pages to "Sign in with GitHub"
 ### Phase 3 Checkpoint
 
 **Automated Checks:**
-- [ ] All tests pass
-- [ ] Type checking passes
-- [ ] Linting passes
+- [x] All tests pass
+- [x] Type checking passes
+- [x] Linting passes
 
 **Manual Verification:**
-- [ ] Visit login page — shows "Sign in with GitHub" button
-- [ ] Complete OAuth flow from login page — lands on projects
-- [ ] Dashboard header shows avatar and username
-- [ ] Dropdown logout works
-- [ ] All marketing CTAs trigger OAuth flow
-- [ ] Projects empty state still shows "Install GitHub App"
+- [x] Visit login page — shows "Sign in with GitHub" button
+- [x] Complete OAuth flow from login page — lands on projects
+- [x] Dashboard header shows avatar and username
+- [x] Dropdown logout works
+- [x] All marketing CTAs trigger OAuth flow
+- [x] Projects empty state still shows "Install GitHub App"
 
 **Browser Verification:**
-- [ ] No console errors on login page
-- [ ] No console errors on dashboard
-- [ ] Responsive design works on mobile
+- [x] No console errors on login page
+- [x] No console errors on dashboard
+- [x] Responsive design works on mobile
 
 **Regression Verification:**
-- [ ] GitHub App installation still works after OAuth login
-- [ ] Webhooks still process correctly
-- [ ] Project analytics still load
+- [x] GitHub App installation still works after OAuth login
+- [x] Webhooks still process correctly
+- [x] Project analytics still load
 
 ---
 

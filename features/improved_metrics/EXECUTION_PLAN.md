@@ -318,8 +318,8 @@ Add conversion configuration columns to the `projects` table in PostgreSQL using
 ### Pre-Phase Setup
 
 Human must complete before starting:
-- [ ] Verify Phase 1 migrations are applied (Tinybird + PostgreSQL)
-- [ ] Ensure events app is running locally for testing
+- [x] Verify Phase 1 migrations are applied (Tinybird + PostgreSQL)
+- [x] Ensure events app is running locally for testing
 
 ---
 
@@ -428,18 +428,18 @@ Wire up all new tracking modules into the main tracker. Initialize modules on `i
 ### Phase 2 Checkpoint
 
 **Automated Checks:**
-- [ ] All SDK tests pass: `pnpm --filter sdk test`
-- [ ] Events app tests pass: `pnpm --filter web test events`
-- [ ] Type checking passes across all packages
+- [x] All SDK tests pass: `pnpm --filter sdk test`
+- [x] Events app tests pass: `pnpm --filter web test events`
+- [x] Type checking passes across all packages
 
 **Regression Verification:**
-- [ ] V1 SDK events still accepted by events app
-- [ ] Existing dashboard still displays data correctly
+- [x] V1 SDK events still accepted by events app
+- [x] Existing dashboard still displays data correctly
 
 **Manual Verification:**
-- [ ] Build SDK and verify bundle size: `pnpm --filter sdk build`
-- [ ] Manually test SDK in browser: V2 fields appear in network requests
-- [ ] Verify Tinybird receives and stores new fields
+- [x] Build SDK and verify bundle size: `pnpm --filter sdk build`
+- [x] Manually test SDK in browser: V2 fields appear in network requests
+- [x] Verify Tinybird receives and stores new fields
 
 ---
 

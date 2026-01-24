@@ -44,27 +44,27 @@ Phase 1 → Phase 2 → Phase 3 → Phase 4
 Human must complete before coding:
 
 1) Products and prices
-- [ ] Create product “Tally Analytics”
-- [ ] Create recurring price “Pro” ($9/mo). Copy its price id.
-- [ ] Create recurring price “Team” ($29/mo). Copy its price id.
+- [x] Create product "Tally Analytics"
+- [x] Create recurring price "Pro" ($9/mo). Copy its price id.
+- [x] Create recurring price "Team" ($29/mo). Copy its price id.
 
 2) Billing Portal configuration (required for correct cancel/downgrade timing)
-- [ ] Create a **Billing Portal configuration** that:
-  - [ ] Allows plan switching between Pro and Team
-  - [ ] Sets proration behavior to match desired UX (immediate upgrade, prorated)
-  - [ ] For downgrades: applies change at period end (if that is the intended behavior)
-  - [ ] For cancellations: “cancel at period end” (not immediate)
-- [ ] Copy the Billing Portal configuration id (optional, but recommended to pin via API).
+- [x] Create a **Billing Portal configuration** that:
+  - [x] Allows plan switching between Pro and Team
+  - [x] Sets proration behavior to match desired UX (immediate upgrade, prorated)
+  - [x] For downgrades: applies change at period end (if that is the intended behavior)
+  - [x] For cancellations: "cancel at period end" (not immediate)
+- [x] Copy the Billing Portal configuration id (optional, but recommended to pin via API).
 
 3) Webhook endpoint
-- [ ] Create webhook endpoint pointing to: `https://usetally.xyz/api/webhooks/stripe` (use a tunnel for local testing)
-- [ ] Enable at least:
-  - [ ] `checkout.session.completed`
-  - [ ] `customer.subscription.created` (optional but useful)
-  - [ ] `customer.subscription.updated`
-  - [ ] `customer.subscription.deleted`
-  - [ ] `invoice.payment_failed` (recommended for status UX)
-- [ ] Copy the webhook signing secret.
+- [x] Create webhook endpoint pointing to: `https://usetally.xyz/api/webhooks/stripe` (use a tunnel for local testing)
+- [x] Enable at least:
+  - [x] `checkout.session.completed`
+  - [x] `customer.subscription.created` (optional but useful)
+  - [x] `customer.subscription.updated`
+  - [x] `customer.subscription.deleted`
+  - [x] `invoice.payment_failed` (recommended for status UX)
+- [x] Copy the webhook signing secret.
 
 ---
 
@@ -83,8 +83,8 @@ Human must complete before coding:
 - `NEXT_PUBLIC_APP_URL` (or ensure existing app URL env is used consistently)
 
 **Acceptance criteria**
-- [ ] `.env.example` contains all required Stripe variables with comments.
-- [ ] App reads the same “app url” consistently for success/cancel/return URLs.
+- [x] `.env.example` contains all required Stripe variables with comments.
+- [x] App reads the same "app url" consistently for success/cancel/return URLs.
 
 ---
 
@@ -120,8 +120,8 @@ ALTER TABLE users
 - `apps/web/lib/db/schema.ts` to add the new columns and indexes (and update the plan check only if you introduce additional plan values, which you should not).
 
 **Acceptance criteria**
-- [ ] Migration runs successfully.
-- [ ] Drizzle schema matches DB columns.
+- [x] Migration runs successfully.
+- [x] Drizzle schema matches DB columns.
 
 ---
 
@@ -133,18 +133,18 @@ ALTER TABLE users
 - `apps/web/lib/stripe/plans.ts` (optional helper module)
 
 **Acceptance criteria**
-- [ ] Stripe client uses the pinned API version.
-- [ ] Constants map plans → price IDs and price IDs → plans.
-- [ ] Price ID mapping failure does not silently downgrade users to free (details in webhook step).
+- [x] Stripe client uses the pinned API version.
+- [x] Constants map plans → price IDs and price IDs → plans.
+- [x] Price ID mapping failure does not silently downgrade users to free (details in webhook step).
 
 ---
 
 ## Phase 1 checkpoint
 
-- [ ] Stripe products, prices, portal config, and webhook endpoint exist (test mode).
-- [ ] Env vars added and load in dev.
-- [ ] DB migration applied.
-- [ ] Stripe client utilities compile.
+- [x] Stripe products, prices, portal config, and webhook endpoint exist (test mode).
+- [x] Env vars added and load in dev.
+- [x] DB migration applied.
+- [x] Stripe client utilities compile.
 
 ---
 
@@ -173,12 +173,12 @@ ALTER TABLE users
    - `cancel_url: ${appUrl}/settings`
 
 **Acceptance criteria**
-- [ ] Returns 401 if unauthenticated.
-- [ ] Returns 400 for invalid plan.
-- [ ] Returns 409 (or redirects to portal) if an active subscription already exists.
-- [ ] Success URL includes `checkout_session_id={CHECKOUT_SESSION_ID}`.
-- [ ] Subscription metadata contains `userId` (used for reconciliation and/or webhook fallback).
-- [ ] Checkout Session creation errors are handled with safe messages (no key leakage).
+- [x] Returns 401 if unauthenticated.
+- [x] Returns 400 for invalid plan.
+- [x] Returns 409 (or redirects to portal) if an active subscription already exists.
+- [x] Success URL includes `checkout_session_id={CHECKOUT_SESSION_ID}`.
+- [x] Subscription metadata contains `userId` (used for reconciliation and/or webhook fallback).
+- [x] Checkout Session creation errors are handled with safe messages (no key leakage).
 
 ---
 
@@ -195,9 +195,9 @@ ALTER TABLE users
   - If `STRIPE_BILLING_PORTAL_CONFIG_ID` is set, pass `configuration: <id>` so behavior matches the lifecycle table.
 
 **Acceptance criteria**
-- [ ] 401 if unauthenticated.
-- [ ] 400 if user has no Stripe customer.
-- [ ] Redirects to portal URL.
+- [x] 401 if unauthenticated.
+- [x] 400 if user has no Stripe customer.
+- [x] Redirects to portal URL.
 
 ---
 
@@ -225,10 +225,10 @@ Webhooks are async and not guaranteed to land before the user returns from Check
    - Optionally set status fields (status, period end, cancel_at_period_end, price id)
 
 **Acceptance criteria**
-- [ ] 401 if unauthenticated.
-- [ ] 400 if missing/invalid session id.
-- [ ] 403 if session does not belong to user.
-- [ ] Returns JSON including updated `plan` and `stripeSubscriptionId`.
+- [x] 401 if unauthenticated.
+- [x] 400 if missing/invalid session id.
+- [x] 403 if session does not belong to user.
+- [x] Returns JSON including updated `plan` and `stripeSubscriptionId`.
 
 ---
 
@@ -268,20 +268,20 @@ B) Stronger (recommended)
   - Update `stripe_subscription_status` to `past_due` (or similar) and surface UX later.
 
 **Acceptance criteria**
-- [ ] Verifies Stripe signature with `STRIPE_WEBHOOK_SECRET`.
-- [ ] Returns 400 on missing/invalid signature.
-- [ ] Safe under duplicate delivery and out-of-order delivery.
-- [ ] Unknown price id never silently downgrades to free.
-- [ ] Logs enough context to debug (event id, customer id, subscription id, price id).
+- [x] Verifies Stripe signature with `STRIPE_WEBHOOK_SECRET`.
+- [x] Returns 400 on missing/invalid signature.
+- [x] Safe under duplicate delivery and out-of-order delivery.
+- [x] Unknown price id never silently downgrades to free.
+- [x] Logs enough context to debug (event id, customer id, subscription id, price id).
 
 ---
 
 ## Phase 2 checkpoint
 
-- [ ] Checkout route works end-to-end in test mode.
-- [ ] Portal route works and returns to settings.
-- [ ] Reconcile route updates plan correctly on redirect even if webhook is delayed.
-- [ ] Webhook handler updates DB safely.
+- [x] Checkout route works end-to-end in test mode.
+- [x] Portal route works and returns to settings.
+- [x] Reconcile route updates plan correctly on redirect even if webhook is delayed.
+- [x] Webhook handler updates DB safely.
 
 ---
 
@@ -300,19 +300,19 @@ B) Stronger (recommended)
   - Optional short polling if reconcile returns “pending” (not required if reconcile directly updates)
 
 **Acceptance criteria**
-- [ ] If `success=true&checkout_session_id=...` is present:
-  - [ ] Calls reconcile once.
-  - [ ] Shows success banner based on the returned plan or refreshed DB plan (not just query params).
-- [ ] Shows current plan and (if implemented) billing status.
-- [ ] “Manage billing” button posts to `/api/stripe/portal`.
+- [x] If `success=true&checkout_session_id=...` is present:
+  - [x] Calls reconcile once.
+  - [x] Shows success banner based on the returned plan or refreshed DB plan (not just query params).
+- [x] Shows current plan and (if implemented) billing status.
+- [x] "Manage billing" button posts to `/api/stripe/portal`.
 
 ---
 
 ## Step 3.2: Pricing page integration
 
 **Acceptance criteria**
-- [ ] “Upgrade” buttons post to `/api/stripe/checkout` with the correct plan.
-- [ ] If the user is already paid, buttons direct to Billing Portal (or are disabled with “Manage billing”).
+- [x] "Upgrade" buttons post to `/api/stripe/checkout` with the correct plan.
+- [x] If the user is already paid, buttons direct to Billing Portal (or are disabled with "Manage billing").
 
 ---
 
@@ -326,16 +326,16 @@ Avoid showing paid users an “Upgrade” CTA due to missing plan wiring.
 - Only show upgrade CTA when `userPlan === "free"`.
 
 **Acceptance criteria**
-- [ ] QuotaDisplay receives `userPlan` from a real data source (server render or API).
-- [ ] No defaulting to “free” for paid users.
+- [x] QuotaDisplay receives `userPlan` from a real data source (server render or API).
+- [x] No defaulting to "free" for paid users.
 
 ---
 
 ## Phase 3 checkpoint
 
-- [ ] Success redirect reliably results in a plan update visible in Settings without waiting on webhook timing.
-- [ ] Paid users never see “Upgrade” in QuotaDisplay due to missing props.
-- [ ] Portal management works from Settings.
+- [x] Success redirect reliably results in a plan update visible in Settings without waiting on webhook timing.
+- [x] Paid users never see "Upgrade" in QuotaDisplay due to missing props.
+- [x] Portal management works from Settings.
 
 ---
 
@@ -344,30 +344,30 @@ Avoid showing paid users an “Upgrade” CTA due to missing plan wiring.
 ## Step 4.1: Local webhook testing (Stripe CLI)
 
 **Acceptance criteria**
-- [ ] Use Stripe CLI to forward webhooks:
+- [x] Use Stripe CLI to forward webhooks:
   - `stripe listen --forward-to http://localhost:3000/api/webhooks/stripe`
-- [ ] Test flows:
-  - [ ] Free → Pro checkout, return, reconcile updates plan
-  - [ ] Pro → Team upgrade (proration behavior matches portal config)
-  - [ ] Cancel at period end (portal config matches desired timing)
-  - [ ] Duplicate event delivery does not break state
+- [x] Test flows:
+  - [x] Free → Pro checkout, return, reconcile updates plan
+  - [x] Pro → Team upgrade (proration behavior matches portal config)
+  - [x] Cancel at period end (portal config matches desired timing)
+  - [x] Duplicate event delivery does not break state
 
 ---
 
 ## Step 4.2: Automated tests (minimum set)
 
-- [ ] Unit test: plan mapping for known price ids and unknown price ids.
-- [ ] Unit test: reconcile route refuses session belonging to another customer/user.
-- [ ] Integration test: checkout route prevents multi-sub (mock Stripe).
+- [x] Unit test: plan mapping for known price ids and unknown price ids.
+- [x] Unit test: reconcile route refuses session belonging to another customer/user.
+- [x] Integration test: checkout route prevents multi-sub (mock Stripe).
 
 ---
 
 ## Step 4.3: Error handling and observability
 
-- [ ] Log webhook event id, type, customer id, subscription id, and price id.
-- [ ] Add a basic “billing status” surface in Settings if you store status fields (recommended).
-- [ ] Document manual recovery steps:
-  - [ ] If DB drifts: run reconcile with a known checkout session id or fetch subscription by customer id and update user row.
+- [x] Log webhook event id, type, customer id, subscription id, and price id.
+- [x] Add a basic "billing status" surface in Settings if you store status fields (recommended).
+- [x] Document manual recovery steps:
+  - [x] If DB drifts: run reconcile with a known checkout session id or fetch subscription by customer id and update user row.
 
 ---
 

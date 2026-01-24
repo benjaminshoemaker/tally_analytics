@@ -866,8 +866,8 @@ API endpoint to manually trigger regeneration.
 
 ### Pre-Phase Setup
 
-- [ ] npm organization created
-- [ ] npm publishing credentials configured
+- [x] npm organization created
+- [x] npm publishing credentials configured
 
 ### Step 3.1: SDK Setup
 
@@ -881,10 +881,10 @@ API endpoint to manually trigger regeneration.
 Create SDK package with TypeScript and tsup bundling.
 
 **Acceptance Criteria:**
-- [ ] packages/sdk/package.json with main, module, types
-- [ ] React/Next.js as peerDependencies
-- [ ] tsup configured for ESM and CJS
-- [ ] `pnpm build` produces dist/
+- [x] packages/sdk/package.json with main, module, types
+- [x] React/Next.js as peerDependencies
+- [x] tsup configured for ESM and CJS
+- [x] `pnpm build` produces dist/
 
 **Files to Create:**
 - `packages/sdk/package.json`
@@ -906,10 +906,10 @@ Create SDK package with TypeScript and tsup bundling.
 Define TypeScript types for SDK public API.
 
 **Acceptance Criteria:**
-- [ ] InitOptions interface
-- [ ] EventType union
-- [ ] AnalyticsEvent interface
-- [ ] Types exported
+- [x] InitOptions interface
+- [x] EventType union
+- [x] AnalyticsEvent interface
+- [x] Types exported
 
 **Files to Create:**
 - `packages/sdk/src/types.ts`
@@ -935,10 +935,10 @@ Define TypeScript types for SDK public API.
 Implement session ID generation and cookie storage with 30-minute inactivity expiry.
 
 **Acceptance Criteria:**
-- [ ] Generates UUID session ID
-- [ ] Stores in first-party cookie
-- [ ] Expires after 30 min inactivity
-- [ ] Creates new session on expiry
+- [x] Generates UUID session ID
+- [x] Stores in first-party cookie
+- [x] Expires after 30 min inactivity
+- [x] Creates new session on expiry
 
 **Files to Create:**
 - `packages/sdk/src/session.ts`
@@ -957,11 +957,11 @@ Implement session ID generation and cookie storage with 30-minute inactivity exp
 Implement core event tracking with fetch and error handling.
 
 **Acceptance Criteria:**
-- [ ] Sends events to ingestion endpoint
-- [ ] Uses keepalive: true
-- [ ] Includes session_id, timestamp, url, path, referrer
-- [ ] Errors caught silently
-- [ ] Respects Do Not Track
+- [x] Sends events to ingestion endpoint
+- [x] Uses keepalive: true
+- [x] Includes session_id, timestamp, url, path, referrer
+- [x] Errors caught silently
+- [x] Respects Do Not Track
 
 **Files to Create:**
 - `packages/sdk/src/tracker.ts`
@@ -980,11 +980,11 @@ Implement core event tracking with fetch and error handling.
 Implement init(), trackPageView(), identify(), isEnabled().
 
 **Acceptance Criteria:**
-- [ ] init(options) stores configuration
-- [ ] trackPageView(path?) tracks page view
-- [ ] identify(userId) associates events with user
-- [ ] isEnabled() respects DNT setting
-- [ ] Guards for SSR
+- [x] init(options) stores configuration
+- [x] trackPageView(path?) tracks page view
+- [x] identify(userId) associates events with user
+- [x] isEnabled() respects DNT setting
+- [x] Guards for SSR
 
 **Files to Modify:**
 - `packages/sdk/src/index.ts`
@@ -1007,10 +1007,10 @@ Implement init(), trackPageView(), identify(), isEnabled().
 React component for Next.js App Router.
 
 **Acceptance Criteria:**
-- [ ] Tracks on route changes
-- [ ] Uses usePathname/useSearchParams
-- [ ] Wrapped in Suspense
-- [ ] Tracks session_start on mount
+- [x] Tracks on route changes
+- [x] Uses usePathname/useSearchParams
+- [x] Wrapped in Suspense
+- [x] Tracks session_start on mount
 
 **Files to Create:**
 - `packages/sdk/src/react/app-router.tsx`
@@ -1030,9 +1030,9 @@ React component for Next.js App Router.
 React hook for Next.js Pages Router.
 
 **Acceptance Criteria:**
-- [ ] Tracks on routeChangeComplete
-- [ ] Uses useRouter
-- [ ] Cleans up listener on unmount
+- [x] Tracks on routeChangeComplete
+- [x] Uses useRouter
+- [x] Cleans up listener on unmount
 
 **Files to Create:**
 - `packages/sdk/src/react/pages-router.tsx`
@@ -1058,10 +1058,10 @@ React hook for Next.js Pages Router.
 Write SDK documentation.
 
 **Acceptance Criteria:**
-- [ ] Installation instructions
-- [ ] Quick start for both router types
-- [ ] API reference
-- [ ] DNT behavior documented
+- [x] Installation instructions
+- [x] Quick start for both router types
+- [x] API reference
+- [x] DNT behavior documented
 
 **Files to Create:**
 - `packages/sdk/README.md`
@@ -1080,10 +1080,10 @@ Write SDK documentation.
 Configure for npm publishing.
 
 **Acceptance Criteria:**
-- [ ] .npmignore configured
-- [ ] publishConfig in package.json
-- [ ] Version 0.1.0
-- [ ] CHANGELOG created
+- [x] .npmignore configured
+- [x] publishConfig in package.json
+- [x] Version 0.1.0
+- [x] CHANGELOG created
 
 **Files to Create:**
 - `packages/sdk/.npmignore`
@@ -1101,15 +1101,15 @@ Configure for npm publishing.
 ### Phase 3 Checkpoint
 
 **Automated Checks:**
-- [ ] SDK builds
-- [ ] All tests pass
-- [ ] Package exports resolve
+- [x] SDK builds
+- [x] All tests pass
+- [x] Package exports resolve
 
 **Manual Verification:**
-- [ ] Install in App Router test project
-- [ ] Install in Pages Router test project
-- [ ] Page views tracked
-- [ ] DNT respected
+- [x] Install in App Router test project
+- [x] Install in Pages Router test project
+- [x] Page views tracked
+- [x] DNT respected
 
 ---
 
@@ -1120,8 +1120,8 @@ Configure for npm publishing.
 
 ### Pre-Phase Setup
 
-- [ ] events.[productname].com subdomain in Vercel
-- [ ] Tinybird workspace with tokens
+- [x] events.[productname].com subdomain in Vercel
+- [x] Tinybird workspace with tokens
 
 ### Step 4.1: Events App
 
@@ -1741,9 +1741,9 @@ Basic account settings page.
 
 ### Pre-Phase Setup
 
-- [ ] Branding finalized
-- [ ] Production domains configured
-- [ ] Environment variables ready
+- [x] Branding finalized
+- [x] Production domains configured
+- [x] Environment variables ready
 
 ### Step 6.1: Marketing
 
@@ -1757,10 +1757,10 @@ Basic account settings page.
 Main landing page with hero and features.
 
 **Acceptance Criteria:**
-- [ ] Hero with value proposition
-- [ ] Features section
-- [ ] "Add to GitHub" CTA
-- [ ] SSG for fast loading
+- [x] Hero with value proposition
+- [x] Features section
+- [x] "Add to GitHub" CTA
+- [x] SSG for fast loading
 
 **Files to Create:**
 - `apps/web/app/(marketing)/page.tsx`
@@ -1781,9 +1781,9 @@ Main landing page with hero and features.
 Pricing page with plan tiers.
 
 **Acceptance Criteria:**
-- [ ] Shows Free, Pro, Team tiers
-- [ ] Event limits displayed
-- [ ] Feature comparison
+- [x] Shows Free, Pro, Team tiers
+- [x] Event limits displayed
+- [x] Feature comparison
 
 **Files to Create:**
 - `apps/web/app/(marketing)/pricing/page.tsx`
@@ -1803,9 +1803,9 @@ Pricing page with plan tiers.
 Basic setup and SDK documentation.
 
 **Acceptance Criteria:**
-- [ ] /docs/setup with getting started
-- [ ] /docs/sdk with API reference
-- [ ] Code examples
+- [x] /docs/setup with getting started
+- [x] /docs/sdk with API reference
+- [x] Code examples
 
 **Files to Create:**
 - `apps/web/app/(marketing)/docs/page.tsx`
@@ -1832,9 +1832,9 @@ Basic setup and SDK documentation.
 End-to-end test suite.
 
 **Acceptance Criteria:**
-- [ ] Login flow test
-- [ ] Dashboard navigation test
-- [ ] Runs in CI
+- [x] Login flow test
+- [x] Dashboard navigation test
+- [x] Runs in CI
 
 **Files to Create:**
 - `apps/web/e2e/auth.spec.ts`
@@ -1856,10 +1856,10 @@ End-to-end test suite.
 Review and harden security.
 
 **Acceptance Criteria:**
-- [ ] All API routes check auth
-- [ ] Webhook signatures verified
-- [ ] No SQL injection possible
-- [ ] Secrets not exposed
+- [x] All API routes check auth
+- [x] Webhook signatures verified
+- [x] No SQL injection possible
+- [x] Secrets not exposed
 
 **Files to Create:**
 - `SECURITY.md` (if issues found)
@@ -1884,10 +1884,10 @@ Review and harden security.
 Configure production environment.
 
 **Acceptance Criteria:**
-- [ ] All env vars in Vercel
-- [ ] Domains configured
-- [ ] SSL active
-- [ ] Webhook URL updated
+- [x] All env vars in Vercel
+- [x] Domains configured
+- [x] SSL active
+- [x] Webhook URL updated
 
 **Files to Modify:** Vercel config (not code)
 
@@ -1903,9 +1903,9 @@ Configure production environment.
 Set up monitoring and alerting.
 
 **Acceptance Criteria:**
-- [ ] Vercel Analytics enabled
-- [ ] Error tracking configured
-- [ ] Alerts for high error rates
+- [x] Vercel Analytics enabled
+- [x] Error tracking configured
+- [x] Alerts for high error rates
 
 **Files to Create:**
 - `MONITORING.md`
@@ -1921,15 +1921,15 @@ Set up monitoring and alerting.
 ### Phase 6 Checkpoint
 
 **Automated Checks:**
-- [ ] All tests pass
-- [ ] E2E tests pass
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] E2E tests pass
+- [x] Build succeeds
 
 **Manual Verification:**
-- [ ] Full flow: landing → install → PR → merge → analytics
-- [ ] Fast page loads
-- [ ] No console errors
-- [ ] Monitoring working
+- [x] Full flow: landing → install → PR → merge → analytics
+- [x] Fast page loads
+- [x] No console errors
+- [x] Monitoring working
 
 ---
 
