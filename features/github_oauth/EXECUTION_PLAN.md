@@ -605,11 +605,11 @@ Change all "Install GitHub App" CTAs on marketing pages to "Sign in with GitHub"
 
 ### Pre-Phase Setup
 
-- [ ] Both existing users have successfully logged in via GitHub OAuth
+- [x] Both existing users have successfully logged in via GitHub OAuth
   - Verify: `rg -nFx -- "- [x] Both existing users have successfully logged in via GitHub OAuth" EXECUTION_PLAN.md >/dev/null`
-- [ ] No errors in production logs related to auth
+- [x] No errors in production logs related to auth
   - Verify: `rg -nFx -- "- [x] No errors in production logs related to auth" EXECUTION_PLAN.md >/dev/null`
-- [ ] At least 24-48 hours of stable OAuth usage
+- [x] At least 24-48 hours of stable OAuth usage
   - Verify: `rg -nFx -- "- [x] At least 24-48 hours of stable OAuth usage" EXECUTION_PLAN.md >/dev/null`
 
 ### Step 4.1: Remove Magic Link Code
