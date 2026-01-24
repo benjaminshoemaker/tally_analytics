@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SDK V2 Browser Test</title>
+</head>
+<body>
+  <h1>SDK V2 Browser Test</h1>
+  <p style="height: 2000px;">Scroll down to test scroll tracking...</p>
+  <a href="#" data-tally-cta>CTA Button</a>
+  <button type="submit" id="submitBtn">Submit Button</button>
+  <br><br>
+  <button id="sendEvent" style="margin-top: 10px;">Send Test Event</button>
+  <div id="status" style="margin-top: 20px; padding: 10px; background: #f0f0f0;"></div>
+
+  <script>
+    // Inline SDK V2 functionality for browser testing
+    const VISITOR_COOKIE_NAME = 'tally_vid';
+    const SESSION_COOKIE_NAME = 'fpa_sid';
+    const SESSION_DURATION_MS = 30 * 60 * 1000;
+    const ENDPOINT = 'http://localhost:3001/v1/track';
+
+    // Visitor ID management
+    function getCookie(name) {
+      const prefix = `${name}=`;
+      const cookie = document.cookie.split('; ').find(row => row.startsWith(prefix))?.slice(prefix.length);
+      return cookie || null;
+    }
+
+    function setCookie(name, value) {
+      const maxAge = 365 * 24 * 60 * 60;
+      document.cookie = `${name}=${value}; max-age=${maxAge}; path=/; samesite=lax`;
+    }
+
+    function getOrCreateVisitorId() {
+      const existingId = getCookie(VISITOR_COOKIE_NAME);
+      if (existingId) {
+        return { visitorId: existingId, isReturning: true };
+      }
+      const visitorId = crypto.randomUUID();
+      setCookie(VISITOR_COOKIE_NAME, visitorId);
+      return { visitorId, isReturning: false };
+    }
+
+    // Session management
+    function getOrCreateSessionId() {
+      const now = Date.now();
+      const existing = getCookie(SESSION_COOKIE_NAME);
+      if (existing) {
+        try {
+          const stored = JSON.parse(decodeURIComponent(existing));
+          if (stored.sessionId && now - stored.lastActivity < SESSION_DURATION_MS) {
+            setCookie(SESSION_COOKIE_NAME, encodeURIComponent(JSON.stringify({ sessionId: stored.sessionId, lastActivity: now })));
+            return stored.sessionId;
+          }
+        } catch {}
+      }
+      const sessionId = crypto.randomUUID();
+      setCookie(SESSION_COOKIE_NAME, encodeURIComponent(JSON.stringify({ sessionId, lastActivity: now })));
+      return sessionId;
+    }
+
+    // UTM capture
+    function captureUTMParams() {
+      const params = new URLSearchParams(window.location.search);
+      const utm = {};
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(p => {
+        const value = params.get(p);
+        if (value) utm[p] = value.slice(0, 100);
+      });
+      return utm;
+    }
+
+    // Scroll tracking
+    let maxScrollDepth = 0;
+    function calculateScrollDepth() {
+      const docHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      const viewportHeight = window.innerHeight;
+      const scrollableHeight = docHeight - viewportHeight;
+      if (scrollableHeight <= 0) return 100;
+      return Math.min(100, Math.max(0, Math.round(window.scrollY / scrollableHeight * 100)));
+    }
+    window.addEventListener('scroll', () => {
+      const current = calculateScrollDepth();
+      if (current > maxScrollDepth) maxScrollDepth = current;
+    }, { passive: true });
+
+    // Engagement tracking
+    let totalEngagementMs = 0;
+    let lastTickTime = Date.now();
+    let lastActivityTime = Date.now();
+    const IDLE_TIMEOUT = 30000;
+
+    function onActivity() { lastActivityTime = Date.now(); }
+    ['scroll', 'click', 'keydown', 'mousemove'].forEach(event => {
+      window.addEventListener(event, onActivity, { passive: true });
+    });
+
+    setInterval(() => {
+      const now = Date.now();
+      const isActive = (now - lastActivityTime) < IDLE_TIMEOUT;
+      const isVisible = document.visibilityState === 'visible';
+      if (isVisible && isActive) {
+        totalEngagementMs += now - lastTickTime;
+      }
+      lastTickTime = now;
+    }, 100);
+
+    // CTA tracking
+    const ctaClicks = [];
+    const CTA_SELECTORS = ['button[type="submit"]', '[data-tally-cta]'];
+
+    window.addEventListener('click', (e) => {
+      for (const selector of CTA_SELECTORS) {
+        if (e.target.matches(selector) || e.target.closest(selector)) {
+          ctaClicks.push({
+            elementType: e.target.tagName.toLowerCase() === 'button' ? 'button' : 'link',
+            text: e.target.textContent?.trim().slice(0, 30) || '',
+            domain: e.target.href ? new URL(e.target.href).hostname : undefined
+          });
+          break;
+        }
+      }
+    }, { capture: true });
+
+    // Initialize
+    const visitorData = getOrCreateVisitorId();
+    const sessionId = getOrCreateSessionId();
+    const utmParams = captureUTMParams();
+
+    function log(msg) {
+      const status = document.getElementById('status');
+      status.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${msg}</div>`;
+      console.log(msg);
+    }
+
+    log('SDK initialized');
+    log(`Visitor ID: ${visitorData.visitorId}`);
+    log(`Is Returning: ${visitorData.isReturning}`);
+    log(`Session ID: ${sessionId}`);
+    log(`UTM Params: ${JSON.stringify(utmParams)}`);
+
+    // Send event function
+    async function sendTestEvent(eventType = 'page_view') {
+      const event = {
+        project_id: 'test_project',
+        session_id: sessionId,
+        event_type: eventType,
+        timestamp: new Date().toISOString(),
+        url: window.location.href,
+        path: window.location.pathname,
+        referrer: document.referrer || undefined,
+        // V2 fields
+        visitor_id: visitorData.visitorId,
+        is_returning: visitorData.isReturning ? 1 : 0,
+        engagement_time_ms: totalEngagementMs,
+        scroll_depth: maxScrollDepth,
+        cta_clicks: JSON.stringify(ctaClicks),
+        ...utmParams
+      };
+
+      log(`Sending ${eventType} event...`);
+      log(`Payload: ${JSON.stringify(event, null, 2)}`);
+
+      try {
+        const response = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ events: [event] })
+        });
+        const data = await response.json();
+        log(`Response: ${JSON.stringify(data)}`);
+      } catch (err) {
+        log(`Error: ${err.message}`);
+      }
+    }
+
+    // Send initial page view
+    sendTestEvent('session_start');
+    sendTestEvent('page_view');
+
+    // Manual send button
+    document.getElementById('sendEvent').addEventListener('click', () => sendTestEvent('page_view'));
+
+    // Expose for console testing
+    window.sendTestEvent = sendTestEvent;
+    window.getState = () => ({
+      visitorId: visitorData.visitorId,
+      isReturning: visitorData.isReturning,
+      sessionId,
+      engagementMs: totalEngagementMs,
+      scrollDepth: maxScrollDepth,
+      ctaClicks,
+      utmParams
+    });
+  </script>
+</body>
+</html>

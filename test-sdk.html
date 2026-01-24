@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SDK V2 Test</title>
+</head>
+<body>
+  <h1>SDK V2 Manual Test</h1>
+  <p style="height: 2000px;">Scroll down to test scroll tracking...</p>
+  <a href="#" data-tally-cta>CTA Button</a>
+  <button type="submit">Submit Button</button>
+
+  <script type="module">
+    import { init, trackPageView } from './packages/sdk/dist/index.mjs';
+
+    init({
+      projectId: 'test_project',
+      endpoint: 'http://localhost:3001/v1/track'
+    });
+
+    // Track initial page view
+    trackPageView('/test-page');
+
+    // Expose for manual testing
+    window.trackPageView = trackPageView;
+
+    console.log('SDK initialized. Scroll around, click CTAs, then check Network tab.');
+  </script>
+</body>
+</html>
