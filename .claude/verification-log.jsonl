@@ -17,3 +17,5 @@
 {"timestamp":"2026-01-24T04:01:30Z","scope":"task","task_id":"4.1.B","criterion_id":"V-003","type":"CODE","status":"PASS","evidence":".claude/verification/task-4.1.B.md"}
 {"timestamp":"2026-01-24T04:01:30Z","scope":"task","task_id":"4.1.B","criterion_id":"V-004","type":"CODE","status":"PASS","evidence":".claude/verification/task-4.1.B.md"}
 {"timestamp":"2026-01-24T04:01:30Z","scope":"task","task_id":"4.1.B","criterion_id":"V-005","type":"BUILD","status":"PASS","evidence":".claude/verification/task-4.1.B.md"}
+{"timestamp":"2026-01-24T04:03:07Z","scope":"task","task_id":"4.1.C","criterion_id":"V-001","type":"CODE","status":"PASS","evidence":".claude/verification/task-4.1.C.md"}
+{"timestamp":"2026-01-24T04:03:07Z","scope":"task","task_id":"4.1.C","criterion_id":"V-002","type":"TEST","status":"PASS","evidence":".claude/verification/task-4.1.C.md"}

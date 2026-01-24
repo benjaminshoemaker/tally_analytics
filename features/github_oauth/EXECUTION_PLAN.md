@@ -683,8 +683,8 @@ Remove the magic link helper library and email infrastructure.
 Delete the old login page test that tested magic link functionality.
 
 **Acceptance Criteria:**
-- [ ] `tests/login-page.test.ts` deleted (replaced by `login-page-oauth.test.ts`)
-- [ ] All remaining tests pass
+- [x] `tests/login-page.test.ts` deleted (replaced by `login-page-oauth.test.ts`)
+- [x] All remaining tests pass
 
 **Files to Delete:**
 - `apps/web/tests/login-page.test.ts`
