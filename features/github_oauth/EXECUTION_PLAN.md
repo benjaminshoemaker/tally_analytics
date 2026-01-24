@@ -624,11 +624,11 @@ Change all "Install GitHub App" CTAs on marketing pages to "Sign in with GitHub"
 Remove the magic link API routes that are no longer used.
 
 **Acceptance Criteria:**
-- [ ] `app/api/auth/magic-link/route.ts` deleted
-- [ ] `app/api/auth/verify/route.ts` deleted
-- [ ] No imports reference these files
-- [ ] App builds successfully
-- [ ] Existing tests that reference these routes are removed or updated
+- [x] `app/api/auth/magic-link/route.ts` deleted
+- [x] `app/api/auth/verify/route.ts` deleted
+- [x] No imports reference these files
+- [x] App builds successfully
+- [x] Existing tests that reference these routes are removed or updated
 
 **Files to Delete:**
 - `apps/web/app/api/auth/magic-link/route.ts`
