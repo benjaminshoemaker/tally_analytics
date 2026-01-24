@@ -2,6 +2,11 @@
 
 ## 🔴 Bugs
 
+### Dependency Audit: `lodash` Prototype Pollution (moderate)
+`pnpm audit --prod` reports `lodash@4.17.21` (via `recharts`) is vulnerable. Consider bumping `recharts` and/or adding a pnpm override to force `lodash>=4.17.23`.
+
+**Priority:** Medium — not blocking, but should be cleaned up before launch
+
 ### Auto-Generated PRs: Export/Import Naming Mismatch
 The GitHub template generation exports `TallyAnalytics` but the generated import statement references `FastPrAnalytics`, causing build failures.
 
