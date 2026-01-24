@@ -30,6 +30,13 @@
       "when": 1767938396666,
       "tag": "0004_add_conversion_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1769227536701,
+      "tag": "0005_drop_magic_links",
+      "breakpoints": true
     }
   ]
 }

@@ -709,12 +709,12 @@ Delete the old login page test that tested magic link functionality.
 Create a migration to drop the magic_links table that is no longer used.
 
 **Acceptance Criteria:**
-- [ ] Migration file `0004_drop_magic_links.sql` exists
-- [ ] Migration drops `magic_links` table
-- [ ] Migration runs successfully
+- [x] Migration file `0005_drop_magic_links.sql` exists
+- [x] Migration drops `magic_links` table
+- [x] Migration runs successfully
 
 **Files to Create:**
-- `apps/web/drizzle/migrations/0004_drop_magic_links.sql`
+- `apps/web/drizzle/migrations/0005_drop_magic_links.sql`
 
 **Files to Modify:**
 - `apps/web/lib/db/schema.ts` — remove magicLinks table definition

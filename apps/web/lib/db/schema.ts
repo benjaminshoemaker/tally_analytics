@@ -63,19 +63,6 @@ export const sessions = pgTable(
   ],
 );
 
-export const magicLinks = pgTable(
-  "magic_links",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    email: varchar("email", { length: 255 }).notNull(),
-    token: varchar("token", { length: 64 }).notNull().unique(),
-    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
-    usedAt: timestamp("used_at", { withTimezone: true }),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  },
-  (table) => [index("idx_magic_links_token").on(table.token), index("idx_magic_links_email").on(table.email)],
-);
-
 export const projects = pgTable(
   "projects",
   {

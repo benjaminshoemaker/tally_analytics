@@ -2,10 +2,9 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 
 import { getTableConfig } from "drizzle-orm/pg-core";
 
-import { githubTokens, magicLinks, projects, regenerateRequests, sessions, users, waitlist } from "../lib/db/schema";
+import { githubTokens, projects, regenerateRequests, sessions, users, waitlist } from "../lib/db/schema";
 import type {
   GithubToken,
-  MagicLink,
   NewProject,
   Project,
   RegenerateRequest,
@@ -18,7 +17,6 @@ describe("db schema", () => {
   it("defines all tables with expected core columns", () => {
     expect(getTableConfig(users).name).toBe("users");
     expect(getTableConfig(sessions).name).toBe("sessions");
-    expect(getTableConfig(magicLinks).name).toBe("magic_links");
     expect(getTableConfig(projects).name).toBe("projects");
     expect(getTableConfig(githubTokens).name).toBe("github_tokens");
     expect(getTableConfig(waitlist).name).toBe("waitlist");
@@ -65,10 +63,6 @@ describe("db schema", () => {
       expect.arrayContaining(["idx_sessions_user_id", "idx_sessions_expires_at"]),
     );
 
-    expect(getTableConfig(magicLinks).indexes.map((i) => i.config.name)).toEqual(
-      expect.arrayContaining(["idx_magic_links_token", "idx_magic_links_email"]),
-    );
-
     expect(getTableConfig(projects).indexes.map((i) => i.config.name)).toEqual(
       expect.arrayContaining(["idx_projects_user_id", "idx_projects_github_repo_id", "idx_projects_status"]),
     );
@@ -85,7 +79,6 @@ describe("db schema", () => {
   it("exports TypeScript types derived from the schema", () => {
     expectTypeOf<User>().toMatchTypeOf<{ id: string; email: string }>();
     expectTypeOf<Session>().toMatchTypeOf<{ id: string; userId: string }>();
-    expectTypeOf<MagicLink>().toMatchTypeOf<{ id: string; email: string; token: string }>();
     expectTypeOf<Project>().toMatchTypeOf<{ id: string; userId: string; githubRepoId: bigint }>();
     expectTypeOf<GithubToken>().toMatchTypeOf<{ id: string; userId: string; installationId: bigint }>();
     expectTypeOf<WaitlistEntry>().toMatchTypeOf<{ id: string; email: string }>();
