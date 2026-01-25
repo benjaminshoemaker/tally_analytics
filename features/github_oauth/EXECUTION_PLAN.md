@@ -775,14 +775,14 @@ Update E2E tests to use the new E2E login bypass instead of magic links.
 - [x] App builds successfully for production
 - [x] Run migration to drop magic_links table
 - [x] Verify database no longer has magic_links table
-- [ ] Full end-to-end test of new user signup via OAuth
+- [x] Full end-to-end test of new user signup via OAuth
 
 **Final Verification:**
-- [ ] Deploy to production
-- [ ] Both existing users can log in
-- [ ] New user can sign up via GitHub OAuth
-- [ ] GitHub App installation works
-- [ ] Analytics dashboard functions correctly
+- [x] Deploy to production
+- [x] Both existing users can log in
+- [x] New user can sign up via GitHub OAuth
+- [x] GitHub App installation works
+- [x] Analytics dashboard functions correctly
 
 ---
 

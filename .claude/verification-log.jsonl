@@ -59,3 +59,5 @@
 {"timestamp":"2026-01-24T23:47:49Z","scope":"phase-checkpoint","phase":4,"check":"orphaned-imports","status":"PASS","evidence":".claude/verification/phase-4.md"}
 {"timestamp":"2026-01-24T23:47:49Z","scope":"phase-checkpoint","phase":4,"check":"db-migrate","status":"PASS","evidence":".claude/verification/phase-4.md"}
 {"timestamp":"2026-01-24T23:47:49Z","scope":"phase-checkpoint","phase":4,"check":"db-verify-magic_links-dropped","status":"PASS","evidence":".claude/verification/phase-4.md"}
+{"timestamp":"2026-01-25T05:58:02Z","scope":"phase-checkpoint","phase":4,"check":"manual-verification","status":"PASS","evidence":".claude/verification/phase-4.md"}
+{"timestamp":"2026-01-25T05:58:02Z","scope":"phase-checkpoint","phase":4,"check":"production-verification","status":"PASS","evidence":".claude/verification/phase-4.md"}
