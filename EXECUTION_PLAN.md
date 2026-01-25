@@ -1413,7 +1413,9 @@ Tinybird pipe for top referrers.
 ### Pre-Phase Setup
 
 - [x] Tinybird endpoints working
+  - Verify: `test -n "$TINYBIRD_API_URL" && test -n "$TINYBIRD_ADMIN_TOKEN" && curl -sf -X POST -H "Authorization: Bearer $TINYBIRD_ADMIN_TOKEN" -H "content-type: application/x-www-form-urlencoded" --data-urlencode 'q=SELECT 1 FORMAT JSON' "$TINYBIRD_API_URL/v0/sql" >/dev/null`
 - [x] Test project with events
+  - Verify: `test -n "$TINYBIRD_API_URL" && test -n "$TINYBIRD_ADMIN_TOKEN" && curl -sf -X POST -H "Authorization: Bearer $TINYBIRD_ADMIN_TOKEN" -H "content-type: application/x-www-form-urlencoded" --data-urlencode 'q=SELECT count() AS total_events FROM events FORMAT JSON' "$TINYBIRD_API_URL/v0/sql" | jq -e '(.data[0].total_events // 0 | tonumber) > 0' >/dev/null`
 
 ### Step 5.1: Layout
 
