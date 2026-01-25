@@ -6,7 +6,7 @@ export type RenderAnalyticsTemplateOptions = {
 export function renderAppRouterAnalyticsComponent(options: RenderAnalyticsTemplateOptions): string {
   const eventsUrl = new URL("/v1/track", options.eventsUrl).toString().replace(/\/$/, "");
 
-  return `// GENERATED FILE: components/tally-analytics.tsx
+  return `// GENERATED FILE: components/fast-pr-analytics.tsx
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -92,7 +92,7 @@ function AnalyticsTracker() {
   return null;
 }
 
-export function TallyAnalytics() {
+export function FastPrAnalytics() {
   return (
     <Suspense fallback={null}>
       <AnalyticsTracker />
@@ -101,4 +101,3 @@ export function TallyAnalytics() {
 }
 `;
 }
-

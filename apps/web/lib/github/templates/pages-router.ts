@@ -6,7 +6,7 @@ export type RenderAnalyticsTemplateOptions = {
 export function renderPagesRouterAnalyticsHook(options: RenderAnalyticsTemplateOptions): string {
   const eventsUrl = new URL("/v1/track", options.eventsUrl).toString().replace(/\/$/, "");
 
-  return `// GENERATED FILE: components/tally-analytics.tsx
+  return `// GENERATED FILE: components/fast-pr-analytics.tsx
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -60,7 +60,7 @@ function trackPageView(path: string) {
   }).catch(() => {});
 }
 
-export function useTallyAnalytics() {
+export function useFastPrAnalytics() {
   const router = useRouter();
 
   useEffect(() => {
@@ -94,4 +94,3 @@ export function useTallyAnalytics() {
 }
 `;
 }
-

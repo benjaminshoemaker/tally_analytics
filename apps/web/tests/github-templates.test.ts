@@ -6,6 +6,7 @@ describe("github templates", () => {
     const code = renderAppRouterAnalyticsComponent({ projectId: "proj_123", eventsUrl: "https://events.example.com" });
 
     expect(code).toContain("'use client'");
+    expect(code).toContain("export function FastPrAnalytics()");
     expect(code).toContain("usePathname");
     expect(code).toContain("useSearchParams");
     expect(code).toContain("event_type: 'session_start'");
@@ -19,6 +20,7 @@ describe("github templates", () => {
     const code = renderPagesRouterAnalyticsHook({ projectId: "proj_123", eventsUrl: "https://events.example.com" });
 
     expect(code).toContain("useRouter");
+    expect(code).toContain("export function useFastPrAnalytics()");
     expect(code).toContain("routeChangeComplete");
     expect(code).toContain("return () =>");
     expect(code).toContain("event_type: 'session_start'");
