@@ -85,3 +85,7 @@
 {"timestamp":"2026-01-25T22:17:16.006Z","scope":"task","task_id":"2.1.A","criterion_id":"V-003","type":"TEST","status":"PASS","evidence":".claude/verification/task-2.1.A.md"}
 {"timestamp":"2026-01-25T22:17:16.006Z","scope":"task","task_id":"2.1.A","criterion_id":"V-004","type":"TEST","status":"PASS","evidence":".claude/verification/task-2.1.A.md"}
 {"timestamp":"2026-01-25T22:17:16.006Z","scope":"task","task_id":"2.1.A","criterion_id":"V-005","type":"TEST","status":"PASS","evidence":".claude/verification/task-2.1.A.md"}
+{"timestamp":"2026-01-25T22:18:25.771Z","scope":"task","task_id":"2.2.A","criterion_id":"V-001","type":"CODE","status":"PASS","evidence":".claude/verification/task-2.2.A.md"}
+{"timestamp":"2026-01-25T22:18:25.771Z","scope":"task","task_id":"2.2.A","criterion_id":"V-002","type":"CODE","status":"PASS","evidence":".claude/verification/task-2.2.A.md"}
+{"timestamp":"2026-01-25T22:18:25.771Z","scope":"task","task_id":"2.2.A","criterion_id":"V-003","type":"TEST","status":"PASS","evidence":".claude/verification/task-2.2.A.md"}
+{"timestamp":"2026-01-25T22:18:25.771Z","scope":"task","task_id":"2.2.A","criterion_id":"V-004","type":"TEST","status":"PASS","evidence":".claude/verification/task-2.2.A.md"}
