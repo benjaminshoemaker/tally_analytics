@@ -20,7 +20,9 @@ For each criterion, use metadata from `Verify:`:
 ## Workflow Overview
 
 ```
-1. Load config (dev server + auth + browser)
+1. Load config (dev server + auth + browser + deployment)
+1.5. Resolve base URL (preview or localhost)
+1.6. HTTP-first evaluation (skip browser if possible)
 2. Select browser tool (with fallback chain)
 3. Authenticate (if required)
 4. Navigate and validate
@@ -51,9 +53,73 @@ Read `.claude/verification-config.json` for:
 - `browser.timeout` — Default timeout in ms (default: 30000)
 - `browser.navigationTimeout` — Navigation timeout in ms (default: 60000)
 
+**Deployment:**
+- `deployment.enabled` — Whether to use preview deployments
+- `deployment.useForBrowserVerification` — Use preview URL for browser tests
+- `deployment.fallbackToLocal` — Fall back to localhost if no preview
+- `deployment.waitForDeployment` — Wait for deployment to be ready
+- `deployment.deploymentTimeout` — Max seconds to wait
+
 If config is missing or incomplete, ask the human to run `/configure-verification`.
 
-## Step 1.5: HTTP-First Evaluation
+## Step 1.5: Resolve Base URL
+
+Determine the base URL for browser verification based on deployment configuration.
+
+### Decision Logic
+
+```
+IF deployment.enabled AND deployment.useForBrowserVerification:
+  1. Invoke vercel-preview skill to get preview URL
+  2. IF URL found:
+       BASE_URL = preview URL
+       Skip dev server startup (not needed)
+       Log: "Using Vercel preview: {URL}"
+  3. ELSE IF fallbackToLocal:
+       BASE_URL = devServer.url
+       Log: "WARNING: No preview URL found, falling back to localhost"
+       Ensure dev server is running
+  4. ELSE (no fallback):
+       BLOCK with error: "No preview deployment and fallback disabled"
+ELSE:
+  BASE_URL = devServer.url (current behavior)
+  Ensure dev server is running
+```
+
+### Preview URL Resolution
+
+When deployment is enabled, invoke the vercel-preview skill:
+
+1. Get current git branch
+2. Query Vercel for ready deployments matching branch
+3. If `waitForDeployment` enabled and deployment building, wait up to timeout
+4. Return URL or null
+
+### Output
+
+```
+BASE URL RESOLUTION
+===================
+Mode: Vercel Preview | Local Dev Server | Fallback to Local
+URL: {resolved URL}
+Branch: {git branch} (if preview)
+Status: Ready | Building | Not Found (if preview)
+```
+
+### Using BASE_URL
+
+All subsequent steps use `BASE_URL` instead of hardcoded `devServer.url`:
+
+- Step 1.6 (HTTP-First): Use `BASE_URL` for curl checks
+- Step 4 (Navigate): Navigate to `BASE_URL + route`
+- Step 7 (Output): Report which URL was used
+- Manual fallback instructions: Use `BASE_URL` in all generated URLs
+
+**IMPORTANT:** When browser verification falls back to manual, all URLs in the
+generated instructions MUST use BASE_URL. This ensures manual verification
+guides point to the correct environment (preview URL when deployment enabled).
+
+## Step 1.6: HTTP-First Evaluation
 
 Before launching browser tools, evaluate if the criterion can be satisfied with HTTP.
 This optimization skips browser overhead for criteria that don't require DOM inspection.
@@ -72,10 +138,10 @@ This optimization skips browser overhead for criteria that don't require DOM ins
 
 ```bash
 # Generic page accessibility check
-curl -sf "{devServer.url}{route}" -o /dev/null && echo "HTTP_PASS" || echo "HTTP_FAIL"
+curl -sf "{BASE_URL}{route}" -o /dev/null && echo "HTTP_PASS" || echo "HTTP_FAIL"
 
 # Response content check
-curl -s "{devServer.url}{route}" | grep -q "{expected_text}" && echo "HTTP_PASS" || echo "HTTP_FAIL"
+curl -s "{BASE_URL}{route}" | grep -q "{expected_text}" && echo "HTTP_PASS" || echo "HTTP_FAIL"
 
 # Status code check
 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "{url}")
@@ -211,7 +277,7 @@ If login fails after 2 attempts:
 
 For each browser criterion:
 
-1. Start from base URL (`devServer.url`)
+1. Start from base URL (`BASE_URL` — preview or localhost per Step 1.5)
 2. Navigate to the criterion's route
 3. Wait for content to load:
    - Use wait-for-text or wait-for-selector
@@ -295,7 +361,8 @@ BROWSER VERIFICATION RESULT
 Instruction ID: [ID]
 Status: PASS | FAIL | BLOCKED
 Type: DOM | VISUAL | CONSOLE | NETWORK | PERFORMANCE | ACCESSIBILITY
-URL: [URL] | Viewport: [width]x[height]
+Target: Vercel Preview (https://...) | Local Dev Server (http://localhost:...)
+URL: [full URL tested] | Viewport: [width]x[height]
 
 Finding: [What was observed]
 Expected: [What was expected]

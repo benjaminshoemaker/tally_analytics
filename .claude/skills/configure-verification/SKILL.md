@@ -112,19 +112,123 @@ Ask the human about authentication requirements:
    - If NO: Set `auth.strategy` to `"none"` and skip remaining auth questions
    - If YES: Continue with auth configuration
 
-2. "What is the login route?" (default: `/login`)
+2. "What authentication method does your app use?"
+
+   Use AskUserQuestion:
+   ```
+   Question: "What authentication method does your app use?"
+   Header: "Auth method"
+   Options:
+     - Label: "Email/Password (Recommended)"
+       Description: "Standard login form with email and password fields"
+     - Label: "Google OAuth"
+       Description: "Sign in with Google button"
+     - Label: "GitHub OAuth"
+       Description: "Sign in with GitHub button"
+   ```
+
+### If Email/Password:
+
+3. "What is the login route?" (default: `/login`)
    - Set `auth.loginRoute`
 
-3. "What environment variable holds the test username/email?"
+4. "What environment variable holds the test username/email?"
    - Default: `TEST_USER_EMAIL`
    - Set `auth.credentials.usernameVar`
 
-4. "What environment variable holds the test password?"
+5. "What environment variable holds the test password?"
    - Default: `TEST_USER_PASSWORD`
    - Set `auth.credentials.passwordVar`
 
-5. Set `auth.strategy` to `"env"` and `auth.storageState` to
+6. Set `auth.strategy` to `"env"` and `auth.storageState` to
    `.claude/verification/auth-state.json`
+
+### If Google or GitHub OAuth:
+
+3. Set `auth.strategy` to `"oauth"` and `auth.provider` to `"google"` or `"github"`
+
+4. Ask: "Would you like to complete OAuth setup now?"
+
+   Use AskUserQuestion:
+   ```
+   Question: "Complete OAuth login now? You'll need your OAuth app credentials ready."
+   Header: "OAuth setup"
+   Options:
+     - Label: "Yes, set up now (Recommended)"
+       Description: "Run /oauth-login to complete OAuth flow and store tokens"
+     - Label: "No, I'll do it later"
+       Description: "Skip for now - run /oauth-login {provider} later"
+   ```
+
+   If YES: Invoke the `/oauth-login` skill with the selected provider.
+   If NO: Continue without tokens (verification will fail until tokens are set up).
+
+5. Set `auth.storageState` to `.claude/verification/auth-state.json`
+
+## Configure Deployment Verification
+
+Ask the human about deployment verification for browser tests:
+
+1. **Detect Vercel project** by checking for:
+   - `.vercel/project.json` (linked project)
+   - `vercel.json` (Vercel config)
+   - `package.json` scripts containing "vercel"
+
+2. **If Vercel detected, ask:**
+
+   Use AskUserQuestion:
+   ```
+   Question: "Do you deploy to Vercel and want to run browser tests against preview URLs?"
+   Header: "Deployment"
+   Options:
+     - Label: "Yes, use preview URLs (Recommended)"
+       Description: "Browser tests run against Vercel preview deployments (HTTPS, OAuth works)"
+     - Label: "No, use localhost"
+       Description: "Browser tests run against local dev server only"
+   ```
+
+3. **If Yes, ask about fallback behavior:**
+
+   Use AskUserQuestion:
+   ```
+   Question: "How should we handle missing preview deployments?"
+   Header: "Fallback"
+   Options:
+     - Label: "Fall back to localhost (Recommended)"
+       Description: "If no preview URL found, use local dev server with a warning"
+     - Label: "Block until deployment ready"
+       Description: "Wait for deployment or fail verification if unavailable"
+   ```
+
+4. **Configure deployment settings:**
+
+   ```json
+   {
+     "deployment": {
+       "enabled": true,
+       "service": "vercel",
+       "useForBrowserVerification": true,
+       "fallbackToLocal": true,
+       "waitForDeployment": true,
+       "deploymentTimeout": 300,
+       "tokenVar": "VERCEL_TOKEN"
+     }
+   }
+   ```
+
+   | Setting | Default | Description |
+   |---------|---------|-------------|
+   | `enabled` | false | Enable deployment URL resolution |
+   | `service` | "vercel" | Deployment service (currently only Vercel supported) |
+   | `useForBrowserVerification` | true | Use preview URL for browser tests |
+   | `fallbackToLocal` | true | Fall back to localhost if no preview |
+   | `waitForDeployment` | true | Wait for deployment to be ready |
+   | `deploymentTimeout` | 300 | Max seconds to wait for deployment |
+   | `tokenVar` | "VERCEL_TOKEN" | Env var for Vercel auth token (CI/CD) |
+
+5. **If No (localhost only):**
+
+   Set `deployment.enabled` to `false` (or omit the section entirely).
 
 ## Ensure .gitignore Protection
 
@@ -189,10 +293,20 @@ Dev Server:
 - startupSeconds: {value}
 
 Authentication:
-- strategy: {none | env}
-- loginRoute: {value or "N/A"}
-- usernameVar: {value or "N/A"}
-- passwordVar: {value or "N/A"}
+- strategy: {none | env | oauth}
+- loginRoute: {value or "N/A"} (env strategy only)
+- usernameVar: {value or "N/A"} (env strategy only)
+- passwordVar: {value or "N/A"} (env strategy only)
+- provider: {google | github | N/A} (oauth strategy only)
+- tokens: {Configured | Not configured} (oauth strategy only)
+
+Deployment Verification:
+- enabled: {true | false}
+- service: {vercel | N/A}
+- useForBrowserVerification: {true | false}
+- fallbackToLocal: {true | false}
+- waitForDeployment: {true | false}
+- deploymentTimeout: {value}s
 
 Git Protection:
 - .gitignore includes .env.verification: {Yes | Added | WARNING: No .gitignore}
@@ -203,7 +317,7 @@ Notes: {missing commands, auth setup needed, no browser tools, etc.}
 
 ## Post-Configuration Reminders
 
-If authentication was configured:
+If email/password authentication was configured:
 
 ```
 AUTHENTICATION SETUP REQUIRED
@@ -212,6 +326,21 @@ AUTHENTICATION SETUP REQUIRED
 2. Fill in TEST_USER_EMAIL and TEST_USER_PASSWORD
 3. Verify .env.verification is in .gitignore (should be auto-added)
 4. Run a browser verification to test login works
+```
+
+If OAuth was configured but tokens not set up:
+
+```
+OAUTH SETUP REQUIRED
+====================
+Run /oauth-login {provider} to complete OAuth setup.
+
+You will need:
+1. OAuth app credentials (Client ID and Secret)
+2. Redirect URI configured: http://localhost:3847/oauth/callback
+
+For Google: https://console.cloud.google.com/apis/credentials
+For GitHub: https://github.com/settings/developers
 ```
 
 If no browser tools detected:
@@ -223,4 +352,24 @@ No browser MCP tools were detected. Browser-based acceptance criteria
 will require manual verification until a browser MCP is configured.
 
 Recommended: Add Playwright MCP to your Claude settings.
+```
+
+If deployment verification was configured:
+
+```
+DEPLOYMENT VERIFICATION CONFIGURED
+==================================
+Browser tests will run against Vercel preview deployments.
+
+How it works:
+1. Push changes to trigger Vercel deployment
+2. Run /phase-checkpoint — it resolves the preview URL automatically
+3. Browser tests run against the preview (HTTPS, OAuth callbacks work)
+
+Fallback: {Enabled - will use localhost if no preview | Disabled - will block}
+
+To test manually:
+1. Push your branch to GitHub
+2. Wait for Vercel deployment (check dashboard or `vercel ls`)
+3. Run /phase-checkpoint to verify against preview
 ```

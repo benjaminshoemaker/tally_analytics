@@ -332,19 +332,36 @@ Suggested Fix: Start the dev server with `npm run dev` or check if port 3000 is 
 
 When generating commands, extract URLs and paths from criterion text:
 
+### Base URL Resolution
+
+Before constructing URLs, resolve the base URL from deployment configuration:
+
+```
+1. Read verification-config.json
+2. IF deployment.enabled AND deployment.useForBrowserVerification:
+     - Invoke vercel-preview skill (or use cached result)
+     - IF preview URL found: BASE_URL = preview URL
+     - ELSE IF fallbackToLocal: BASE_URL = devServer.url (warn)
+     - ELSE: Return BLOCKED (no URL available)
+3. ELSE:
+     - BASE_URL = devServer.url
+```
+
+**IMPORTANT:** All auto-verify HTTP checks must use BASE_URL, not hardcoded localhost.
+
 ### URL Extraction
 
 ```
-# Look for explicit URLs
+# Look for explicit URLs (use as-is, don't prepend BASE_URL)
 /https?:\/\/[^\s]+/
 
-# Look for route patterns
+# Look for route patterns (prepend BASE_URL)
 /(?:at|to|from)\s+\/[a-zA-Z0-9\/_-]+/
 
-# Look for localhost patterns
+# Look for localhost patterns (replace with BASE_URL if deployment enabled)
 /localhost:\d+[^\s]*/
 
-# Default to devServer.url from verification-config.json
+# Default to BASE_URL from resolution above
 ```
 
 ### Path Extraction
@@ -384,6 +401,12 @@ This skill respects settings from `.claude/verification-config.json`:
   "devServer": {
     "url": "http://localhost:3000"
   },
+  "deployment": {
+    "enabled": true,
+    "service": "vercel",
+    "useForBrowserVerification": true,
+    "fallbackToLocal": true
+  },
   "autoVerify": {
     "enabled": true,
     "httpTimeout": 5000,
@@ -393,5 +416,11 @@ This skill respects settings from `.claude/verification-config.json`:
   }
 }
 ```
+
+**URL resolution priority:**
+1. If `deployment.enabled` and preview URL available → use preview URL
+2. If `deployment.enabled` but no preview and `fallbackToLocal` → use devServer.url (warn)
+3. If `deployment.enabled` but no preview and NOT `fallbackToLocal` → BLOCKED
+4. If deployment not enabled → use devServer.url
 
 If `autoVerify.enabled` is false, skip automation attempts and return MANUAL for all criteria.

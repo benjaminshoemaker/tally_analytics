@@ -7,6 +7,18 @@
 
 **Priority:** Medium — not blocking, but should be cleaned up before launch
 
+### Dependency Audit: `esbuild` Dev Server Vulnerability (moderate)
+`pnpm audit` reports `esbuild@0.18.20` (via `drizzle-kit` → `@esbuild-kit/*`) is vulnerable. Consider updating the `@esbuild-kit/*` chain and/or `drizzle-kit` so `esbuild>=0.25.0` is used.
+
+**Source:** `pnpm audit --audit-level moderate` (2026-01-24)
+**Priority:** Medium — not blocking, but should be cleaned up before launch
+
+### Docs Drift: `SECURITY.md` Still References Magic Link Auth (post-cleanup)
+After removing magic link auth (Phase 4 of GitHub OAuth), `SECURITY.md` still references `apps/web/app/api/auth/verify/route.ts` and `E2E_TEST_MODE` behavior for `/api/auth/magic-link`.
+
+**Source:** `SECURITY.md` (2026-01-24)
+**Priority:** Low — docs-only, but worth updating for accuracy
+
 ### Auto-Generated PRs: Export/Import Naming Mismatch
 The GitHub template generation exports `TallyAnalytics` but the generated import statement references `FastPrAnalytics`, causing build failures.
 

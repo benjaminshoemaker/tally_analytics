@@ -180,19 +180,36 @@ These checks run only if the required tools are available (detected above).
 
    Focus: reduce complexity, improve naming, eliminate redundancy. Preserve all functionality.
 
-9. **Browser Verification - Local** (requires browser MCP tools)
+9. **Browser Verification** (requires browser MCP tools)
 
    First, check if phase includes UI work by scanning for `BROWSER:*` criteria.
 
    **If browser criteria exist:**
 
-   a. Check tool availability (fallback chain):
+   a. **Resolve target URL** (deployment config check):
+      - Read `deployment.enabled` from verification-config.json
+      - If enabled: Invoke vercel-preview skill to get preview URL
+      - If preview URL found: TARGET = preview URL
+      - If not found and `fallbackToLocal`: TARGET = localhost (with warning)
+      - If not found and NO fallback: BLOCK verification
+      - If deployment not enabled: TARGET = localhost (devServer.url)
+
+   b. Check tool availability (fallback chain):
       - ExecuteAutomation Playwright → Browser MCP → Microsoft Playwright → Chrome DevTools
 
-   b. **If at least one tool available:**
+   c. **If at least one tool available:**
       - Use the browser-verification skill with each criterion's `Verify:` metadata
       - Take snapshots for verification
-      - Test against local dev server (localhost)
+      - Test against TARGET URL
+
+   **Display target in output:**
+   ```
+   Browser Verification:
+   - Target: Vercel Preview (https://my-app-xyz.vercel.app)
+   [Or]
+   - Target: Local Dev Server (http://localhost:3000)
+   - Target: Local Dev Server (fallback - no preview deployment found)
+   ```
 
    c. **If NO browser tools available (SOFT BLOCK):**
       - Display warning:
@@ -244,25 +261,155 @@ For each manual item:
 ```
 Automated Successfully:
 - [x] "{item}" — PASS ({method}, {duration})
-
-Automation Failed (needs human review):
-- [ ] "{item}"
-  - Attempted: {method}
-  - Error: {error message}
-  - Suggested Fix: {if applicable}
-  - Manual Steps:
-    1. {First action to take}
-    2. {What to verify/look for}
-    3. {How to confirm success}
-
-Truly Manual (no automation possible):
-- [ ] "{item}"
-  - Reason: {why automation is not feasible}
-  - Steps:
-    1. {First action to take}
-    2. {What to verify/look for}
-    3. {How to confirm success}
 ```
+
+For items requiring manual verification ("Automation Failed" or "Truly Manual"), generate a **comprehensive verification guide** as described below.
+
+### Manual Verification Guide Format
+
+When ANY items require manual verification, produce a detailed, standalone guide that anyone could follow without prior project knowledge.
+
+**CRITICAL:** Do not use placeholder text like "{First action to take}". Generate specific, actionable instructions based on the actual criterion and project context.
+
+#### Guide Structure
+
+For each manual item, generate ALL of the following sections.
+
+**CRITICAL: URL Resolution for Manual Guides**
+
+Before generating instructions, resolve the BASE_URL:
+
+1. Read `deployment.enabled` from verification-config.json
+2. If deployment enabled:
+   - Invoke vercel-preview skill to get preview URL
+   - If found: BASE_URL = preview URL
+   - If not found: BASE_URL = devServer.url (note fallback)
+3. If deployment not enabled:
+   - BASE_URL = devServer.url
+
+**All URLs in the guide MUST use BASE_URL** — never hardcode localhost when
+deployment is enabled with a preview URL available.
+
+```
+═══════════════════════════════════════════════════════════════════════════════
+MANUAL VERIFICATION: {criterion title}
+═══════════════════════════════════════════════════════════════════════════════
+
+## What We're Verifying
+{1-2 sentence plain-English explanation of what this criterion tests and why it matters}
+
+## Prerequisites
+
+{If using Vercel preview:}
+- [ ] Vercel deployment ready at {BASE_URL}
+- [ ] Browser open (Chrome/Firefox recommended)
+- [ ] {Any test accounts, API keys, or data needed}
+- [ ] {Any specific state the app must be in}
+
+{If using localhost:}
+- [ ] Dev server running at {BASE_URL} (start with: `{command}`)
+- [ ] Browser open (Chrome/Firefox recommended)
+- [ ] {Any test accounts, API keys, or data needed}
+- [ ] {Any specific state the app must be in}
+
+## Step-by-Step Verification
+
+### Step 1: {Action title}
+1. Open your browser and navigate to: `{BASE_URL}{route}`
+2. You should see: {description of expected initial state}
+   - If you don't see this: {troubleshooting hint}
+
+### Step 2: {Action title}
+1. {Exact action to take, e.g., "Click the 'Sign In' button in the top-right corner"}
+2. {Next action}
+3. You should see: {expected result}
+   - Screenshot reference: {if applicable, what the UI should look like}
+
+### Step 3: {Action title}
+1. {Continue with specific actions}
+2. {Include exact text to enter, buttons to click, etc.}
+
+{Continue with as many steps as needed - be thorough}
+
+## Expected Results
+✓ {Specific observable outcome 1}
+✓ {Specific observable outcome 2}
+✓ {Specific observable outcome 3}
+
+## How to Confirm Success
+The criterion PASSES if ALL of the following are true:
+1. {Concrete, verifiable condition}
+2. {Concrete, verifiable condition}
+3. {Concrete, verifiable condition}
+
+## Common Issues & Troubleshooting
+
+| Symptom | Likely Cause | Solution |
+|---------|--------------|----------|
+| {What you might see} | {Why it happens} | {How to fix it} |
+| {Another symptom} | {Cause} | {Solution} |
+
+## If Verification Fails
+1. Check the browser console for errors (F12 → Console tab)
+2. Check the terminal running the dev server for errors
+3. Try: {specific recovery steps}
+4. If still failing, note the exact error and report it
+
+───────────────────────────────────────────────────────────────────────────────
+```
+
+#### Examples of Good vs Bad Instructions
+
+**BAD (too vague):**
+```
+1. First action to take
+2. What to verify/look for
+3. How to confirm success
+```
+
+**GOOD (specific and actionable - localhost):**
+```
+### Step 1: Navigate to Login Page
+1. Open your browser and go to: `http://localhost:3000/login`
+2. You should see a login form with email and password fields
+   - If you see a 404 error: Make sure the dev server is running with `npm run dev`
+
+### Step 2: Enter Test Credentials
+1. In the "Email" field, enter: `test@example.com`
+2. In the "Password" field, enter: `testpassword123`
+3. Click the blue "Sign In" button below the form
+
+### Step 3: Verify Successful Login
+1. You should be redirected to: `http://localhost:3000/dashboard`
+2. The top-right corner should show "Welcome, Test User"
+3. The navigation should now include "My Account" and "Logout" options
+```
+
+**GOOD (specific and actionable - Vercel preview):**
+```
+### Step 1: Navigate to Login Page
+1. Open your browser and go to: `https://my-app-abc123-team.vercel.app/login`
+2. You should see a login form with email and password fields
+   - If you see a 404 error: Verify the deployment is ready in Vercel dashboard
+
+### Step 2: Enter Test Credentials
+1. In the "Email" field, enter: `test@example.com`
+2. In the "Password" field, enter: `testpassword123`
+3. Click the blue "Sign In" button below the form
+
+### Step 3: Verify Successful Login
+1. You should be redirected to: `https://my-app-abc123-team.vercel.app/dashboard`
+2. The top-right corner should show "Welcome, Test User"
+3. The navigation should now include "My Account" and "Logout" options
+```
+
+#### Context to Use When Generating Instructions
+
+When writing verification guides, reference:
+1. **EXECUTION_PLAN.md** — for acceptance criteria context
+2. **Project files** — to find exact URLs, component names, test credentials
+3. **package.json / config files** — for correct commands
+4. **Previous phase implementations** — for understanding current app state
 
 **Note:** Only items in "Truly Manual" genuinely require human action. Items in
 "Automation Failed" may be automatable once the underlying issue is fixed.
@@ -445,7 +592,8 @@ Automated Checks:
 
 Optional Checks:
 - Code Simplification: APPLIED | SKIPPED
-- Browser Verification (local): PASSED | SKIPPED
+- Browser Verification: PASSED | SKIPPED
+  - Target: Vercel Preview ({URL}) | Local Dev Server ({URL}) | Fallback ({URL})
 - Tech Debt: PASSED | NOTES | SKIPPED
 
 Manual Local Checks:
@@ -456,17 +604,15 @@ Manual Local Checks:
 Automated Successfully:
 - [x] "{item}" — PASS ({method}, {duration})
 
-Failed Automation:
-- [ ] "{item}"
-  - Attempted: {method}, Error: {error}
-  - Steps: ...
-
-Truly Manual:
-- [ ] "{item}"
-  - Reason: {why not automatable}
-  - Steps: ...
+Items Requiring Manual Verification: {N}
+(See detailed verification guide below)
 
 Approach Review: No issues noted | {list specific issues}
+```
+
+**If any items require manual verification, append the full Manual Verification Guide (see format above) after this summary report.** The guide should be comprehensive enough that anyone unfamiliar with the project could complete the verification.
+
+```
 
 Local Verification: ✓ PASSED | ✗ FAILED (address issues above)
 
