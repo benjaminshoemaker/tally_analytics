@@ -425,6 +425,55 @@ Wire up all new tracking modules into the main tracker. Initialize modules on `i
 
 ---
 
+#### Task 2.2.C: Update PR Templates with V2 Tracking
+
+**Description:**
+Update the PR generation templates to include V2 tracking features. The current templates contain inline V1-only tracking code that doesn't include engagement time, scroll depth, visitor ID, UTM parameters, or CTA click tracking. This task adds those features to the generated analytics components so sites set up via PR receive V2 tracking.
+
+**Acceptance Criteria:**
+- [ ] App Router template (`apps/web/lib/github/templates/app-router.ts`) includes V2 tracking:
+  - [ ] Engagement time tracking (activity detection, idle timeout, visibility state)
+  - [ ] Scroll depth tracking (max depth reached)
+  - [ ] Visitor ID management (`tally_vid` cookie, 1-year expiry)
+  - [ ] `is_returning` flag based on visitor cookie existence
+  - [ ] UTM parameter capture from URL query string
+  - [ ] CTA click tracking for conversion-intent elements
+- [ ] Pages Router template (`apps/web/lib/github/templates/pages-router.ts`) includes same V2 tracking
+- [ ] `session_start` events include `visitor_id`, `is_returning`, and UTM params
+- [ ] `page_view` events include `engagement_time_ms`, `scroll_depth`, and `cta_clicks`
+- [ ] `beforeunload`/`visibilitychange` sends final page metrics
+- [ ] DNT check skips V2 tracking when `navigator.doNotTrack === "1"`
+- [ ] Generated component remains self-contained (no external dependencies)
+- [ ] All existing tests pass: `pnpm --filter web test`
+
+**Files to Create:**
+- None
+
+**Files to Modify:**
+- `apps/web/lib/github/templates/app-router.ts` — add V2 tracking to generated component
+- `apps/web/lib/github/templates/pages-router.ts` — add V2 tracking to generated component
+
+**Existing Code to Reference:**
+- `packages/sdk/src/engagement.ts` — engagement time tracking implementation
+- `packages/sdk/src/scroll.ts` — scroll depth tracking implementation
+- `packages/sdk/src/visitor.ts` — visitor ID management implementation
+- `packages/sdk/src/utm.ts` — UTM parameter capture implementation
+- `packages/sdk/src/cta.ts` — CTA click tracking implementation
+- `packages/sdk/src/tracker.ts` — integration pattern for V2 modules
+
+**Dependencies:** Tasks 2.2.A, 2.2.B (V2 modules and types must exist as reference)
+
+**Spec Reference:** Technical Spec > Section 4.1-4.7 (all V2 tracking features)
+
+**Requires Browser Verification:** Yes
+- Generate a test PR with updated template
+- Verify V2 fields appear in network requests to `/v1/track`
+- Verify engagement time accumulates correctly
+- Verify scroll depth captures max value
+- Verify visitor ID persists across page loads
+
+---
+
 ### Phase 2 Checkpoint
 
 **Automated Checks:**
@@ -438,8 +487,8 @@ Wire up all new tracking modules into the main tracker. Initialize modules on `i
 
 **Manual Verification:**
 - [x] Build SDK and verify bundle size: `pnpm --filter sdk build`
-- [x] Manually test SDK in browser: V2 fields appear in network requests
-- [x] Verify Tinybird receives and stores new fields
+- [ ] Manually test PR-generated component in browser: V2 fields appear in network requests
+- [ ] Verify Tinybird receives and stores new V2 fields from PR-generated sites
 
 ---
 
@@ -452,7 +501,9 @@ Wire up all new tracking modules into the main tracker. Initialize modules on `i
 
 Human must complete before starting:
 - [ ] Verify SDK is sending V2 events (check Tinybird data)
+  - Verify: `tb sql "SELECT count() AS v2_events FROM events WHERE engagement_time_ms IS NOT NULL OR scroll_depth IS NOT NULL OR visitor_id IS NOT NULL OR is_returning IS NOT NULL OR utm_source IS NOT NULL OR utm_medium IS NOT NULL OR utm_campaign IS NOT NULL OR utm_term IS NOT NULL OR utm_content IS NOT NULL OR cta_clicks IS NOT NULL"`
 - [ ] Ensure PostgreSQL conversion columns exist
+  - Verify: `pnpm -C ../../apps/web exec node -e "const { Client } = require('pg'); const columns = ['conversion_path', 'conversion_label', 'conversion_configured_at', 'conversion_prompt_dismissed_at']; if (!process.env.DATABASE_URL) { console.error('DATABASE_URL not set'); process.exit(1); } (async () => { const client = new Client({ connectionString: process.env.DATABASE_URL }); await client.connect(); const result = await client.query('select column_name from information_schema.columns where table_name = $1 and column_name = any($2)', ['projects', columns]); const found = new Set(result.rows.map((row) => row.column_name)); const missing = columns.filter((column) => !found.has(column)); await client.end(); if (missing.length) { console.error('Missing columns: ' + missing.join(', ')); process.exit(1); } console.log('Conversion columns present'); })().catch((error) => { console.error(error); process.exit(1); });"`
 
 ---
 

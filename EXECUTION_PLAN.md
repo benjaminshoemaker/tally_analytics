@@ -867,7 +867,9 @@ API endpoint to manually trigger regeneration.
 ### Pre-Phase Setup
 
 - [x] npm organization created
+  - Verify: `npm access list packages @tally-analytics >/dev/null`
 - [x] npm publishing credentials configured
+  - Verify: `npm whoami >/dev/null`
 
 ### Step 3.1: SDK Setup
 

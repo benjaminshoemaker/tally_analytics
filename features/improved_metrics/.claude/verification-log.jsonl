@@ -1,0 +1,2 @@
+{"timestamp":"2026-01-25T12:00:00.000Z","scope":"phase-prep","phase":3,"check":"pre-phase-setup","status":"FAIL","evidence":null,"details":"V2 events count: 0 - SDK not sending V2 events to Tinybird. PostgreSQL conversion columns: PASS (present in schema)"}
+{"timestamp":"2026-01-25T12:15:00.000Z","scope":"phase-prep","phase":3,"check":"gap-analysis","status":"BLOCKED","evidence":null,"details":"Discovered PR templates (app-router.ts, pages-router.ts) contain V1-only inline code. Added Task 2.2.C to update templates with V2 tracking. Phase 2 not complete."}
