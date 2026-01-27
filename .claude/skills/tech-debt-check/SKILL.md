@@ -18,13 +18,16 @@ This skill catches these issues before they compound.
 
 ## Workflow Overview
 
+Copy this checklist and track progress:
+
 ```
-1. Detect project language/framework
-2. Run duplication analysis
-3. Run complexity analysis
-4. Run file size analysis
-5. Check for common AI code smells
-6. Generate report with actionable items
+Tech Debt Check Progress:
+- [ ] Step 1: Detect project type
+- [ ] Step 2: Run duplication analysis
+- [ ] Step 3: Run complexity analysis
+- [ ] Step 4: Run file size analysis
+- [ ] Step 5: Check for AI code smells
+- [ ] Step 6: Generate report
 ```
 
 ## Thresholds Reference
@@ -229,6 +232,32 @@ When invoked from `/phase-checkpoint`:
 - Complexity analysis requires language-specific linters
 - Manual review still needed for semantic duplication
 - Cannot detect architectural debt or design issues
+
+## When Check Cannot Complete
+
+**If multiple CRITICAL thresholds are exceeded:**
+- Report all CRITICAL issues, not just the first
+- Prioritize by impact: duplication first (compounds fastest), then complexity, then file size
+- Ask user: "Fix issues incrementally or address all before proceeding?"
+- If incremental: suggest tackling one category at a time
+
+**If required tools are not installed:**
+- Report which tools are missing and why they're needed
+- Provide installation commands: `npm install -g jscpd`, `pip install radon`, etc.
+- Fall back to manual pattern matching where possible
+- Mark checks as SKIPPED (not FAILED) when tool unavailable
+
+**If codebase is too large for analysis:**
+- Report: "Codebase exceeds analysis threshold ({N} files)"
+- Suggest: Focus on recently modified files: `git diff --name-only HEAD~10`
+- Offer to run on specific directories instead
+- Provide incremental analysis option
+
+**If analysis reveals overwhelming debt:**
+- Do NOT suggest fixing everything at once
+- Prioritize: Top 3 highest-impact fixes only
+- Suggest: Create tracking issue for remaining items
+- Recommend: `/add-todo` for each deferred fix
 
 ## Example
 

@@ -393,3 +393,30 @@ Verify in TECHNICAL_SPEC:
 **Step 7:** Re-verify - all clear
 
 **Step 8:** Report PASSED, ready to proceed
+
+## When Verification Cannot Complete
+
+**If issues persist after 2 fix iterations:**
+- Stop attempting automatic fixes
+- Report: "Verification loop limit reached (2 iterations)"
+- List all remaining issues with their current state
+- Recommend: "Manual review required for these {N} issues"
+- Ask user: "Continue with known issues or pause for manual resolution?"
+
+**If upstream document is missing or unreadable:**
+- Skip context preservation check
+- Proceed with quality checks only
+- Report: "Context preservation skipped (upstream document unavailable)"
+- Note which checks were limited
+
+**If user declines to resolve CRITICAL issues:**
+- Do NOT silently proceed
+- Report: "Proceeding with {N} unresolved CRITICAL issues"
+- List the specific items that remain unresolved
+- Warn about potential downstream impacts
+
+**If document format prevents parsing:**
+- Report: "Unable to parse document structure"
+- List what could not be extracted
+- Suggest: "Check document follows expected markdown format"
+- Provide manual verification steps as fallback

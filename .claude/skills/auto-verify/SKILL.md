@@ -1,6 +1,6 @@
 ---
 name: auto-verify
-description: Attempt automated verification of criteria before falling back to manual. Parses criterion text for automation hints and executes appropriate tool (curl, browser, file check).
+description: Attempt automated verification of criteria before falling back to manual. Parses criterion text for automation hints and executes appropriate tool (curl, browser, file check). Invoked by verify-task and phase-checkpoint for MANUAL criteria.
 ---
 
 # Auto-Verify Skill
@@ -18,12 +18,16 @@ executes verification commands before marking items as truly manual.
 
 ## Workflow Overview
 
+Copy this checklist and track progress:
+
 ```
-1. Parse criterion for automation hints (keywords, patterns)
-2. Check tool availability (Bash always, browser conditional)
-3. Select best available tool and generate command
-4. Execute with appropriate timeout
-5. Interpret result and return structured output
+Auto-Verify Progress:
+- [ ] Step 1: Parse criterion for automation hints
+- [ ] Step 2: Check tool availability
+- [ ] Step 3: Select tool and generate command
+- [ ] Step 4: Execute with timeout
+- [ ] Step 5: Interpret result
+- [ ] Step 6: Return structured output
 ```
 
 ## Step 1: Pattern Detection
@@ -31,36 +35,16 @@ executes verification commands before marking items as truly manual.
 Analyze criterion text and optional `Verify:` line for automation keywords.
 Patterns are checked in priority order — first match wins.
 
-### Pattern Matching Table
+### Pattern Matching
 
-| Priority | Pattern Keywords | Tool | Command Template |
-|----------|-----------------|------|------------------|
-| 1 | `curl`, `endpoint`, `API`, `/api/`, `returns`, `status code`, `HTTP` | curl | Status/response check |
-| 2 | `response contains`, `JSON contains`, `body includes` | curl+jq/grep | Content verification |
-| 3 | `redirect`, `redirects to`, `Location header`, `302`, `301` | curl | Header inspection |
-| 4 | `health`, `running`, `reachable`, `alive`, `up`, `accessible` | curl | Health check |
-| 5 | `page loads`, `loads at`, `visit`, `navigate to` | curl first | HTTP status (skip browser if sufficient) |
-| 6 | `visible`, `shows`, `displays`, `element`, `selector`, `DOM` | browser | Browser snapshot required |
-| 7 | `console`, `no errors`, `warnings`, `logs` | browser | Console inspection |
-| 8 | `file exists`, `created`, `generated`, `written` | bash | File existence check |
-| 9 | `directory exists`, `folder`, `path` | bash | Directory check |
-| 10 | `env var`, `environment variable`, `\$`, `set` | bash | Environment check |
-| 11 | `looks`, `feels`, `UX`, `intuitive`, `user experience`, `brand`, `tone` | NONE | Truly manual |
+See [PATTERNS.md](PATTERNS.md) for the full pattern matching table and command templates.
 
-### Pattern Detection Algorithm
-
-```
-function detectPattern(criterion_text, verify_line):
-  text = lowercase(criterion_text + " " + verify_line)
-
-  # Check patterns in priority order
-  for pattern in PATTERN_TABLE:
-    if any(keyword in text for keyword in pattern.keywords):
-      return pattern
-
-  # No pattern matched - truly manual
-  return { tool: NONE, reason: "No automation pattern detected" }
-```
+Key pattern categories:
+- HTTP patterns (curl): API endpoints, status codes, redirects, health checks
+- Browser patterns: DOM elements, visual checks, console logs
+- File patterns (bash): File/directory existence, content checks
+- Environment patterns: Environment variable checks
+- Truly manual: Subjective criteria (UX, brand, tone)
 
 ## Step 2: Tool Availability Check
 
@@ -100,68 +84,12 @@ TOOL_AVAILABILITY = {
 ## Step 3: Command Generation
 
 Based on detected pattern, generate the appropriate verification command.
+See [PATTERNS.md](PATTERNS.md) for complete command templates.
 
-### HTTP Patterns (curl-based)
-
-**Status Check:**
-```bash
-# Check if endpoint returns success (2xx/3xx)
-curl -sf "{url}" -o /dev/null && echo "PASS:status_ok" || echo "FAIL:status_{http_code}"
-```
-
-**Response Contains Text:**
-```bash
-# Check if response body contains expected text
-curl -s "{url}" | grep -q "{expected_text}" && echo "PASS:text_found" || echo "FAIL:text_missing"
-```
-
-**JSON Field Exists:**
-```bash
-# Check if JSON response has expected field
-curl -s "{url}" | jq -e '.{json_path}' > /dev/null 2>&1 && echo "PASS:field_exists" || echo "FAIL:field_missing"
-```
-
-**Redirect Check:**
-```bash
-# Check if redirect goes to expected location
-curl -sI "{url}" | grep -i "location:" | grep -qi "{expected_location}" && echo "PASS:redirect_ok" || echo "FAIL:redirect_wrong"
-```
-
-**Health Check:**
-```bash
-# Check service health (try /health first, then root)
-curl -sf "{url}/health" -o /dev/null 2>/dev/null || curl -sf "{url}" -o /dev/null && echo "PASS:service_healthy" || echo "FAIL:service_unreachable"
-```
-
-### File Patterns (bash-based)
-
-**File Exists:**
-```bash
-test -f "{path}" && echo "PASS:file_exists" || echo "FAIL:file_missing"
-```
-
-**File Contains:**
-```bash
-grep -q "{pattern}" "{path}" && echo "PASS:content_found" || echo "FAIL:content_missing"
-```
-
-**Directory Exists:**
-```bash
-test -d "{path}" && echo "PASS:dir_exists" || echo "FAIL:dir_missing"
-```
-
-### Environment Patterns (bash-based)
-
-**Environment Variable Set:**
-```bash
-test -n "${VAR_NAME}" && echo "PASS:env_set" || echo "FAIL:env_missing"
-```
-
-### Browser Patterns
-
-For browser-required criteria, delegate to browser-verification skill:
-- Use the browser tool fallback chain (ExecuteAutomation → BrowserMCP → Playwright → ChromeDevTools)
-- Pass the route, selector, and expected state from the criterion
+**Quick reference:**
+- HTTP patterns: Use curl for status, content, redirect, health checks
+- File patterns: Use bash test/grep for existence and content checks
+- Browser patterns: Delegate to browser-verification skill with fallback chain
 
 ## Step 4: Execution Protocol
 
@@ -330,67 +258,7 @@ Suggested Fix: Start the dev server with `npm run dev` or check if port 3000 is 
 
 ## URL and Path Extraction
 
-When generating commands, extract URLs and paths from criterion text:
-
-### Base URL Resolution
-
-Before constructing URLs, resolve the base URL from deployment configuration:
-
-```
-1. Read verification-config.json
-2. IF deployment.enabled AND deployment.useForBrowserVerification:
-     - Invoke vercel-preview skill (or use cached result)
-     - IF preview URL found: BASE_URL = preview URL
-     - ELSE IF fallbackToLocal: BASE_URL = devServer.url (warn)
-     - ELSE: Return BLOCKED (no URL available)
-3. ELSE:
-     - BASE_URL = devServer.url
-```
-
-**IMPORTANT:** All auto-verify HTTP checks must use BASE_URL, not hardcoded localhost.
-
-### URL Extraction
-
-```
-# Look for explicit URLs (use as-is, don't prepend BASE_URL)
-/https?:\/\/[^\s]+/
-
-# Look for route patterns (prepend BASE_URL)
-/(?:at|to|from)\s+\/[a-zA-Z0-9\/_-]+/
-
-# Look for localhost patterns (replace with BASE_URL if deployment enabled)
-/localhost:\d+[^\s]*/
-
-# Default to BASE_URL from resolution above
-```
-
-### Path Extraction
-
-```
-# Look for file paths
-/(?:file|path|in)\s+[a-zA-Z0-9\/_.-]+/
-
-# Look for common patterns
-/src\/[^\s]+/
-/\.\/[^\s]+/
-```
-
-## Truly Manual Patterns
-
-These patterns indicate criteria that genuinely require human judgment:
-
-| Pattern | Reason |
-|---------|--------|
-| `looks`, `appears`, `visual` | Subjective visual assessment |
-| `feels`, `intuitive`, `UX` | User experience judgment |
-| `brand`, `tone`, `voice` | Brand consistency |
-| `professional`, `polished` | Quality perception |
-| `easy to use`, `user-friendly` | Usability judgment |
-| `appropriate`, `suitable` | Context-dependent evaluation |
-| `creative`, `engaging` | Subjective content quality |
-
-When these patterns are detected, return MANUAL status with a clear reason explaining
-why automation is not feasible.
+See [PATTERNS.md](PATTERNS.md) for URL and path extraction patterns.
 
 ## Configuration
 
@@ -400,12 +268,6 @@ This skill respects settings from `.claude/verification-config.json`:
 {
   "devServer": {
     "url": "http://localhost:3000"
-  },
-  "deployment": {
-    "enabled": true,
-    "service": "vercel",
-    "useForBrowserVerification": true,
-    "fallbackToLocal": true
   },
   "autoVerify": {
     "enabled": true,
@@ -417,10 +279,6 @@ This skill respects settings from `.claude/verification-config.json`:
 }
 ```
 
-**URL resolution priority:**
-1. If `deployment.enabled` and preview URL available → use preview URL
-2. If `deployment.enabled` but no preview and `fallbackToLocal` → use devServer.url (warn)
-3. If `deployment.enabled` but no preview and NOT `fallbackToLocal` → BLOCKED
-4. If deployment not enabled → use devServer.url
+**URL resolution:** Use `devServer.url` for all HTTP checks. Ensure the dev server is running before verification.
 
 If `autoVerify.enabled` is false, skip automation attempts and return MANUAL for all criteria.

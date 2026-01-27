@@ -1,6 +1,6 @@
 ---
 name: criteria-audit
-description: Validate EXECUTION_PLAN.md for verification metadata, manual reasons, and testability.
+description: Validate EXECUTION_PLAN.md for verification metadata, manual reasons, and testability. Use when preparing Phase 1 or after editing EXECUTION_PLAN.md.
 ---
 
 # Criteria Audit Skill

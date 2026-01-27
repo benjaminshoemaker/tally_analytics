@@ -1,6 +1,6 @@
 ---
 name: add-todo
-description: Add a properly formatted TODO item to TODOS.md
+description: Add a properly formatted TODO item to TODOS.md. Use when you need to capture a new task, bug, or feature request during development.
 allowed-tools: Read, Write, Edit, AskUserQuestion
 ---
 
@@ -205,6 +205,25 @@ If TODOS.md doesn't exist, create it:
 
 (Ideas to explore later)
 ```
+
+## Error Handling
+
+**If TODOS.md cannot be written:**
+- Check file permissions
+- Report the error and suggest: `touch TODOS.md` or check directory permissions
+
+**If existing TODOS.md has unexpected format:**
+- Preserve the original content
+- Add the new TODO at the end of the file
+- Warn user about non-standard format
+
+**If user provides ambiguous priority/effort:**
+- Default to P2 / Medium
+- Note the default in the confirmation message
+
+**If the file is very large (>500 lines):**
+- Warn user that the file is large
+- Suggest archiving completed items to TODOS-ARCHIVE.md
 
 ## Notes
 

@@ -9,15 +9,17 @@ Verify code against requirements using a main agent / sub-agent loop with struct
 
 ## Workflow Overview
 
+Copy this checklist and track progress:
+
 ```
-1. Parse verification instructions into testable items
-2. For each instruction:
-   a. Pre-flight: Confirm instruction is testable
-   b. Sub-agent: Verify if instruction is met
-   c. If failed: Main agent attempts fix
-   d. Repeat b-c up to 5 times or until success
-   e. Update checklist with result
-3. Generate verification report
+Code Verification Progress:
+- [ ] Step 1: Parse verification instructions
+- [ ] Step 2: Pre-flight validation
+- [ ] Step 3: Verification loop (per instruction)
+- [ ] Step 4: Fix attempts (if failed)
+- [ ] Step 5: Update checklist with results
+- [ ] Step 6: Generate verification report
+- [ ] Step 7: Log results to verification-log.jsonl
 ```
 
 ## Step 1: Parse Verification Instructions
@@ -91,7 +93,8 @@ For instructions with `browser: true`:
 
    **If NO tools available (SOFT BLOCK):**
 
-   Before marking as BLOCKED, attempt HTTP fallback for any remaining criteria:
+   Before marking as BLOCKED, attempt HTTP fallback for any remaining criteria.
+   **EXECUTE these commands** via Bash tool (substitute actual URLs):
    - Page loading: `curl -sf {url}`
    - API responses: `curl -s {url} | jq .`
    - Redirects: `curl -sI {url}`

@@ -1,6 +1,6 @@
 ---
 name: vercel-preview
-description: Resolve Vercel preview deployment URL for the current git branch
+description: Resolve Vercel preview deployment URL for the current git branch. Invoked by browser-verification when deployment.enabled is true, or directly to check deployment status.
 ---
 
 # Vercel Preview URL Resolution Skill
@@ -39,12 +39,15 @@ From `.claude/verification-config.json`:
 
 ## Workflow Overview
 
+Copy this checklist and track progress:
+
 ```
-1. Get current git branch and commit SHA
-2. Check for Vercel project linking
-3. Query Vercel for deployments matching branch
-4. Optionally wait for deployment to be ready
-5. Return URL or error with actionable guidance
+Vercel Preview Progress:
+- [ ] Step 1: Get git context (branch, commit)
+- [ ] Step 2: Check Vercel project linking
+- [ ] Step 3: Query deployments for branch
+- [ ] Step 4: Wait for deployment (if configured)
+- [ ] Step 5: Return URL or error guidance
 ```
 
 ## Step 1: Get Git Context
@@ -279,3 +282,29 @@ Action: USE_PREVIEW | USE_FALLBACK | BLOCK
 1. Check Vercel dashboard for build errors
 2. Review build logs: `vercel logs <deployment-url>`
 3. Increase `deploymentTimeout` in verification-config.json
+
+## When Preview Cannot Be Resolved
+
+**If Vercel CLI is not installed and cannot be installed:**
+- Report: "Vercel CLI unavailable"
+- Provide fallback: Use local dev server at `devServer.url`
+- If `fallbackToLocal` is disabled: BLOCK with clear message
+- Suggest: Install Vercel CLI for preview deployment support
+
+**If all deployments are failing:**
+- Report the deployment status and error summary
+- Do NOT wait indefinitely
+- After timeout: Fall back to local if enabled, otherwise BLOCK
+- Provide: Direct link to Vercel dashboard for manual investigation
+
+**If branch has never been deployed:**
+- Report: "No deployments found for branch '{branch}'"
+- Check if this is a new branch that hasn't been pushed
+- Suggest: Push branch to trigger deployment
+- Fall back to local if enabled
+
+**If timeout reached while waiting:**
+- Stop waiting immediately
+- Report: "Deployment wait timeout ({N}s) exceeded"
+- Show current deployment state (if known)
+- Ask user: "Continue with local fallback?" or "Abort verification?"

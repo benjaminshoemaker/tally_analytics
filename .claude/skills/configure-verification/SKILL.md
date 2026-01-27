@@ -1,6 +1,6 @@
 ---
 name: configure-verification
-description: Configure verification commands for this project
+description: Configure verification commands for this project. Use when setting up a new project or when verification-config.json is missing or incomplete.
 argument-hint: [project-directory]
 allowed-tools: Read, Edit, Grep, Glob, Bash, AskUserQuestion
 ---

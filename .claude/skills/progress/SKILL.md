@@ -1,10 +1,23 @@
 ---
 name: progress
-description: Show progress through EXECUTION_PLAN.md and feature plans
+description: Show progress through EXECUTION_PLAN.md and feature plans. Use to check completion status and identify remaining work.
 allowed-tools: Read, Grep, Glob
 ---
 
 Read EXECUTION_PLAN.md and any feature execution plans to show overall project status.
+
+## Workflow
+
+Copy this checklist and track progress:
+
+```
+Progress Report:
+- [ ] Step 1: Directory guard check
+- [ ] Step 2: Discover all execution plans
+- [ ] Step 3: Count checkbox categories
+- [ ] Step 4: Calculate completion percentages
+- [ ] Step 5: Generate progress report
+```
 
 ## Directory Guard (Wrong Directory Check)
 
@@ -147,6 +160,32 @@ Consider:
 - Review for any deferred items in DEFERRED.md
 - Check TODOS.md for follow-up work
 ```
+
+## Error Handling
+
+**If EXECUTION_PLAN.md exists but is empty:**
+- Report: "EXECUTION_PLAN.md exists but contains no content"
+- Suggest running `/generate-plan` to populate it
+
+**If EXECUTION_PLAN.md has unexpected format:**
+- Attempt to parse what exists
+- Report any sections that couldn't be parsed
+- Show raw checkbox counts as fallback: "Found X checkboxes (Y checked)"
+
+**If feature plan directory exists but EXECUTION_PLAN.md is missing:**
+- Report the feature directory was found but has no execution plan
+- List: "Feature directory without plan: features/{name}/"
+- Suggest: "Run /feature-plan to generate the missing plan"
+
+**If checkbox parsing yields zero items:**
+- Report: "No task acceptance criteria found in EXECUTION_PLAN.md"
+- Check if the file uses non-standard checkbox format
+- Suggest verifying the plan was generated correctly
+
+**If file read permissions fail:**
+- Report which file couldn't be read
+- Continue with other files if possible
+- Suggest checking file permissions
 
 ## Feature Plan Discovery Details
 
