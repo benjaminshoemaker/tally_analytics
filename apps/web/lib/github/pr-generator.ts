@@ -94,6 +94,21 @@ async function fetchJsonFileIfExists(
   }
 }
 
+async function fetchFileShaIfExists(
+  octokit: PrOctokitLike,
+  params: { owner: string; repo: string; path: string; ref?: string },
+): Promise<string | null> {
+  try {
+    const response = await octokit.repos.getContent(params);
+    const file = response.data;
+    if (!isRecord(file) || file.type !== "file") return null;
+    return typeof file.sha === "string" && file.sha.length > 0 ? file.sha : null;
+  } catch (error) {
+    if (isNotFoundError(error)) return null;
+    throw error;
+  }
+}
+
 async function fetchTextFile(
   octokit: PrOctokitLike,
   params: { owner: string; repo: string; path: string; ref?: string },
@@ -148,6 +163,13 @@ export async function commitAnalyticsFiles(
       ? renderAppRouterAnalyticsComponent({ projectId: params.projectId, eventsUrl: params.eventsUrl })
       : renderPagesRouterAnalyticsHook({ projectId: params.projectId, eventsUrl: params.eventsUrl });
 
+  const existingComponentSha = await fetchFileShaIfExists(octokit, {
+    owner: params.owner,
+    repo: params.repo,
+    path: paths.componentFilePath,
+    ref: params.defaultBranch,
+  });
+
   await octokit.repos.createOrUpdateFileContents({
     owner: params.owner,
     repo: params.repo,
@@ -155,6 +177,7 @@ export async function commitAnalyticsFiles(
     path: paths.componentFilePath,
     message: `Add Fast PR Analytics component`,
     content: encodeBase64(componentContent),
+    ...(existingComponentSha ? { sha: existingComponentSha } : {}),
   });
 
   const entryPointFile = await fetchTextFile(octokit, {

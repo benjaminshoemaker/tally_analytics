@@ -58,6 +58,14 @@ Execution plans contain **4 distinct checkbox categories**. Count them separatel
 
 **Secondary Metrics:** Checkpoint, Setup, and Manual criteria (procedural/verification work).
 
+**How to distinguish categories when counting:**
+- **Task criteria**: Found under `#### Task X.Y.Z` headers; lines match `- [ ] .*\((TEST|CODE|BROWSER|MANUAL)\)`
+- **Checkpoint criteria**: Found under `### Phase N Checkpoint`; in "Automated Checks" or "Manual Verification" subsections
+- **Setup criteria**: Found under `### Pre-Phase Setup`; lines contain `Verify:` commands
+- **Manual verification**: Under "Human Required" headers; lines have `Reason:` annotations
+
+When in doubt, check the parent header level: `####` = task, `###` = phase-level.
+
 ## Progress Report Format
 
 ### If Multiple Execution Plans Exist

@@ -111,8 +111,18 @@ Adjust score based on:
 - {Question that would improve requirements clarity}
 - {Another question, if applicable}
 
-**Suggested Next Action:** {One of: "Ready to implement", "Needs research", "Consider deferring", "Consider removing"}
+**Suggested Next Action:** {See rules below}
 ```
+
+### Suggested Next Action Rules
+
+The "Suggested Next Action" field must follow these rules:
+
+- **"Ready to implement"** — ONLY when the item has an explicit `[ready]` tag in TODOS.md. Never infer readiness from clarity or detail alone. The user must explicitly mark items as ready.
+- **"Needs clarification"** — When requirements clarity is LOW, or significant open questions remain
+- **"Needs research"** — When the approach is unclear and investigation is needed before implementation
+- **"Consider deferring"** — When explicitly marked DEFERRED, has low value, or user has deprioritized (low multiplier)
+- **"Consider removing"** — When the item appears obsolete, superseded, or no longer relevant
 
 ### For items with LOW requirements clarity:
 
@@ -163,7 +173,7 @@ Adjust score based on:
 | 2 | {title} | {N}/10 | {×N or —} | {action} |
 | ... | ... | ... | ... | ... |
 
-**Ready to implement:** {count}
+**Ready to implement ([ready] tagged):** {count}
 **Needs clarification:** {count}
 **Consider deferring:** {count}
 ```
@@ -211,10 +221,10 @@ Adjust score based on:
 
 ## Interactive Q&A Phase
 
-After displaying the prioritized list and summary, offer the user an interactive session to clarify requirements.
+After displaying the prioritized list and summary, use `AskUserQuestion` to offer the user an interactive session to clarify requirements. **All user interactions in this phase MUST use the `AskUserQuestion` tool** — never ask questions via plain text output.
 
-See [QA_WORKFLOW.md](QA_WORKFLOW.md) for the detailed 8-step Q&A workflow:
-1. Offer to start Q&A
+See [QA_WORKFLOW.md](QA_WORKFLOW.md) for the detailed Q&A workflow:
+1. Choose action (Clarify an item / Done)
 2. Select item to clarify
 3. Summarize current state
 4. Ask open questions one at a time

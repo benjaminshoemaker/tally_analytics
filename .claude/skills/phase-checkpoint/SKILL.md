@@ -57,14 +57,14 @@ Read `.claude/verification-config.json` from PROJECT_ROOT. If missing or incompl
 Read `.claude/settings.local.json` for cross-model review config:
 ```json
 {
-  "multiModelVerify": {
+  "codexReview": {
     "enabled": true,
     "triggerOn": ["phase-checkpoint"]
   }
 }
 ```
 
-If `multiModelVerify` is not configured, default to `enabled: true` when Codex CLI is available.
+If `codexReview` is not configured, default to `enabled: true` when Codex CLI is available.
 
 ## Step 3: Local Verification (Must Pass First)
 
@@ -107,36 +107,29 @@ For external integrations, follow [DOCS_PROTOCOL.md](DOCS_PROTOCOL.md) to fetch 
 
 This step runs if ALL of these conditions are true:
 - Codex CLI is available (`codex --version` succeeds)
-- `multiModelVerify.enabled` is true (or not configured, defaulting to true)
-- `"phase-checkpoint"` is in `multiModelVerify.triggerOn` (or not configured)
+- `codexReview.enabled` is true (or not configured, defaulting to true)
+- `"phase-checkpoint"` is in `codexReview.triggerOn` (or not configured)
 
 ### Execution
 
 1. **Gather phase context:**
    ```bash
-   # Get branch diff
-   git diff main...HEAD --stat
-
-   # Get commit list
-   git log --oneline main..HEAD
-
-   # Identify technologies from changed files
+   # Identify technologies from changed files for --research flag
+   # Check package.json, imports in changed files
    ```
 
-2. **Identify research topics** from the phase:
-   - External services integrated (Supabase, Stripe, etc.)
-   - Frameworks/libraries used
-   - Security-sensitive areas
-
-3. **Invoke multi-model-verify** with:
+2. **Invoke `/codex-review`** with appropriate flags:
    ```
-   artifact_type: code
-   artifact_path: (phase branch diff)
-   research_topics: (extracted from phase context)
-   verification_focus: correctness, best practices, security
+   /codex-review --research "{technologies}" security
    ```
 
-4. **Process results:**
+   The `/codex-review` skill handles:
+   - Branch diff gathering
+   - Prompt generation with research instructions
+   - Codex CLI invocation
+   - Result parsing
+
+3. **Process results:**
 
    | Codex Status | Checkpoint Action |
    |--------------|-------------------|
@@ -146,7 +139,7 @@ This step runs if ALL of these conditions are true:
    | `skipped` | Note unavailable, continue |
    | `error` | Note error, continue |
 
-5. **For `needs_attention` status:**
+4. **For `needs_attention` status:**
    - Display critical issues from Codex
    - Ask user: "Address Codex findings before proceeding?"
      - Yes → List issues to fix, pause checkpoint
@@ -168,9 +161,9 @@ Cross-Model Review (Codex):
 ### Skip Conditions
 
 Skip this step (mark as SKIPPED) if:
-- Running inside Codex CLI (`$CODEX_SANDBOX` is set) — Codex reviewing Codex has no cross-model benefit
+- Running inside Codex CLI (`$CODEX_SANDBOX` is set) — `/codex-review` detects this automatically
 - Codex CLI not installed
-- `multiModelVerify.enabled` is explicitly false
+- `codexReview.enabled` is explicitly false
 - Phase has fewer than 3 tasks (trivial phase)
 - `--skip-codex` flag passed to checkpoint
 

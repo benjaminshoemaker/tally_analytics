@@ -76,7 +76,15 @@ export async function POST(request: Request) {
     const activeByProjectId = new Map(pairs);
 
     activeEvents = parsed.data.events.filter((event) => activeByProjectId.get(event.project_id));
-  } catch {
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") {
+      const details = error instanceof Error ? error.message : String(error);
+      return Response.json(
+        { success: false, error: "Project validation failed", details },
+        { status: 500, headers: corsHeaders },
+      );
+    }
+
     return Response.json({ success: false, error: "Project validation failed" }, { status: 500, headers: corsHeaders });
   }
 

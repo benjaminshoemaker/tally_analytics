@@ -1,11 +1,33 @@
 ---
 name: phase-start
 description: Execute all tasks in a phase autonomously. Use after /phase-prep confirms prerequisites are met.
-argument-hint: [phase-number]
+argument-hint: "<phase-number> [--codex] [--pause]"
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task, WebFetch, WebSearch
 ---
 
 Execute all steps and tasks in Phase $1 from EXECUTION_PLAN.md.
+
+## Arguments
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `$1` | Yes | Phase number to execute |
+| `--codex` | No | Execute tasks via Codex CLI instead of directly |
+| `--pause` | No | Stop after phase completes (skip auto-advance to checkpoint) |
+
+## Execution Modes
+
+**Default mode:** Claude Code executes tasks directly using its tools.
+
+**Codex mode (`--codex`):** Claude Code orchestrates while Codex CLI executes each task:
+- Claude Code maintains context, verification, auto-advance logic
+- Codex executes individual tasks with documentation research
+- Results return to Claude Code for verification and next-task decisions
+
+Use `--codex` when:
+- Tasks involve external APIs where current documentation matters
+- You want cross-model execution for different perspectives
+- Codex's web search during implementation adds value
 
 ## External Tool Documentation Protocol
 
@@ -86,6 +108,12 @@ Before starting, confirm the required files exist:
 
 **Before starting:** If context is below 40% remaining, run `/compact` first. This ensures the full command instructions remain in context throughout execution. Compaction mid-command loses procedural instructions.
 
+## Codex Mode Prerequisites (if `--codex` flag provided)
+
+Skip this section if `--codex` was not provided.
+
+See [CODEX_MODE.md](CODEX_MODE.md) for detailed Codex CLI setup and configuration.
+
 ## Execution Rules
 
 1. **Git Workflow (Auto-Commit)**
@@ -126,6 +154,12 @@ Before starting, confirm the required files exist:
    git checkout -b phase-$1
    ```
 
+   **Verify branch creation:**
+   ```bash
+   git branch --show-current
+   ```
+   If the output doesn't match `phase-$1`, the checkout failed. Check if branch already exists and append a suffix.
+
    After each task completion (sequential commits on same branch):
    ```bash
    git add -A
@@ -147,6 +181,21 @@ Before starting, confirm the required files exist:
    - Use conventional commit format: `task({id}): {imperative description}`
 
 2. **Task Execution** (for each task)
+
+   {If `--codex` flag provided}
+
+   **Codex Execution Mode:**
+
+   See [CODEX_MODE.md](CODEX_MODE.md) for full details. Summary:
+   - Build task prompt with context and acceptance criteria
+   - Execute via `codex exec` with appropriate flags
+   - Process results and handle failures
+   - Verify and commit (Claude Code verifies Codex's work)
+
+   {Else}
+
+   **Default Execution Mode:**
+
    - Read the task definition and acceptance criteria
    - **Explore before implementing:**
      - Search for similar existing functionality (don't duplicate)
@@ -158,6 +207,8 @@ Before starting, confirm the required files exist:
    - Run verification using /verify-task
    - Update checkboxes in EXECUTION_PLAN.md: `- [ ]` → `- [x]`
    - **Commit immediately** (see Git Workflow above)
+
+   {/If}
 
 3. **Stuck Detection and Recovery**
 
@@ -207,63 +258,12 @@ Before starting, confirm the required files exist:
 
 ## State Tracking
 
-Maintain `.claude/phase-state.json` throughout execution:
+Maintain `.claude/phase-state.json` throughout execution. See [STATE_TRACKING.md](STATE_TRACKING.md) for JSON formats.
 
-1. **At phase start**, update state:
-   ```bash
-   mkdir -p .claude
-   ```
-
-   Set phase status to `IN_PROGRESS` with `started_at` timestamp.
-
-2. **After each task completion**, update the task entry:
-   ```json
-   {
-     "tasks": {
-       "{task_id}": {
-         "status": "COMPLETE",
-         "completed_at": "{ISO timestamp}"
-       }
-     }
-   }
-   ```
-
-3. **If task is blocked**, record the blocker:
-   ```json
-   {
-     "tasks": {
-       "{task_id}": {
-         "status": "BLOCKED",
-         "blocker": "{description}",
-         "blocker_type": "user-action|dependency|external-service|unclear-requirements",
-         "since": "{ISO timestamp}"
-       }
-     }
-   }
-   ```
-
-4. **State file format** (create if missing):
-   ```json
-   {
-     "schema_version": "1.0",
-     "project_name": "{directory name}",
-     "last_updated": "{ISO timestamp}",
-     "main": {
-       "current_phase": 1,
-       "total_phases": 6,
-       "status": "IN_PROGRESS",
-       "phases": [
-         {
-           "number": 1,
-           "name": "{Phase Name}",
-           "status": "IN_PROGRESS",
-           "started_at": "{ISO timestamp}",
-           "tasks": {}
-         }
-       ]
-     }
-   }
-   ```
+Key updates:
+1. **At phase start**: Set status to `IN_PROGRESS` with timestamp and execution mode
+2. **After each task**: Update task entry with `COMPLETE` status
+3. **If blocked**: Record blocker type and description
 
 If `.claude/phase-state.json` doesn't exist, run `/populate-state` first to initialize it.
 
@@ -274,6 +274,7 @@ If `.claude/phase-state.json` doesn't exist, run `/populate-state` first to init
 Do not check back until Phase $1 is complete, unless blocked or stuck.
 
 When done, provide:
+- Execution mode used (default or Codex)
 - Summary of what was built
 - Files created/modified
 - Git branch and commits created
@@ -362,4 +363,6 @@ Truly Manual ({N} items requiring human judgment):
   - Reason: {why automation not possible, e.g., "subjective UX assessment"}
 
 Next: Run /phase-checkpoint $1 when ready to verify
+
+Ready to open a PR? Run: /create-pr
 ```

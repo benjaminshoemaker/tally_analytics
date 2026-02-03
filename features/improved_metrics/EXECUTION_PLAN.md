@@ -486,8 +486,9 @@ Update the PR generation templates to include V2 tracking features. The current 
 - [x] Existing dashboard still displays data correctly
 
 **Manual Verification:**
-- [x] Build SDK and verify bundle size: `pnpm --filter sdk build`
-- [ ] Manually test PR-generated component in browser: V2 fields appear in network requests
+- [ ] Build SDK and verify bundle size (deferred — 4556 bytes gzipped > 3KB limit): `pnpm --filter sdk build`
+- [x] Manually test PR-generated component in browser: V2 fields appear in network requests
+- [ ] Verify PR-generated component delivers V2 events to events API (no DNS/network errors)
 - [ ] Verify Tinybird receives and stores new V2 fields from PR-generated sites
 
 ---

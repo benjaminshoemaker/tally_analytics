@@ -241,6 +241,14 @@
                   }
                 }
               }
+            },
+            "checkpoint_failed": {
+              "failed_at": "2026-01-25T23:00:09.926Z",
+              "reasons": [
+                "SDK bundle size exceeds 3KB gzipped (4556 bytes)",
+                "Manual verification items pending: PR-generated component network fields; Tinybird ingestion"
+              ],
+              "evidence": ".claude/verification/phase-2.md"
             }
           }
         ]
@@ -342,7 +350,7 @@
     "branch": "phase-2",
     "lastCommit": "2026-01-24"
   },
-  "lastUpdated": "2026-01-25T22:21:56.882Z",
+  "lastUpdated": "2026-01-25T23:00:09.926Z",
   "updatedBy": "codex-phase-checkpoint",
   "verificationNotes": {
     "mainExecutionPlan": "All 6 phases verified complete via code inspection",

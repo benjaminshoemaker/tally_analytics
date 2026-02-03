@@ -76,6 +76,12 @@ For instructions with `browser: true`:
    curl -sf -o /dev/null -w "%{http_code}" "{url}"
    ```
 
+   **Curl error handling:**
+   - Use `-m 10` (10-second timeout) to prevent hanging on unresponsive services
+   - If curl returns exit code 7 (connection refused): dev server may not be running
+   - If curl returns exit code 28 (timeout): service is slow or unreachable
+   - On any curl failure, fall through to browser verification (do not mark as FAIL yet)
+
    **If HTTP check passes AND criterion does NOT explicitly require:**
    - DOM element inspection (selector, visibility)
    - Visual appearance verification
@@ -216,6 +222,11 @@ Attempt 2: [Description of change] → [Result]
 - Attempts 4-5: Broaden scope, consider architectural changes
 
 If the same failure pattern repeats twice, explicitly try a different strategy.
+
+**After applying fix, re-verify the specific criterion:**
+1. Re-run the sub-agent check for the failed criterion only
+2. If still failing after 2 fix attempts, mark as FAIL with evidence from both attempts
+3. Do NOT re-run all criteria — only the failing one
 
 ### Browser-Specific Fix Strategies
 

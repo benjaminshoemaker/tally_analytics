@@ -138,6 +138,83 @@ describe("pr generator", () => {
     expect(updatedLayout).toContain("<FastPrAnalytics />");
   });
 
+  it("includes sha when analytics component already exists", async () => {
+    vi.resetModules();
+    setProjectPullRequestByRepoIdSpy = vi.fn();
+
+    const defaultBranch = "main";
+    const entryPoint = "app/layout.tsx";
+    const projectId = "proj_123";
+
+    const reposGet = vi.fn().mockResolvedValue({ data: { default_branch: defaultBranch } });
+    const gitGetRef = vi.fn().mockResolvedValue({ data: { object: { sha: "sha_main" } } });
+    const gitCreateRef = vi.fn().mockResolvedValue(undefined);
+
+    const layoutBefore = [
+      "export default function RootLayout({ children }: { children: React.ReactNode }) {",
+      "  return (",
+      "    <html>",
+      "      <body>{children}</body>",
+      "    </html>",
+      "  );",
+      "}",
+      "",
+    ].join("\\n");
+
+    const reposGetContent = vi.fn(async ({ path }: { path: string }) => {
+      if (path === "tsconfig.json") throw { status: 404 };
+      if (path === "components/fast-pr-analytics.tsx") {
+        return {
+          data: {
+            type: "file",
+            sha: "sha_component",
+            encoding: "base64",
+            content: Buffer.from("// existing component", "utf8").toString("base64"),
+          },
+        };
+      }
+      if (path === entryPoint) {
+        return {
+          data: {
+            type: "file",
+            sha: "sha_layout",
+            encoding: "base64",
+            content: Buffer.from(layoutBefore, "utf8").toString("base64"),
+          },
+        };
+      }
+      throw { status: 404 };
+    });
+
+    const createOrUpdateFileContents = vi.fn().mockResolvedValue(undefined);
+
+    const octokit = {
+      repos: {
+        get: reposGet,
+        getContent: reposGetContent,
+        createOrUpdateFileContents,
+      },
+      git: { getRef: gitGetRef, createRef: gitCreateRef },
+    };
+
+    const { createAnalyticsBranch, commitAnalyticsFiles } = await import("../lib/github/pr-generator");
+    const branch = await createAnalyticsBranch(octokit as never, { owner: "octo", repo: "repo" });
+
+    await commitAnalyticsFiles(octokit as never, {
+      owner: "octo",
+      repo: "repo",
+      branch,
+      defaultBranch,
+      projectId,
+      detection: { framework: "nextjs-app", entryPoint },
+      eventsUrl: "https://events.example.com",
+    });
+
+    const calls = createOrUpdateFileContents.mock.calls as unknown[][];
+    const componentCall = calls.find((c) => (c[0] as any).path === "components/fast-pr-analytics.tsx");
+    expect(componentCall?.[0]).toMatchObject({ sha: "sha_component" });
+  });
+
   it("creates a PR and stores pr_number/pr_url on the project", async () => {
     vi.resetModules();
 

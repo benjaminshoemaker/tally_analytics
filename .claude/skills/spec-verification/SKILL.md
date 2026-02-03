@@ -29,6 +29,19 @@ Can also be invoked manually via `/verify-spec <document-type>`.
 7. Re-verify (max 2 iterations, then escalate)
 ```
 
+Copy this checklist and track progress:
+
+```
+Spec Verification Progress:
+- [ ] Step 1: Detect document type
+- [ ] Step 2: Context preservation check
+- [ ] Step 3: Quality check
+- [ ] Step 4: Present issues
+- [ ] Step 5: Collect user choices
+- [ ] Step 6: Apply fixes
+- [ ] Step 7: Re-verify
+```
+
 ## Step 1: Document Type Detection
 
 Determine what's being verified and its upstream dependencies:
@@ -257,7 +270,8 @@ For each collected resolution:
 1. **Read the target document**
 2. **Locate the problematic text** (use exact match from issue)
 3. **Apply the fix** using Edit tool
-4. **For upstream document changes**: Require explicit confirmation before editing
+4. **Verify the edit** — Re-read the edited section to confirm the change was applied correctly. If the Edit tool reported no match or the content is unchanged, retry with corrected `old_string`.
+5. **For upstream document changes**: Require explicit confirmation before editing
 
 ### Fix Application Rules
 

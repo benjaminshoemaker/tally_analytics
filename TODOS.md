@@ -32,6 +32,9 @@ The GitHub template generation exports `TallyAnalytics` but the generated import
 
 **Priority:** High — breaks generated PRs
 
+### SDK Bundle Size Limit Exceeded (Phase 2)
+- [ ] **[P1 / Medium]** Reduce SDK bundle size below 3KB gzipped — Currently 4556 bytes; slim bundle or split optional exports
+
 ---
 
 ## 🟠 Revenue & Monetization

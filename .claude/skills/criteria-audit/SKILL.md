@@ -8,16 +8,27 @@ description: Validate EXECUTION_PLAN.md for verification metadata, manual reason
 Audit EXECUTION_PLAN.md to ensure acceptance criteria are automation-ready and
 use the verification metadata format.
 
+## Arguments
+
+- `$1` (optional) = directory containing `EXECUTION_PLAN.md`
+  - If provided, read `$1/EXECUTION_PLAN.md`
+  - If empty, read `EXECUTION_PLAN.md` from the current working directory
+
 ## Workflow Overview
 
+Copy this checklist and track progress:
+
 ```
-1. Read EXECUTION_PLAN.md
-2. Parse phases, tasks, and acceptance criteria
-3. Validate verification metadata
-4. Report issues and summarize
+Criteria Audit Progress:
+- [ ] Step 1: Read EXECUTION_PLAN.md
+- [ ] Step 2: Parse phases, tasks, and acceptance criteria
+- [ ] Step 3: Validate verification metadata
+- [ ] Step 4: Report issues and summarize
 ```
 
 ## Step 1: Parse Acceptance Criteria
+
+Resolve the plan path: if `$1` is provided, use `$1/EXECUTION_PLAN.md`; otherwise use `EXECUTION_PLAN.md` in the current working directory.
 
 For each task, collect:
 - Criterion text

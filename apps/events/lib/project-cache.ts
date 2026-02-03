@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { Pool } from "pg";
 
 type ProjectStatus = string;
 
@@ -38,15 +39,27 @@ export function createProjectCacheFromEnv(options?: { ttlMs?: number; now?: () =
     throw new Error("Missing required environment variable: DATABASE_URL");
   }
 
-  const sql = neon(databaseUrl);
+  const url = new URL(databaseUrl);
+  const isLocal = url.hostname === "localhost" || url.hostname === "127.0.0.1";
+  const sql = isLocal ? null : neon(databaseUrl);
+  const pool = isLocal ? new Pool({ connectionString: databaseUrl }) : null;
 
   return createProjectCache({
     ttlMs: options?.ttlMs,
     now: options?.now,
     queryStatus: async (projectId) => {
-      const rows = (await sql`SELECT status FROM projects WHERE id = ${projectId} LIMIT 1`) as Array<{ status?: string }>;
-      return rows[0]?.status ?? null;
+      if (sql) {
+        const rows = (await sql`SELECT status FROM projects WHERE id = ${projectId} LIMIT 1`) as Array<{
+          status?: string;
+        }>;
+        return rows[0]?.status ?? null;
+      }
+
+      if (!pool) return null;
+      const result = await pool.query<{ status?: string }>("SELECT status FROM projects WHERE id = $1 LIMIT 1", [
+        projectId,
+      ]);
+      return result.rows[0]?.status ?? null;
     },
   });
 }
-

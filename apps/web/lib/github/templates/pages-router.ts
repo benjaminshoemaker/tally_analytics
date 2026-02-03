@@ -18,6 +18,7 @@ const IDLE_TIMEOUT_MS = 30000;
 const TICK_INTERVAL_MS = 100;
 const MAX_UTM_LENGTH = 100;
 const MAX_CTA_TEXT_LENGTH = 30;
+const SESSION_START_KEY = 'tally_session_start';
 
 const UTM_PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
 const CTA_SELECTORS = [
@@ -74,6 +75,32 @@ function getSessionId(): string {
   sessionId = crypto.randomUUID();
   setCookie('tally_sid', sessionId);
   return sessionId;
+}
+
+function getStoredSessionStartId(): string | null {
+  if (typeof sessionStorage === 'undefined') return null;
+  try {
+    return sessionStorage.getItem(SESSION_START_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function setStoredSessionStartId(value: string): void {
+  if (typeof sessionStorage === 'undefined') return;
+  try {
+    sessionStorage.setItem(SESSION_START_KEY, value);
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function shouldTrackSessionStart(): boolean {
+  const currentSessionId = getSessionId();
+  const storedSessionId = getStoredSessionStartId();
+  if (storedSessionId === currentSessionId) return false;
+  setStoredSessionStartId(currentSessionId);
+  return true;
 }
 
 function getOrCreateVisitorId(): { visitorId: string; isReturning: boolean } | null {
@@ -436,7 +463,9 @@ export function useFastPrAnalytics() {
     if (!isInitialized) {
       isInitialized = true;
       initializeV2Tracking();
-      sendEvents([createSessionStartEvent()]);
+      if (shouldTrackSessionStart()) {
+        sendEvents([createSessionStartEvent()]);
+      }
     }
 
     const handler = (url: string) => trackPageView(url);

@@ -1,5 +1,217 @@
 {
-  "toolkit_location": "/Users/coding/Projects/ai_coding_project_base",
-  "toolkit_commit": "f7be29fc348b267d2b8647a0491c722b655fd553",
-  "last_sync": "2026-01-27T08:54:12Z"
+  "files": {
+    ".claude/skills/add-todo/SKILL.md": {
+      "hash": "f3a01701b5d136173f8049f023f46b160e5aa06ebd347fbbc4168065947f0da8",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/analyze-sessions/SKILL.md": {
+      "hash": "0a09ca80ec1b4dc203a92b9d4937f15a3ca9e467f03e32d2c805503024b0a38c",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/audit-skills/CRITERIA.md": {
+      "hash": "450911df67f802aa15b70b991bc6fbcd2555cafd872a0c61b314acd5629ca456",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/audit-skills/SCORING.md": {
+      "hash": "46b6b562211e570cc7eea2e8965a32acc8228f11de5a3658ef748bd56394e567",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/audit-skills/SKILL.md": {
+      "hash": "d0a3dfe468003d3cd197eb64f63f12c80d9a8b1de2b97ff35af0d6510f5bae26",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/auto-verify/PATTERNS.md": {
+      "hash": "b8dd6a9362e4b6198b05c98e0840214f6d7acedef787de7d62ba32b5954c1183",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/auto-verify/SKILL.md": {
+      "hash": "cf5859931703409c4ed3864035280fd6c96b40cd08b27a8f62a118d3f175a710",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/browser-verification/SKILL.md": {
+      "hash": "a5efaee2cc46f148ebfceee2b422a88eb8d40e8b5f5ad4130e2a25fbaca0f0ea",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/browser-verification/TOOL_NOTES.md": {
+      "hash": "c52811ff59ee17cbffc3a847b12c2bc7d4eb27dbc33e6bd29d4d2c8c36cb7527",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/code-verification/SKILL.md": {
+      "hash": "2796f7c0a6880514693cc3b734254c381ae874c904904e672cd83f3022a1d27d",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/codex-consult/CODEX_INVOCATION.md": {
+      "hash": "5fb9981989ccb17c74947b46c7b37da5383ea74c41bafe0ea0bc6ef36b26f848",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/codex-consult/PROMPT_TEMPLATE.md": {
+      "hash": "430f8c199b17f699838c9cedeaaec2cb612b89000ff0c8d984cf1ba96272fccb",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/codex-consult/SKILL.md": {
+      "hash": "e9bd9e5d1bdd008b81d0c9e1f60044070a694ddec07d136ffee6c9594dd776a8",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/codex-review/CODEX_INVOCATION.md": {
+      "hash": "f220b708aa86ef542007bc56550772f5aa35a84f0db93b6498fc9e702bb5dee6",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/codex-review/EVALUATION_PRACTICES.md": {
+      "hash": "45a1008cd3d36de8b2107f5c06b14102234a9788e97422b7f549681520d22482",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/codex-review/PROMPT_TEMPLATE.md": {
+      "hash": "28b8486fd1d8f000afea6c7bfd9d26c4f66907529f1c46c1edc525f1db654a40",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/codex-review/SKILL.md": {
+      "hash": "9a1e00063e6f3cadd21bc5e67dabc87927674369d6b99db03ceb8e2ef88ee07c",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/configure-verification/SKILL.md": {
+      "hash": "afc608d8a52cb3012979d6e6d0c8485d3b6bda6552dcbc3776c8a3865a805cdd",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/create-pr/SKILL.md": {
+      "hash": "1ad6b291ddeb846347ec54d9bb4fd9314a89f100dd0986f97afec6f97141d798",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/criteria-audit/SKILL.md": {
+      "hash": "76f8a441db83f92132b22c517081ae666d209bb597422da10aad6f287e49397a",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/feature-plan/PROMPT.md": {
+      "hash": "afd1e557bdd57a870a45a386423007b6c08948a93718594778f061f02005cd75",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/feature-plan/SKILL.md": {
+      "hash": "ed284aa0debccaed8c4c7514622b15cc4da7721fe3e997283bf8b583615b6ea4",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/feature-spec/PROMPT.md": {
+      "hash": "c5e2fcdc322d3ae710a40b4fbf42a98c9d5124bcddbbf96619534680b9d5dffc",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/feature-spec/SKILL.md": {
+      "hash": "7f1bdbf5a81d1bb60c4762ed6e149906b5346ab1a9ab00036dca97663c4a4d52",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/feature-technical-spec/PROMPT.md": {
+      "hash": "9b2b6888174abc7af9e704d9c656d8b31d2580c405d42e904b23e3d01f8cf7a5",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/feature-technical-spec/SKILL.md": {
+      "hash": "5751d7011c56a63d4135766ca02c1033a17ce47bc6b592dc0cedb90cb9ef1ba5",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/fresh-start/SKILL.md": {
+      "hash": "96ebdef9ccdf58204c32c526f9c6121617ee6010abc978e13dc0aa91a1118c69",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/list-todos/QA_WORKFLOW.md": {
+      "hash": "3ddcc82b0927ba3e41231e477f1f81d46ee0f11a86ecc1dc9bc1db821157626d",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/list-todos/SKILL.md": {
+      "hash": "c4e922358aefc85a6d9f736b88688be4ff3a03cafec25a34e8a6d669bf28c82a",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/oauth-login/SKILL.md": {
+      "hash": "759c3991a840801f9019ffabfc4744a8553fa45659f22bf7b201e849aed0b43f",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-checkpoint/AUTO_ADVANCE.md": {
+      "hash": "2f9baa38582cb851ea8190f633366a605c0c6a3a820aaded37e5bcb8efc87e14",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-checkpoint/DOCS_PROTOCOL.md": {
+      "hash": "d54bd7c3d5619c1200141067510326589b3229cdaa2c389615c0728a4db806bf",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-checkpoint/SKILL.md": {
+      "hash": "75a537ce57d25c27c6eced29b4267f505d5724398ad9e6aeabe9a2ff2b52f8e8",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-checkpoint/VERIFICATION.md": {
+      "hash": "9d5d30420b78a0de877a9e2726637f638890c8346c53e57962b2a1b7ccf6b6fd",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-prep/SERVICES.md": {
+      "hash": "22c2da4629c6d1d766c6757f11596eff3963b4daee04f39703877858c26a6815",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-prep/SKILL.md": {
+      "hash": "946fbed813e5d213a507d032da63804ad2a812f8def637a42288ab753fe859a8",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-start/CODEX_MODE.md": {
+      "hash": "278e982c843bd11f20cc69f1ef5c9b9231049d892513cf25a31deef2ffa891a9",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-start/SKILL.md": {
+      "hash": "48fed76acee687ceb7e14e4b5b6731d43ff985c916d44db39cdffad818e34111",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/phase-start/STATE_TRACKING.md": {
+      "hash": "7e5eef7524002f3a9b86baab2fccb2d53cad09991be7e0dc8040e157a09ceb43",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/populate-state/SKILL.md": {
+      "hash": "a507de75231a0c82f7e81173f652cea345a4ea77d51955ed304a71e3f8fe59c9",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/progress/SKILL.md": {
+      "hash": "565b8e12a8b377d6fbbf504363d5cdb0e0fa3f4af40b5dd5cfc06793317ce2f4",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/run-todos/SKILL.md": {
+      "hash": "68474889ad295c44928f5e26bb93237da8b1e031038373068652c0277836871e",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/security-scan/SKILL.md": {
+      "hash": "931fc7d551ee1616d48c49b5e6aa33882a816f829ad573905cf51faf65a86c31",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/spec-verification/SKILL.md": {
+      "hash": "ea293e69c749f92e958a32ceab2c11ce2e299e4f9bd5c4b2ae5f573822f2952c",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/tech-debt-check/SKILL.md": {
+      "hash": "7e6d675ca9e5f191050cd072b608e61486e6af953ff09202882554789ced6719",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/update-docs/CONFIGURATION.md": {
+      "hash": "5c4b87f02055bf9c68c9e56937caa0e51ea77ce4835fe5c20ac0a2f659272174",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/update-docs/MIGRATION.md": {
+      "hash": "bbbd77c2270d19907d046500a7587f53cb76d65f77700dbfef50424ae80d796d",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/update-docs/POST_COMMIT_HOOK.md": {
+      "hash": "a55d94dc988e1ad67ae6f2c7695be91f2e31182828068fe9290b5e081fd688a2",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/update-docs/SKILL.md": {
+      "hash": "c33489ba9477def2145a19b477237bc53f78daf5d867f7dcf9ad614f0a34725a",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/vercel-preview/SKILL.md": {
+      "hash": "c2a20348e023783014399ffb4b16ecf902ba6ad267afd5f5f153fa3bf8d1c10f",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/verify-task/SKILL.md": {
+      "hash": "596f12b5bcc80607fbae506687a5adb97d129897b92f2f1b9f061f3cf9f87c33",
+      "synced_at": "2026-02-03T02:04:48Z"
+    },
+    ".claude/skills/vision-audit/SKILL.md": {
+      "hash": "438cd249239d4c06495b856e89505439abefe1e3d451932f9b06973b7f53e3ce",
+      "synced_at": "2026-02-03T02:04:48Z"
+    }
+  },
+  "last_sync": "2026-02-03T02:04:48Z",
+  "schema_version": "1.0",
+  "toolkit_commit": "1af7261eeb4852c61b70d28e1726b788f6fdf1a9",
+  "toolkit_commit_date": "2026-02-02T00:55:44-08:00",
+  "toolkit_location": "/Users/coding/Projects/ai_coding_project_base"
 }

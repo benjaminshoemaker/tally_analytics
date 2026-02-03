@@ -129,6 +129,11 @@ If a fix command is documented, offer it as the primary option.
 
 ## Step 7: Apply Fixes
 
+**Before applying any fix, show a preview:**
+- Display the proposed change (file, line, before/after)
+- Ask for confirmation: "Apply this fix?" (Yes/Skip)
+- Only modify files after explicit user confirmation
+
 Apply fixes based on user choices:
 - Use project-documented fix commands when available
 - Otherwise, propose manual code changes and confirm before editing

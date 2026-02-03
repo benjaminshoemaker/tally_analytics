@@ -99,6 +99,16 @@ vercel ls --json -m gitBranch="$BRANCH" --status READY 2>/dev/null | head -1
 - `--status READY` filters to only completed deployments
 - Returns most recent matching deployment
 
+### Validate Response Before Parsing
+
+```bash
+RESPONSE=$(vercel ls --json -m gitBranch="$BRANCH" --status READY 2>/dev/null)
+if ! echo "$RESPONSE" | jq empty 2>/dev/null; then
+  echo "ERROR: vercel ls returned invalid JSON"
+  # Return error status, don't attempt to parse
+fi
+```
+
 ### Parse Response
 
 ```bash
@@ -124,6 +134,15 @@ If `waitForDeployment` is enabled and no ready deployment exists:
 ```bash
 # Get the latest deployment (any status) for the branch
 LATEST=$(vercel ls --json -m gitBranch="$BRANCH" 2>/dev/null | jq -r '.[0].url // empty')
+
+if [ -z "$LATEST" ]; then
+  echo "No deployments found for branch: $BRANCH"
+  echo "Possible causes:"
+  echo "  - Branch has not been pushed to remote"
+  echo "  - Vercel project is not linked (run: vercel link)"
+  echo "  - Branch name doesn't match Vercel's git integration"
+  # Return empty result, let caller decide how to handle
+fi
 
 if [ -n "$LATEST" ]; then
   echo "Waiting for deployment to be ready: $LATEST"

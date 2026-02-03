@@ -1,0 +1,77 @@
+{
+  "baseUrl": "http://localhost:3002",
+  "notes": "Requests sent to https://events.productname.com/v1/track failed due to DNS (ERR_NAME_NOT_RESOLVED), but request payloads are captured below.",
+  "requests": [
+    {
+      "reqid": 120,
+      "url": "https://events.productname.com/v1/track",
+      "status": "failed - net::ERR_NAME_NOT_RESOLVED",
+      "body": {
+        "events": [
+          {
+            "project_id": "proj_1rPCHWI1-OeoKP_",
+            "session_id": "a24fd602-ee40-44ac-b748-b4e26ef6ebf2",
+            "event_type": "session_start",
+            "timestamp": "2026-01-26T06:58:13.494Z",
+            "url": "http://localhost:3002/?utm_source=test&utm_medium=cpc&utm_campaign=local&utm_term=demo&utm_content=cta",
+            "referrer": null,
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+            "visitor_id": "57b88457-e80d-498a-949a-7ef4baaf1c14",
+            "is_returning": 1,
+            "utm_source": "test",
+            "utm_medium": "cpc",
+            "utm_campaign": "local",
+            "utm_term": "demo",
+            "utm_content": "cta"
+          }
+        ]
+      }
+    },
+    {
+      "reqid": 121,
+      "url": "https://events.productname.com/v1/track",
+      "status": "failed - net::ERR_NAME_NOT_RESOLVED",
+      "body": {
+        "events": [
+          {
+            "project_id": "proj_1rPCHWI1-OeoKP_",
+            "session_id": "a24fd602-ee40-44ac-b748-b4e26ef6ebf2",
+            "event_type": "page_view",
+            "timestamp": "2026-01-26T06:58:13.496Z",
+            "url": "http://localhost:3002/?utm_source=test&utm_medium=cpc&utm_campaign=local&utm_term=demo&utm_content=cta",
+            "path": "/?utm_source=test&utm_medium=cpc&utm_campaign=local&utm_term=demo&utm_content=cta",
+            "referrer": null,
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+            "screen_width": 1122,
+            "engagement_time_ms": 2,
+            "scroll_depth": 100,
+            "cta_clicks": "[]"
+          }
+        ]
+      }
+    },
+    {
+      "reqid": 57,
+      "url": "https://events.productname.com/v1/track",
+      "status": "failed - net::ERR_NAME_NOT_RESOLVED",
+      "body": {
+        "events": [
+          {
+            "project_id": "proj_1rPCHWI1-OeoKP_",
+            "session_id": "a24fd602-ee40-44ac-b748-b4e26ef6ebf2",
+            "event_type": "page_view",
+            "timestamp": "2026-01-26T06:56:38.991Z",
+            "url": "http://localhost:3002/about",
+            "path": "/about",
+            "referrer": "http://localhost:3002/",
+            "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+            "screen_width": 1122,
+            "engagement_time_ms": 1,
+            "scroll_depth": 100,
+            "cta_clicks": "[]"
+          }
+        ]
+      }
+    }
+  ]
+}

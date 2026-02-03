@@ -167,9 +167,19 @@ server.listen(3847, () => {
 });
 EOF
 
+# Start callback server as BACKGROUND PROCESS
 node /tmp/oauth-callback-server.js &
 CALLBACK_PID=$!
+echo "Callback server started (PID: $CALLBACK_PID, background process)"
+
+# Verify the server started successfully
+sleep 1
+curl -sf http://localhost:3847/ -o /dev/null 2>&1 || echo "WARNING: Callback server may not have started"
 ```
+
+**Verify server is listening** before proceeding. If the server failed to start
+(port in use, Node.js error), check the error output and try an alternate port
+(3848, 3849) before continuing.
 
 ### Step 6: Build Authorization URL
 

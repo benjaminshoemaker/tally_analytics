@@ -67,6 +67,8 @@ Human verification required:
 Next steps:
 1. Complete the verification items above
 2. Run /phase-prep {N+1} manually when ready
+
+Ready to open a PR? Run: /create-pr
 ```
 
 ## Auto-Advance Session Tracking
@@ -112,6 +114,8 @@ Requires attention:
 - [ ] Confirm email notifications received
 
 Next: Complete manual items, then run /phase-checkpoint 2 again
+
+Ready to open a PR? Run: /create-pr
 ```
 
 Delete `.claude/auto-advance-session.json` after reporting (or on fresh `/phase-start 1` with no prior session).
