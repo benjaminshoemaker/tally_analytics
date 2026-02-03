@@ -1,6 +1,6 @@
 ---
 name: oauth-login
-description: Complete OAuth login flow and store tokens for verification
+description: Complete OAuth login flow and store tokens for verification. Use when browser verification requires authenticated sessions.
 argument-hint: <provider>
 allowed-tools: Bash, Read, Edit, Write, AskUserQuestion, WebFetch, mcp__playwright__*
 ---
@@ -44,6 +44,24 @@ consent page, waits for callback, and stores tokens in the project's `.env` file
    Playwright MCP or similar browser tool must be available for automated flow.
 
 ## Workflow
+
+Copy this checklist and track progress:
+
+```
+OAuth Login Progress:
+- [ ] Step 1: Check provider argument
+- [ ] Step 2: Check for existing credentials
+- [ ] Step 3: Collect OAuth app credentials
+- [ ] Step 4: Generate state parameter
+- [ ] Step 5: Build authorization URL
+- [ ] Step 6: Start callback server
+- [ ] Step 7: Open browser to auth URL
+- [ ] Step 8: Wait for callback
+- [ ] Step 9: Exchange code for tokens
+- [ ] Step 10: Store tokens in .env
+- [ ] Step 11: Verify token validity
+- [ ] Step 12: Report success
+```
 
 ### Step 1: Check Provider Argument
 
@@ -109,7 +127,9 @@ OAUTH_{PROVIDER}_CLIENT_SECRET=<client_secret>
 
 ### Step 5: Start Local Callback Server
 
-Create a temporary callback server to receive the OAuth code:
+Create a temporary callback server to receive the OAuth code.
+
+**EXECUTE this entire block** via the Bash tool (the JavaScript is written to a file, then executed):
 
 ```bash
 # Create callback server script
@@ -332,6 +352,33 @@ curl -s -X POST https://oauth2.googleapis.com/token \
 | User cancels consent | Show error, suggest retry |
 | Token exchange fails | Show API error, suggest checking credentials |
 | Browser MCP unavailable | Provide manual URL, ask user to paste code |
+
+## When Login Cannot Complete
+
+**If user is still in browser after 120s timeout:**
+- Do NOT close the browser or kill the callback server
+- Report: "OAuth callback timeout reached (120s)"
+- Ask user:
+  - "Extend timeout by 60s" — Continue waiting
+  - "Paste authorization code manually" — Fallback to manual entry
+  - "Cancel and retry later" — Clean up and exit
+
+**If browser MCP is completely unavailable:**
+- Display the full authorization URL for manual copy
+- Provide instructions: "Open this URL in your browser, then paste the authorization code when prompted"
+- Wait for manual code entry
+- Proceed with token exchange using manually provided code
+
+**If OAuth app credentials are invalid:**
+- Report the specific error from the provider (invalid_client, unauthorized, etc.)
+- Suggest: "Verify client ID and secret match your OAuth app settings"
+- Provide link to OAuth app settings page for the provider
+- Exit cleanly without partial state
+
+**If callback server cannot start on any port:**
+- Report: "Unable to start callback server on ports 3847-3849"
+- Suggest: "Check for processes using these ports: lsof -i :3847"
+- Exit cleanly
 
 ## Security Notes
 

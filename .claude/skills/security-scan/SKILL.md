@@ -18,14 +18,17 @@ Scan the codebase for security issues across three categories:
 
 ## Workflow Overview
 
+Copy this checklist and track progress:
+
 ```
-1. Discover security tooling from project docs
-2. Run dependency audit (if configured)
-3. Run secrets detection
-4. Run static analysis (if configured)
-5. Aggregate and deduplicate findings
-6. Present issues with severity and fix suggestions
-7. Offer to apply fixes where possible
+Security Scan Progress:
+- [ ] Step 1: Discover security tooling from project docs
+- [ ] Step 2: Run dependency audit
+- [ ] Step 3: Run secrets detection
+- [ ] Step 4: Run static analysis
+- [ ] Step 5: Aggregate and deduplicate findings
+- [ ] Step 6: Present issues with severity
+- [ ] Step 7: Offer to apply fixes
 ```
 
 ## Step 1: Discover Project Security Tooling
@@ -163,6 +166,40 @@ Show full report with all findings and options.
 
 If required tools are missing, instruct the user to install them based on the
 project's documentation or security policy.
+
+## Error Handling
+
+**If no project documentation is found:**
+- Report: "No security tooling documentation found"
+- Ask the user for the correct commands
+- Proceed with default secrets detection (always available)
+
+**If a security tool returns a non-zero exit code:**
+- If output indicates findings (common for `npm audit`, `pip-audit`, etc.), treat as SUCCESS_WITH_FINDINGS
+- Parse and report the findings; do NOT mark the check as FAILED
+- If output indicates an execution error (crash, invalid args, config error), treat as FAILED
+- Always continue with other checks and include the outcome in the final report
+
+**If tool is not installed:**
+- Report: "{tool} not found"
+- Provide installation instructions if known
+- Mark check as SKIPPED with reason
+- Continue with available tools
+
+**If secrets scan finds too many results (>100):**
+- Truncate results with: "Showing first 100 of {N} findings"
+- Suggest the user may have sensitive data that should be gitignored
+- Recommend running on specific directories
+
+**If project has no package manager (dependency scan N/A):**
+- Mark dependency scan as NOT APPLICABLE
+- Note: "No package.json, requirements.txt, go.mod, or similar found"
+- Proceed with other checks
+
+**If scan is interrupted:**
+- Report partial results obtained
+- Mark interrupted checks clearly
+- Suggest re-running the scan
 
 ## Example Invocations
 

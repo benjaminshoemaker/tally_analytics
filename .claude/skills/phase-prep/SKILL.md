@@ -1,6 +1,6 @@
 ---
 name: phase-prep
-description: Check prerequisites before starting a phase
+description: Check prerequisites before starting a phase. Use before /phase-start to verify dependencies are met and context is loaded.
 argument-hint: [phase-number]
 allowed-tools: Bash, Read, Glob, Grep, AskUserQuestion, WebFetch, WebSearch
 ---
@@ -33,21 +33,7 @@ Fetch documentation when ANY of these apply:
 
 ### Documentation URLs by Service
 
-| Service | Primary Doc URL |
-|---------|----------------|
-| Supabase | https://supabase.com/docs/guides/getting-started |
-| Firebase | https://firebase.google.com/docs/web/setup |
-| Stripe | https://stripe.com/docs/development/quickstart |
-| Auth0 | https://auth0.com/docs/quickstart |
-| Vercel | https://vercel.com/docs/getting-started |
-| Netlify | https://docs.netlify.com/get-started/ |
-| Clerk | https://clerk.com/docs/quickstarts |
-| Resend | https://resend.com/docs/introduction |
-| Neon | https://neon.tech/docs/get-started-with-neon |
-| PlanetScale | https://planetscale.com/docs |
-| Turso | https://docs.turso.tech/quickstart |
-
-For services not listed, use WebSearch: `{service name} official documentation quickstart`
+See [SERVICES.md](SERVICES.md) for the full list of service documentation URLs and setup patterns.
 
 ### Integration with Setup Instructions
 
@@ -94,18 +80,8 @@ Before starting, confirm the required files exist:
    - Note any external services that must be configured
 
    **Auto-Verify Generation:**
-   If a setup item lacks a `Verify:` line, infer one based on item type:
-
-   | Item Pattern | Auto-Generated Verify Command |
-   |--------------|-------------------------------|
-   | Environment variable `VAR_NAME` | `test -n "$VAR_NAME" && echo "VAR_NAME is set"` |
-   | Service at `localhost:PORT` | `curl -sf http://localhost:PORT/health || curl -sf http://localhost:PORT` |
-   | Service at URL | `curl -sf {URL}/health || curl -sf {URL}` |
-   | File exists `path/to/file` | `test -f path/to/file && echo "File exists"` |
-   | Directory exists `path/to/dir` | `test -d path/to/dir && echo "Directory exists"` |
-   | Command available `cmd` | `command -v cmd >/dev/null && echo "cmd available"` |
-   | Database connection | `{db-cli} -c "SELECT 1" || echo "DB connection failed"` |
-
+   If a setup item lacks a `Verify:` line, infer one based on item type.
+   See [SERVICES.md](SERVICES.md) for the auto-verify command templates.
    After auto-generating, add the `Verify:` line to EXECUTION_PLAN.md for future runs.
 
 2. **Dependencies** — Verify prior phases are complete:
@@ -209,12 +185,7 @@ Run `/phase-prep $1` again to confirm all items complete.
 
 ### Common Service Templates
 
-For frequently used services, provide detailed guides:
-- **Supabase**: Project creation, API keys, database setup
-- **Firebase**: Project creation, config, auth setup
-- **Stripe**: Test account, API keys, webhook setup
-- **Auth0**: Tenant creation, application setup
-- **Vercel/Netlify**: Project linking, environment variables
+See [SERVICES.md](SERVICES.md) for setup patterns for: Supabase, Firebase, Stripe, Auth0, Vercel/Netlify, and other common services.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: phase-start
-description: Execute all tasks in a phase autonomously
+description: Execute all tasks in a phase autonomously. Use after /phase-prep confirms prerequisites are met.
 argument-hint: [phase-number]
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task, WebFetch, WebSearch
 ---

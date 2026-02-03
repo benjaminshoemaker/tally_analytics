@@ -1,6 +1,6 @@
 ---
 name: browser-verification
-description: Verify browser-based acceptance criteria using ExecuteAutomation Playwright MCP with multi-tool fallback chain.
+description: Verify browser-based acceptance criteria using ExecuteAutomation Playwright MCP with multi-tool fallback chain. Invoked by verify-task and phase-checkpoint for BROWSER:* criteria.
 ---
 
 # Browser Verification Skill
@@ -19,16 +19,19 @@ For each criterion, use metadata from `Verify:`:
 
 ## Workflow Overview
 
+Copy this checklist and track progress:
+
 ```
-1. Load config (dev server + auth + browser + deployment)
-1.5. Resolve base URL (preview or localhost)
-1.6. HTTP-first evaluation (skip browser if possible)
-2. Select browser tool (with fallback chain)
-3. Authenticate (if required)
-4. Navigate and validate
-5. Capture evidence
-6. Handle errors and recover
-7. Report results
+Browser Verification Progress:
+- [ ] Step 1: Load configuration
+- [ ] Step 1.5: Resolve base URL (preview or localhost)
+- [ ] Step 1.6: HTTP-first evaluation (skip browser if possible)
+- [ ] Step 2: Select browser tool (with fallback chain)
+- [ ] Step 3: Authenticate (if required)
+- [ ] Step 4: Navigate and validate
+- [ ] Step 5: Capture evidence
+- [ ] Step 6: Handle errors and recover
+- [ ] Step 7: Report results
 ```
 
 ## Step 1: Load Configuration
@@ -292,7 +295,7 @@ For each browser criterion:
 
 ## Step 5: Evidence Capture
 
-Capture evidence appropriate to the criterion type:
+Capture evidence appropriate to the criterion type using the selected browser MCP tool (not Bash commands):
 
 | Type | Evidence |
 |------|----------|
@@ -386,47 +389,9 @@ Suggested Fix: [If FAIL]
 
 ## Tool-Specific Notes
 
-### ExecuteAutomation Playwright MCP (Recommended Primary)
-- Package: `@executeautomation/playwright-mcp-server`
-- Most stable option, actively maintained (312+ commits)
-- 143 device presets for responsive testing
-- Cross-browser support (Chrome, Firefox, Safari)
-- Install: Add to `.claude/settings.json` mcpServers:
-  ```json
-  {
-    "mcpServers": {
-      "playwright": {
-        "command": "npx",
-        "args": ["-y", "@executeautomation/playwright-mcp-server"]
-      }
-    }
-  }
-  ```
-
-### Browser MCP (Best for Auth-Heavy Apps)
-- Source: [browsermcp.io](https://browsermcp.io/)
-- Uses your existing browser profile (stays logged in to services)
-- Local execution (no network latency, better privacy)
-- Bot-detection resistant (uses real browser fingerprint)
-- Requires: Browser MCP Chrome extension installed
-- Best for: Apps where maintaining login sessions matters
-
-### Microsoft Playwright MCP (Use Pinned Version)
-- Package: `@anthropic-ai/mcp-server-playwright` (recommended)
-- Official implementation with accessibility tree support
-- **AVOID** `@playwright/mcp@latest` — includes unstable betas causing "undefined" errors
-- If you must use Microsoft's version, pin to a specific stable version
-
-### Chrome DevTools MCP (Basic Fallback)
-- Often pre-installed with Claude Code
-- Good for debugging and simple automation
-- Use `mcp__chrome-devtools__*` tools
-- **Limitations:** Not designed for complex automation, less stable for multi-step workflows
-- Best for: Quick screenshots, simple navigation, debugging
-
-### Browserbase + Stagehand (Cloud Option)
-- Package: `@browserbasehq/mcp-server-browserbase`
-- Cloud-hosted browsers (no local browser needed)
-- Stealth mode, proxy support, concurrent sessions
-- Requires: Browserbase API key (external service)
-- Best for: CI/CD pipelines, high-volume testing, anti-detection needs
+See [TOOL_NOTES.md](TOOL_NOTES.md) for detailed information on each browser MCP tool option:
+- ExecuteAutomation Playwright MCP (recommended primary)
+- Browser MCP (best for auth-heavy apps)
+- Microsoft Playwright MCP (use pinned version)
+- Chrome DevTools MCP (basic fallback)
+- Browserbase + Stagehand (cloud option)

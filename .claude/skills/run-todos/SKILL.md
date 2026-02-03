@@ -1,12 +1,27 @@
 ---
 name: run-todos
-description: Implement [ready]-tagged TODO items with commits
+description: Implement [ready]-tagged TODO items with commits. Use after /list-todos has clarified requirements and marked items as ready.
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, Task
 ---
 
 # Run TODOs Skill
 
 Implement TODO items that have been marked as `[ready]` in TODOS.md.
+
+## Workflow
+
+Copy this checklist and track progress:
+
+```
+Run TODOs Progress:
+- [ ] Step 1: Directory guard check
+- [ ] Step 2: Find [ready] items
+- [ ] Step 3: User selection
+- [ ] Step 4: Git workflow setup
+- [ ] Step 5: Implementation loop (per item)
+- [ ] Step 6: Update TODOS.md with completion
+- [ ] Step 7: Generate summary report
+```
 
 ## Directory Guard
 

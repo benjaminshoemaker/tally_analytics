@@ -1,583 +1,230 @@
 ---
 name: phase-checkpoint
-description: Run checkpoint criteria after completing a phase
+description: Run checkpoint criteria after completing a phase. Use after /phase-start completes all tasks to verify quality gates before proceeding.
 argument-hint: [phase-number]
 allowed-tools: Bash, Read, Edit, Glob, Grep, AskUserQuestion, WebFetch, WebSearch
 ---
 
-Phase $1 is complete. Read EXECUTION_PLAN.md and run the checkpoint criteria.
+Phase $1 is complete. Run the checkpoint criteria from EXECUTION_PLAN.md.
 
-## External Tool Documentation Protocol
+## Workflow
 
-**CRITICAL:** Before providing verification instructions for external integrations, you MUST read the latest official documentation first.
+Copy this checklist and track progress:
 
-### When to Fetch Docs
+```
+Phase Checkpoint Progress:
+- [ ] Step 1: Context detection
+- [ ] Step 2: Tool availability & config
+- [ ] Step 3: Local verification (automated, optional, manual)
+- [ ] Step 4: Cross-model review (Codex)
+- [ ] Step 5: Production verification
+- [ ] Step 6: State update
+- [ ] Step 7: Generate report
+- [ ] Step 8: Auto-advance check
+```
 
-Fetch documentation when ANY of these apply:
-- Checkpoint criteria involve verifying external service integration
-- Manual verification steps reference third-party dashboards or APIs
-- You need to guide users through external service verification (webhooks, API responses, etc.)
-
-### How to Fetch Docs
-
-1. **Identify external services** from checkpoint criteria
-2. **Fetch relevant docs** using WebFetch or WebSearch:
-   - Focus on testing/verification sections
-   - Look for troubleshooting guides for common issues
-3. **Cache per session** — Don't re-fetch docs already fetched in this session
-4. **Handle failures gracefully:**
-   - Retry with exponential backoff (2-3 attempts)
-   - If all retries fail: warn user and proceed with best available info
-
-### Documentation URLs by Service
-
-| Service | Verification/Testing Doc |
-|---------|-------------------------|
-| Supabase | https://supabase.com/docs/guides/getting-started |
-| Firebase | https://firebase.google.com/docs/web/setup |
-| Stripe | https://stripe.com/docs/testing |
-| Auth0 | https://auth0.com/docs/troubleshoot |
-| Vercel | https://vercel.com/docs/deployments/overview |
-| Resend | https://resend.com/docs/dashboard/emails/logs |
-
-For services not listed, use WebSearch: `{service name} testing verification documentation`
-
-### Integration with Verification
-
-When guiding manual verification of external integrations:
-1. Fetch docs FIRST to understand current testing procedures
-2. Provide accurate dashboard navigation (UI may have changed)
-3. Include expected responses/behaviors from official docs
-4. Reference troubleshooting steps for common failures
-
-## Context Detection
+## Step 1: Context Detection
 
 Determine working context:
 
-1. If current working directory matches pattern `*/features/*`:
-   - PROJECT_ROOT = parent of parent of CWD (e.g., `/project/features/foo` → `/project`)
+1. If CWD matches `*/features/*`:
+   - PROJECT_ROOT = parent of parent of CWD
    - MODE = "feature"
-
 2. Otherwise:
    - PROJECT_ROOT = current working directory
    - MODE = "greenfield"
 
-## Directory Guard (Wrong Directory Check)
+**Directory Guard:** Confirm `EXECUTION_PLAN.md` exists. If not, STOP and tell user to `cd` into their project directory.
 
-Before starting, confirm `EXECUTION_PLAN.md` exists in the current working directory.
+**Context Check:** If context is below 40% remaining, run `/compact` first.
 
-- If it does not exist, **STOP** and tell the user to `cd` into their project/feature directory (the one containing `EXECUTION_PLAN.md`) and re-run `/phase-checkpoint $1`.
+## Step 2: Tool Availability & Config
 
-## Context Check
-
-**Before starting:** If context is below 40% remaining, run `/compact` first. This ensures the full command instructions remain in context throughout execution. Compaction mid-command loses procedural instructions.
-
-## Tool Availability Check
-
-Before running checks, detect which optional tools are available by attempting a harmless call:
+Check which optional tools are available:
 
 | Tool | Check Method | Fallback |
 |------|--------------|----------|
-| ExecuteAutomation Playwright | Check for `mcp__playwright__*` or `mcp__executeautomation__*` | Next in chain |
-| Browser MCP | Check for `mcp__browsermcp__*` tools | Next in chain |
-| Microsoft Playwright MCP | Check for `mcp__playwright__*` tools | Next in chain |
-| Chrome DevTools MCP | Call `mcp__chrome-devtools__list_pages` | Manual verification |
-| code-simplifier | Check if agent type available | Skip code simplification |
-| Trigger.dev MCP | `mcp__trigger__list_projects` | Skip Trigger.dev checks |
+| ExecuteAutomation Playwright | Check for `mcp__playwright__*` | Next in chain |
+| Browser MCP | Check for `mcp__browsermcp__*` | Next in chain |
+| Chrome DevTools MCP | `mcp__chrome-devtools__list_pages` | Manual verification |
+| code-simplifier | Check if agent type available | Skip |
+| Codex CLI | `codex --version` | Skip cross-model review |
 
-**Browser tool fallback chain:** ExecuteAutomation Playwright → Browser MCP → Microsoft Playwright → Chrome DevTools → Manual
+**Browser fallback chain:** ExecuteAutomation → Browser MCP → Microsoft Playwright → Chrome DevTools → Manual
 
-Read `.claude/verification-config.json` from PROJECT_ROOT. Use it to determine
-commands for tests, lint, typecheck, build, coverage, and dev server.
+Read `.claude/verification-config.json` from PROJECT_ROOT. If missing or incomplete, run `/configure-verification` first.
 
-If the config is missing or required commands are empty:
-- Run `/configure-verification`
-- Do not proceed with automated checks until commands are configured
+Read `.claude/settings.local.json` for cross-model review config:
+```json
+{
+  "multiModelVerify": {
+    "enabled": true,
+    "triggerOn": ["phase-checkpoint"]
+  }
+}
+```
 
-## Local Verification (Must Pass First)
+If `multiModelVerify` is not configured, default to `enabled: true` when Codex CLI is available.
 
-**IMPORTANT**: All local verification must pass before proceeding to production verification.
-If any local check fails, stop and report — do not run production checks.
+## Step 3: Local Verification (Must Pass First)
 
-### Automated Local Checks
+**IMPORTANT**: All local verification must pass before production verification.
 
-Run these commands and report results:
+See [VERIFICATION.md](VERIFICATION.md) for detailed check procedures.
 
-1. **Tests**
-   ```
-   {commands.test from verification-config}
-   ```
-   (if empty, block and ask to configure)
+### Automated Checks
 
-2. **Type Checking**
-   ```
-   {commands.typecheck from verification-config}
-   ```
-   (if empty, mark as not applicable or configure)
+Run these using commands from verification-config:
+1. Tests (`commands.test`)
+2. Type Checking (`commands.typecheck`)
+3. Linting (`commands.lint`)
+4. Build (`commands.build`)
+5. Dev Server (`devServer.command`)
+6. Security Scan
+7. Code Quality Metrics
 
-3. **Linting**
-   ```
-   {commands.lint from verification-config}
-   ```
-   (if empty, mark as not applicable or configure)
+### Optional Checks
 
-4. **Build** (if applicable)
-   ```
-   {commands.build from verification-config}
-   ```
-   (if empty and project has build step, ask to configure)
+- Code Simplification (if code-simplifier available)
+- Browser Verification (if browser tools available)
+- Technical Debt Check (if skill exists)
 
-5. **Dev Server Starts**
-   ```
-   {devServer.command from verification-config}
-   ```
-   Verify it starts without errors and is accessible at `{devServer.url}`.
+### Manual Verification
 
-6. **Security Scan**
+1. Extract manual items from "Phase $1 Checkpoint" in EXECUTION_PLAN.md
+2. Attempt automation using auto-verify skill
+3. Generate detailed verification guide for remaining items
+4. Ask human for batch confirmation
+5. Update checkboxes in EXECUTION_PLAN.md
 
-   Run security checks:
-   - Use the project's configured security tooling (if documented)
-   - Run secrets detection (pattern-based)
-   - Run static analysis via documented tools or ask for a command
+For external integrations, follow [DOCS_PROTOCOL.md](DOCS_PROTOCOL.md) to fetch latest documentation.
 
-   For CRITICAL or HIGH issues:
-   - Present each issue with resolution options
-   - Apply fixes based on user choices
-   - Re-scan to confirm resolution
+## Step 4: Cross-Model Review (Codex)
 
-   Security scan blocks checkpoint if CRITICAL or HIGH issues remain unresolved.
+**Purpose:** Get a second opinion from a different AI model to catch blind spots.
 
-7. **Code Quality Metrics**
+### When This Step Runs
 
-   Collect and report these metrics for the phase:
+This step runs if ALL of these conditions are true:
+- Codex CLI is available (`codex --version` succeeds)
+- `multiModelVerify.enabled` is true (or not configured, defaulting to true)
+- `"phase-checkpoint"` is in `multiModelVerify.triggerOn` (or not configured)
 
-   ```
-   CODE QUALITY METRICS
-   --------------------
-   Test Coverage: {X}% (target: 80%)
-   Files changed in phase: {N}
-   Lines added: {N}
-   Lines removed: {N}
-   New dependencies added: {list or "None"}
-   ```
+### Execution
 
-   To get coverage:
-   - Use `commands.coverage` from verification-config if present
-   - If empty, mark coverage as not applicable or ask to configure
-
-   Flag if coverage dropped compared to before the phase (if a baseline exists).
-
-### Optional Local Checks
-
-These checks run only if the required tools are available (detected above).
-
-8. **Code Simplification** (requires: code-simplifier plugin)
-
-   If available, run code-simplifier on files changed in this phase:
+1. **Gather phase context:**
    ```bash
-   git diff --name-only HEAD~{commits-in-phase}
+   # Get branch diff
+   git diff main...HEAD --stat
+
+   # Get commit list
+   git log --oneline main..HEAD
+
+   # Identify technologies from changed files
    ```
 
-   Focus: reduce complexity, improve naming, eliminate redundancy. Preserve all functionality.
+2. **Identify research topics** from the phase:
+   - External services integrated (Supabase, Stripe, etc.)
+   - Frameworks/libraries used
+   - Security-sensitive areas
 
-9. **Browser Verification** (requires browser MCP tools)
-
-   First, check if phase includes UI work by scanning for `BROWSER:*` criteria.
-
-   **If browser criteria exist:**
-
-   a. **Resolve target URL** (deployment config check):
-      - Read `deployment.enabled` from verification-config.json
-      - If enabled: Invoke vercel-preview skill to get preview URL
-      - If preview URL found: TARGET = preview URL
-      - If not found and `fallbackToLocal`: TARGET = localhost (with warning)
-      - If not found and NO fallback: BLOCK verification
-      - If deployment not enabled: TARGET = localhost (devServer.url)
-
-   b. Check tool availability (fallback chain):
-      - ExecuteAutomation Playwright → Browser MCP → Microsoft Playwright → Chrome DevTools
-
-   c. **If at least one tool available:**
-      - Use the browser-verification skill with each criterion's `Verify:` metadata
-      - Take snapshots for verification
-      - Test against TARGET URL
-
-   **Display target in output:**
+3. **Invoke multi-model-verify** with:
    ```
-   Browser Verification:
-   - Target: Vercel Preview (https://my-app-xyz.vercel.app)
-   [Or]
-   - Target: Local Dev Server (http://localhost:3000)
-   - Target: Local Dev Server (fallback - no preview deployment found)
+   artifact_type: code
+   artifact_path: (phase branch diff)
+   research_topics: (extracted from phase context)
+   verification_focus: correctness, best practices, security
    ```
 
-   c. **If NO browser tools available (SOFT BLOCK):**
-      - Display warning:
-        ```
-        ⚠️  BROWSER VERIFICATION BLOCKED
+4. **Process results:**
 
-        This phase has {N} browser-based acceptance criteria but no browser
-        MCP tools are available.
+   | Codex Status | Checkpoint Action |
+   |--------------|-------------------|
+   | `pass` | Continue, note in report |
+   | `pass_with_notes` | Show recommendations, continue |
+   | `needs_attention` | Show critical issues, ask user how to proceed |
+   | `skipped` | Note unavailable, continue |
+   | `error` | Note error, continue |
 
-        Criteria requiring browser verification:
-        - {list each BROWSER:* criterion}
+5. **For `needs_attention` status:**
+   - Display critical issues from Codex
+   - Ask user: "Address Codex findings before proceeding?"
+     - Yes → List issues to fix, pause checkpoint
+     - No → Continue, note as accepted risk
+   - Critical issues do NOT auto-block (user decides)
 
-        Options:
-        1. Continue anyway (browser criteria become manual verification)
-        2. Stop and configure browser tools first
-
-        To enable automated browser verification, install one of:
-        - ExecuteAutomation Playwright: Add to .mcp.json
-        - Browser MCP: Install extension from browsermcp.io
-        - Chrome DevTools MCP: Often pre-installed
-        ```
-      - Use AskUserQuestion to let user choose:
-        - "Continue with manual verification" → Add browser checks to Human Required section
-        - "Stop to configure tools" → Halt checkpoint, provide setup instructions
-
-10. **Technical Debt Check** (optional)
-
-    If `.claude/skills/tech-debt-check/SKILL.md` exists:
-    - Run duplication analysis
-    - Run complexity analysis
-    - Check file sizes
-    - Detect AI code smells
-
-    Report findings with severity levels. Informational only (does not block).
-
-### Manual Local Verification
-
-From the "Phase $1 Checkpoint" section in EXECUTION_PLAN.md, extract LOCAL items
-marked for manual verification.
-
-**Before listing for human review, attempt automation using the auto-verify skill:**
-
-For each manual item:
-1. Invoke auto-verify skill with item text and available tools
-2. Record attempt result (PASS, FAIL, or MANUAL)
-
-**Categorize and report results:**
+### Output
 
 ```
-Automated Successfully:
-- [x] "{item}" — PASS ({method}, {duration})
+Cross-Model Review (Codex):
+- Status: PASS | PASS WITH NOTES | NEEDS ATTENTION | SKIPPED
+- Critical Issues: {N}
+- Recommendations: {N}
+{If issues}
+- Top Issue: {description}
+{/If}
 ```
 
-For items requiring manual verification ("Automation Failed" or "Truly Manual"), generate a **comprehensive verification guide** as described below.
+### Skip Conditions
 
-### Manual Verification Guide Format
+Skip this step (mark as SKIPPED) if:
+- Running inside Codex CLI (`$CODEX_SANDBOX` is set) — Codex reviewing Codex has no cross-model benefit
+- Codex CLI not installed
+- `multiModelVerify.enabled` is explicitly false
+- Phase has fewer than 3 tasks (trivial phase)
+- `--skip-codex` flag passed to checkpoint
 
-When ANY items require manual verification, produce a detailed, standalone guide that anyone could follow without prior project knowledge.
-
-**CRITICAL:** Do not use placeholder text like "{First action to take}". Generate specific, actionable instructions based on the actual criterion and project context.
-
-#### Guide Structure
-
-For each manual item, generate ALL of the following sections.
-
-**CRITICAL: URL Resolution for Manual Guides**
-
-Before generating instructions, resolve the BASE_URL:
-
-1. Read `deployment.enabled` from verification-config.json
-2. If deployment enabled:
-   - Invoke vercel-preview skill to get preview URL
-   - If found: BASE_URL = preview URL
-   - If not found: BASE_URL = devServer.url (note fallback)
-3. If deployment not enabled:
-   - BASE_URL = devServer.url
-
-**All URLs in the guide MUST use BASE_URL** — never hardcode localhost when
-deployment is enabled with a preview URL available.
-
-```
-═══════════════════════════════════════════════════════════════════════════════
-MANUAL VERIFICATION: {criterion title}
-═══════════════════════════════════════════════════════════════════════════════
-
-## What We're Verifying
-{1-2 sentence plain-English explanation of what this criterion tests and why it matters}
-
-## Prerequisites
-
-{If using Vercel preview:}
-- [ ] Vercel deployment ready at {BASE_URL}
-- [ ] Browser open (Chrome/Firefox recommended)
-- [ ] {Any test accounts, API keys, or data needed}
-- [ ] {Any specific state the app must be in}
-
-{If using localhost:}
-- [ ] Dev server running at {BASE_URL} (start with: `{command}`)
-- [ ] Browser open (Chrome/Firefox recommended)
-- [ ] {Any test accounts, API keys, or data needed}
-- [ ] {Any specific state the app must be in}
-
-## Step-by-Step Verification
-
-### Step 1: {Action title}
-1. Open your browser and navigate to: `{BASE_URL}{route}`
-2. You should see: {description of expected initial state}
-   - If you don't see this: {troubleshooting hint}
-
-### Step 2: {Action title}
-1. {Exact action to take, e.g., "Click the 'Sign In' button in the top-right corner"}
-2. {Next action}
-3. You should see: {expected result}
-   - Screenshot reference: {if applicable, what the UI should look like}
-
-### Step 3: {Action title}
-1. {Continue with specific actions}
-2. {Include exact text to enter, buttons to click, etc.}
-
-{Continue with as many steps as needed - be thorough}
-
-## Expected Results
-✓ {Specific observable outcome 1}
-✓ {Specific observable outcome 2}
-✓ {Specific observable outcome 3}
-
-## How to Confirm Success
-The criterion PASSES if ALL of the following are true:
-1. {Concrete, verifiable condition}
-2. {Concrete, verifiable condition}
-3. {Concrete, verifiable condition}
-
-## Common Issues & Troubleshooting
-
-| Symptom | Likely Cause | Solution |
-|---------|--------------|----------|
-| {What you might see} | {Why it happens} | {How to fix it} |
-| {Another symptom} | {Cause} | {Solution} |
-
-## If Verification Fails
-1. Check the browser console for errors (F12 → Console tab)
-2. Check the terminal running the dev server for errors
-3. Try: {specific recovery steps}
-4. If still failing, note the exact error and report it
-
-───────────────────────────────────────────────────────────────────────────────
-```
-
-#### Examples of Good vs Bad Instructions
-
-**BAD (too vague):**
-```
-1. First action to take
-2. What to verify/look for
-3. How to confirm success
-```
-
-**GOOD (specific and actionable - localhost):**
-```
-### Step 1: Navigate to Login Page
-1. Open your browser and go to: `http://localhost:3000/login`
-2. You should see a login form with email and password fields
-   - If you see a 404 error: Make sure the dev server is running with `npm run dev`
-
-### Step 2: Enter Test Credentials
-1. In the "Email" field, enter: `test@example.com`
-2. In the "Password" field, enter: `testpassword123`
-3. Click the blue "Sign In" button below the form
-
-### Step 3: Verify Successful Login
-1. You should be redirected to: `http://localhost:3000/dashboard`
-2. The top-right corner should show "Welcome, Test User"
-3. The navigation should now include "My Account" and "Logout" options
-```
-
-**GOOD (specific and actionable - Vercel preview):**
-```
-### Step 1: Navigate to Login Page
-1. Open your browser and go to: `https://my-app-abc123-team.vercel.app/login`
-2. You should see a login form with email and password fields
-   - If you see a 404 error: Verify the deployment is ready in Vercel dashboard
-
-### Step 2: Enter Test Credentials
-1. In the "Email" field, enter: `test@example.com`
-2. In the "Password" field, enter: `testpassword123`
-3. Click the blue "Sign In" button below the form
-
-### Step 3: Verify Successful Login
-1. You should be redirected to: `https://my-app-abc123-team.vercel.app/dashboard`
-2. The top-right corner should show "Welcome, Test User"
-3. The navigation should now include "My Account" and "Logout" options
-```
-
-#### Context to Use When Generating Instructions
-
-When writing verification guides, reference:
-1. **EXECUTION_PLAN.md** — for acceptance criteria context
-2. **Project files** — to find exact URLs, component names, test credentials
-3. **package.json / config files** — for correct commands
-4. **Previous phase implementations** — for understanding current app state
-
-**Note:** Only items in "Truly Manual" genuinely require human action. Items in
-"Automation Failed" may be automatable once the underlying issue is fixed.
-
-### Update EXECUTION_PLAN.md Checkboxes (Auto-Verified Items)
-
-After auto-verify passes items, immediately update their checkboxes in EXECUTION_PLAN.md:
-
-1. **For each item that auto-verify marked PASS:**
-   - Read EXECUTION_PLAN.md
-   - Find the "### Phase $1 Checkpoint" section
-   - Locate the exact line: `- [ ] {criterion text}`
-   - Edit: change `- [ ]` to `- [x]`
-   - Verify edit succeeded
-
-2. **Matching rules:**
-   - Match the exact checkbox text (criterion may be truncated in reports)
-   - Use the phase section as anchor to avoid updating wrong items
-   - Skip items already checked (`- [x]`)
-
-### Human Confirmation (Batch)
-
-For items in "Automation Failed" or "Truly Manual" categories, ask human for batch confirmation:
-
-1. **List all items needing human verification:**
-   ```
-   Manual verification needed for {N} items:
-   1. {item 1 text}
-   2. {item 2 text}
-   ...
-   ```
-
-2. **Ask ONE question using AskUserQuestion:**
-   - Question: "Which items have you verified?"
-   - Options:
-     - "All verified" → Update ALL remaining checkboxes at once
-     - "Some verified" → Follow up asking which ones (comma-separated numbers)
-     - "None yet" → Leave all unchecked, continue to next section
-
-3. **Accept natural language responses:**
-   - "they're all good", "verified", "all done" → Treat as "All verified"
-   - "all except 2" or "1 and 3 only" → Update specified items only
-
-4. **Update checkboxes:**
-   - For confirmed items, edit EXECUTION_PLAN.md to change `- [ ]` to `- [x]`
-   - Use a single Edit call when updating multiple items in sequence
-   - Do NOT ask follow-up confirmation questions after user says "all verified"
-
-### Approach Review (Human)
-
-Ask the human to review the phase's implementation approach against these criteria:
-
-- Solutions use appropriate abstractions (not over/under-engineered)
-- New code follows existing codebase patterns and conventions
-- No unnecessary dependencies were added
-- Error handling is consistent with rest of codebase
-- Any "almost correct" AI solutions that need refinement?
-
-**Reporting format:**
-- Only list items that have issues or need attention
-- If all criteria pass, report: "Approach Review: No issues noted"
-- If issues exist, report each one briefly with context
-
-### Regression Check (if feature work)
-
-- Confirm existing tests still pass
-- Note any changes to existing functionality
-
----
-
-## Production Verification (After Local Passes)
+## Step 5: Production Verification
 
 **BLOCKED** until all Local Verification passes.
 
-If local verification has any failures, show:
-```
-## Production Verification
+When local passes, verify:
+- Staging/production deployment
+- External integrations
+- Production-only manual checks
 
-(Blocked: Complete local verification first)
-
-Pending production checks:
-- [ ] {list items from EXECUTION_PLAN.md marked for production/staging}
-```
-
-### When Local Verification Passes
-
-Extract PRODUCTION items from "Phase $1 Checkpoint" in EXECUTION_PLAN.md:
-
-1. **Staging/Production Deployment Verification**
-   - If phase includes deployment: verify staging environment works
-   - Check production logs for errors (if applicable)
-   - Verify no regressions in deployed environment
-
-2. **External Integration Verification**
-   - Third-party API connections working
-   - External services responding correctly
-   - Webhooks/callbacks functioning
-
-3. **Production-Only Manual Checks**
-   - Items that can only be verified in production environment
-   - Performance under real load (if applicable)
-   - Cross-browser/device testing on production URLs
-
-## State Update
+## Step 6: State Update
 
 After checkpoint passes, update `.claude/phase-state.json`:
 
-1. Set phase status to `CHECKPOINTED`
-2. Add `completed_at` timestamp
-3. Record checkpoint results
-
 ```json
 {
-  "phases": [
-    {
-      "number": 1,
-      "status": "CHECKPOINTED",
-      "completed_at": "{ISO timestamp}",
-      "checkpoint": {
-        "tests_passed": true,
-        "type_check_passed": true,
-        "lint_passed": true,
-        "security_passed": true,
-        "coverage_percent": 85,
-        "manual_verified": true
+  "phases": [{
+    "number": 1,
+    "status": "CHECKPOINTED",
+    "completed_at": "{ISO timestamp}",
+    "checkpoint": {
+      "tests_passed": true,
+      "type_check_passed": true,
+      "lint_passed": true,
+      "security_passed": true,
+      "coverage_percent": 85,
+      "manual_verified": true,
+      "codex_review": {
+        "status": "pass | pass_with_notes | needs_attention | skipped",
+        "critical_issues": 0,
+        "recommendations": 2,
+        "user_accepted_risks": []
       }
     }
-  ]
+  }]
 }
 ```
 
-If checkpoint fails, keep status as `IN_PROGRESS` and add `checkpoint_failed` with details.
+Write checkpoint report to `.claude/verification/phase-$1.md` and append to `.claude/verification-log.jsonl`.
 
-## Verification Evidence and Logs
-
-After running checks:
-- Write a checkpoint report to `.claude/verification/phase-$1.md`
-- Append results to `.claude/verification-log.jsonl`
-  - Include check type, status, timestamp, and evidence path
- - Ensure `.claude/verification/` exists before writing evidence files
-
-Example log entry:
-```json
-{
-  "timestamp": "{ISO timestamp}",
-  "scope": "phase-checkpoint",
-  "phase": "$1",
-  "check": "tests",
-  "status": "PASS",
-  "evidence": ".claude/verification/phase-$1.md"
-}
-```
-
----
-
-## Report
+## Step 7: Report
 
 ```
 Phase $1 Checkpoint Results
 ===========================
 
 Tool Availability:
-- ExecuteAutomation Playwright: ✓ | ✗ (primary)
-- Browser MCP Extension: ✓ | ✗
-- Microsoft Playwright MCP: ✓ | ✗
+- ExecuteAutomation Playwright: ✓ | ✗
+- Browser MCP: ✓ | ✗
 - Chrome DevTools MCP: ✓ | ✗
 - code-simplifier: ✓ | ✗
-- Trigger.dev MCP: ✓ | ✗ | N/A
+- Codex CLI: ✓ | ✗
 
 ## Local Verification
 
@@ -586,168 +233,99 @@ Automated Checks:
 - Type Check: PASSED | FAILED | SKIPPED
 - Linting: PASSED | FAILED | SKIPPED
 - Build: PASSED | FAILED | SKIPPED
-- Dev Server: PASSED | FAILED | SKIPPED
-- Security: PASSED | FAILED | X critical, Y high
-- Coverage: {X}% (target: 80%)
+- Security: PASSED | FAILED
 
 Optional Checks:
-- Code Simplification: APPLIED | SKIPPED
 - Browser Verification: PASSED | SKIPPED
-  - Target: Vercel Preview ({URL}) | Local Dev Server ({URL}) | Fallback ({URL})
+  - Target: {URL}
 - Tech Debt: PASSED | NOTES | SKIPPED
 
-Manual Local Checks:
-- Automated: {X} items verified automatically
-- Failed automation: {Y} items (see details below)
-- Truly manual: {Z} items (human judgment required)
+Manual Checks:
+- Automated: {X} items
+- Truly manual: {Y} items
 
-Automated Successfully:
-- [x] "{item}" — PASS ({method}, {duration})
+Local Verification: ✓ PASSED | ✗ FAILED
 
-Items Requiring Manual Verification: {N}
-(See detailed verification guide below)
+---
 
-Approach Review: No issues noted | {list specific issues}
-```
+## Cross-Model Review (Codex)
 
-**If any items require manual verification, append the full Manual Verification Guide (see format above) after this summary report.** The guide should be comprehensive enough that anyone unfamiliar with the project could complete the verification.
+Status: PASS | PASS WITH NOTES | NEEDS ATTENTION | SKIPPED
+{If not skipped}
+- Critical Issues: {N}
+- Recommendations: {N}
+{If needs_attention}
+- User Action: Addressed | Accepted as risk
+{/If}
+{/If}
 
-```
-
-Local Verification: ✓ PASSED | ✗ FAILED (address issues above)
+{If has recommendations}
+Top Recommendations:
+1. {recommendation}
+2. {recommendation}
+{/If}
 
 ---
 
 ## Production Verification
-
-[If local passed:]
-- [ ] Staging deployment verified
-- [ ] Production logs clean
-- [ ] External integrations working
-- [ ] {other production items from EXECUTION_PLAN.md}
-
-[If local failed:]
-(Blocked: Complete local verification first)
+{items or "Blocked: Complete local verification first"}
 
 ---
 
-Overall: Ready to proceed | Local issues to address | Production issues to address
+Overall: Ready to proceed | Issues to address
 ```
 
-## Auto-Advance (After Checkpoint Passes)
+## Step 8: Auto-Advance
 
-Check if auto-advance is enabled and this checkpoint passes all criteria.
+See [AUTO_ADVANCE.md](AUTO_ADVANCE.md) for auto-advance logic.
 
-### Configuration Check
+**Summary:** If all checks pass and no manual items remain, automatically invoke `/phase-prep {N+1}`.
 
-Read `.claude/settings.local.json` for auto-advance configuration:
+**Codex review and auto-advance:** Codex findings do NOT block auto-advance unless user explicitly chooses to address them. The review is advisory.
 
-```json
-{
-  "autoAdvance": {
-    "enabled": true      // default: true
-  }
-}
-```
+---
 
-If `autoAdvance` is not configured, use defaults (`enabled: true`).
+## When Checkpoint Cannot Pass
 
-### Auto-Advance Conditions
+**If both local AND production verification fail:**
+- Report all failures clearly, separated by category
+- Do NOT suggest skipping checks
+- Prioritize: Fix local failures first (they often cause production failures)
+- Suggest: Run `/phase-start $1` to address failing tasks before re-running checkpoint
 
-Auto-advance to `/phase-prep {N+1}` ONLY if ALL of these are true:
+**If manual verification items cannot be completed:**
+- Ask user: "Skip this item and document reason?" vs "Block until complete"
+- If skipping: Record in DEFERRED.md with reason and timestamp
+- Note: Skipped items don't count as PASSED for auto-advance
 
-1. ✓ All automated checks passed (tests, lint, types, security)
-2. ✓ No "truly manual" verification items remain (auto-verify was attempted above)
-3. ✓ No production verification items exist
-4. ✓ Phase $1 is not the final phase
-5. ✓ `--pause` flag was NOT passed to this command
-6. ✓ `autoAdvance.enabled` is true (or not configured, defaulting to true)
+**If verification config is missing critical commands:**
+- STOP and run `/configure-verification`
+- Do NOT substitute or guess commands
+- Report which commands are missing
 
-**Rationale:** Auto-verify (run in Manual Local Verification above) attempts automation before blocking. Only items that genuinely require human judgment block auto-advance. Production verification items always require human presence to confirm deployed behavior.
+**If auto-advance chain should stop:**
+- Report: "Auto-advance stopped at Phase $1 checkpoint"
+- List specific blocking items
+- Provide: "Run `/phase-checkpoint $1` again after resolving issues"
 
-### If Auto-Advance Conditions Met
+**If a tool consistently fails mid-checkpoint:**
+- Mark that specific check as FAILED (not SKIPPED)
+- Continue with remaining checks
+- Report tool failure in final summary
+- Suggest troubleshooting steps for the failing tool
 
-1. **Show brief notification:**
-   ```
-   AUTO-ADVANCE
-   ============
-   All Phase $1 criteria verified (no truly manual items remain).
-   Proceeding to next phase...
-   ```
+**If Codex review times out or errors:**
+- Mark as SKIPPED with reason
+- Do NOT block checkpoint progress
+- Note in report: "Cross-model review unavailable: {reason}"
+- Suggest: Re-run `/codex-review` manually after checkpoint if desired
 
-2. **Execute immediately:**
-   - Track this command in auto-advance session log
-   - Invoke `/phase-prep {N+1}` using the Skill tool
-   - Continue auto-advance chain (phase-prep will continue if it passes)
+**If Codex finds critical issues:**
+- Present issues to user with context
+- Ask: "Address before proceeding or accept as noted risk?"
+- If user chooses to proceed: Log as "accepted risk" in state
+- Do NOT auto-block — cross-model review is advisory
 
-### If Auto-Advance Conditions NOT Met
+---
 
-Stop and report why:
-
-```
-AUTO-ADVANCE STOPPED
-====================
-
-Reason: {one of below}
-- Truly manual verification items remain (human judgment required)
-- Production verification items exist (human intervention required)
-- Phase $1 is the final phase
-- Auto-advance disabled via --pause flag
-- Auto-advance disabled in settings
-
-{If manual/production items exist:}
-Human verification required:
-- [ ] {item 1}
-- [ ] {item 2}
-
-Next steps:
-1. Complete the verification items above
-2. Run /phase-prep {N+1} manually when ready
-```
-
-### Auto-Advance Session Tracking
-
-Maintain `.claude/auto-advance-session.json` during auto-advance:
-
-```json
-{
-  "started_at": "{ISO timestamp}",
-  "commands": [
-    {"command": "/phase-checkpoint 1", "status": "PASS", "timestamp": "{ISO}"},
-    {"command": "/phase-prep 2", "status": "PASS", "timestamp": "{ISO}"},
-    {"command": "/phase-start 2", "status": "PASS", "timestamp": "{ISO}"},
-    {"command": "/phase-checkpoint 2", "status": "MANUAL_REQUIRED", "timestamp": "{ISO}"}
-  ],
-  "stopped_at": "{ISO timestamp}",
-  "stop_reason": "manual_verification_required"
-}
-```
-
-### Session Report (When Auto-Advance Stops)
-
-When auto-advance stops (for any reason), generate a summary:
-
-```
-AUTO-ADVANCE SESSION COMPLETE
-=============================
-
-Commands executed:
-1. /phase-checkpoint 1 → ✓ All criteria passed
-2. /phase-prep 2 → ✓ All setup complete
-3. /phase-start 2 → ✓ All tasks completed
-4. /phase-checkpoint 2 → ⚠ Manual verification required
-
-Summary:
-- Phases completed: 1 (Phase 2)
-- Steps completed: 4
-- Duration: 12m 34s
-- Stopped: Manual verification items detected
-
-Requires attention:
-- [ ] Verify payment flow works end-to-end (localhost:3000/checkout)
-- [ ] Confirm email notifications received
-
-Next: Complete manual items, then run /phase-checkpoint 2 again
-```
-
-Delete `.claude/auto-advance-session.json` after reporting (or on fresh `/phase-start 1` with no prior session).
+**REMINDER**: Local verification must pass before production verification. If any local check fails, stop and report — do not proceed to production checks.

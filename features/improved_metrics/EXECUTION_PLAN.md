@@ -431,20 +431,20 @@ Wire up all new tracking modules into the main tracker. Initialize modules on `i
 Update the PR generation templates to include V2 tracking features. The current templates contain inline V1-only tracking code that doesn't include engagement time, scroll depth, visitor ID, UTM parameters, or CTA click tracking. This task adds those features to the generated analytics components so sites set up via PR receive V2 tracking.
 
 **Acceptance Criteria:**
-- [ ] App Router template (`apps/web/lib/github/templates/app-router.ts`) includes V2 tracking:
-  - [ ] Engagement time tracking (activity detection, idle timeout, visibility state)
-  - [ ] Scroll depth tracking (max depth reached)
-  - [ ] Visitor ID management (`tally_vid` cookie, 1-year expiry)
-  - [ ] `is_returning` flag based on visitor cookie existence
-  - [ ] UTM parameter capture from URL query string
-  - [ ] CTA click tracking for conversion-intent elements
-- [ ] Pages Router template (`apps/web/lib/github/templates/pages-router.ts`) includes same V2 tracking
-- [ ] `session_start` events include `visitor_id`, `is_returning`, and UTM params
-- [ ] `page_view` events include `engagement_time_ms`, `scroll_depth`, and `cta_clicks`
-- [ ] `beforeunload`/`visibilitychange` sends final page metrics
-- [ ] DNT check skips V2 tracking when `navigator.doNotTrack === "1"`
-- [ ] Generated component remains self-contained (no external dependencies)
-- [ ] All existing tests pass: `pnpm --filter web test`
+- [x] App Router template (`apps/web/lib/github/templates/app-router.ts`) includes V2 tracking:
+  - [x] Engagement time tracking (activity detection, idle timeout, visibility state)
+  - [x] Scroll depth tracking (max depth reached)
+  - [x] Visitor ID management (`tally_vid` cookie, 1-year expiry)
+  - [x] `is_returning` flag based on visitor cookie existence
+  - [x] UTM parameter capture from URL query string
+  - [x] CTA click tracking for conversion-intent elements
+- [x] Pages Router template (`apps/web/lib/github/templates/pages-router.ts`) includes same V2 tracking
+- [x] `session_start` events include `visitor_id`, `is_returning`, and UTM params
+- [x] `page_view` events include `engagement_time_ms`, `scroll_depth`, and `cta_clicks`
+- [x] `beforeunload`/`visibilitychange` sends final page metrics
+- [x] DNT check skips V2 tracking when `navigator.doNotTrack === "1"`
+- [x] Generated component remains self-contained (no external dependencies)
+- [x] All existing tests pass: `pnpm --filter web test`
 
 **Files to Create:**
 - None

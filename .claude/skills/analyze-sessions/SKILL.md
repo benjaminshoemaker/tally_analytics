@@ -1,6 +1,6 @@
 ---
 name: analyze-sessions
-description: Analyze session logs to discover automation opportunities
+description: Analyze session logs to discover automation opportunities. Use periodically to find patterns in your Claude Code usage that could be automated.
 allowed-tools: Read, Write, Glob, Grep, Bash
 ---
 
@@ -22,6 +22,18 @@ Each entry contains:
 ```
 
 ## Analysis Process
+
+Copy this checklist and track progress:
+
+```
+Analyze Sessions Progress:
+- [ ] Step 1: Read session logs
+- [ ] Step 2: Calculate statistics
+- [ ] Step 3: Identify command patterns
+- [ ] Step 4: Find automation opportunities
+- [ ] Step 5: Analyze tool usage
+- [ ] Step 6: Generate recommendations
+```
 
 ### 1. Read Session Logs
 
@@ -180,6 +192,33 @@ Recommended next steps:
 2. Consider creating skills for high-priority patterns
 3. Update AGENTS.md with guidance for common questions
 ```
+
+## Error Handling
+
+**If `.claude/logs/` directory doesn't exist:**
+- Create the directory structure: `mkdir -p .claude/logs`
+- Report that no sessions have been logged yet
+- Suggest running a few sessions first
+
+**If session log file is malformed:**
+- Skip malformed lines and continue processing valid entries
+- Report the count of skipped entries in the output
+- Note: "X entries skipped due to malformed data"
+
+**If transcript files are inaccessible:**
+- Continue analysis without transcript data
+- Mark transcript-dependent insights as "Limited (transcripts unavailable)"
+- Report which transcripts couldn't be read
+
+**If no patterns are found:**
+- Report "No automation opportunities identified"
+- Suggest that more sessions may be needed for meaningful patterns
+- Provide guidance: "Run /analyze-sessions again after 5+ additional sessions"
+
+**If ANALYSIS_REPORT.md cannot be written:**
+- Output the report to the terminal instead
+- Report the write failure with the specific error
+- Suggest checking directory permissions
 
 ## Limitations
 
