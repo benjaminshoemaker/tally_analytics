@@ -1,0 +1,3709 @@
+{
+  "statistics": {
+    "detectionDate": "2026-02-03T22:49:05.968Z",
+    "formats": {
+      "tsx": {
+        "sources": {
+          "packages/sdk/src/react/pages-router.tsx": {
+            "lines": 22,
+            "tokens": 174,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/react/app-router.tsx": {
+            "lines": 26,
+            "tokens": 207,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/sessions/page.tsx": {
+            "lines": 97,
+            "tokens": 1082,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 19,
+            "duplicatedTokens": 281,
+            "percentage": 19.59,
+            "percentageTokens": 25.97,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/overview/page.tsx": {
+            "lines": 152,
+            "tokens": 1757,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 19,
+            "duplicatedTokens": 281,
+            "percentage": 12.5,
+            "percentageTokens": 15.99,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/live/page.tsx": {
+            "lines": 91,
+            "tokens": 961,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/docs/setup/page.tsx": {
+            "lines": 42,
+            "tokens": 471,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/docs/sdk/page.tsx": {
+            "lines": 201,
+            "tokens": 1735,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/page.tsx": {
+            "lines": 288,
+            "tokens": 2800,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 5,
+            "duplicatedTokens": 83,
+            "percentage": 1.74,
+            "percentageTokens": 2.96,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/layout.tsx": {
+            "lines": 104,
+            "tokens": 959,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 5,
+            "duplicatedTokens": 83,
+            "percentage": 4.81,
+            "percentageTokens": 8.65,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/terms/page.tsx": {
+            "lines": 13,
+            "tokens": 117,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/privacy/page.tsx": {
+            "lines": 13,
+            "tokens": 113,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/pricing/page.tsx": {
+            "lines": 178,
+            "tokens": 1885,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 7,
+            "duplicatedTokens": 107,
+            "percentage": 3.93,
+            "percentageTokens": 5.68,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/docs/page.tsx": {
+            "lines": 24,
+            "tokens": 283,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/settings/stripe-reconcile-client.tsx": {
+            "lines": 72,
+            "tokens": 717,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/settings/page.tsx": {
+            "lines": 120,
+            "tokens": 1434,
+            "sources": 1,
+            "clones": 5,
+            "duplicatedLines": 27,
+            "duplicatedTokens": 399,
+            "percentage": 22.5,
+            "percentageTokens": 27.82,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/page.tsx": {
+            "lines": 86,
+            "tokens": 897,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/what-you-get.tsx": {
+            "lines": 165,
+            "tokens": 1095,
+            "sources": 1,
+            "clones": 11,
+            "duplicatedLines": 137,
+            "duplicatedTokens": 807,
+            "percentage": 83.03,
+            "percentageTokens": 73.7,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/set-and-forget.tsx": {
+            "lines": 54,
+            "tokens": 380,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/pricing-card.tsx": {
+            "lines": 140,
+            "tokens": 1236,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/navbar.tsx": {
+            "lines": 73,
+            "tokens": 503,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/how-it-works.tsx": {
+            "lines": 169,
+            "tokens": 1181,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/hero.tsx": {
+            "lines": 85,
+            "tokens": 694,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/footer.tsx": {
+            "lines": 58,
+            "tokens": 399,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 8,
+            "duplicatedTokens": 61,
+            "percentage": 13.79,
+            "percentageTokens": 15.29,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/features.tsx": {
+            "lines": 70,
+            "tokens": 555,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 17,
+            "duplicatedTokens": 127,
+            "percentage": 24.29,
+            "percentageTokens": 22.88,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/user-dropdown.tsx": {
+            "lines": 110,
+            "tokens": 1010,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 24,
+            "duplicatedTokens": 249,
+            "percentage": 21.82,
+            "percentageTokens": 24.65,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/top-list.tsx": {
+            "lines": 71,
+            "tokens": 613,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/status-badge.tsx": {
+            "lines": 108,
+            "tokens": 986,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/stat-card.tsx": {
+            "lines": 31,
+            "tokens": 400,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/skeleton.tsx": {
+            "lines": 79,
+            "tokens": 683,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/sidebar.tsx": {
+            "lines": 131,
+            "tokens": 939,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/sessions-chart.tsx": {
+            "lines": 25,
+            "tokens": 309,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/quota-display.tsx": {
+            "lines": 82,
+            "tokens": 667,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/project-card.tsx": {
+            "lines": 48,
+            "tokens": 546,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/page-views-chart.tsx": {
+            "lines": 56,
+            "tokens": 540,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/onboarding-checklist.tsx": {
+            "lines": 131,
+            "tokens": 1075,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/mobile-tab-bar.tsx": {
+            "lines": 106,
+            "tokens": 718,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/live-event.tsx": {
+            "lines": 27,
+            "tokens": 271,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/header.tsx": {
+            "lines": 44,
+            "tokens": 386,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 14,
+            "duplicatedTokens": 138,
+            "percentage": 31.82,
+            "percentageTokens": 35.75,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/login/page.tsx": {
+            "lines": 99,
+            "tokens": 790,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/dashboard/page.tsx": {
+            "lines": 4,
+            "tokens": 33,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/page.tsx": {
+            "lines": 55,
+            "tokens": 360,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/layout.tsx": {
+            "lines": 24,
+            "tokens": 230,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/layout.tsx": {
+            "lines": 46,
+            "tokens": 371,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/providers.tsx": {
+            "lines": 9,
+            "tokens": 106,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/layout.tsx": {
+            "lines": 45,
+            "tokens": 370,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/events/app/layout.tsx": {
+            "lines": 12,
+            "tokens": 100,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 3686,
+          "tokens": 33138,
+          "sources": 46,
+          "clones": 15,
+          "duplicatedLines": 141,
+          "duplicatedTokens": 1308,
+          "percentage": 3.83,
+          "percentageTokens": 3.95,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "javascript": {
+        "sources": {
+          "packages/sdk/src/react/app-router.tsx": {
+            "lines": 0,
+            "tokens": 3,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/sessions/page.tsx": {
+            "lines": 32,
+            "tokens": 357,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/overview/page.tsx": {
+            "lines": 61,
+            "tokens": 712,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/live/page.tsx": {
+            "lines": 16,
+            "tokens": 239,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/docs/setup/page.tsx": {
+            "lines": 0,
+            "tokens": 3,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/page.tsx": {
+            "lines": 220,
+            "tokens": 2295,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/[id]/layout.tsx": {
+            "lines": 19,
+            "tokens": 122,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/pricing/page.tsx": {
+            "lines": 19,
+            "tokens": 195,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/projects/page.tsx": {
+            "lines": 42,
+            "tokens": 499,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/what-you-get.tsx": {
+            "lines": 0,
+            "tokens": 5,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/set-and-forget.tsx": {
+            "lines": 0,
+            "tokens": 3,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/pricing-card.tsx": {
+            "lines": 130,
+            "tokens": 1166,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/navbar.tsx": {
+            "lines": 19,
+            "tokens": 125,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/how-it-works.tsx": {
+            "lines": 35,
+            "tokens": 298,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/hero.tsx": {
+            "lines": 41,
+            "tokens": 320,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/footer.tsx": {
+            "lines": 0,
+            "tokens": 3,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/marketing/features.tsx": {
+            "lines": 0,
+            "tokens": 5,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/user-dropdown.tsx": {
+            "lines": 19,
+            "tokens": 182,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/top-list.tsx": {
+            "lines": 46,
+            "tokens": 404,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/status-badge.tsx": {
+            "lines": 98,
+            "tokens": 912,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/stat-card.tsx": {
+            "lines": 2,
+            "tokens": 21,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/skeleton.tsx": {
+            "lines": 4,
+            "tokens": 21,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/sidebar.tsx": {
+            "lines": 114,
+            "tokens": 805,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/sessions-chart.tsx": {
+            "lines": 3,
+            "tokens": 56,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/project-card.tsx": {
+            "lines": 18,
+            "tokens": 205,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/page-views-chart.tsx": {
+            "lines": 36,
+            "tokens": 349,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/onboarding-checklist.tsx": {
+            "lines": 95,
+            "tokens": 793,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/mobile-tab-bar.tsx": {
+            "lines": 87,
+            "tokens": 572,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/live-event.tsx": {
+            "lines": 3,
+            "tokens": 22,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/components/dashboard/header.tsx": {
+            "lines": 0,
+            "tokens": 13,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/login/page.tsx": {
+            "lines": 0,
+            "tokens": 9,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/page.tsx": {
+            "lines": 24,
+            "tokens": 175,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(marketing)/layout.tsx": {
+            "lines": 2,
+            "tokens": 32,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/(dashboard)/layout.tsx": {
+            "lines": 0,
+            "tokens": 11,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/scripts/playwright-test.mjs": {
+            "lines": 71,
+            "tokens": 799,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 25,
+            "duplicatedTokens": 321,
+            "percentage": 35.21,
+            "percentageTokens": 40.18,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/scripts/playwright-install.mjs": {
+            "lines": 69,
+            "tokens": 816,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 25,
+            "duplicatedTokens": 321,
+            "percentage": 36.23,
+            "percentageTokens": 39.34,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/providers.tsx": {
+            "lines": 0,
+            "tokens": 3,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/layout.tsx": {
+            "lines": 0,
+            "tokens": 9,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/tailwind.config.js": {
+            "lines": 106,
+            "tokens": 781,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/postcss.config.js": {
+            "lines": 5,
+            "tokens": 33,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/next.config.js": {
+            "lines": 26,
+            "tokens": 198,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/events/next.config.js": {
+            "lines": 5,
+            "tokens": 28,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 1467,
+          "tokens": 13599,
+          "sources": 42,
+          "clones": 1,
+          "duplicatedLines": 25,
+          "duplicatedTokens": 321,
+          "percentage": 1.7,
+          "percentageTokens": 2.36,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "typescript": {
+        "sources": {
+          "packages/sdk/src/visitor.ts": {
+            "lines": 53,
+            "tokens": 417,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 9,
+            "duplicatedTokens": 107,
+            "percentage": 16.98,
+            "percentageTokens": 25.66,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/utm.ts": {
+            "lines": 36,
+            "tokens": 250,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/types.ts": {
+            "lines": 30,
+            "tokens": 217,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/tracker.ts": {
+            "lines": 75,
+            "tokens": 622,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 26,
+            "duplicatedTokens": 230,
+            "percentage": 34.67,
+            "percentageTokens": 36.98,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/session.ts": {
+            "lines": 71,
+            "tokens": 661,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 9,
+            "duplicatedTokens": 107,
+            "percentage": 12.68,
+            "percentageTokens": 16.19,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/scroll.ts": {
+            "lines": 65,
+            "tokens": 487,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/index.ts": {
+            "lines": 6,
+            "tokens": 70,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/engagement.ts": {
+            "lines": 92,
+            "tokens": 719,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/cta.ts": {
+            "lines": 131,
+            "tokens": 1004,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/src/core.ts": {
+            "lines": 213,
+            "tokens": 1684,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/tsup.config.ts": {
+            "lines": 11,
+            "tokens": 101,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/projects/[id]/analytics/sessions/route.ts": {
+            "lines": 102,
+            "tokens": 1110,
+            "sources": 1,
+            "clones": 6,
+            "duplicatedLines": 92,
+            "duplicatedTokens": 1267,
+            "percentage": 90.2,
+            "percentageTokens": 114.14,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/projects/[id]/analytics/overview/route.ts": {
+            "lines": 238,
+            "tokens": 2016,
+            "sources": 1,
+            "clones": 4,
+            "duplicatedLines": 65,
+            "duplicatedTokens": 750,
+            "percentage": 27.31,
+            "percentageTokens": 37.2,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/projects/[id]/analytics/live/route.ts": {
+            "lines": 113,
+            "tokens": 1221,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 33,
+            "duplicatedTokens": 403,
+            "percentage": 29.2,
+            "percentageTokens": 33.01,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/projects/[id]/regenerate/route.ts": {
+            "lines": 60,
+            "tokens": 795,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 5,
+            "duplicatedTokens": 85,
+            "percentage": 8.33,
+            "percentageTokens": 10.69,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/auth/github/callback/route.ts": {
+            "lines": 67,
+            "tokens": 724,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/webhooks/stripe/route.ts": {
+            "lines": 214,
+            "tokens": 2396,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 9,
+            "duplicatedTokens": 159,
+            "percentage": 4.21,
+            "percentageTokens": 6.64,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/webhooks/github/route.ts": {
+            "lines": 53,
+            "tokens": 554,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 11,
+            "duplicatedTokens": 85,
+            "percentage": 20.75,
+            "percentageTokens": 15.34,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/stripe/reconcile/route.ts": {
+            "lines": 126,
+            "tokens": 1566,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 27,
+            "duplicatedTokens": 331,
+            "percentage": 21.43,
+            "percentageTokens": 21.14,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/stripe/portal/route.ts": {
+            "lines": 49,
+            "tokens": 618,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 18,
+            "duplicatedTokens": 177,
+            "percentage": 36.73,
+            "percentageTokens": 28.64,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/stripe/checkout/route.ts": {
+            "lines": 116,
+            "tokens": 1414,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 18,
+            "duplicatedTokens": 179,
+            "percentage": 15.52,
+            "percentageTokens": 12.66,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/projects/[id]/route.ts": {
+            "lines": 130,
+            "tokens": 1327,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 26,
+            "duplicatedTokens": 361,
+            "percentage": 20,
+            "percentageTokens": 27.2,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/github/callback/route.ts": {
+            "lines": 30,
+            "tokens": 355,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/auth/logout/route.ts": {
+            "lines": 14,
+            "tokens": 145,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/auth/github/route.ts": {
+            "lines": 12,
+            "tokens": 137,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/auth/e2e-login/route.ts": {
+            "lines": 37,
+            "tokens": 395,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/templates/paths.ts": {
+            "lines": 30,
+            "tokens": 402,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/templates/pages-router.ts": {
+            "lines": 480,
+            "tokens": 94,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/templates/insert-analytics.ts": {
+            "lines": 69,
+            "tokens": 873,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/templates/app-router.ts": {
+            "lines": 489,
+            "tokens": 94,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/handlers/push.ts": {
+            "lines": 62,
+            "tokens": 728,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 15,
+            "duplicatedTokens": 174,
+            "percentage": 24.19,
+            "percentageTokens": 23.9,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/handlers/pull-request.ts": {
+            "lines": 25,
+            "tokens": 321,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/handlers/installation.ts": {
+            "lines": 101,
+            "tokens": 1097,
+            "sources": 1,
+            "clones": 5,
+            "duplicatedLines": 51,
+            "duplicatedTokens": 546,
+            "percentage": 50.5,
+            "percentageTokens": 49.77,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/db/queries/users.ts": {
+            "lines": 65,
+            "tokens": 563,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/db/queries/regenerate-requests.ts": {
+            "lines": 23,
+            "tokens": 285,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/db/queries/projects.ts": {
+            "lines": 104,
+            "tokens": 1154,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/db/queries/github-tokens.ts": {
+            "lines": 106,
+            "tokens": 1016,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/app/api/projects/route.ts": {
+            "lines": 103,
+            "tokens": 1066,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 15,
+            "duplicatedTokens": 168,
+            "percentage": 14.56,
+            "percentageTokens": 15.76,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/events/app/v1/track/route.ts": {
+            "lines": 96,
+            "tokens": 1148,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/tinybird/client.ts": {
+            "lines": 75,
+            "tokens": 982,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 35,
+            "duplicatedTokens": 464,
+            "percentage": 46.67,
+            "percentageTokens": 47.25,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/stripe/plans.ts": {
+            "lines": 8,
+            "tokens": 120,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/stripe/constants.ts": {
+            "lines": 21,
+            "tokens": 221,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/stripe/client.ts": {
+            "lines": 15,
+            "tokens": 114,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/hooks/use-projects.ts": {
+            "lines": 48,
+            "tokens": 509,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 32,
+            "duplicatedTokens": 432,
+            "percentage": 66.67,
+            "percentageTokens": 84.87,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/hooks/use-project.ts": {
+            "lines": 59,
+            "tokens": 698,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 20,
+            "duplicatedTokens": 264,
+            "percentage": 33.9,
+            "percentageTokens": 37.82,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/hooks/use-live-feed.ts": {
+            "lines": 45,
+            "tokens": 499,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 12,
+            "duplicatedTokens": 168,
+            "percentage": 26.67,
+            "percentageTokens": 33.67,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/webhook-verify.ts": {
+            "lines": 20,
+            "tokens": 241,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/pr-generator.ts": {
+            "lines": 289,
+            "tokens": 3147,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/generate.ts": {
+            "lines": 112,
+            "tokens": 1212,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 16,
+            "duplicatedTokens": 179,
+            "percentage": 14.29,
+            "percentageTokens": 14.77,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/detection.ts": {
+            "lines": 242,
+            "tokens": 2340,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/detect-framework.ts": {
+            "lines": 80,
+            "tokens": 557,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/app.ts": {
+            "lines": 129,
+            "tokens": 1402,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 11,
+            "duplicatedTokens": 85,
+            "percentage": 8.53,
+            "percentageTokens": 6.06,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/github/analyze.ts": {
+            "lines": 70,
+            "tokens": 705,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 16,
+            "duplicatedTokens": 179,
+            "percentage": 22.86,
+            "percentageTokens": 25.39,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/env/read-required-env.ts": {
+            "lines": 7,
+            "tokens": 81,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/db/schema.ts": {
+            "lines": 164,
+            "tokens": 1946,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/db/drizzle-env.ts": {
+            "lines": 30,
+            "tokens": 323,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/db/client.ts": {
+            "lines": 26,
+            "tokens": 293,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/auth/session.ts": {
+            "lines": 49,
+            "tokens": 509,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/auth/github-oauth.ts": {
+            "lines": 106,
+            "tokens": 918,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/auth/get-user.ts": {
+            "lines": 36,
+            "tokens": 473,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/auth/cookies.ts": {
+            "lines": 117,
+            "tokens": 952,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/types/github.ts": {
+            "lines": 20,
+            "tokens": 131,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/types/database.ts": {
+            "lines": 20,
+            "tokens": 243,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/scripts/link-github-users.ts": {
+            "lines": 66,
+            "tokens": 581,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/env.ts": {
+            "lines": 12,
+            "tokens": 81,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/lib/app-url.ts": {
+            "lines": 4,
+            "tokens": 36,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/events/lib/tinybird.ts": {
+            "lines": 105,
+            "tokens": 1072,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 9,
+            "duplicatedTokens": 82,
+            "percentage": 8.57,
+            "percentageTokens": 7.65,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/events/lib/project-cache.ts": {
+            "lines": 64,
+            "tokens": 711,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/vitest.config.ts": {
+            "lines": 7,
+            "tokens": 50,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/playwright.config.ts": {
+            "lines": 39,
+            "tokens": 366,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/next-env.d.ts": {
+            "lines": 4,
+            "tokens": 7,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/middleware.ts": {
+            "lines": 22,
+            "tokens": 243,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/drizzle.config.ts": {
+            "lines": 20,
+            "tokens": 150,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/events/next-env.d.ts": {
+            "lines": 4,
+            "tokens": 7,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 6032,
+          "tokens": 51766,
+          "sources": 74,
+          "clones": 24,
+          "duplicatedLines": 290,
+          "duplicatedTokens": 3491,
+          "percentage": 4.81,
+          "percentageTokens": 6.74,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "json": {
+        "sources": {
+          "packages/sdk/tsconfig.json": {
+            "lines": 9,
+            "tokens": 68,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/package.json": {
+            "lines": 31,
+            "tokens": 177,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/drizzle/migrations/meta/_journal.json": {
+            "lines": 41,
+            "tokens": 228,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/tsconfig.json": {
+            "lines": 25,
+            "tokens": 113,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/package.json": {
+            "lines": 55,
+            "tokens": 364,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/events/tsconfig.json": {
+            "lines": 19,
+            "tokens": 84,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/events/package.json": {
+            "lines": 24,
+            "tokens": 147,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 204,
+          "tokens": 1181,
+          "sources": 7,
+          "clones": 0,
+          "duplicatedLines": 0,
+          "duplicatedTokens": 0,
+          "percentage": 0,
+          "percentageTokens": 0,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "markdown": {
+        "sources": {
+          "packages/sdk/README.md": {
+            "lines": 81,
+            "tokens": 490,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "packages/sdk/CHANGELOG.md": {
+            "lines": 0,
+            "tokens": 4,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 81,
+          "tokens": 494,
+          "sources": 2,
+          "clones": 0,
+          "duplicatedLines": 0,
+          "duplicatedTokens": 0,
+          "percentage": 0,
+          "percentageTokens": 0,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "sql": {
+        "sources": {
+          "apps/web/drizzle/migrations/0005_drop_magic_links.sql": {
+            "lines": 2,
+            "tokens": 12,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/drizzle/migrations/0004_add_conversion_columns.sql": {
+            "lines": 6,
+            "tokens": 81,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/drizzle/migrations/0003_github_oauth.sql": {
+            "lines": 5,
+            "tokens": 54,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/drizzle/migrations/0002_stripe_billing.sql": {
+            "lines": 9,
+            "tokens": 101,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/drizzle/migrations/0001_regenerate_requests.sql": {
+            "lines": 12,
+            "tokens": 146,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "apps/web/drizzle/migrations/0000_initial.sql": {
+            "lines": 159,
+            "tokens": 1273,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 193,
+          "tokens": 1667,
+          "sources": 6,
+          "clones": 0,
+          "duplicatedLines": 0,
+          "duplicatedTokens": 0,
+          "percentage": 0,
+          "percentageTokens": 0,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "css": {
+        "sources": {
+          "apps/web/app/globals.css": {
+            "lines": 51,
+            "tokens": 289,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 51,
+          "tokens": 289,
+          "sources": 1,
+          "clones": 0,
+          "duplicatedLines": 0,
+          "duplicatedTokens": 0,
+          "percentage": 0,
+          "percentageTokens": 0,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      }
+    },
+    "total": {
+      "lines": 11714,
+      "tokens": 102134,
+      "sources": 178,
+      "clones": 40,
+      "duplicatedLines": 456,
+      "duplicatedTokens": 5120,
+      "percentage": 3.89,
+      "percentageTokens": 5.01,
+      "newDuplicatedLines": 0,
+      "newClones": 0
+    }
+  },
+  "duplicates": [
+    {
+      "format": "typescript",
+      "lines": 14,
+      "fragment": ": string;\n  userId?: string;\n}): AnalyticsEvent {\n  const url =\n    typeof window === \"undefined\" ? undefined : window.location.href || undefined;\n  const referrer =\n    typeof document === \"undefined\"\n      ? undefined\n      : document.referrer || undefined;\n\n  return {\n    project_id: options.projectId,\n    session_id: options.sessionId,\n    event_type: \"session_start\"",
+      "tokens": 0,
+      "firstFile": {
+        "name": "packages/sdk/src/tracker.ts",
+        "start": 57,
+        "end": 70,
+        "startLoc": {
+          "line": 57,
+          "column": 10,
+          "position": 468
+        },
+        "endLoc": {
+          "line": 70,
+          "column": 16,
+          "position": 583
+        }
+      },
+      "secondFile": {
+        "name": "packages/sdk/src/tracker.ts",
+        "start": 33,
+        "end": 46,
+        "startLoc": {
+          "line": 33,
+          "column": 5,
+          "position": 282
+        },
+        "endLoc": {
+          "line": 46,
+          "column": 12,
+          "position": 397
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 10,
+      "fragment": "function getCookie(name: string): string | null {\n  if (typeof document === \"undefined\") return null;\n\n  const prefix = `${name}=`;\n  const cookie = document.cookie\n    .split(\"; \")\n    .find((row) => row.startsWith(prefix))\n    ?.slice(prefix.length);\n\n  return cookie ? cookie",
+      "tokens": 0,
+      "firstFile": {
+        "name": "packages/sdk/src/session.ts",
+        "start": 10,
+        "end": 19,
+        "startLoc": {
+          "line": 10,
+          "column": 1,
+          "position": 78
+        },
+        "endLoc": {
+          "line": 19,
+          "column": 7,
+          "position": 185
+        }
+      },
+      "secondFile": {
+        "name": "packages/sdk/src/visitor.ts",
+        "start": 9,
+        "end": 18,
+        "startLoc": {
+          "line": 9,
+          "column": 1,
+          "position": 58
+        },
+        "endLoc": {
+          "line": 18,
+          "column": 2,
+          "position": 164
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 21,
+      "fragment": ": number }>;\n};\n\nfunction parsePeriod(raw: string | null): Period | null {\n  if (!raw) return \"7d\";\n  if (raw === \"24h\" || raw === \"7d\" || raw === \"30d\") return raw;\n  return null;\n}\n\nfunction periodMs(period: Period): number {\n  switch (period) {\n    case \"24h\":\n      return 24 * 60 * 60 * 1000;\n    case \"7d\":\n      return 7 * 24 * 60 * 60 * 1000;\n    case \"30d\":\n      return 30 * 24 * 60 * 60 * 1000;\n  }\n}\n\nfunction percentChange",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/overview/route.ts",
+        "start": 15,
+        "end": 35,
+        "startLoc": {
+          "line": 15,
+          "column": 11,
+          "position": 218
+        },
+        "endLoc": {
+          "line": 35,
+          "column": 14,
+          "position": 419
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/sessions/route.ts",
+        "start": 15,
+        "end": 35,
+        "startLoc": {
+          "line": 15,
+          "column": 18,
+          "position": 148
+        },
+        "endLoc": {
+          "line": 35,
+          "column": 16,
+          "position": 349
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 11,
+      "fragment": "}\n\nfunction escapeSqlString(value: string): string {\n  return value.replaceAll(\"'\", \"''\");\n}\n\nfunction toTinybirdDateTime64String(date: Date): string {\n  return date.toISOString().replace(\"T\", \" \").replace(\"Z\", \"\");\n}\n\nasync",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/overview/route.ts",
+        "start": 38,
+        "end": 48,
+        "startLoc": {
+          "line": 38,
+          "column": 1,
+          "position": 493
+        },
+        "endLoc": {
+          "line": 48,
+          "column": 6,
+          "position": 572
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/sessions/route.ts",
+        "start": 33,
+        "end": 43,
+        "startLoc": {
+          "line": 33,
+          "column": 1,
+          "position": 344
+        },
+        "endLoc": {
+          "line": 43,
+          "column": 7,
+          "position": 423
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 25,
+      "fragment": "}\n\nexport async function GET(\n  request: Request,\n  context: { params: Promise<{ id: string }> | { id: string } },\n): Promise<Response> {\n  const user = await getUserFromRequest(request);\n  if (!user) return Response.json({ error: \"Unauthorized\" }, { status: 401 });\n\n  const params = \"then\" in context.params ? await context.params : context.params;\n  const projectId = params.id;\n  if (!projectId) return Response.json({ error: \"Missing project id\" }, { status: 400 });\n\n  const ownedRows = await db\n    .select({ id: projects.id })\n    .from(projects)\n    .where(and(eq(projects.id, projectId), eq(projects.userId, user.id)));\n  if (!ownedRows[0]) return Response.json({ error: \"Project not found\" }, { status: 404 });\n\n  const url = new URL(request.url);\n  const period = parsePeriod(url.searchParams.get(\"period\"));\n  if (!period) return Response.json({ error: \"Invalid period\" }, { status: 400 });\n\n  const now = new Date();\n  const duration",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/overview/route.ts",
+        "start": 55,
+        "end": 79,
+        "startLoc": {
+          "line": 55,
+          "column": 1,
+          "position": 688
+        },
+        "endLoc": {
+          "line": 79,
+          "column": 9,
+          "position": 1076
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/sessions/route.ts",
+        "start": 41,
+        "end": 65,
+        "startLoc": {
+          "line": 41,
+          "column": 1,
+          "position": 420
+        },
+        "endLoc": {
+          "line": 65,
+          "column": 6,
+          "position": 808
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 12,
+      "fragment": ");\n}\n\nfunction escapeSqlString(value: string): string {\n  return value.replaceAll(\"'\", \"''\");\n}\n\nfunction toTinybirdDateTime64String(date: Date): string {\n  return date.toISOString().replace(\"T\", \" \").replace(\"Z\", \"\");\n}\n\nfunction",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/live/route.ts",
+        "start": 21,
+        "end": 32,
+        "startLoc": {
+          "line": 21,
+          "column": 2,
+          "position": 197
+        },
+        "endLoc": {
+          "line": 32,
+          "column": 9,
+          "position": 279
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/overview/route.ts",
+        "start": 37,
+        "end": 43,
+        "startLoc": {
+          "line": 37,
+          "column": 4,
+          "position": 490
+        },
+        "endLoc": {
+          "line": 43,
+          "column": 7,
+          "position": 423
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 23,
+      "fragment": ";\n}\n\nexport async function GET(\n  request: Request,\n  context: { params: Promise<{ id: string }> | { id: string } },\n): Promise<Response> {\n  const user = await getUserFromRequest(request);\n  if (!user) return Response.json({ error: \"Unauthorized\" }, { status: 401 });\n\n  const params = \"then\" in context.params ? await context.params : context.params;\n  const projectId = params.id;\n  if (!projectId) return Response.json({ error: \"Missing project id\" }, { status: 400 });\n\n  const ownedRows = await db\n    .select({ id: projects.id })\n    .from(projects)\n    .where(and(eq(projects.id, projectId), eq(projects.userId, user.id)));\n\n  if (!ownedRows[0]) return Response.json({ error: \"Project not found\" }, { status: 404 });\n\n  const url = new URL(request.url);\n  const limitRaw",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/live/route.ts",
+        "start": 38,
+        "end": 60,
+        "startLoc": {
+          "line": 38,
+          "column": 3,
+          "position": 382
+        },
+        "endLoc": {
+          "line": 60,
+          "column": 9,
+          "position": 703
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/sessions/route.ts",
+        "start": 40,
+        "end": 61,
+        "startLoc": {
+          "line": 40,
+          "column": 2,
+          "position": 418
+        },
+        "endLoc": {
+          "line": 61,
+          "column": 7,
+          "position": 738
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 6,
+      "fragment": "(\n  request: Request,\n  context: { params: Promise<{ id: string }> | { id: string } },\n): Promise<Response> {\n  const user = await getUserFromRequest(request);\n  if (!user) return Response.json({ success",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/projects/[id]/regenerate/route.ts",
+        "start": 11,
+        "end": 16,
+        "startLoc": {
+          "line": 11,
+          "column": 5,
+          "position": 116
+        },
+        "endLoc": {
+          "line": 16,
+          "column": 8,
+          "position": 201
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/sessions/route.ts",
+        "start": 43,
+        "end": 48,
+        "startLoc": {
+          "line": 43,
+          "column": 4,
+          "position": 430
+        },
+        "endLoc": {
+          "line": 48,
+          "column": 6,
+          "position": 515
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 14,
+      "fragment": ": number }>;\n};\n\ntype ErrorResponse = { error?: string; message?: string };\n\nfunction extractErrorMessage(body: unknown): string | null {\n  if (!body || typeof body !== \"object\") return null;\n  const maybe = body as ErrorResponse;\n  if (typeof maybe.error === \"string\" && maybe.error.length > 0) return maybe.error;\n  if (typeof maybe.message === \"string\" && maybe.message.length > 0) return maybe.message;\n  return null;\n}\n\nasync function fetchOverview",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/(dashboard)/projects/[id]/overview/page.tsx",
+        "start": 18,
+        "end": 31,
+        "startLoc": {
+          "line": 18,
+          "column": 11,
+          "position": 229
+        },
+        "endLoc": {
+          "line": 31,
+          "column": 14,
+          "position": 403
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/(dashboard)/projects/[id]/sessions/page.tsx",
+        "start": 17,
+        "end": 30,
+        "startLoc": {
+          "line": 17,
+          "column": 18,
+          "position": 144
+        },
+        "endLoc": {
+          "line": 30,
+          "column": 14,
+          "position": 318
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 7,
+      "fragment": "${period}`, {\n    method: \"GET\",\n    headers: { accept: \"application/json\" },\n  });\n  const body = (await response.json().catch(() => null)) as unknown;\n  if (!response.ok) throw new Error(extractErrorMessage(body) ?? `Request failed (${response.status})`);\n  return body as OverviewResponse",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/(dashboard)/projects/[id]/overview/page.tsx",
+        "start": 32,
+        "end": 38,
+        "startLoc": {
+          "line": 32,
+          "column": 28,
+          "position": 444
+        },
+        "endLoc": {
+          "line": 38,
+          "column": 17,
+          "position": 551
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/(dashboard)/projects/[id]/sessions/page.tsx",
+        "start": 31,
+        "end": 37,
+        "startLoc": {
+          "line": 31,
+          "column": 28,
+          "position": 359
+        },
+        "endLoc": {
+          "line": 37,
+          "column": 17,
+          "position": 466
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 10,
+      "fragment": "function getExpandedId(value: unknown): string | null {\n  if (typeof value === \"string\" && value.length > 0) return value;\n  if (value && typeof value === \"object\" && \"id\" in value && typeof (value as { id?: unknown }).id === \"string\") {\n    const id = (value as { id: string }).id;\n    return id.length > 0 ? id : null;\n  }\n  return null;\n}\n\nfunction getUnixSecondsDate",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/stripe/reconcile/route.ts",
+        "start": 13,
+        "end": 22,
+        "startLoc": {
+          "line": 13,
+          "column": 1,
+          "position": 100
+        },
+        "endLoc": {
+          "line": 22,
+          "column": 19,
+          "position": 259
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/webhooks/stripe/route.ts",
+        "start": 40,
+        "end": 49,
+        "startLoc": {
+          "line": 40,
+          "column": 1,
+          "position": 498
+        },
+        "endLoc": {
+          "line": 49,
+          "column": 18,
+          "position": 657
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 10,
+      "fragment": ";\n}\n\nexport async function POST(request: Request): Promise<Response> {\n  const session = await validateSession(request);\n  if (!session) {\n    return Response.json({ error: \"Unauthorized\" }, { status: 401 });\n  }\n\n  const",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/stripe/portal/route.ts",
+        "start": 11,
+        "end": 20,
+        "startLoc": {
+          "line": 11,
+          "column": 4,
+          "position": 134
+        },
+        "endLoc": {
+          "line": 20,
+          "column": 6,
+          "position": 219
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/stripe/reconcile/route.ts",
+        "start": 40,
+        "end": 49,
+        "startLoc": {
+          "line": 40,
+          "column": 2,
+          "position": 497
+        },
+        "endLoc": {
+          "line": 49,
+          "column": 4,
+          "position": 582
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 10,
+      "fragment": ";\n}\n\nexport async function POST(request: Request): Promise<Response> {\n  const session = await validateSession(request);\n  if (!session) {\n    return Response.json({ error: \"Unauthorized\" }, { status: 401 });\n  }\n\n  let formData",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/stripe/checkout/route.ts",
+        "start": 28,
+        "end": 37,
+        "startLoc": {
+          "line": 28,
+          "column": 5,
+          "position": 340
+        },
+        "endLoc": {
+          "line": 37,
+          "column": 9,
+          "position": 427
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/stripe/reconcile/route.ts",
+        "start": 40,
+        "end": 49,
+        "startLoc": {
+          "line": 40,
+          "column": 2,
+          "position": 497
+        },
+        "endLoc": {
+          "line": 49,
+          "column": 5,
+          "position": 584
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 10,
+      "fragment": "stripeCustomerId: users.stripeCustomerId })\n    .from(users)\n    .where(eq(users.id, session.userId));\n\n  const user = rows[0];\n  if (!user) {\n    return Response.json({ error: \"User not found\" }, { status: 404 });\n  }\n\n  const",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/stripe/checkout/route.ts",
+        "start": 51,
+        "end": 60,
+        "startLoc": {
+          "line": 51,
+          "column": 2,
+          "position": 605
+        },
+        "endLoc": {
+          "line": 60,
+          "column": 6,
+          "position": 697
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/stripe/portal/route.ts",
+        "start": 20,
+        "end": 26,
+        "startLoc": {
+          "line": 20,
+          "column": 2,
+          "position": 233
+        },
+        "endLoc": {
+          "line": 26,
+          "column": 3,
+          "position": 320
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 12,
+      "fragment": "export async function GET(\n  request: Request,\n  context: { params: Promise<{ id: string }> | { id: string } },\n): Promise<Response> {\n  const user = await getUserFromRequest(request);\n  if (!user) return Response.json({ error: \"Unauthorized\" }, { status: 401 });\n\n  const params = \"then\" in context.params ? await context.params : context.params;\n  const projectId = params.id;\n  if (!projectId) return Response.json({ error: \"Missing project id\" }, { status: 400 });\n\n  const projectRows",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/projects/[id]/route.ts",
+        "start": 66,
+        "end": 77,
+        "startLoc": {
+          "line": 66,
+          "column": 1,
+          "position": 540
+        },
+        "endLoc": {
+          "line": 77,
+          "column": 12,
+          "position": 733
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/projects/[id]/analytics/sessions/route.ts",
+        "start": 43,
+        "end": 54,
+        "startLoc": {
+          "line": 43,
+          "column": 1,
+          "position": 423
+        },
+        "endLoc": {
+          "line": 54,
+          "column": 10,
+          "position": 616
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 6,
+      "fragment": "useMemo(() => {\n    const data = projectQuery.data as null | { project?: unknown };\n    return (data?.project as null | Record<string, unknown>) ?? null;\n  }, [projectQuery.data]);\n\n  const repoName",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/(dashboard)/projects/[id]/layout.tsx",
+        "start": 36,
+        "end": 41,
+        "startLoc": {
+          "line": 36,
+          "column": 2,
+          "position": 397
+        },
+        "endLoc": {
+          "line": 41,
+          "column": 9,
+          "position": 480
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/(dashboard)/projects/[id]/page.tsx",
+        "start": 112,
+        "end": 117,
+        "startLoc": {
+          "line": 112,
+          "column": 2,
+          "position": 993
+        },
+        "endLoc": {
+          "line": 117,
+          "column": 9,
+          "position": 1076
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 16,
+      "fragment": "} from \"../../db/queries/projects\";\nimport { analyzeRepository } from \"../analyze\";\n\nfunction isRecord(value: unknown): value is Record<string, unknown> {\n  return typeof value === \"object\" && value !== null;\n}\n\nfunction readInstallationId(payload: Record<string, unknown>): bigint | null {\n  const installation = payload.installation;\n  if (!isRecord(installation)) return null;\n  const id = installation.id;\n  if (typeof id !== \"number\" || !Number.isFinite(id)) return null;\n  return BigInt(id);\n}\n\nasync",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/github/handlers/installation.ts",
+        "start": 10,
+        "end": 25,
+        "startLoc": {
+          "line": 10,
+          "column": 1,
+          "position": 62
+        },
+        "endLoc": {
+          "line": 25,
+          "column": 6,
+          "position": 236
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/github/handlers/push.ts",
+        "start": 1,
+        "end": 16,
+        "startLoc": {
+          "line": 1,
+          "column": 2,
+          "position": 6
+        },
+        "endLoc": {
+          "line": 16,
+          "column": 9,
+          "position": 180
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 9,
+      "fragment": "(payload: unknown): Promise<void> {\n  if (!isRecord(payload)) return;\n  const action = payload.action;\n  if (typeof action !== \"string\") return;\n\n  const installationId = readInstallationId(payload);\n  if (!installationId) return;\n\n  if (action === \"added\"",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/github/handlers/installation.ts",
+        "start": 75,
+        "end": 83,
+        "startLoc": {
+          "line": 75,
+          "column": 38,
+          "position": 800
+        },
+        "endLoc": {
+          "line": 83,
+          "column": 8,
+          "position": 891
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/github/handlers/installation.ts",
+        "start": 48,
+        "end": 56,
+        "startLoc": {
+          "line": 48,
+          "column": 26,
+          "position": 542
+        },
+        "endLoc": {
+          "line": 56,
+          "column": 10,
+          "position": 633
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 11,
+      "fragment": ");\n    await upsertProjectsForRepos({ userId, installationId, repositories });\n    await Promise.all(\n      repositories.map((repo) =>\n        analyzeRepository({ repoId: BigInt(repo.id), repoFullName: repo.fullName, installationId }),\n      ),\n    );\n    return;\n  }\n\n  if (action === \"removed\"",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/github/handlers/installation.ts",
+        "start": 87,
+        "end": 97,
+        "startLoc": {
+          "line": 87,
+          "column": 21,
+          "position": 936
+        },
+        "endLoc": {
+          "line": 97,
+          "column": 10,
+          "position": 1031
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/github/handlers/installation.ts",
+        "start": 60,
+        "end": 70,
+        "startLoc": {
+          "line": 60,
+          "column": 15,
+          "position": 678
+        },
+        "endLoc": {
+          "line": 70,
+          "column": 10,
+          "position": 773
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 16,
+      "fragment": ";\n\nfunction escapeSqlString(value: string): string {\n  return value.replaceAll(\"'\", \"''\");\n}\n\nfunction normalizeTimestamp(value: unknown): string | null {\n  const raw = String(value ?? \"\");\n  if (!raw) return null;\n  if (raw.includes(\"T\")) return raw.endsWith(\"Z\") ? raw : `${raw}Z`;\n\n  const iso = raw.replace(\" \", \"T\");\n  return iso.endsWith(\"Z\") ? iso : `${iso}Z`;\n}\n\nasync function fetchLastEventAtByProjectId",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/api/projects/route.ts",
+        "start": 6,
+        "end": 21,
+        "startLoc": {
+          "line": 6,
+          "column": 31,
+          "position": 70
+        },
+        "endLoc": {
+          "line": 21,
+          "column": 28,
+          "position": 238
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/projects/[id]/route.ts",
+        "start": 6,
+        "end": 21,
+        "startLoc": {
+          "line": 6,
+          "column": 34,
+          "position": 73
+        },
+        "endLoc": {
+          "line": 21,
+          "column": 25,
+          "position": 241
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 8,
+      "fragment": "const now = new Date();\n  const sessionRows = await db\n    .select({ userId: sessions.userId })\n    .from(sessions)\n    .where(and(eq(sessions.id, sessionId), gt(sessions.expiresAt, now)));\n\n  const userId = sessionRows[0]?.userId ?? null;\n  if (!userId) {",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/(dashboard)/settings/page.tsx",
+        "start": 16,
+        "end": 23,
+        "startLoc": {
+          "line": 16,
+          "column": 3,
+          "position": 171
+        },
+        "endLoc": {
+          "line": 23,
+          "column": 2,
+          "position": 278
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/(marketing)/pricing/page.tsx",
+        "start": 58,
+        "end": 65,
+        "startLoc": {
+          "line": 58,
+          "column": 3,
+          "position": 494
+        },
+        "endLoc": {
+          "line": 65,
+          "column": 7,
+          "position": 601
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 6,
+      "fragment": "<svg className=\"size-4 transition-transform group-hover:translate-x-0.5\" viewBox=\"0 0 16 16\" fill=\"none\">\n                    <path d=\"M3 8h10M9 4l4 4-4 4\" stroke=\"currentColor\" strokeWidth=\"2\" strokeLinecap=\"round\" strokeLinejoin=\"round\"/>\n                  </svg>\n                </button>\n              </form>\n            <",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/(dashboard)/settings/page.tsx",
+        "start": 101,
+        "end": 106,
+        "startLoc": {
+          "line": 101,
+          "column": 19,
+          "position": 1215
+        },
+        "endLoc": {
+          "line": 106,
+          "column": 2,
+          "position": 1288
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/(dashboard)/settings/page.tsx",
+        "start": 92,
+        "end": 97,
+        "startLoc": {
+          "line": 92,
+          "column": 19,
+          "position": 1077
+        },
+        "endLoc": {
+          "line": 97,
+          "column": 2,
+          "position": 1150
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 6,
+      "fragment": "<svg className=\"size-4 transition-transform group-hover:translate-x-0.5\" viewBox=\"0 0 16 16\" fill=\"none\">\n                  <path d=\"M3 8h10M9 4l4 4-4 4\" stroke=\"currentColor\" strokeWidth=\"2\" strokeLinecap=\"round\" strokeLinejoin=\"round\"/>\n                </svg>\n              </button>\n            </form>\n          )",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/app/(dashboard)/settings/page.tsx",
+        "start": 111,
+        "end": 116,
+        "startLoc": {
+          "line": 111,
+          "column": 17,
+          "position": 1339
+        },
+        "endLoc": {
+          "line": 116,
+          "column": 2,
+          "position": 1412
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/(dashboard)/settings/page.tsx",
+        "start": 92,
+        "end": 97,
+        "startLoc": {
+          "line": 92,
+          "column": 19,
+          "position": 1077
+        },
+        "endLoc": {
+          "line": 97,
+          "column": 2,
+          "position": 1150
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 14,
+      "fragment": "});\n\n  const text = await response.text();\n  const json = ((): null | { data?: T[]; error?: unknown } => {\n    try {\n      return JSON.parse(text) as { data?: T[]; error?: unknown };\n    } catch {\n      return null;\n    }\n  })();\n\n  if (!response.ok || !json || !Array.isArray(json.data)) {\n    const detail = json?.error ? String(json.error) : text.slice(0, 500);\n    throw new Error(`Tinybird SQL request failed (",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/tinybird/client.ts",
+        "start": 59,
+        "end": 72,
+        "startLoc": {
+          "line": 59,
+          "column": 3,
+          "position": 758
+        },
+        "endLoc": {
+          "line": 72,
+          "column": 31,
+          "position": 949
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/tinybird/client.ts",
+        "start": 28,
+        "end": 40,
+        "startLoc": {
+          "line": 28,
+          "column": 2,
+          "position": 338
+        },
+        "endLoc": {
+          "line": 40,
+          "column": 32,
+          "position": 528
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 13,
+      "fragment": ";\n\ntype ErrorResponse = { error?: string; message?: string };\n\nfunction extractErrorMessage(body: unknown): string | null {\n  if (!body || typeof body !== \"object\") return null;\n  const maybe = body as ErrorResponse;\n  if (typeof maybe.error === \"string\" && maybe.error.length > 0) return maybe.error;\n  if (typeof maybe.message === \"string\" && maybe.message.length > 0) return maybe.message;\n  return null;\n}\n\nexport async function fetchProject",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/hooks/use-project.ts",
+        "start": 11,
+        "end": 23,
+        "startLoc": {
+          "line": 11,
+          "column": 2,
+          "position": 87
+        },
+        "endLoc": {
+          "line": 23,
+          "column": 13,
+          "position": 254
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/hooks/use-projects.ts",
+        "start": 18,
+        "end": 30,
+        "startLoc": {
+          "line": 18,
+          "column": 2,
+          "position": 131
+        },
+        "endLoc": {
+          "line": 30,
+          "column": 14,
+          "position": 298
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 9,
+      "fragment": "});\n\n  const body = (await response.json().catch(() => null)) as unknown;\n\n  if (!response.ok) {\n    throw new Error(extractErrorMessage(body) ?? `Request failed (${response.status})`);\n  }\n\n  if (!body || typeof body !== \"object\") {",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/hooks/use-project.ts",
+        "start": 27,
+        "end": 35,
+        "startLoc": {
+          "line": 27,
+          "column": 3,
+          "position": 315
+        },
+        "endLoc": {
+          "line": 35,
+          "column": 2,
+          "position": 412
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/hooks/use-projects.ts",
+        "start": 31,
+        "end": 38,
+        "startLoc": {
+          "line": 31,
+          "column": 2,
+          "position": 344
+        },
+        "endLoc": {
+          "line": 38,
+          "column": 6,
+          "position": 440
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 13,
+      "fragment": "};\n\ntype ErrorResponse = { error?: string; message?: string };\n\nfunction extractErrorMessage(body: unknown): string | null {\n  if (!body || typeof body !== \"object\") return null;\n  const maybe = body as ErrorResponse;\n  if (typeof maybe.error === \"string\" && maybe.error.length > 0) return maybe.error;\n  if (typeof maybe.message === \"string\" && maybe.message.length > 0) return maybe.message;\n  return null;\n}\n\nexport async function fetchLiveFeed",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/hooks/use-live-feed.ts",
+        "start": 16,
+        "end": 28,
+        "startLoc": {
+          "line": 16,
+          "column": 2,
+          "position": 113
+        },
+        "endLoc": {
+          "line": 28,
+          "column": 14,
+          "position": 281
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/hooks/use-projects.ts",
+        "start": 18,
+        "end": 30,
+        "startLoc": {
+          "line": 18,
+          "column": 2,
+          "position": 130
+        },
+        "endLoc": {
+          "line": 30,
+          "column": 14,
+          "position": 298
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 12,
+      "fragment": ";\n\nfunction readRequiredEnv(name: string): string {\n  const value = process.env[name];\n  if (typeof value === \"string\" && value.length > 0) return value;\n\n  throw new Error(\n    `Missing required environment variable: ${name}. Set it in apps/web/.env.local for local dev, or in your Vercel project environment variables.`,\n  );\n}\n\nfunction",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/github/app.ts",
+        "start": 33,
+        "end": 44,
+        "startLoc": {
+          "line": 33,
+          "column": 5,
+          "position": 284
+        },
+        "endLoc": {
+          "line": 44,
+          "column": 9,
+          "position": 369
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/app/api/webhooks/github/route.ts",
+        "start": 4,
+        "end": 15,
+        "startLoc": {
+          "line": 4,
+          "column": 39,
+          "position": 53
+        },
+        "endLoc": {
+          "line": 15,
+          "column": 6,
+          "position": 138
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 17,
+      "fragment": ";\n\nfunction toSafeNumber(value: bigint): number {\n  const asNumber = Number(value);\n  if (!Number.isSafeInteger(asNumber)) {\n    throw new Error(`Installation ID is too large to safely convert to number: ${value.toString()}`);\n  }\n  return asNumber;\n}\n\nfunction parseRepoFullName(repoFullName: string): { owner: string; repo: string } | null {\n  const [owner, repo, ...rest] = repoFullName.split(\"/\");\n  if (!owner || !repo || rest.length > 0) return null;\n  return { owner, repo };\n}\n\nexport async",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/lib/github/analyze.ts",
+        "start": 5,
+        "end": 21,
+        "startLoc": {
+          "line": 5,
+          "column": 13,
+          "position": 57
+        },
+        "endLoc": {
+          "line": 21,
+          "column": 6,
+          "position": 236
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/github/generate.ts",
+        "start": 5,
+        "end": 21,
+        "startLoc": {
+          "line": 5,
+          "column": 17,
+          "position": 59
+        },
+        "endLoc": {
+          "line": 21,
+          "column": 9,
+          "position": 238
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 13,
+      "fragment": ",\n    icon: (\n      <svg\n        viewBox=\"0 0 24 24\"\n        aria-hidden=\"true\"\n        className=\"size-7\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"M3 17l6-6 4 4 7-7",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 31,
+        "end": 43,
+        "startLoc": {
+          "line": 31,
+          "column": 82,
+          "position": 176
+        },
+        "endLoc": {
+          "line": 43,
+          "column": 18,
+          "position": 245
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 13,
+        "end": 25,
+        "startLoc": {
+          "line": 13,
+          "column": 93,
+          "position": 74
+        },
+        "endLoc": {
+          "line": 25,
+          "column": 26,
+          "position": 143
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 13,
+      "fragment": ",\n    icon: (\n      <svg\n        viewBox=\"0 0 24 24\"\n        aria-hidden=\"true\"\n        className=\"size-7\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 50,
+        "end": 62,
+        "startLoc": {
+          "line": 50,
+          "column": 71,
+          "position": 290
+        },
+        "endLoc": {
+          "line": 62,
+          "column": 59,
+          "position": 359
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 13,
+        "end": 25,
+        "startLoc": {
+          "line": 13,
+          "column": 93,
+          "position": 74
+        },
+        "endLoc": {
+          "line": 25,
+          "column": 26,
+          "position": 143
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 13,
+      "fragment": ",\n    icon: (\n      <svg\n        viewBox=\"0 0 24 24\"\n        aria-hidden=\"true\"\n        className=\"size-7\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"M10 13a5 5 0 0 1 0-7l1.4-1.4a5 5 0 0 1 7 7L17 13",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 72,
+        "end": 84,
+        "startLoc": {
+          "line": 72,
+          "column": 108,
+          "position": 429
+        },
+        "endLoc": {
+          "line": 84,
+          "column": 49,
+          "position": 498
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 13,
+        "end": 25,
+        "startLoc": {
+          "line": 13,
+          "column": 93,
+          "position": 74
+        },
+        "endLoc": {
+          "line": 25,
+          "column": 26,
+          "position": 143
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 13,
+      "fragment": ",\n    icon: (\n      <svg\n        viewBox=\"0 0 24 24\"\n        aria-hidden=\"true\"\n        className=\"size-7\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 91,
+        "end": 103,
+        "startLoc": {
+          "line": 91,
+          "column": 73,
+          "position": 543
+        },
+        "endLoc": {
+          "line": 103,
+          "column": 42,
+          "position": 612
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 13,
+        "end": 25,
+        "startLoc": {
+          "line": 13,
+          "column": 93,
+          "position": 74
+        },
+        "endLoc": {
+          "line": 25,
+          "column": 26,
+          "position": 143
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 13,
+      "fragment": ",\n    icon: (\n      <svg\n        viewBox=\"0 0 24 24\"\n        aria-hidden=\"true\"\n        className=\"size-7\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <rect",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 112,
+        "end": 124,
+        "startLoc": {
+          "line": 112,
+          "column": 71,
+          "position": 681
+        },
+        "endLoc": {
+          "line": 124,
+          "column": 5,
+          "position": 745
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 13,
+        "end": 25,
+        "startLoc": {
+          "line": 13,
+          "column": 93,
+          "position": 74
+        },
+        "endLoc": {
+          "line": 25,
+          "column": 5,
+          "position": 138
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 18,
+      "fragment": "\">\n          {FEATURES.map((feature) => (\n            <div\n              key={feature.title}\n              className=\"group rounded-lg border border-[#e8e0d9] bg-white p-8 shadow-warm transition-all duration-300 hover:-translate-y-1 hover:shadow-warm-lg\"\n            >\n              <div className=\"mb-6 flex size-12 items-center justify-center rounded bg-[#ec7f13]/10 text-[#ec7f13] transition-transform group-hover:scale-110\">\n                {feature.icon}\n              </div>\n              <h3 className=\"mb-3 font-display text-xl font-semibold text-[#1b140d]\">{feature.title}</h3>\n              <p className=\"leading-relaxed text-[#9a734c]\">{feature.description}</p>\n            </div>\n          ))}\n        </div>\n      </div>\n    </section>\n  );\n}",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/marketing/features.tsx",
+        "start": 54,
+        "end": 71,
+        "startLoc": {
+          "line": 54,
+          "column": 38,
+          "position": 428
+        },
+        "endLoc": {
+          "line": 71,
+          "column": 2,
+          "position": 555
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/marketing/what-you-get.tsx",
+        "start": 145,
+        "end": 166,
+        "startLoc": {
+          "line": 145,
+          "column": 53,
+          "position": 960
+        },
+        "endLoc": {
+          "line": 166,
+          "column": 2,
+          "position": 1095
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 10,
+      "fragment": ") {\n      if (!open) return;\n      const target = event.target as Node | null;\n      if (!target) return;\n      if (rootRef.current && !rootRef.current.contains(target)) {\n        setOpen(false);\n      }\n    }\n\n    function onDocumentKeyDown",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/dashboard/user-dropdown.tsx",
+        "start": 30,
+        "end": 39,
+        "startLoc": {
+          "line": 30,
+          "column": 11,
+          "position": 288
+        },
+        "endLoc": {
+          "line": 39,
+          "column": 18,
+          "position": 374
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/dashboard/user-dropdown.tsx",
+        "start": 21,
+        "end": 30,
+        "startLoc": {
+          "line": 21,
+          "column": 11,
+          "position": 196
+        },
+        "endLoc": {
+          "line": 30,
+          "column": 21,
+          "position": 282
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 9,
+      "fragment": "\">\n            <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" className=\"size-4\">\n              <path\n                fill=\"currentColor\"\n                d=\"M3 3h18v18H3V3zm4 14h2V9H7v8zm4 0h2V5h-2v12zm4 0h2v-6h-2v6z\"\n              />\n            </svg>\n          </div>\n          <span className=\"text-base font-bold tracking-tight text-warm-900",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/dashboard/header.tsx",
+        "start": 16,
+        "end": 24,
+        "startLoc": {
+          "line": 16,
+          "column": 82,
+          "position": 137
+        },
+        "endLoc": {
+          "line": 24,
+          "column": 49,
+          "position": 198
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/marketing/footer.tsx",
+        "start": 12,
+        "end": 20,
+        "startLoc": {
+          "line": 12,
+          "column": 79,
+          "position": 97
+        },
+        "endLoc": {
+          "line": 20,
+          "column": 41,
+          "position": 158
+        }
+      }
+    },
+    {
+      "format": "tsx",
+      "lines": 7,
+      "fragment": "\" viewBox=\"0 0 16 16\" fill=\"none\" aria-hidden=\"true\">\n              <path d=\"M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H6\" stroke=\"currentColor\" strokeWidth=\"1.5\" strokeLinecap=\"round\" strokeLinejoin=\"round\"/>\n            </svg>\n            Log out\n          </button>\n        </form>\n      )",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/components/dashboard/header.tsx",
+        "start": 36,
+        "end": 42,
+        "startLoc": {
+          "line": 36,
+          "column": 65,
+          "position": 297
+        },
+        "endLoc": {
+          "line": 42,
+          "column": 2,
+          "position": 374
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/components/dashboard/user-dropdown.tsx",
+        "start": 101,
+        "end": 107,
+        "startLoc": {
+          "line": 101,
+          "column": 21,
+          "position": 916
+        },
+        "endLoc": {
+          "line": 107,
+          "column": 3,
+          "position": 993
+        }
+      }
+    },
+    {
+      "format": "javascript",
+      "lines": 26,
+      "fragment": "import { spawnSync } from \"node:child_process\";\nimport os from \"node:os\";\nimport fs from \"node:fs\";\nimport path from \"node:path\";\n\nconst browsersPath = path.resolve(process.cwd(), \".playwright-browsers\");\nconst pnpmCmd = process.platform === \"win32\" ? \"pnpm.cmd\" : \"pnpm\";\nconst extraArgs = process.argv.slice(2);\n\nfunction playwrightHostPlatformOverride() {\n  if (process.env.PLAYWRIGHT_HOST_PLATFORM_OVERRIDE) return undefined;\n  if (process.platform !== \"darwin\") return undefined;\n  if (process.arch !== \"arm64\") return undefined;\n\n  const darwinMajor = Number.parseInt(os.release().split(\".\")[0] ?? \"\", 10);\n  if (!Number.isFinite(darwinMajor)) return undefined;\n\n  const hasAppleCpuModel = os.cpus().some((cpu) => typeof cpu.model === \"string\" && cpu.model.includes(\"Apple\"));\n  if (hasAppleCpuModel) return undefined;\n\n  const LAST_STABLE_MACOS_MAJOR_VERSION = 15;\n  const macMajor = Math.min(darwinMajor - 9, LAST_STABLE_MACOS_MAJOR_VERSION);\n  return `mac${macMajor}-arm64`;\n}\n\nfunction removeMismatchedMacBrowserRevisions",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/web/scripts/playwright-install.mjs",
+        "start": 1,
+        "end": 26,
+        "startLoc": {
+          "line": 1,
+          "column": 1,
+          "position": 0
+        },
+        "endLoc": {
+          "line": 26,
+          "column": 36,
+          "position": 321
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/scripts/playwright-test.mjs",
+        "start": 1,
+        "end": 27,
+        "startLoc": {
+          "line": 1,
+          "column": 1,
+          "position": 0
+        },
+        "endLoc": {
+          "line": 27,
+          "column": 33,
+          "position": 322
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 10,
+      "fragment": ";\n};\n\nfunction readRequiredEnv(name: string): string {\n  const value = process.env[name];\n  if (typeof value === \"string\" && value.length > 0) return value;\n  throw new Error(`Missing required environment variable: ${name}`);\n}\n\nfunction",
+      "tokens": 0,
+      "firstFile": {
+        "name": "apps/events/lib/tinybird.ts",
+        "start": 16,
+        "end": 25,
+        "startLoc": {
+          "line": 16,
+          "column": 2,
+          "position": 116
+        },
+        "endLoc": {
+          "line": 25,
+          "column": 9,
+          "position": 198
+        }
+      },
+      "secondFile": {
+        "name": "apps/web/lib/tinybird/client.ts",
+        "start": 3,
+        "end": 12,
+        "startLoc": {
+          "line": 3,
+          "column": 7,
+          "position": 22
+        },
+        "endLoc": {
+          "line": 12,
+          "column": 7,
+          "position": 104
+        }
+      }
+    }
+  ]
+}
