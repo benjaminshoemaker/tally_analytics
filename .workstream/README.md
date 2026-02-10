@@ -91,16 +91,19 @@ avoids collisions with other worktrees.
 Codex App's worktree mode creates isolated git worktrees per thread. To
 integrate:
 
-1. In Codex App → Project Settings → Local Environment → Setup script:
+1. Open Codex App **Settings** (Cmd+,) → **Local Environments**
+2. Set the setup script to:
    ```
-   bash .workstream/setup.sh
+   bash .codex/setup.sh
    ```
-   (Or: `bash .codex/setup.sh` which delegates to the same script)
+   (Or directly: `bash .workstream/setup.sh`)
+3. When creating a thread, select **Worktree** under the composer and choose
+   your local environment
+4. Codex threads will automatically get dependencies installed and env files
+   copied when the worktree is created
 
-2. Codex threads will automatically get dependencies installed and env files
-   copied when created.
-
-3. The `.codex/AGENTS.md` file provides Codex-specific agent instructions.
+The `.codex/AGENTS.md` file provides Codex-specific agent instructions.
+Configuration is stored in the `.codex` folder and can be checked into git.
 
 ## Using with Claude Code
 

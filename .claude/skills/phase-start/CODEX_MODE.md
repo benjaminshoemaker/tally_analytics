@@ -37,7 +37,7 @@ Read `.claude/settings.local.json` for Codex settings:
 ```json
 {
   "codexReview": {
-    "codeModel": "gpt-5.2-codex",
+    "codeModel": "gpt-5.3-codex",
     "taskTimeoutMinutes": 60
   }
 }
@@ -46,7 +46,7 @@ Read `.claude/settings.local.json` for Codex settings:
 Extract configuration values:
 
 ```bash
-# Extract model (default: gpt-5.2-codex for code tasks)
+# Extract model (default: gpt-5.3-codex for code tasks)
 CODEX_MODEL=$(jq -r '.codexReview.codeModel // empty' .claude/settings.local.json 2>/dev/null)
 
 # Extract timeout in minutes (default: 60 = 1 hour)

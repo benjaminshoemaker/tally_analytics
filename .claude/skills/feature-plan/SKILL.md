@@ -7,6 +7,24 @@ allowed-tools: Bash, Read, Write, Edit, AskUserQuestion, Glob, Grep
 
 Generate the execution plan and agent additions for the feature `$1`.
 
+## Workflow
+
+Copy this checklist and track progress:
+
+```
+Feature Plan Progress:
+- [ ] Directory guard
+- [ ] Handle arguments (feature name)
+- [ ] Check prerequisites (FEATURE_SPEC.md + FEATURE_TECHNICAL_SPEC.md)
+- [ ] Existing file guard (prevent overwrite)
+- [ ] Generate EXECUTION_PLAN.md and AGENTS_ADDITIONS.md
+- [ ] Verify execution skills installed
+- [ ] Codex CLI detection and skill install
+- [ ] Run spec-verification
+- [ ] Run criteria audit
+- [ ] Cross-model review (if Codex available)
+```
+
 ## Directory Guard
 
 1. If `START_PROMPTS.md` or `GENERATOR_PROMPT.md` exists in the current working directory → **STOP**:

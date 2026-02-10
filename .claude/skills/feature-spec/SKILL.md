@@ -7,6 +7,22 @@ allowed-tools: Bash, Read, Write, AskUserQuestion
 
 Generate a feature specification document for the feature `$1`.
 
+## Workflow
+
+Copy this checklist and track progress:
+
+```
+Feature Spec Progress:
+- [ ] Directory guard
+- [ ] Handle arguments (feature name)
+- [ ] Create feature directory
+- [ ] Existing file guard (prevent overwrite)
+- [ ] Run guided Q&A process (from PROMPT.md)
+- [ ] Write FEATURE_SPEC.md
+- [ ] Capture deferred requirements
+- [ ] Cross-model review (if Codex available)
+```
+
 ## Directory Guard
 
 1. If `START_PROMPTS.md` or `GENERATOR_PROMPT.md` exists in the current working directory → **STOP**:
@@ -131,9 +147,27 @@ After collecting answers, append to `PROJECT_ROOT/DEFERRED.md` right away.
 
 After capturing (or skipping), continue the spec Q&A where you left off.
 
+## Verification (Automatic)
+
+After writing FEATURE_SPEC.md, run quality verification:
+
+1. Invoke `/verify-spec feature-spec` on the generated document
+2. This runs **quality checks only** (no upstream context preservation since FEATURE_SPEC.md has no upstream):
+   - Q-001: Vague/unmeasurable language ("fast", "user-friendly", "simple")
+   - Q-002: Subjective terms without targets ("better", "improved")
+   - Q-003: Missing rationale for decisions
+   - Q-005: Implicit assumptions
+   - Q-006: Conflicting requirements
+   - Q-PS-001: Missing user flow (feature mentioned without step-by-step interaction)
+   - Q-PS-002: Only happy path described (no edge cases)
+   - Q-PS-003: Unbounded scope ("all", "any", "every" without limits)
+   - Q-PS-004: Missing non-functional requirements (performance, security, accessibility)
+3. Present CRITICAL issues with resolution options (max 2 fix iterations)
+4. Do not proceed to cross-model review until verification passes or user explicitly chooses to proceed with noted issues
+
 ## Cross-Model Review (Automatic)
 
-After writing FEATURE_SPEC.md, run cross-model review if Codex CLI is available:
+After verification, run cross-model review if Codex CLI is available:
 
 1. Check if Codex CLI is installed: `codex --version`
 2. If available, run `/codex-consult` on the generated document
@@ -158,6 +192,7 @@ When complete, inform the user:
 ```
 FEATURE_SPEC.md created at features/$1/FEATURE_SPEC.md
 Deferred Requirements: {count} items captured to DEFERRED.md
+Verification: PASSED | PASSED WITH NOTES | NEEDS REVIEW
 Cross-Model Review: PASSED | PASSED WITH NOTES | SKIPPED
 
 Next: Run /feature-technical-spec $1

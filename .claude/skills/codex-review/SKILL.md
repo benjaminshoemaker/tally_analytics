@@ -104,15 +104,15 @@ Read `.claude/settings.local.json` for settings:
 
 ```bash
 # Read config
-CODE_MODEL=$(jq -r '.codexReview.codeModel // "gpt-5.2-codex"' .claude/settings.local.json 2>/dev/null || echo "gpt-5.2-codex")
-TIMEOUT_MINS=$(jq -r '.codexReview.reviewTimeoutMinutes // 10' .claude/settings.local.json 2>/dev/null || echo "10")
+CODE_MODEL=$(jq -r '.codexReview.codeModel // "gpt-5.3-codex"' .claude/settings.local.json 2>/dev/null || echo "gpt-5.3-codex")
+TIMEOUT_MINS=$(jq -r '.codexReview.reviewTimeoutMinutes // 20' .claude/settings.local.json 2>/dev/null || echo "20")
 ```
 
 If `codexReview.enabled` is explicitly `false`, skip with message.
 
 ### Select Model
 
-Priority order: `--model` flag > config > default (`gpt-5.2-codex`)
+Priority order: `--model` flag > config > default (`gpt-5.3-codex`)
 
 ```bash
 # 1. Explicit --model flag always wins
@@ -267,8 +267,8 @@ Read from `.claude/settings.local.json`:
 {
   "codexReview": {
     "enabled": true,
-    "codeModel": "gpt-5.2-codex",
-    "reviewTimeoutMinutes": 10
+    "codeModel": "gpt-5.3-codex",
+    "reviewTimeoutMinutes": 20
   }
 }
 ```
@@ -276,8 +276,8 @@ Read from `.claude/settings.local.json`:
 | Setting | Default | Description |
 |---------|---------|-------------|
 | `enabled` | `true` | Set to `false` to disable Codex review |
-| `codeModel` | `"gpt-5.2-codex"` | Model for code review tasks |
-| `reviewTimeoutMinutes` | `10` | Max time for review invocations |
+| `codeModel` | `"gpt-5.3-codex"` | Model for code review tasks |
+| `reviewTimeoutMinutes` | `20` | Max time for review invocations |
 
 For document consultation (specs, plans), see `/codex-consult` which uses `codexConsult` config.
 For task execution via Codex, see `/phase-start --codex` which uses `codexReview.taskTimeoutMinutes`.

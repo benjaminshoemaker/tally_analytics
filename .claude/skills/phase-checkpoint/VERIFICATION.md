@@ -8,31 +8,32 @@ Run these commands and report results:
    ```
    {commands.test from verification-config}
    ```
-   (if empty, block and ask to configure)
+   If `commands.test` is not in config: `Tests: SKIPPED (not configured)`
 
 2. **Type Checking**
    ```
    {commands.typecheck from verification-config}
    ```
-   (if empty, mark as not applicable or configure)
+   If `commands.typecheck` is not in config: `Type Check: SKIPPED (not configured)`
 
 3. **Linting**
    ```
    {commands.lint from verification-config}
    ```
-   (if empty, mark as not applicable or configure)
+   If `commands.lint` is not in config: `Linting: SKIPPED (not configured)`
 
 4. **Build** (if applicable)
    ```
    {commands.build from verification-config}
    ```
-   (if empty and project has build step, ask to configure)
+   If `commands.build` is not in config: `Build: SKIPPED (not configured)`
 
 5. **Dev Server Starts**
    ```
    {devServer.command from verification-config}
    ```
-   Verify it starts without errors and is accessible at `{devServer.url}`.
+   Only start if `devServer.command` exists in config.
+   If not in config: `Dev Server: SKIPPED (not configured)`
 
 6. **Security Scan**
 
@@ -88,12 +89,14 @@ First, check if phase includes UI work by scanning for `BROWSER:*` criteria.
 **If browser criteria exist:**
 
 a. **Resolve target URL** (deployment config check):
-   - Read `deployment.enabled` from verification-config.json
-   - If enabled: Invoke vercel-preview skill to get preview URL
+   - If `deployment` section missing from config → go straight to localhost
+   - If `deployment.enabled` is true: Invoke vercel-preview skill to get preview URL
    - If preview URL found: TARGET = preview URL
    - If not found and `fallbackToLocal`: TARGET = localhost (with warning)
    - If not found and NO fallback: BLOCK verification
    - If deployment not enabled: TARGET = localhost (devServer.url)
+   - If `devServer` section also missing from config → skip browser verification entirely:
+     `"Browser Verification: SKIPPED (no dev server or deployment configured)"`
 
 b. Check tool availability (fallback chain):
    - ExecuteAutomation Playwright → Browser MCP → Microsoft Playwright → Chrome DevTools

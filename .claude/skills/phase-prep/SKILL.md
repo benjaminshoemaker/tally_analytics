@@ -89,8 +89,16 @@ Before starting, confirm the required files exist:
    - Flag any incomplete dependencies
 
 3. **Verification Config** — Check `.claude/verification-config.json`:
-   - If missing or any required command is empty, run `/configure-verification`
-   - Confirm commands for tests, lint, typecheck, build, coverage, dev server
+   - If file is completely missing → run `/configure-verification` to auto-detect
+   - If file exists but some command keys are omitted → treat as "not configured
+     for that check" (don't block, don't ask to configure)
+   - If upcoming phase has `BROWSER:*` criteria in EXECUTION_PLAN.md and config
+     has no `auth` or `deployment` section → emit warning (non-blocking):
+     ```
+     WARNING: Phase $1 has browser criteria but no auth/deployment configured.
+     Browser tests will run against localhost without authentication.
+     Configure these in verification-config.json if needed.
+     ```
 
 4. **Git Status** — Check repository state:
    - Run `git status` to verify clean working tree (or understand current state)
@@ -247,7 +255,8 @@ Documents:
 
 Verification Config:
 - verification-config.json: ✓ | ✗
-- Commands configured: Tests | Lint | Typecheck | Build | Coverage | Dev Server
+- Configured: {list only commands that ARE in config, e.g., "test, lint, build"}
+- Not configured: {list omitted commands, or "none" if all present}
 
 Git: {branch}, {clean | dirty}
 
@@ -318,7 +327,7 @@ Auto-advance to `/phase-start $1` ONLY if ALL of these are true:
 
 1. ✓ All Pre-Phase Setup items are PASS (none FAIL or BLOCKED)
 2. ✓ Dependencies (prior phases) are complete
-3. ✓ Verification config is properly configured
+3. ✓ Verification config file exists (omitted keys are OK — treated as not applicable)
 4. ✓ Criteria audit passed (for Phase 1)
 5. ✓ `--pause` flag was NOT passed to this command
 6. ✓ `autoAdvance.enabled` is true (or not configured, defaulting to true)

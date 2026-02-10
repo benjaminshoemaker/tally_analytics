@@ -66,6 +66,17 @@ When requirements are refined through Q&A, add a clarifications block:
 
 ## Workflow
 
+Copy this checklist and track progress:
+
+```
+Add TODO Progress:
+- [ ] Step 1: Gather information (title, priority, effort, description, section)
+- [ ] Step 2: Format the TODO line
+- [ ] Step 3: Read current TODOS.md
+- [ ] Step 4: Insert TODO into selected section
+- [ ] Step 5: Confirm addition
+```
+
 ### Step 1: Gather Information
 
 Use AskUserQuestion to collect TODO details:

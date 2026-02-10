@@ -52,7 +52,7 @@ Check which optional tools are available:
 
 **Browser fallback chain:** ExecuteAutomation → Browser MCP → Microsoft Playwright → Chrome DevTools → Manual
 
-Read `.claude/verification-config.json` from PROJECT_ROOT. If missing or incomplete, run `/configure-verification` first.
+Read `.claude/verification-config.json` from PROJECT_ROOT. If missing entirely, run `/configure-verification`. Omitted keys mean those checks are not configured — skip them rather than blocking.
 
 Read `.claude/settings.local.json` for cross-model review config:
 ```json
@@ -74,14 +74,18 @@ See [VERIFICATION.md](VERIFICATION.md) for detailed check procedures.
 
 ### Automated Checks
 
-Run these using commands from verification-config:
-1. Tests (`commands.test`)
-2. Type Checking (`commands.typecheck`)
-3. Linting (`commands.lint`)
-4. Build (`commands.build`)
-5. Dev Server (`devServer.command`)
-6. Security Scan
-7. Code Quality Metrics
+Run these using commands from verification-config (skip any that are not configured):
+1. Tests (`commands.test`) — skip if not in config
+2. Type Checking (`commands.typecheck`) — skip if not in config
+3. Linting (`commands.lint`) — skip if not in config
+4. Build (`commands.build`) — skip if not in config
+5. Mutation Tests (`commands.mutation_test`) — skip if not in config
+6. Dev Server (`devServer.command`) — skip if not in config
+7. Security Scan
+8. Code Quality Metrics
+
+If `commands.mutation_test` is configured, treat failures as a local verification
+failure (it is part of the quality gate).
 
 ### Optional Checks
 
@@ -191,6 +195,7 @@ After checkpoint passes, update `.claude/phase-state.json`:
       "type_check_passed": true,
       "lint_passed": true,
       "security_passed": true,
+      "mutation_tests_passed": true,
       "coverage_percent": 85,
       "manual_verified": true,
       "codex_review": {
@@ -226,6 +231,7 @@ Automated Checks:
 - Type Check: PASSED | FAILED | SKIPPED
 - Linting: PASSED | FAILED | SKIPPED
 - Build: PASSED | FAILED | SKIPPED
+- Mutation Tests: PASSED | FAILED | SKIPPED
 - Security: PASSED | FAILED
 
 Optional Checks:
@@ -291,10 +297,9 @@ See [AUTO_ADVANCE.md](AUTO_ADVANCE.md) for auto-advance logic.
 - If skipping: Record in DEFERRED.md with reason and timestamp
 - Note: Skipped items don't count as PASSED for auto-advance
 
-**If verification config is missing critical commands:**
-- STOP and run `/configure-verification`
-- Do NOT substitute or guess commands
-- Report which commands are missing
+**If verification config file is missing entirely:**
+- Run `/configure-verification` to auto-detect
+- Omitted keys in an existing config are intentional — skip those checks
 
 **If auto-advance chain should stop:**
 - Report: "Auto-advance stopped at Phase $1 checkpoint"

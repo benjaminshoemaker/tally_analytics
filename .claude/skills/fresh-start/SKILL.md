@@ -7,6 +7,24 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
 
 Orient to a project directory and load context for execution.
 
+## Workflow
+
+Copy this checklist and track progress:
+
+```
+Fresh Start Progress:
+- [ ] Detect context (project root vs feature directory)
+- [ ] Directory guard (verify AGENTS.md + EXECUTION_PLAN.md exist)
+- [ ] Git initialization (if needed)
+- [ ] Feature branch setup (feature mode only)
+- [ ] AGENTS_ADDITIONS merge (feature mode only)
+- [ ] Read context and summarize
+- [ ] Auto-configure verification (first run only)
+- [ ] Phase state detection
+- [ ] Auto-prep phase (first run only)
+- [ ] Branch context detection
+```
+
 ## Project Directory
 
 Use the current working directory by default.
@@ -15,7 +33,9 @@ If `$1` is provided, treat `$1` as the working directory and read files under `$
 
 ## Context Detection
 
-Determine working context before validation:
+Determine working context before validation.
+
+**Convention:** For feature work, run all execution commands from the feature directory (`features/<name>/`), not the project root. The skills auto-detect feature mode from the path.
 
 1. Let WORKING_DIR = `$1` if provided, otherwise current working directory
 
@@ -115,46 +135,115 @@ If MODE = "feature", check for and offer to merge workflow additions:
 
 4. Ask: "Apply these workflow additions to AGENTS.md now? (recommended before starting work)"
 
-5. If user approves:
-   - Read current PROJECT_ROOT/AGENTS.md
-   - Use AGENTS_ADDITIONS.md as instructions to edit AGENTS.md:
-     - Extract the "Content to add" blocks
-     - Insert each block at the location specified in "Where to add"
-     - If location is unclear, append to end of AGENTS.md
-   - Add a comment marker where content was added: `<!-- Added for FEATURE_NAME -->`
-   - Prepend a header to AGENTS_ADDITIONS.md indicating merge is complete:
-     ```
-     <!-- MERGED into PROJECT_ROOT/AGENTS.md on YYYY-MM-DD -->
-     ```
-   - Report: "Applied workflow additions to AGENTS.md"
+5. **Show diff for each section and collect approvals:**
 
-6. If user declines:
+   For each section/block in AGENTS_ADDITIONS.md:
+   a. Display the section heading and its content
+   b. Show where it would be inserted in AGENTS.md:
+      - If a matching heading exists in AGENTS.md → append under that heading
+      - If no match → append as a new section at end of AGENTS.md
+   c. Ask via AskUserQuestion: "Apply this addition?"
+      - Options: "Yes, apply" / "Skip this section" / "Edit first" (let user modify before applying)
+
+   Apply approved sections using Edit tool:
+   - Insert under matching heading if one exists, otherwise append as new section
+   - Add a comment marker: `<!-- Added for FEATURE_NAME -->`
+   - Preserve existing AGENTS.md formatting and structure
+
+   After all sections processed, prepend a header to AGENTS_ADDITIONS.md:
+   ```
+   <!-- MERGED into PROJECT_ROOT/AGENTS.md on YYYY-MM-DD -->
+   <!-- Applied: {list of applied sections} -->
+   <!-- Skipped: {list of skipped sections} -->
+   ```
+
+   Report: "Applied {N}/{total} workflow additions to AGENTS.md"
+
+6. If user declines all:
    - Report: "Skipped. You can manually apply AGENTS_ADDITIONS.md changes later."
    - Continue with fresh-start (don't block)
 
-## Verification Configuration (First Run)
+## Auto-Configure Verification (First Run Only)
 
-Check if verification is configured:
+Silently auto-detect verification commands if not already configured.
 
-1. Check if `PROJECT_ROOT/.claude/verification-config.json` exists and is non-empty
-2. If it exists and has content, skip this section
-3. If missing or empty, check for a `"skipped": true` marker — if present, skip
-4. Otherwise, prompt the user:
+1. Check if `PROJECT_ROOT/.claude/verification-config.json` exists
+2. **Skip this section if ANY of these are true:**
+   - File exists and contains real config (has a `commands` key)
+   - File exists with only `{"skipped": true}` (user previously opted out)
+3. **Run auto-detection if:**
+   - File does not exist
+   - File is empty
 
-```
-Verification not configured. Configure now?
+Invoke `/configure-verification` with PROJECT_ROOT. This runs silently with no
+prompts and prints a one-line summary.
 
-[Y] Yes - run /configure-verification (recommended)
-[n] No - remind me later
-[s] Skip - don't ask again for this project
-```
+## Phase State Detection
 
-**Handling:**
-- **Y (default):** Invoke `/configure-verification` with PROJECT_ROOT, then continue
-- **n:** Report "Run `/configure-verification` before `/phase-prep` to enable automated verification." and continue
-- **s:** Create `.claude/verification-config.json` with `{"skipped": true}` and continue
+Check for existing phase state to determine if this is a resume or first run:
 
-**Note:** In non-interactive/CI environments, if no response is possible, treat as "n" (remind later) and continue without blocking.
+1. Check if `.claude/phase-state.json` exists in PROJECT_ROOT (or FEATURE_DIR if feature mode)
+
+2. **If valid phase state exists** (file exists, parses correctly, has `current_phase`):
+   - This is a **resume**. Skip auto-configure and auto-prep (already done).
+   - Report:
+     ```
+     RESUMING SESSION
+     ================
+     Current phase: {current_phase}
+     Completed: {count} tasks
+     In progress: Task {in_progress_task} (if any)
+     Last activity: {relative time, e.g., "2 hours ago"}
+     ```
+   - If `in_progress_task` exists, offer to continue:
+     - "Continue with Task {id}: {task title}?" [Y/n]
+     - If yes, jump directly to that task after context load
+   - **Do not run auto-prep on resume.** Go straight to Branch Context Detection.
+
+3. **If no phase state exists** (or file is invalid/stale):
+   - This is a **first run**. Continue to Auto-Prep Phase section.
+
+## Auto-Prep Phase (First Run Only)
+
+**Skip this section entirely if resuming** (phase-state.json exists and is valid).
+
+After context reading and verification config, automatically prepare the next phase:
+
+1. **Determine next phase number:**
+   - If no phase state exists → Phase 1
+   - If phase state exists but is stale/invalid → Phase 1
+
+2. **Invoke `/phase-prep {next_phase}`** silently.
+   - Phase-prep will verify prerequisites and auto-advance to `/phase-start` if
+     all checks pass (via its existing auto-advance logic).
+   - If phase-prep blocks (human setup needed), it will report what's needed
+     and the user runs `/phase-start` manually after resolving.
+
+## Branch Context Detection
+
+Detect the current git branch and load relevant context:
+
+1. Get current branch:
+   ```bash
+   git branch --show-current 2>/dev/null
+   ```
+
+2. If branch matches `feature/*` pattern:
+   - Extract feature name from branch (e.g., `feature/analytics-dashboard` → `analytics-dashboard`)
+   - Look for matching feature directory: `PROJECT_ROOT/features/{feature-name}/`
+   - If found and MODE is "greenfield", suggest: "Switch to feature mode? Found feature directory for this branch."
+
+3. Summarize recent branch activity:
+   ```bash
+   git log --oneline -5 2>/dev/null
+   ```
+   Report: "Recent commits on this branch: {summary}"
+
+4. Check for uncommitted changes:
+   ```bash
+   git status --porcelain 2>/dev/null
+   ```
+   If changes exist, report: "Note: {N} uncommitted changes in working tree"
 
 ## Required Context
 

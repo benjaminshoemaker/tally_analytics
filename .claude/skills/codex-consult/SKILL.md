@@ -105,7 +105,7 @@ Read `.claude/settings.local.json` for settings:
 ```bash
 # Read model from config (codexConsult with fallback to codexReview)
 CONSULT_MODEL=$(jq -r '.codexConsult.researchModel // .codexReview.researchModel // "gpt-5.2"' .claude/settings.local.json 2>/dev/null || echo "gpt-5.2")
-TIMEOUT_MINS=$(jq -r '.codexConsult.consultTimeoutMinutes // 15' .claude/settings.local.json 2>/dev/null || echo "15")
+TIMEOUT_MINS=$(jq -r '.codexConsult.consultTimeoutMinutes // 20' .claude/settings.local.json 2>/dev/null || echo "20")
 ```
 
 Check enabled status (fallback chain):
@@ -257,7 +257,7 @@ Read from `.claude/settings.local.json`:
   "codexConsult": {
     "enabled": true,
     "researchModel": "gpt-5.2",
-    "consultTimeoutMinutes": 15
+    "consultTimeoutMinutes": 20
   }
 }
 ```
@@ -266,7 +266,7 @@ Read from `.claude/settings.local.json`:
 |---------|---------|----------|-------------|
 | `enabled` | `true` | `codexReview.enabled` | Set to `false` to disable consultation |
 | `researchModel` | `"gpt-5.2"` | `codexReview.researchModel` | Model for consultation tasks |
-| `consultTimeoutMinutes` | `15` | — | Max time for consultation invocations |
+| `consultTimeoutMinutes` | `20` | — | Max time for consultation invocations |
 
 Existing `codexReview.researchModel` config continues to work via fallback.
 
