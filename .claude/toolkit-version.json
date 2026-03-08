@@ -1,189 +1,519 @@
 {
   "toolkit_location": "/Users/coding/Projects/ai_coding_project_base",
-  "toolkit_commit": "b232308",
-  "toolkit_commit_full": "0113c1ecaf1ffcd8f89ccd8ca540b5a22c465a83",
-  "last_sync": "2026-02-15T19:17:04Z",
+  "toolkit_commit": "ba2c236",
+  "toolkit_commit_full": "ba2c2369fdf6c21c7c6e87557563106b267f6583",
+  "last_sync": "2026-03-08T01:38:02.925Z",
   "skill_resolution": "local",
   "files": {
     ".claude/skills/add-todo/SKILL.md": {
-      "hash": "f988630b1805bced4b73eab5570eefa8443470d8bb03aad958ce18ae82d4817c"
+      "hash": "e37c71ec7cc448781fe8dafcf15b1cc4fd97316047a2cc0f45d583a5a965caf9",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/analyze-sessions/SKILL.md": {
-      "hash": "0a09ca80ec1b4dc203a92b9d4937f15a3ca9e467f03e32d2c805503024b0a38c"
+      "hash": "0ea56e03cf06ec7a78c92fef3b0d4de9b8327b82d033990fe0261636aab45a6b",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/audit-agentsmd/ATTENTION_MODEL.md": {
+      "hash": "ba225fb0560fbf8d879cb5d214b7785b1559750d112eb906fd0343c2f777ff50",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/audit-agentsmd/EXTRACTION_RULES.md": {
+      "hash": "acb6f94de6e0538dee6970daa0852a2c5aecdb3d144da22e9e21aa03ff928fb2",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/audit-agentsmd/SKILL.md": {
+      "hash": "60b93d437d764915b7416198aa8156171569d911cb0a1ac703937f7f0646b7c0",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/audit-skills/CRITERIA.md": {
-      "hash": "450911df67f802aa15b70b991bc6fbcd2555cafd872a0c61b314acd5629ca456"
+      "hash": "450911df67f802aa15b70b991bc6fbcd2555cafd872a0c61b314acd5629ca456",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/audit-skills/SCORING.md": {
-      "hash": "46b6b562211e570cc7eea2e8965a32acc8228f11de5a3658ef748bd56394e567"
+      "hash": "46b6b562211e570cc7eea2e8965a32acc8228f11de5a3658ef748bd56394e567",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/audit-skills/SKILL.md": {
-      "hash": "d0a3dfe468003d3cd197eb64f63f12c80d9a8b1de2b97ff35af0d6510f5bae26"
+      "hash": "28c0f31ef621823666e8ceb1048c95e76d058ad24004a2d708d5125c7974585a",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/auto-verify/PATTERNS.md": {
-      "hash": "b8dd6a9362e4b6198b05c98e0840214f6d7acedef787de7d62ba32b5954c1183"
+      "hash": "b99c1ffb9743c1e3140be2fabe72d8bfcc97ff1d497188742363ae5976635669",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/auto-verify/SKILL.md": {
-      "hash": "cf5859931703409c4ed3864035280fd6c96b40cd08b27a8f62a118d3f175a710"
+      "hash": "26f5c6d86bef0885b572529acd95a82d2af8c948e1ecf110f34c1d06c26fcb27",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/browser-verification/SKILL.md": {
-      "hash": "a5efaee2cc46f148ebfceee2b422a88eb8d40e8b5f5ad4130e2a25fbaca0f0ea"
+      "hash": "b679c4f8ff67a9a6af6883d426869e7605d7e0006800ce12b84f363f18abc4d8",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/browser-verification/TOOL_NOTES.md": {
-      "hash": "c52811ff59ee17cbffc3a847b12c2bc7d4eb27dbc33e6bd29d4d2c8c36cb7527"
+      "hash": "c52811ff59ee17cbffc3a847b12c2bc7d4eb27dbc33e6bd29d4d2c8c36cb7527",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/capture-learning/SKILL.md": {
+      "hash": "4451747034ae129076be1fbba44a87aa650182796a8ca25ddb01526e72861c45",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/code-verification/SKILL.md": {
-      "hash": "2796f7c0a6880514693cc3b734254c381ae874c904904e672cd83f3022a1d27d"
+      "hash": "7eb412d20cd78de2186bbde6304e85d311a1abc0df379239977079bdb642d42c",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/codex-consult/CODEX_INVOCATION.md": {
-      "hash": "5fb9981989ccb17c74947b46c7b37da5383ea74c41bafe0ea0bc6ef36b26f848"
+      "hash": "725c55f1c7eb0422c563320bf7d25ef2543df9560af67db7fc64f04c930fe4e9",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/codex-consult/PROMPT_TEMPLATE.md": {
-      "hash": "430f8c199b17f699838c9cedeaaec2cb612b89000ff0c8d984cf1ba96272fccb"
+      "hash": "430f8c199b17f699838c9cedeaaec2cb612b89000ff0c8d984cf1ba96272fccb",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/codex-consult/SKILL.md": {
-      "hash": "47f603b5cc9c1c729ab1d55310948245837b76619cf92928012f90f72e7585b9"
+      "hash": "09e4f54673298c2beda6c933a577218a8eedced5885e86a8790e8ab396fb5985",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/codex-review/CODEX_INVOCATION.md": {
-      "hash": "f220b708aa86ef542007bc56550772f5aa35a84f0db93b6498fc9e702bb5dee6"
+      "hash": "b618fe0496c801521363c94482b904e4796d33721bc85f60189e12701bea3c08",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/codex-review/EVALUATION_PRACTICES.md": {
-      "hash": "45a1008cd3d36de8b2107f5c06b14102234a9788e97422b7f549681520d22482"
+      "hash": "45a1008cd3d36de8b2107f5c06b14102234a9788e97422b7f549681520d22482",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/codex-review/PROMPT_TEMPLATE.md": {
-      "hash": "28b8486fd1d8f000afea6c7bfd9d26c4f66907529f1c46c1edc525f1db654a40"
+      "hash": "28b8486fd1d8f000afea6c7bfd9d26c4f66907529f1c46c1edc525f1db654a40",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/codex-review/SKILL.md": {
-      "hash": "3e7f1e912e8d696f258ca23d2c688fbdf892f52ac8c8220a471ba277ef520a19"
-    },
-    ".claude/skills/configure-verification/SKILL.md": {
-      "hash": "7549d552f780b7e925cd0498b89e7d9005e2036ce3bb20ca8cace09c2ba49ed8"
+      "hash": "185c56ae10eb9d018f062ab9cfa79ba8d3dd2af8d85036bf4fab7744755a6ca9",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/create-pr/SKILL.md": {
-      "hash": "6c81eb29ad140ce1d54827a0e2c29a946657e76683cbaacf552acc79ee1fe7e8"
+      "hash": "0d357ef325db20cec037a5f20adbb0323f655e01b061a2deb28c1f7b8f086ef2",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/criteria-audit/SKILL.md": {
-      "hash": "76f8a441db83f92132b22c517081ae666d209bb597422da10aad6f287e49397a"
-    },
-    ".claude/skills/feature-plan/PROMPT.md": {
-      "hash": "afd1e557bdd57a870a45a386423007b6c08948a93718594778f061f02005cd75"
-    },
-    ".claude/skills/feature-plan/SKILL.md": {
-      "hash": "9199fa898b3d6da0294ceeff68b9622c1421a2afaad618309f1034e664b43c4f"
-    },
-    ".claude/skills/feature-spec/PROMPT.md": {
-      "hash": "c5e2fcdc322d3ae710a40b4fbf42a98c9d5124bcddbbf96619534680b9d5dffc"
-    },
-    ".claude/skills/feature-spec/SKILL.md": {
-      "hash": "d75bf41249d5cacb2546692f224454fd6bd54fdcb6b3d5f47aca2482b502ec54"
-    },
-    ".claude/skills/feature-technical-spec/PROMPT.md": {
-      "hash": "9b2b6888174abc7af9e704d9c656d8b31d2580c405d42e904b23e3d01f8cf7a5"
-    },
-    ".claude/skills/feature-technical-spec/SKILL.md": {
-      "hash": "35875fdcb2aba55a2bd4283f46df2dc4afefa19aed554117cdde98a34856d012"
-    },
-    ".claude/skills/fresh-start/SKILL.md": {
-      "hash": "9e6899be83e75c232d7de1e6271c5a5e10064c91f83882f26bd53bfd573271af"
-    },
-    ".claude/skills/list-todos/QA_WORKFLOW.md": {
-      "hash": "3ddcc82b0927ba3e41231e477f1f81d46ee0f11a86ecc1dc9bc1db821157626d"
-    },
-    ".claude/skills/list-todos/SKILL.md": {
-      "hash": "c4e922358aefc85a6d9f736b88688be4ff3a03cafec25a34e8a6d669bf28c82a"
-    },
-    ".claude/skills/oauth-login/SKILL.md": {
-      "hash": "759c3991a840801f9019ffabfc4744a8553fa45659f22bf7b201e849aed0b43f"
-    },
-    ".claude/skills/phase-checkpoint/AUTO_ADVANCE.md": {
-      "hash": "2f9baa38582cb851ea8190f633366a605c0c6a3a820aaded37e5bcb8efc87e14"
-    },
-    ".claude/skills/phase-checkpoint/DOCS_PROTOCOL.md": {
-      "hash": "d54bd7c3d5619c1200141067510326589b3229cdaa2c389615c0728a4db806bf"
-    },
-    ".claude/skills/phase-checkpoint/SKILL.md": {
-      "hash": "957f8b3778d1d93989040c97c9a15b41b33145142bbbdd34bc4adf28d31b40be"
-    },
-    ".claude/skills/phase-checkpoint/VERIFICATION.md": {
-      "hash": "106661d3a8a197db9ba267eed620621ad60759ea768d78c219c2735742294167"
-    },
-    ".claude/skills/phase-prep/SERVICES.md": {
-      "hash": "22c2da4629c6d1d766c6757f11596eff3963b4daee04f39703877858c26a6815"
-    },
-    ".claude/skills/phase-prep/SKILL.md": {
-      "hash": "fc136932c901d172d56198501367bc3dd61ae2cb90b7f4f811c7ce237cfe07cf"
-    },
-    ".claude/skills/phase-start/CODEX_MODE.md": {
-      "hash": "2652773d1bca3f00bccf53c006d1085fc16bd9aa69dd362d9b00f8f70e88f79f"
-    },
-    ".claude/skills/phase-start/SKILL.md": {
-      "hash": "4a9f71a65101a9d55001bb3adcde66df06be66d1015a184eb589bd11d53301cf"
-    },
-    ".claude/skills/phase-start/STATE_TRACKING.md": {
-      "hash": "7e5eef7524002f3a9b86baab2fccb2d53cad09991be7e0dc8040e157a09ceb43"
-    },
-    ".claude/skills/populate-state/SKILL.md": {
-      "hash": "27d9f83f15392defd8017b4bab71f7710258f5da712d13d0bf10ccf61eab019b"
-    },
-    ".claude/skills/progress/SKILL.md": {
-      "hash": "565b8e12a8b377d6fbbf504363d5cdb0e0fa3f4af40b5dd5cfc06793317ce2f4"
-    },
-    ".claude/skills/run-todos/SKILL.md": {
-      "hash": "68474889ad295c44928f5e26bb93237da8b1e031038373068652c0277836871e"
-    },
-    ".claude/skills/security-scan/SKILL.md": {
-      "hash": "931fc7d551ee1616d48c49b5e6aa33882a816f829ad573905cf51faf65a86c31"
-    },
-    ".claude/skills/spec-verification/SKILL.md": {
-      "hash": "ea293e69c749f92e958a32ceab2c11ce2e299e4f9bd5c4b2ae5f573822f2952c"
-    },
-    ".claude/skills/tech-debt-check/SKILL.md": {
-      "hash": "7e6d675ca9e5f191050cd072b608e61486e6af953ff09202882554789ced6719"
-    },
-    ".claude/skills/update-docs/CONFIGURATION.md": {
-      "hash": "5c4b87f02055bf9c68c9e56937caa0e51ea77ce4835fe5c20ac0a2f659272174"
-    },
-    ".claude/skills/update-docs/MIGRATION.md": {
-      "hash": "bbbd77c2270d19907d046500a7587f53cb76d65f77700dbfef50424ae80d796d"
-    },
-    ".claude/skills/update-docs/POST_COMMIT_HOOK.md": {
-      "hash": "a55d94dc988e1ad67ae6f2c7695be91f2e31182828068fe9290b5e081fd688a2"
-    },
-    ".claude/skills/update-docs/SKILL.md": {
-      "hash": "c33489ba9477def2145a19b477237bc53f78daf5d867f7dcf9ad614f0a34725a"
-    },
-    ".claude/skills/vercel-preview/SKILL.md": {
-      "hash": "c2a20348e023783014399ffb4b16ecf902ba6ad267afd5f5f153fa3bf8d1c10f"
-    },
-    ".claude/skills/verify-task/SKILL.md": {
-      "hash": "34c5a020dc152c9c7c463c1516c8fb0bad58d27463de0f9e2dace051156b0120"
-    },
-    ".claude/skills/vision-audit/SKILL.md": {
-      "hash": "438cd249239d4c06495b856e89505439abefe1e3d451932f9b06973b7f53e3ce"
-    },
-    ".claude/skills/merge-prs/SKILL.md": {
-      "hash": "26e1e8510f4f91fb27231ee7f14b5eb18ff01510803482f15794457df14d552c",
-      "resolution": "local"
-    },
-    ".claude/skills/merge-prs/CI_DIAGNOSIS.md": {
-      "hash": "a059b87d9f5ac348f8ed5aa2aa93cb09538b1646babf60e77f14c554b44d8dab",
-      "resolution": "local"
-    },
-    ".claude/skills/data-flow-audit/SKILL.md": {
-      "hash": "2f5387d74fb28a8cba435a4860b625e0cc8b31d2db70225d3f9b1cf6f42c143b",
-      "resolution": "local"
+      "hash": "7333442ecb76b547091ca78ba02878071ab44011a7530909a28076349d01c381",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/data-flow-audit/DETECTION_PATTERNS.md": {
       "hash": "70c1f0d9bd5d7558a5753c626368e5a74385db272a667eef754cdf99d46c927e",
-      "resolution": "local"
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/data-flow-audit/SKILL.md": {
+      "hash": "814e1f5d6740e135edfc2cb7cb183d6694b3598c91cbcd8ae9415d6391451e24",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/feature-audit/BROWSER_PROMPT_TEMPLATE.md": {
+      "hash": "3cb8eeb165fc0e11f4639e806412c12c1bc6325effc4cc2836332fd803b3126a",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/feature-audit/CODEX_PROMPT_TEMPLATE.md": {
+      "hash": "152ca6489addd15ac098eee9109476deff286e847a93f393c8ce8de5085a674a",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/feature-audit/REPORT_TEMPLATE.md": {
+      "hash": "8a015791652616a17028a949476bbc7e8ce70c6788b3c041621998f49a8797fa",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/feature-audit/SKILL.md": {
+      "hash": "5cc17d5e1adfcb77a3b8dd0b69470149a6cea6dd74c846e0d94466e87907ca15",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/feature-spec/PROMPT.md": {
+      "hash": "b3f99649376eef505ec6b8e74688698f4e84aaba72f57af0b7c4d1b7f1eb4b08",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/feature-spec/SKILL.md": {
+      "hash": "054358b4dcda6b648ad3053be5d7c8d273b2c07bc4fc8c0cbd454b6c75cf4b04",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/feature-technical-spec/PROMPT.md": {
+      "hash": "f49a98d52a98dd8b9f159a16c8b7ee74b619e42176fc24dd8db3cac957381d09",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/feature-technical-spec/SKILL.md": {
+      "hash": "296e881084ba19bd02952f32ed14ed622b0cd1b8a3ce8f2dc037941c11c1a58b",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/innovate/SKILL.md": {
+      "hash": "cb82c1e530323326f73183b9580732ae097af53dd4b69045886c062d8467aec0",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/list-todos/QA_WORKFLOW.md": {
+      "hash": "3ddcc82b0927ba3e41231e477f1f81d46ee0f11a86ecc1dc9bc1db821157626d",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/list-todos/SKILL.md": {
+      "hash": "5ea8dd17f95623f62991a80d55206aa6ae5198f75a5608b7eb25778753cc354a",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/merge-prs/CI_DIAGNOSIS.md": {
+      "hash": "a059b87d9f5ac348f8ed5aa2aa93cb09538b1646babf60e77f14c554b44d8dab",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/merge-prs/MERGE_STRATEGIES.md": {
       "hash": "31c3e7811847ab6c0719ddb83ec1d0850580f5406436f6b2c4695c3b75611663",
-      "resolution": "local"
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
     },
     ".claude/skills/merge-prs/RISK_SCORING.md": {
       "hash": "f3972e1178758d864cce9a1c8dfb6f58c39c7365dda811d6fd5edf97de3da771",
-      "resolution": "local"
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/merge-prs/SKILL.md": {
+      "hash": "c4e4fb4055311a4a7035993d816cf9b1fa15bcdc32998871af0d76951599e639",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/oauth-login/SKILL.md": {
+      "hash": "affbef39e9c07e6dd0df26dadd1b780e600b16927d2aaf026444c68ff9ea91b5",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/review-deferred/SKILL.md": {
+      "hash": "8b1608b7431255660cb82814a01ed21e9e311775006186ee68052121992f07ea",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/run-todos/SKILL.md": {
+      "hash": "dd0fbb7c83c1a14a77078abf542067d24e7bae04b84977bf3c03549454ec6243",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/security-scan/SKILL.md": {
+      "hash": "fd588002efc992c3bda6cfc420ce11c6934c4fbd2b9e5b25e96bcefc99f41c42",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/shared/EXECUTION_PLAN_FORMAT.md": {
+      "hash": "f255ac4aa07308c7a032f42c1a55d8f238c91cd7c4d2052ffa4c340f912ba9c8",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/spec-verification/SKILL.md": {
+      "hash": "64c5aac4a858af24d15d50d6aa0a4a8228bd7e12794d1ac2b513f13c15c69231",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/tech-debt-check/SKILL.md": {
+      "hash": "03b7547fbe5d799c0b70e7d9205df8b97fe7c1bff34e4e3b46c4277d79e38ef1",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/ui-ux/SKILL.md": {
+      "hash": "4b38bc7f166fd7a012d024b831d94dc6d92dd6cf376dc041540256197d4f0a83",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/update-docs/CONFIGURATION.md": {
+      "hash": "5c4b87f02055bf9c68c9e56937caa0e51ea77ce4835fe5c20ac0a2f659272174",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/update-docs/MIGRATION.md": {
+      "hash": "bbbd77c2270d19907d046500a7587f53cb76d65f77700dbfef50424ae80d796d",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/update-docs/POST_COMMIT_HOOK.md": {
+      "hash": "a55d94dc988e1ad67ae6f2c7695be91f2e31182828068fe9290b5e081fd688a2",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/update-docs/SKILL.md": {
+      "hash": "9f47bf89a0fccfb3756814493be7665f3daad7dc261010138a8be63ecea6ccfd",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/vercel-preview/SKILL.md": {
+      "hash": "4e4f532df321480c21fd656dde16234c8e7b89faabfd53508fdfc8910de75bfa",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/vision-audit/SKILL.md": {
+      "hash": "7c4107d4367653ac77b51d01e3a3477da20c187f61939f33404c0e16e408ef12",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/configure-verification.md": {
+      "hash": "3d3a1d15bd5b4b36c6aa51b30d7b8c4dd80762b20705bb233d5685699d1c12e1",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/criteria-audit.md": {
+      "hash": "4d2e0df6c48be7dd8e9787421ba78d40bcec74f95786a0e95691f510cbce0341",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/feature-plan.md": {
+      "hash": "f765966c6c60b22300ff89b3219cfa2fe8c8e00b0659e0829ddcf8e41a3afda3",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/feature-spec.md": {
+      "hash": "75da18242653d1da6c62723e2473ddb22269e2e516b1446a7adbdb50c791b814",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/feature-technical-spec.md": {
+      "hash": "3489ba1e42ccc0680b0a0f2b5266e2dfebabf706289168ea4fdcd2beb2081a8c",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/fresh-start.md": {
+      "hash": "226363a2d67e9507b4cf59b70138909596391812200dcce6fd84deb75990a552",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/generate-plan.md": {
+      "hash": "66ee93a539c2ebf2216ee68b27a2dd2bf115597bc987817d8790656a8983ff2c",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/gh-init.md": {
+      "hash": "05c6588ace05cbf4629cc79566ad2ff79923a4beca19fe9c94d71d1924c45e9a",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/install-hooks.md": {
+      "hash": "d0a187107081b1bd985041a43fdcd6ad5c241954df6dba2806516ab8efe6d9ea",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/list-todos.md": {
+      "hash": "c36f59f9c509057c366adf7df45f2bd877b91fe9b19b04c71dddd69a7e2da474",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/phase-checkpoint.md": {
+      "hash": "a8906deb825fc5aff80120f8675c7323062db38dd992208baa43c4ca2c884db4",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/phase-prep.md": {
+      "hash": "a4cde6d21905e9d7c9fbf4b4c46fa5985bc3aa066c70e19eca2519516c9a0ee0",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/phase-start.md": {
+      "hash": "b7db5e6a3c337fba79d5bb178a40d49127991de95211b7f9dce638baf5413642",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/populate-state.md": {
+      "hash": "684de36b5be17b1ebf96df2083a9bed36ea1d8d6984fe6963c7aced2e2b83c3d",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/product-spec.md": {
+      "hash": "2260b61341734f4ca282e1f2a712741dd609526eb28ab5fe65fa4b22def3e87a",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/progress.md": {
+      "hash": "a6e173f03155b4beaa461d5ee37a9895ac811781ba5fa6dc5707ed1df017f223",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/run-todos.md": {
+      "hash": "94f79b29f8b65494e1917e8dba24fadc0dc4ab0f510a558276259644798ee073",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/security-scan.md": {
+      "hash": "2d98412b9c80103a146413e65bb309863c71e9b82f6c208766ca79218c0f3537",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/technical-spec.md": {
+      "hash": "3297352b9d79852a22f7ed6cfb34c4142c416fc2e1e64efc47708674546b07d9",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/verify-spec.md": {
+      "hash": "912de0f7b4c6d815fb761f18ef59403670ca72961056c9224cd2a5b560858886",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/commands/verify-task.md": {
+      "hash": "e4aa5d16f80223a2db08950d972a877de6958186770757822a19ca00118efbf7",
+      "resolution": "local",
+      "synced_at": "2026-02-24T22:25:50Z"
+    },
+    ".claude/skills/configure-verification/SKILL.md": {
+      "hash": "32642c5a350871ca24af8172cd0b3ce3914fdf35527a215bf96758dcc7eb1705",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/feature-plan/AGENTS_TEMPLATE.md": {
+      "hash": "89b3c520225436e11a663012f69e435c3a1924e466eb0f835d2f426f37dd5dca",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/feature-plan/PROMPT.md": {
+      "hash": "5027a0968a27eb622deb8dae55c512b9d8f70192ae18cf4a4df542803c44b3d5",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/feature-plan/SKILL.md": {
+      "hash": "dbe106dff9e3f482b2af7ee01bdbc3a844bf7fbb4b98795da1741f8d034aeee6",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/fresh-start/SKILL.md": {
+      "hash": "8d2ff6dcf0a07be160ec7f68f9af39bb2f8d42f9f1b3651a9bb3735a9eb4ef77",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/generate-plan/AGENTS_TEMPLATE.md": {
+      "hash": "be8050e2ecaa835a1f6f2893228c35f857a1b51d215c4ee3b42abfa76b26e3cc",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/generate-plan/PLAN_AGENTS_TEMPLATE.md": {
+      "hash": "7947e32c7fa2a28abaeac85a01e32ca630ba3aff9b8cadf4d379e4e60c5ab72b",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/generate-plan/PROMPT.md": {
+      "hash": "282b3f300421f3ae5dfbb75e2386094c705beb1e18f0934c7a4c3cdf4f5727b3",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/generate-plan/SKILL.md": {
+      "hash": "97f127c960a41515ecf39dc49937ced6a9d36c356328afb1e900a07a2257a6ec",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/go/SKILL.md": {
+      "hash": "4b4085027aec1182916083406f3bceb615164de2bb342f7544b8f1a396a2a922",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-checkpoint/AUTO_ADVANCE.md": {
+      "hash": "2436de97c8f40f03319827bf44603776aff63d34ccc804c007026df899bba8e7",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-checkpoint/DEFERRED_QUEUE.md": {
+      "hash": "4de3dd62def8312a202a78f8b51f8f166ac8dc5e814b98f1c0530614d17e714f",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-checkpoint/DOCS_PROTOCOL.md": {
+      "hash": "d54bd7c3d5619c1200141067510326589b3229cdaa2c389615c0728a4db806bf",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-checkpoint/SKILL.md": {
+      "hash": "fd8984cad2a9ca5c27467410d51a9e6002061bb219cd5d8078600ac70b209746",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-checkpoint/VERIFICATION.md": {
+      "hash": "2df0b0a7e7e03bd205ba373e1901dba344df955a49087644c19d0f8172d9c8b1",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-prep/SERVICES.md": {
+      "hash": "22c2da4629c6d1d766c6757f11596eff3963b4daee04f39703877858c26a6815",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-prep/SKILL.md": {
+      "hash": "101809f36e6360e4fe3d08dc828ecc42128324f1bd7a5e8b650555cf33d243aa",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-start/CODEX_MODE.md": {
+      "hash": "2652773d1bca3f00bccf53c006d1085fc16bd9aa69dd362d9b00f8f70e88f79f",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-start/SKILL.md": {
+      "hash": "baafb03ac3c3e8c826283be4f9319b743fc9d0d7eb5f9c5e7c1eac9a7b2e1c8e",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/phase-start/STATE_TRACKING.md": {
+      "hash": "7e5eef7524002f3a9b86baab2fccb2d53cad09991be7e0dc8040e157a09ceb43",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/populate-state/SKILL.md": {
+      "hash": "2eaada7d9036be5c1df895b346d945377cb681993441d7001b206e2e90e1fc67",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/product-spec/PROMPT.md": {
+      "hash": "872fddef24d803370abcc7ddf361fe6914822d93e24d17f781a5dd495d5172e1",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/product-spec/SKILL.md": {
+      "hash": "2eb464079407a5c86c2360ff92ac77de863f4780387a1413807a9bffdf58e380",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/progress/SKILL.md": {
+      "hash": "89268c5ce2886cc5307de76b4c7513e220fac1797dc1f34eeb0342126470f064",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/technical-spec/PROMPT.md": {
+      "hash": "a10d1bb2892538be57f39e50d64372bf57ddfd65a4b6880e1a129fe320f8d9e0",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/technical-spec/SKILL.md": {
+      "hash": "c7c6d12ad74d4a68349f573dbe3b308d038279a6146899aede40390d18e5ca44",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
+    },
+    ".claude/skills/verify-task/SKILL.md": {
+      "hash": "8d6e349a8e4f8760968a00f782e280a6bfe32b3053df6be3cb59b8d887a1ff94",
+      "resolution": "local",
+      "synced_at": "2026-03-08T01:38:02.925Z"
     }
   }
 }

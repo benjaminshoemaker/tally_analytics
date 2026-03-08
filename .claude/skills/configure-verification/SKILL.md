@@ -10,6 +10,8 @@ Runs silently with no user prompts — best-effort detection only.
 
 ## Workflow
 
+Copy this checklist and track progress:
+
 ```
 Configure Verification Progress:
 - [ ] Detect project directory and context
@@ -35,7 +37,9 @@ Determine working context:
 
 1. If the working directory matches `*/features/*`:
    - PROJECT_ROOT = parent of parent of working directory
-2. Otherwise:
+2. If the working directory matches `*/plans/greenfield*`:
+   - PROJECT_ROOT = parent of parent of working directory
+3. Otherwise:
    - PROJECT_ROOT = working directory
 
 ## Directory Guard
@@ -87,7 +91,11 @@ the config entirely.
 
 ## Conditional Dev Server Detection
 
-**Only run this section if** `EXECUTION_PLAN.md` contains `BROWSER:` criteria
+**Only run this section if** the active execution plan contains `BROWSER:` criteria.
+
+Resolve the active execution plan in this order:
+1. `EXECUTION_PLAN.md` in the working directory
+2. `plans/greenfield/EXECUTION_PLAN.md` in the working directory
 (e.g., `BROWSER:DOM`, `BROWSER:VISUAL`, etc.).
 
 If browser criteria exist, look for dev server scripts in `package.json`:
@@ -109,7 +117,7 @@ If found, include in config:
 Use port 3000 as default. If the script content in package.json contains a
 different port (e.g., `--port 5173`), use that instead.
 
-If no browser criteria in EXECUTION_PLAN.md, omit `devServer` entirely.
+If no browser criteria in the active execution plan, omit `devServer` entirely.
 
 ## Ensure .gitignore Protection
 
@@ -193,6 +201,16 @@ found. Always include `browser.tool: "auto"`.
 
 Do NOT include `auth`, `deployment`, or `devServer` (unless browser criteria
 detected a dev server). These are deferred to `/phase-checkpoint` when needed.
+
+## Error Handling
+
+| Situation | Action |
+|-----------|--------|
+| PROJECT_ROOT does not exist or is not writable | Stop immediately and report the path error to the user |
+| No package.json, Makefile, Taskfile.yml, or justfile found | Write config with empty `commands` object; report "no commands detected" |
+| package.json exists but contains invalid JSON | Report parse error with file path; skip package.json and try next source |
+| Lockfile detected but package manager binary is missing | Record the detected package manager but warn the user it is not installed |
+| `.claude/` directory does not exist for writing config | Create `.claude/` directory before writing `verification-config.json` |
 
 ## Output
 

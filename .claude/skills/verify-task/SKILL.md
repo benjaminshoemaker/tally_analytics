@@ -15,15 +15,20 @@ Determine working context:
    - PROJECT_ROOT = parent of parent of CWD (e.g., `/project/features/foo` → `/project`)
    - MODE = "feature"
 
-2. Otherwise:
-   - PROJECT_ROOT = current working directory
+2. If current working directory matches pattern `*/plans/greenfield*`:
+   - PROJECT_ROOT = parent of parent of CWD (e.g., `/project/plans/greenfield` → `/project`)
    - MODE = "greenfield"
+
+3. Otherwise:
+   - PROJECT_ROOT = current working directory
+   - MODE = "greenfield-legacy"
 
 ## Directory Guard (Wrong Directory Check)
 
 Before starting, confirm `EXECUTION_PLAN.md` exists in the current working directory.
 
 - If it does not exist, **STOP** and tell the user to `cd` into their project/feature directory (the one containing `EXECUTION_PLAN.md`) and re-run `/verify-task $1`.
+- If `plans/greenfield/EXECUTION_PLAN.md` exists in the current working directory, tell the user to `cd plans/greenfield` and re-run `/verify-task $1`.
 
 ## Task Context
 
@@ -275,6 +280,16 @@ Append a JSON line to `.claude/verification-log.jsonl` for each criterion:
 ```
 
 Ensure `.claude/verification/` exists before writing evidence files.
+
+## Error Handling
+
+| Situation | Action |
+|-----------|--------|
+| EXECUTION_PLAN.md not found in working directory | Stop and tell user to `cd` into the project/feature directory containing EXECUTION_PLAN.md |
+| Task ID `$1` not found in EXECUTION_PLAN.md | Stop and report "Task $1 not found"; list available task IDs for the user |
+| `.claude/verification-config.json` missing or has empty commands | Run `/configure-verification` automatically; if still missing, report and mark checks as SKIPPED |
+| Test runner command fails with non-zero exit (not test failures) | Distinguish execution errors from test failures; report the execution error and mark criterion as BLOCKED |
+| No browser MCP tools available for BROWSER:* criteria | Prompt user to continue with manual verification or stop to configure browser tools |
 
 ## On Success
 

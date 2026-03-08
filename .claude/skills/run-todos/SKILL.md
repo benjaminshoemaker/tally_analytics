@@ -289,7 +289,7 @@ TODOS.md updated with completion status.
 Next: Review changes, then run:
   git push origin todo-impl-{date}
 
-Ready to open a PR? Run: /create-pr
+Ready to open a PR? Create one using your preferred workflow.
 ```
 
 ## Archive Completed Items
@@ -328,6 +328,16 @@ Options:
    ```
 
 **If fewer than 10 completed items**, skip this step silently.
+
+## Error Handling
+
+| Situation | Action |
+|-----------|--------|
+| `TODOS.md` does not exist in working directory | STOP and tell user to create TODOS.md or `cd` into their project directory |
+| No `[ready]`-tagged items found in TODOS.md | Report "No ready items" with instructions on how to mark items as ready via `/list-todos` |
+| Git branch creation fails (branch name already exists) | Append an incrementing suffix (e.g., `todo-impl-2026-02-22-2`) and retry |
+| `git commit` fails due to pre-commit hook rejection | Fix the flagged issue (e.g., lint errors), re-stage, and create a new commit; do NOT use `--amend` |
+| Implementation fails (tests do not pass or runtime errors) | Present failure details via AskUserQuestion with options: skip item, retry with different approach, or abort session |
 
 ## Notes
 

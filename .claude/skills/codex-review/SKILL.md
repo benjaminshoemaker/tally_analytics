@@ -15,7 +15,7 @@ Invoke OpenAI's Codex CLI to review the current branch, with instructions to res
 - You want cross-verification between different AI models
 - The implementation uses tools/libraries where current docs would help
 - You've completed a feature and want thorough review before merging
-- `/phase-checkpoint` invokes this for cross-model review (Step 4)
+- Can be invoked by other workflow skills for automated cross-model review
 
 ## Prerequisites
 
@@ -178,14 +178,10 @@ Before invoking Codex, protect the working tree:
 ```bash
 # Record current HEAD so we can detect if Codex makes commits
 HEAD_BEFORE=$(git rev-parse HEAD)
-
-# Stash uncommitted changes (if any) to protect working tree
-STASHED=false
-if ! git diff --quiet HEAD 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
-  git stash push -m "codex-review-safety-$(date +%s)" --include-untracked
-  STASHED=true
-fi
 ```
+
+**Note:** Do NOT stash uncommitted changes — stash/pop triggers file-system events
+that confuse IDE watchers, hot-reload, and other processes. The HEAD check alone is sufficient.
 
 ### Invoke Codex
 
@@ -217,11 +213,6 @@ HEAD_AFTER=$(git rev-parse HEAD)
 if [ "$HEAD_BEFORE" != "$HEAD_AFTER" ]; then
   echo "WARNING: Codex made commits during review. Reverting to pre-review state."
   git reset --hard "$HEAD_BEFORE"
-fi
-
-# Restore stashed changes
-if [ "$STASHED" = true ]; then
-  git stash pop
 fi
 ```
 
@@ -265,7 +256,7 @@ Context Preservation: ✓ All 5 items from PRODUCT_SPEC.md preserved
 {/If}
 ```
 
-### Output Format (Programmatic — for /phase-checkpoint)
+### Output Format (Programmatic — when invoked by another skill)
 
 When invoked by another skill, return structured data:
 
@@ -314,7 +305,6 @@ Read from `.claude/settings.local.json`:
 | `reviewTimeoutMinutes` | `20` | Max time for review invocations |
 
 For document consultation (specs, plans), see `/codex-consult` which uses `codexConsult` config.
-For task execution via Codex, see `/phase-start --codex` which uses `codexReview.taskTimeoutMinutes`.
 
 **For CI/headless environments:** Set `CODEX_API_KEY` environment variable for authentication without interactive login.
 

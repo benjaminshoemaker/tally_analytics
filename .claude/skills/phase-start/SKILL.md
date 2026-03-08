@@ -75,15 +75,15 @@ Fetch documentation when ANY of these apply:
 
 | Service | SDK/API Documentation |
 |---------|----------------------|
-| Supabase | https://supabase.com/docs/reference/javascript |
-| Firebase | https://firebase.google.com/docs/reference/js |
-| Stripe | https://stripe.com/docs/api |
-| Auth0 | https://auth0.com/docs/api |
-| Clerk | https://clerk.com/docs/references/javascript |
-| Resend | https://resend.com/docs/api-reference |
-| OpenAI | https://platform.openai.com/docs/api-reference |
-| Anthropic | https://docs.anthropic.com/en/api |
-| Trigger.dev | https://trigger.dev/docs |
+| Supabase | <https://supabase.com/docs/reference/javascript> |
+| Firebase | <https://firebase.google.com/docs/reference/js> |
+| Stripe | <https://stripe.com/docs/api> |
+| Auth0 | <https://auth0.com/docs/api> |
+| Clerk | <https://clerk.com/docs/references/javascript> |
+| Resend | <https://resend.com/docs/api-reference> |
+| OpenAI | <https://platform.openai.com/docs/api-reference> |
+| Anthropic | <https://docs.anthropic.com/en/api> |
+| Trigger.dev | <https://trigger.dev/docs> |
 
 For services not listed, use WebSearch: `{service name} {language} SDK documentation`
 
@@ -98,20 +98,25 @@ When implementing external service integrations:
 
 ## Context Detection
 
-Determine working context. **For feature work, users should `cd` into `features/<name>/` before running execution commands.** The skill auto-detects feature mode from the path.
+Determine working context. Run execution commands from the scoped directory that contains the active `EXECUTION_PLAN.md`.
 
 1. If current working directory matches pattern `*/features/*`:
    - PROJECT_ROOT = parent of parent of CWD (e.g., `/project/features/foo` → `/project`)
    - MODE = "feature"
 
-2. Otherwise:
-   - PROJECT_ROOT = current working directory
+2. If current working directory matches pattern `*/plans/greenfield*`:
+   - PROJECT_ROOT = parent of parent of CWD (e.g., `/project/plans/greenfield` → `/project`)
    - MODE = "greenfield"
+
+3. Otherwise:
+   - PROJECT_ROOT = current working directory
+   - MODE = "greenfield-legacy"
 
 ## Context
 
 Before starting, read these files:
-- **PROJECT_ROOT/AGENTS.md** — Follow all workflow conventions
+- **PROJECT_ROOT/AGENTS.md** — Follow all durable workflow conventions
+- **AGENTS.md** — Follow scoped execution guidance if present in CWD
 - **EXECUTION_PLAN.md** — Task definitions and acceptance criteria (from CWD)
 
 ## Directory Guard (Wrong Directory Check)
@@ -121,6 +126,7 @@ Before starting, confirm the required files exist:
 - `PROJECT_ROOT/AGENTS.md` exists
 
 - If either is missing, **STOP** and tell the user to `cd` into their project/feature directory (the one containing `EXECUTION_PLAN.md`) and re-run `/phase-start $1`.
+- If `plans/greenfield/EXECUTION_PLAN.md` exists in the current working directory, tell the user to `cd plans/greenfield` and re-run `/phase-start $1`.
 
 ## Context Check
 
@@ -153,6 +159,7 @@ See [CODEX_MODE.md](CODEX_MODE.md) for detailed Codex CLI setup and configuratio
    # Commit any dirty files first (preserves user work)
    git add -A && git diff --cached --quiet || git commit -m "wip: uncommitted changes before phase-$1"
    ```
+   Verify with `git status` that the working tree is clean after the commit.
 
    **Check for unpushed commits before branching:**
    ```bash
@@ -176,13 +183,14 @@ See [CODEX_MODE.md](CODEX_MODE.md) for detailed Codex CLI setup and configuratio
    ```bash
    git branch --show-current
    ```
-   If the output doesn't match `phase-$1`, the checkout failed. Check if branch already exists and append a suffix.
+   If the output does not match `phase-$1`, the checkout failed. Check if the branch already exists (`git branch --list phase-$1`) and append a suffix (e.g., `phase-$1-2`).
 
    After each task completion (sequential commits on same branch):
    ```bash
    git add -A
    git commit -m "task({id}): {description} [REQ-XXX]"
    ```
+   Verify with `git status` that the commit succeeded and the working tree is clean.
 
    **Requirement traceability:** Check the task's `Requirement:` field in EXECUTION_PLAN.md.
    - If a REQ-ID exists (e.g., `REQ-002`), include it: `task(1.2.A): Add auth [REQ-002]`
@@ -241,7 +249,7 @@ See [CODEX_MODE.md](CODEX_MODE.md) for detailed Codex CLI setup and configuratio
    }
    ```
 
-   - **On task failure**: Increment `consecutive`, append to `last_errors` (keep last 3), write to phase-state.json
+   - **On task failure**: Increment `consecutive`, append to `last_errors` (keep last 3), write to phase-state.json. Read back the file to confirm valid JSON.
    - **On task success**: Reset `consecutive` to 0, clear `last_errors`
    - **On verification attempt**: Increment the criterion's count in `verification_attempts`
 
@@ -294,8 +302,8 @@ See [CODEX_MODE.md](CODEX_MODE.md) for detailed Codex CLI setup and configuratio
 Maintain `.claude/phase-state.json` throughout execution. See [STATE_TRACKING.md](STATE_TRACKING.md) for JSON formats.
 
 Key updates:
-1. **At phase start**: Set status to `IN_PROGRESS` with timestamp and execution mode
-2. **After each task**: Update task entry with `COMPLETE` status; reset `failures.consecutive` to 0
+1. **At phase start**: Set status to `IN_PROGRESS` with timestamp and execution mode. Read back `phase-state.json` to confirm valid JSON.
+2. **After each task**: Update task entry with `COMPLETE` status; reset `failures.consecutive` to 0. Read back `phase-state.json` to confirm valid JSON.
 3. **On task failure**: Increment `failures.consecutive`, append error to `failures.last_errors` (max 3)
 4. **On verification attempt**: Increment `failures.verification_attempts[criterion_id]`
 5. **If blocked**: Record blocker type and description
@@ -360,7 +368,11 @@ Auto-advance to `/phase-checkpoint $1` ONLY if ALL of these are true:
 4. ✓ `--pause` flag was NOT passed to this command
 5. ✓ `autoAdvance.enabled` is true (or not configured, defaulting to true)
 
-**Rationale:** Auto-verify attempts automation before blocking. Only items tagged `(MANUAL)` that genuinely require human judgment AND affect downstream work block auto-advance. Items tagged `(MANUAL:DEFER)` are enqueued for later review. Items that can be verified with curl, file checks, or browser automation don't require human presence.
+**Rationale:** Auto-verify attempts automation before blocking. Only items
+tagged `(MANUAL)` that genuinely require human judgment and affect downstream
+work block auto-advance. Items tagged `(MANUAL:DEFER)` are enqueued for later
+review. Items that can be verified with curl, file checks, or browser
+automation do not require human presence.
 
 ### If Auto-Advance Conditions Met
 

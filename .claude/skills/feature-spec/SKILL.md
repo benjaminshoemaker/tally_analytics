@@ -25,7 +25,7 @@ Feature Spec Progress:
 
 ## Directory Guard
 
-1. If `START_PROMPTS.md` or `GENERATOR_PROMPT.md` exists in the current working directory → **STOP**:
+1. If `.toolkit-marker` exists in the current working directory → **STOP**:
    "You're in the toolkit repo. Feature skills run from your project directory.
     Run: `cd ~/Projects/your-project && /feature-spec $1`"
 
@@ -185,6 +185,16 @@ After verification, run cross-model review if Codex CLI is available:
 - If No: Continue with noted issues
 
 **If Codex unavailable:** Skip silently and proceed to Next Step.
+
+## Error Handling
+
+| Situation | Action |
+|-----------|--------|
+| Feature name argument is empty and user does not provide one | Prompt again with AskUserQuestion; do not proceed without a feature name |
+| FEATURE_SPEC.md already exists and user selects "Abort" | Stop immediately, do not write any files, suggest renaming or moving the existing file |
+| PROMPT.md not found at `.claude/skills/feature-spec/PROMPT.md` | Stop and report "Skill asset missing — reinstall toolkit or run /setup" |
+| DEFERRED.md write fails (permissions or disk) | Output deferred items to terminal, warn user, continue with spec generation |
+| Codex CLI invocation fails or times out | Log the error, skip cross-model review, proceed to Next Step |
 
 ## Next Step
 
