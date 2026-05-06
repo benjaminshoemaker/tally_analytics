@@ -1,0 +1,119 @@
+{
+  "id": "active-project-with-campaign-data",
+  "description": "An active project with deterministic UTM campaign and page-view event fixtures.",
+  "tags": ["local", "state", "analytics", "campaigns"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000106",
+    "email": "e2e+campaign-data@example.com",
+    "githubUserId": 910000006,
+    "githubUsername": "fpa-campaign-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000006?v=4",
+    "plan": "pro"
+  },
+  "github": {
+    "installations": [
+      {
+        "id": 990000106,
+        "accessToken": "e2e_installation_token_campaign_data",
+        "expiresAt": "2030-01-01T00:00:00.000Z"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj_e2e_campaign",
+      "repoId": 991000106,
+      "repoFullName": "fast-pr-sandbox/next-app-campaigns",
+      "installationId": 990000106,
+      "status": "active",
+      "prNumber": 31,
+      "prUrl": "https://github.com/fast-pr-sandbox/next-app-campaigns/pull/31",
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 8,
+      "lastEventAt": "2026-05-01T12:36:00.000Z",
+      "createdAt": "2026-05-01T10:40:00.000Z",
+      "updatedAt": "2026-05-01T12:36:00.000Z",
+      "conversion": {
+        "path": "/signup",
+        "label": "Signup",
+        "configuredAt": "2026-05-01T10:45:00.000Z",
+        "promptDismissedAt": null
+      }
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_e2e_campaign",
+        "session_id": "sess_campaign_google_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:00:00.000Z",
+        "url": "https://example.test/?utm_source=google&utm_medium=cpc&utm_campaign=launch",
+        "path": "/",
+        "referrer": "https://google.com/search?q=analytics",
+        "user_agent": "Mozilla/5.0 AgentScenario",
+        "screen_width": 1440,
+        "visitor_id": "visitor_campaign_google",
+        "is_returning": 0,
+        "utm_source": "google",
+        "utm_medium": "cpc",
+        "utm_campaign": "launch",
+        "utm_term": "analytics",
+        "utm_content": "hero"
+      },
+      {
+        "project_id": "proj_e2e_campaign",
+        "session_id": "sess_campaign_google_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:00:05.000Z",
+        "url": "https://example.test/",
+        "path": "/",
+        "referrer": "https://google.com/search?q=analytics",
+        "user_agent": "Mozilla/5.0 AgentScenario",
+        "screen_width": 1440,
+        "engagement_time_ms": 12000,
+        "scroll_depth": 80,
+        "cta_clicks": "[]"
+      },
+      {
+        "project_id": "proj_e2e_campaign",
+        "session_id": "sess_campaign_linkedin_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:30:00.000Z",
+        "url": "https://example.test/pricing?utm_source=linkedin&utm_medium=social&utm_campaign=launch",
+        "path": "/pricing",
+        "referrer": "https://www.linkedin.com/",
+        "user_agent": "Mozilla/5.0 AgentScenario",
+        "screen_width": 1280,
+        "visitor_id": "visitor_campaign_linkedin",
+        "is_returning": 1,
+        "utm_source": "linkedin",
+        "utm_medium": "social",
+        "utm_campaign": "launch"
+      },
+      {
+        "project_id": "proj_e2e_campaign",
+        "session_id": "sess_campaign_linkedin_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:36:00.000Z",
+        "url": "https://example.test/signup",
+        "path": "/signup",
+        "referrer": "https://www.linkedin.com/",
+        "user_agent": "Mozilla/5.0 AgentScenario",
+        "screen_width": 1280,
+        "engagement_time_ms": 45000,
+        "scroll_depth": 100,
+        "cta_clicks": "[{\"type\":\"link\",\"text\":\"Start trial\",\"href\":\"/signup\"}]"
+      }
+    ]
+  },
+  "expectations": {
+    "startPath": "/projects/proj_e2e_campaign",
+    "assertions": [
+      "Project is active.",
+      "Quota display reports eight events this month.",
+      "Event fixture contains google and linkedin launch campaign sessions."
+    ]
+  }
+}

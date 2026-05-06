@@ -1,0 +1,27 @@
+{
+  "id": "empty-new-user",
+  "description": "A signed-in user with no projects.",
+  "tags": ["local", "state", "auth"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000101",
+    "email": "e2e+empty-new-user@example.com",
+    "githubUserId": 910000001,
+    "githubUsername": "fpa-empty-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000001?v=4",
+    "plan": "free"
+  },
+  "github": {
+    "installations": []
+  },
+  "projects": [],
+  "analytics": {
+    "events": []
+  },
+  "expectations": {
+    "startPath": "/projects",
+    "assertions": [
+      "Projects list renders an empty state.",
+      "Dashboard redirects to /projects for signed-in users without projects."
+    ]
+  }
+}

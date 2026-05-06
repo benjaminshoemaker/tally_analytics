@@ -1,0 +1,49 @@
+{
+  "id": "github-installed-pending-analysis",
+  "description": "A GitHub App installation has created a project that is waiting for analysis.",
+  "tags": ["local", "state", "github-app"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000102",
+    "email": "e2e+pending-analysis@example.com",
+    "githubUserId": 910000002,
+    "githubUsername": "fpa-pending-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000002?v=4",
+    "plan": "free"
+  },
+  "github": {
+    "installations": [
+      {
+        "id": 990000102,
+        "accessToken": "e2e_installation_token_pending_analysis",
+        "expiresAt": "2030-01-01T00:00:00.000Z"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj_e2e_pending",
+      "repoId": 991000102,
+      "repoFullName": "fast-pr-sandbox/next-app-pending",
+      "installationId": 990000102,
+      "status": "pending",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": null,
+      "detectedAnalytics": [],
+      "eventsThisMonth": 0,
+      "lastEventAt": null,
+      "createdAt": "2026-05-01T10:00:00.000Z",
+      "updatedAt": "2026-05-01T10:00:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": []
+  },
+  "expectations": {
+    "startPath": "/projects/proj_e2e_pending",
+    "assertions": [
+      "Project detail loads without GitHub OAuth.",
+      "No PR link is shown while the project is still pending."
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "quota-exceeded",
+  "description": "A free-plan active project that has reached the monthly event quota.",
+  "tags": ["local", "state", "quota"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000107",
+    "email": "e2e+quota-exceeded@example.com",
+    "githubUserId": 910000007,
+    "githubUsername": "fpa-quota-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000007?v=4",
+    "plan": "free"
+  },
+  "github": {
+    "installations": [
+      {
+        "id": 990000107,
+        "accessToken": "e2e_installation_token_quota_exceeded",
+        "expiresAt": "2030-01-01T00:00:00.000Z"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj_e2e_quota",
+      "repoId": 991000107,
+      "repoFullName": "fast-pr-sandbox/next-app-quota",
+      "installationId": 990000107,
+      "status": "active",
+      "prNumber": 8,
+      "prUrl": "https://github.com/fast-pr-sandbox/next-app-quota/pull/8",
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 10000,
+      "lastEventAt": "2026-05-01T13:00:00.000Z",
+      "createdAt": "2026-05-01T10:50:00.000Z",
+      "updatedAt": "2026-05-01T13:00:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": []
+  },
+  "expectations": {
+    "startPath": "/projects/proj_e2e_quota",
+    "assertions": ["Quota display is visible.", "Quota state reports the free limit as reached."]
+  }
+}

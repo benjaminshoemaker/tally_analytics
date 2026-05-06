@@ -1,0 +1,50 @@
+{
+  "id": "unsupported-framework",
+  "description": "A repository that analysis marked unsupported.",
+  "tags": ["local", "state", "regenerate", "unsupported"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000108",
+    "email": "e2e+unsupported-framework@example.com",
+    "githubUserId": 910000008,
+    "githubUsername": "fpa-unsupported-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000008?v=4",
+    "plan": "free"
+  },
+  "github": {
+    "installations": [
+      {
+        "id": 990000108,
+        "accessToken": "e2e_installation_token_unsupported",
+        "expiresAt": "2030-01-01T00:00:00.000Z"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj_e2e_unsup",
+      "repoId": 991000108,
+      "repoFullName": "fast-pr-sandbox/unsupported-remix-app",
+      "installationId": 990000108,
+      "status": "unsupported",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": null,
+      "detectedAnalytics": [],
+      "eventsThisMonth": 0,
+      "lastEventAt": null,
+      "createdAt": "2026-05-01T11:00:00.000Z",
+      "updatedAt": "2026-05-01T11:05:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": []
+  },
+  "expectations": {
+    "startPath": "/projects/proj_e2e_unsup",
+    "assertions": [
+      "Repository Not Supported status card is visible.",
+      "Re-run Analysis is visible.",
+      "No PR link is shown."
+    ]
+  }
+}

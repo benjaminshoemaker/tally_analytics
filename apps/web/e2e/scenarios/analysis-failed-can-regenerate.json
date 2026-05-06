@@ -1,0 +1,50 @@
+{
+  "id": "analysis-failed-can-regenerate",
+  "description": "A project whose analysis failed and should expose the re-run action.",
+  "tags": ["local", "state", "regenerate"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000103",
+    "email": "e2e+analysis-failed@example.com",
+    "githubUserId": 910000003,
+    "githubUsername": "fpa-failed-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000003?v=4",
+    "plan": "pro"
+  },
+  "github": {
+    "installations": [
+      {
+        "id": 990000103,
+        "accessToken": "e2e_installation_token_analysis_failed",
+        "expiresAt": "2030-01-01T00:00:00.000Z"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj_e2e_failed",
+      "repoId": 991000103,
+      "repoFullName": "fast-pr-sandbox/next-app-failed",
+      "installationId": 990000103,
+      "status": "analysis_failed",
+      "prNumber": 17,
+      "prUrl": "https://github.com/fast-pr-sandbox/next-app-failed/pull/17",
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 0,
+      "lastEventAt": null,
+      "createdAt": "2026-05-01T10:10:00.000Z",
+      "updatedAt": "2026-05-01T10:12:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": []
+  },
+  "expectations": {
+    "startPath": "/projects/proj_e2e_failed",
+    "assertions": [
+      "Analysis Failed status card is visible.",
+      "Re-run Analysis is visible.",
+      "View PR points to the seeded PR URL."
+    ]
+  }
+}

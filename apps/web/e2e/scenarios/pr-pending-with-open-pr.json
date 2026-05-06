@@ -1,0 +1,50 @@
+{
+  "id": "pr-pending-with-open-pr",
+  "description": "A project with an open analytics PR waiting for the user to merge it.",
+  "tags": ["local", "state", "github-app", "onboarding"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000104",
+    "email": "e2e+pr-pending@example.com",
+    "githubUserId": 910000004,
+    "githubUsername": "fpa-pr-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000004?v=4",
+    "plan": "free"
+  },
+  "github": {
+    "installations": [
+      {
+        "id": 990000104,
+        "accessToken": "e2e_installation_token_pr_pending",
+        "expiresAt": "2030-01-01T00:00:00.000Z"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "proj_e2e_prpend",
+      "repoId": 991000104,
+      "repoFullName": "fast-pr-sandbox/next-app-pr-pending",
+      "installationId": 990000104,
+      "status": "pr_pending",
+      "prNumber": 22,
+      "prUrl": "https://github.com/fast-pr-sandbox/next-app-pr-pending/pull/22",
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 0,
+      "lastEventAt": null,
+      "createdAt": "2026-05-01T10:20:00.000Z",
+      "updatedAt": "2026-05-01T10:25:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": []
+  },
+  "expectations": {
+    "startPath": "/projects/proj_e2e_prpend",
+    "assertions": [
+      "View PR is visible.",
+      "Getting Started checklist is visible.",
+      "Quota display is visible for PR-pending projects."
+    ]
+  }
+}
