@@ -75,3 +75,61 @@ describe("MCP OAuth client registration helpers", () => {
     expect(insertSpy).not.toHaveBeenCalled();
   });
 });
+
+describe("POST /api/oauth/register", () => {
+  it("returns dynamic client registration metadata as 201 JSON", async () => {
+    vi.resetModules();
+
+    const valuesSpy = vi.fn().mockResolvedValue(undefined);
+    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+
+    const { POST } = await import("../app/api/oauth/register/route");
+    const response = await POST(
+      new Request("http://localhost/api/oauth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          client_name: "Codex",
+          redirect_uris: ["http://localhost:4321/callback"],
+          grant_types: ["authorization_code", "refresh_token"],
+          response_types: ["code"],
+          scope: "mcp:install",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(201);
+    await expect(response.json()).resolves.toMatchObject({
+      redirect_uris: ["http://localhost:4321/callback"],
+      grant_types: ["authorization_code", "refresh_token"],
+      response_types: ["code"],
+      scope: "mcp:install",
+    });
+    expect(valuesSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        clientName: "Codex",
+        redirectUris: ["http://localhost:4321/callback"],
+        scope: "mcp:install",
+      }),
+    );
+  });
+
+  it("rejects invalid client metadata before inserting a client", async () => {
+    vi.resetModules();
+
+    insertSpy = vi.fn(() => {
+      throw new Error("db.insert called unexpectedly");
+    });
+
+    const { POST } = await import("../app/api/oauth/register/route");
+    const response = await POST(
+      new Request("http://localhost/api/oauth/register", {
+        method: "POST",
+        body: JSON.stringify({ redirect_uris: ["http://evil.example/callback"] }),
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({ error: "invalid_client_metadata" });
+    expect(insertSpy).not.toHaveBeenCalled();
+  });
+});

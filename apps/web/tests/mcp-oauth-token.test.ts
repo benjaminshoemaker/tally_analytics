@@ -264,3 +264,137 @@ describe("MCP OAuth token helpers", () => {
     expect(JSON.stringify(persistedValues)).not.toContain("refresh-token");
   });
 });
+
+describe("POST /api/oauth/token", () => {
+  it("exchanges authorization codes for OAuth-compatible bearer tokens", async () => {
+    vi.resetModules();
+
+    const { createS256CodeChallenge, hashOAuthSecret } = await import("../lib/oauth/crypto");
+    const codeVerifier = "verifier-value";
+    const redirectUri = "http://localhost:4321/callback";
+    const resource = "https://usetally.xyz/api/mcp";
+
+    selectSpy = vi.fn(() => ({
+      from: () => ({
+        where: vi.fn().mockResolvedValue([
+          {
+            codeHash: hashOAuthSecret("raw-code"),
+            clientId: "client_1",
+            userId: "user_1",
+            redirectUri,
+            codeChallenge: createS256CodeChallenge(codeVerifier),
+            codeChallengeMethod: "S256",
+            scope: "mcp:install",
+            resource,
+            expiresAt: new Date(Date.now() + 60_000),
+            usedAt: null,
+            createdAt: new Date("2026-05-07T00:00:00.000Z"),
+          },
+        ]),
+      }),
+    }));
+
+    const whereUpdateSpy = vi.fn().mockResolvedValue(undefined);
+    updateSpy = vi.fn(() => ({ set: vi.fn(() => ({ where: whereUpdateSpy })) }));
+
+    const valuesSpy = vi.fn().mockResolvedValue(undefined);
+    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+
+    const { POST } = await import("../app/api/oauth/token/route");
+    const body = new URLSearchParams({
+      grant_type: "authorization_code",
+      client_id: "client_1",
+      code: "raw-code",
+      redirect_uri: redirectUri,
+      code_verifier: codeVerifier,
+      resource,
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/oauth/token", {
+        method: "POST",
+        body,
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      token_type: "Bearer",
+      expires_in: 3600,
+      scope: "mcp:install",
+    });
+    expect(valuesSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("rotates refresh tokens and returns a replacement token pair", async () => {
+    vi.resetModules();
+
+    const { hashOAuthSecret } = await import("../lib/oauth/crypto");
+    const resource = "https://usetally.xyz/api/mcp";
+
+    selectSpy = vi.fn(() => ({
+      from: () => ({
+        where: vi.fn().mockResolvedValue([
+          {
+            tokenHash: hashOAuthSecret("refresh-token"),
+            clientId: "client_1",
+            userId: "user_1",
+            scope: "mcp:install",
+            resource,
+            expiresAt: new Date(Date.now() + 60_000),
+            revokedAt: null,
+            createdAt: new Date("2026-05-07T00:00:00.000Z"),
+            rotatedFromHash: null,
+          },
+        ]),
+      }),
+    }));
+
+    const whereUpdateSpy = vi.fn().mockResolvedValue(undefined);
+    updateSpy = vi.fn(() => ({ set: vi.fn(() => ({ where: whereUpdateSpy })) }));
+
+    const valuesSpy = vi.fn().mockResolvedValue(undefined);
+    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+
+    const { POST } = await import("../app/api/oauth/token/route");
+    const body = new URLSearchParams({
+      grant_type: "refresh_token",
+      client_id: "client_1",
+      refresh_token: "refresh-token",
+    });
+
+    const response = await POST(
+      new Request("http://localhost/api/oauth/token", {
+        method: "POST",
+        body,
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      token_type: "Bearer",
+      expires_in: 3600,
+      scope: "mcp:install",
+    });
+    expect(valuesSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns OAuth-compatible errors for unsupported grants", async () => {
+    vi.resetModules();
+
+    selectSpy = vi.fn();
+    insertSpy = vi.fn();
+    updateSpy = vi.fn();
+
+    const { POST } = await import("../app/api/oauth/token/route");
+    const response = await POST(
+      new Request("http://localhost/api/oauth/token", {
+        method: "POST",
+        body: new URLSearchParams({ grant_type: "client_credentials", client_id: "client_1" }),
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({ error: "unsupported_grant_type" });
+  });
+});

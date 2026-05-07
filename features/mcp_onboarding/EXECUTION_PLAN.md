@@ -248,17 +248,17 @@ Expose Tally as an OAuth authorization server for MCP clients. Add protected-res
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Endpoint response contracts"; FEATURE_SPEC.md "MCP Setup Flow"
 
 **Acceptance Criteria:**
-- [ ] (CODE) OAuth metadata and API route files exist at the specified App Router paths.
+- [x] (CODE) OAuth metadata and API route files exist at the specified App Router paths.
   - Verify: `cd ../.. && test -f apps/web/app/.well-known/oauth-protected-resource/route.ts && test -f apps/web/app/.well-known/oauth-authorization-server/route.ts && test -f apps/web/app/api/oauth/register/route.ts && test -f apps/web/app/api/oauth/authorize/route.ts && test -f apps/web/app/api/oauth/token/route.ts`
-- [ ] (TEST) Metadata routes return issuer/resource/endpoints/scopes and CORS `OPTIONS` responses.
+- [x] (TEST) Metadata routes return issuer/resource/endpoints/scopes and CORS `OPTIONS` responses.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth-metadata`
-- [ ] (TEST) Register route returns `201` JSON with `client_id`, `client_id_issued_at`, redirect URIs, grant types, response types, and `scope: "mcp:install"`.
+- [x] (TEST) Register route returns `201` JSON with `client_id`, `client_id_issued_at`, redirect URIs, grant types, response types, and `scope: "mcp:install"`.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth-register`
-- [ ] (TEST) Authorize route redirects unauthenticated users to GitHub login with a safe `return_to`, creates codes for authenticated users, and rejects invalid client/redirect/resource/scope inputs.
+- [x] (TEST) Authorize route redirects unauthenticated users to GitHub login with a safe `return_to`, creates codes for authenticated users, and rejects invalid client/redirect/resource/scope inputs.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth-authorize`
-- [ ] (TEST) Token route supports `authorization_code` and `refresh_token` grants with OAuth-compatible success/error JSON.
+- [x] (TEST) Token route supports `authorization_code` and `refresh_token` grants with OAuth-compatible success/error JSON.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth-token`
-- [ ] (TEST) Completed MCP OAuth flow creates a Tally user for a new GitHub identity, reuses or links an existing matching identity, and maps issued tokens to the authenticated user for MCP project ownership.
+- [x] (TEST) Completed MCP OAuth flow creates a Tally user for a new GitHub identity, reuses or links an existing matching identity, and maps issued tokens to the authenticated user for MCP project ownership.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth-authorize mcp-auth users-queries`
 
 **Files to Create:**
