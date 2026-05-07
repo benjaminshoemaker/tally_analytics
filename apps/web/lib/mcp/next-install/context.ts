@@ -95,6 +95,10 @@ function isEntrypointForFramework(kind: McpRepoContextInput["framework"]["kind"]
   return false;
 }
 
+export function isNextEntrypointPath(path: string): boolean {
+  return /(^|\/)(src\/)?app\/layout\.(tsx|jsx)$/.test(path) || /(^|\/)(src\/)?pages\/_app\.(tsx|jsx)$/.test(path);
+}
+
 function isSensitiveOrUnsupportedFile(path: string): boolean {
   const basename = pathBasename(path).toLowerCase();
   if (basename === ".env" || basename.startsWith(".env.")) return true;
@@ -111,6 +115,9 @@ function containsBinaryContent(content: string): boolean {
 function isAllowedContextPath(path: string, context: { appRoot: string; dependencyTarget: string; entrypoint: string }): boolean {
   if (path === context.dependencyTarget) return true;
   if (path === context.entrypoint) return true;
+  if (pathBasename(path) === "package.json") return true;
+  if (isNextEntrypointPath(path)) return true;
+  if (path === "pnpm-workspace.yaml") return true;
 
   for (const name of CONFIG_FILE_NAMES) {
     if (path === joinAppPath(context.appRoot, name)) return true;

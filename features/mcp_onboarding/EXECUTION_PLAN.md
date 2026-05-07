@@ -472,15 +472,15 @@ Implement the install service skeleton that selects the target package JSON and 
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Next.js Install Service" and "Project Reuse Implementation"; FEATURE_SPEC.md "V1 Supported Targets"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Next install detection and project reuse modules exist.
+- [x] (CODE) Next install detection and project reuse modules exist.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/next-install/detect.ts && test -f apps/web/lib/mcp/next-install/project-reuse.ts && test -f apps/web/lib/mcp/next-install/prepare-nextjs-install-patch.ts`
-- [ ] (TEST) App Router, Pages Router, root app, `src` app, and explicit monorepo app roots are detected from supplied files.
+- [x] (TEST) App Router, Pages Router, root app, `src` app, and explicit monorepo app roots are detected from supplied files.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (TEST) Non-Next, missing package, missing entrypoint, ambiguous monorepo, unsupported framework, and app-router/pages-router ambiguity produce structured unsupported results.
+- [x] (TEST) Non-Next, missing package, missing entrypoint, ambiguous monorepo, unsupported framework, and app-router/pages-router ambiguity produce structured unsupported results.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (TEST) Remote and no-remote project reuse paths return existing project IDs and dashboard URLs when exactly one match exists.
+- [x] (TEST) Remote and no-remote project reuse paths return existing project IDs and dashboard URLs when exactly one match exists.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install mcp-project-queries`
-- [ ] (TEST) Multiple project matches return `unsupported` with reason `multiple_matching_projects`.
+- [x] (TEST) Multiple project matches return `unsupported` with reason `multiple_matching_projects`.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install mcp-project-queries`
 
 **Files to Create:**
