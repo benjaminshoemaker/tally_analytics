@@ -23,6 +23,7 @@ const validStatuses = new Set([
   'active',
   'unsupported',
 ]);
+const validSources = new Set(['github_app', 'mcp_codex']);
 
 function loadEnv() {
   for (const candidate of [
@@ -71,23 +72,39 @@ function validateScenario(scenario, expectedId) {
   if (!Array.isArray(scenario.projects)) throw new Error('Scenario projects must be an array');
 
   for (const project of scenario.projects) {
+    const source = project.source ?? 'github_app';
     if (typeof project.id !== 'string' || project.id.length > 20) {
       throw new Error(`Invalid project id in ${scenario.id}: ${project.id}`);
+    }
+    if (!validSources.has(source)) {
+      throw new Error(`Invalid project source in ${scenario.id}: ${project.id}`);
+    }
+    if (typeof (project.displayName ?? project.repoFullName) !== 'string') {
+      throw new Error(`Invalid displayName in ${scenario.id}: ${project.id}`);
     }
     if (!validStatuses.has(project.status)) {
       throw new Error(`Invalid project status in ${scenario.id}: ${project.status}`);
     }
-    if (typeof project.repoId !== 'number' || !Number.isSafeInteger(project.repoId)) {
-      throw new Error(`Invalid repoId in ${scenario.id}: ${project.id}`);
-    }
-    if (
-      typeof project.installationId !== 'number' ||
-      !Number.isSafeInteger(project.installationId)
-    ) {
-      throw new Error(`Invalid installationId in ${scenario.id}: ${project.id}`);
-    }
-    if (typeof project.repoFullName !== 'string' || !project.repoFullName.includes('/')) {
-      throw new Error(`Invalid repoFullName in ${scenario.id}: ${project.id}`);
+    if (source === 'github_app') {
+      if (typeof project.repoId !== 'number' || !Number.isSafeInteger(project.repoId)) {
+        throw new Error(`Invalid repoId in ${scenario.id}: ${project.id}`);
+      }
+      if (
+        typeof project.installationId !== 'number' ||
+        !Number.isSafeInteger(project.installationId)
+      ) {
+        throw new Error(`Invalid installationId in ${scenario.id}: ${project.id}`);
+      }
+      if (typeof project.repoFullName !== 'string' || !project.repoFullName.includes('/')) {
+        throw new Error(`Invalid repoFullName in ${scenario.id}: ${project.id}`);
+      }
+    } else {
+      if (project.repoId !== null || project.repoFullName !== null || project.installationId !== null) {
+        throw new Error(`MCP scenarios must use null GitHub fields in ${scenario.id}: ${project.id}`);
+      }
+      if (typeof project.mcpFingerprint !== 'string' || project.mcpFingerprint.length !== 64) {
+        throw new Error(`Invalid mcpFingerprint in ${scenario.id}: ${project.id}`);
+      }
     }
   }
 
@@ -143,6 +160,7 @@ function installationRecordsForScenario(scenario) {
   }
 
   for (const project of scenario.projects) {
+    if (project.installationId == null) continue;
     const key = String(project.installationId);
     if (!recordsById.has(key)) {
       recordsById.set(key, {
@@ -178,7 +196,9 @@ async function cleanupScenarioRows(client, scenario) {
   const githubUserId =
     scenario.user.githubUserId == null ? null : String(scenario.user.githubUserId);
   const projectIds = scenario.projects.map((project) => project.id);
-  const repoIds = scenario.projects.map((project) => String(project.repoId));
+  const repoIds = scenario.projects
+    .filter((project) => project.repoId != null)
+    .map((project) => String(project.repoId));
   const installationIds = installationRecordsForScenario(scenario).map((installation) =>
     String(installation.id)
   );
@@ -257,14 +277,25 @@ async function insertInstallations(client, scenario) {
 
 async function insertProjects(client, scenario) {
   for (const project of scenario.projects) {
+    const source = project.source ?? 'github_app';
+    const displayName = project.displayName ?? project.repoFullName ?? project.mcpRepoName ?? project.id;
+
     await client.query(
       `
         INSERT INTO projects (
           id,
           user_id,
+          source,
+          display_name,
           github_repo_id,
           github_repo_full_name,
           github_installation_id,
+          mcp_normalized_git_remote,
+          mcp_repo_name,
+          mcp_app_root,
+          mcp_framework,
+          mcp_package_manager,
+          mcp_fingerprint,
           status,
           pr_number,
           pr_url,
@@ -283,15 +314,15 @@ async function insertProjects(client, scenario) {
         VALUES (
           $1,
           $2,
-          $3::bigint,
+          $3,
           $4,
           $5::bigint,
           $6,
-          $7,
+          $7::bigint,
           $8,
           $9,
-          $10::text[],
-          $11::bigint,
+          $10,
+          $11,
           $12,
           $13,
           $14,
@@ -299,15 +330,31 @@ async function insertProjects(client, scenario) {
           $16,
           $17,
           $18,
-          $19
+          $19::bigint,
+          $20,
+          $21,
+          $22,
+          $23,
+          $24,
+          $25,
+          $26,
+          $27
         )
       `,
       [
         project.id,
         scenario.user.id,
-        String(project.repoId),
-        project.repoFullName,
-        String(project.installationId),
+        source,
+        displayName,
+        project.repoId == null ? null : String(project.repoId),
+        project.repoFullName ?? null,
+        project.installationId == null ? null : String(project.installationId),
+        project.mcpNormalizedGitRemote ?? null,
+        project.mcpRepoName ?? null,
+        project.mcpAppRoot ?? null,
+        project.mcpFramework ?? null,
+        project.mcpPackageManager ?? null,
+        project.mcpFingerprint ?? null,
         project.status,
         project.prNumber ?? null,
         project.prUrl ?? null,
@@ -367,7 +414,7 @@ function printScenarioSummary(result) {
   console.log(`Database host: ${safeDatabaseHost(databaseUrl)}`);
   console.log(`User: ${scenario.user.email} (${scenario.user.id})`);
   for (const project of scenario.projects) {
-    console.log(`Project: ${project.id} ${project.status} ${project.repoFullName}`);
+    console.log(`Project: ${project.id} ${project.status} ${project.repoFullName ?? project.displayName}`);
     console.log(`Route: /projects/${project.id}`);
   }
   console.log(`Events fixture: ${path.relative(appDir, eventsPath)}`);

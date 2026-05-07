@@ -13,6 +13,7 @@ const validStatuses = new Set([
   'active',
   'unsupported',
 ]);
+const validSources = new Set(['github_app', 'mcp_codex']);
 
 type Scenario = {
   id: string;
@@ -29,9 +30,12 @@ type Scenario = {
   };
   projects: Array<{
     id: string;
-    repoId: number;
-    repoFullName: string;
-    installationId: number;
+    source?: string;
+    displayName?: string;
+    repoId: number | null;
+    repoFullName: string | null;
+    installationId: number | null;
+    mcpFingerprint?: string;
     status: string;
     detectedAnalytics: string[];
     eventsThisMonth: number;
@@ -91,15 +95,26 @@ describe('E2E scenario contracts', () => {
 
       const knownProjectIds = new Set(scenario.projects.map((project) => project.id));
       for (const project of scenario.projects) {
+        const source = project.source ?? 'github_app';
         expect(project.id).toMatch(/^proj_/);
         expect(project.id.length).toBeLessThanOrEqual(20);
         expect(projectIds.has(project.id)).toBe(false);
         projectIds.add(project.id);
 
-        expect(Number.isSafeInteger(project.repoId)).toBe(true);
-        expect(repoIds.has(project.repoId)).toBe(false);
-        repoIds.add(project.repoId);
-        expect(project.repoFullName).toMatch(/^[^/]+\/[^/]+$/);
+        expect(validSources.has(source)).toBe(true);
+        expect(typeof (project.displayName ?? project.repoFullName)).toBe('string');
+        if (source === 'github_app') {
+          expect(Number.isSafeInteger(project.repoId)).toBe(true);
+          expect(repoIds.has(project.repoId as number)).toBe(false);
+          repoIds.add(project.repoId as number);
+          expect(project.repoFullName).toMatch(/^[^/]+\/[^/]+$/);
+          expect(Number.isSafeInteger(project.installationId)).toBe(true);
+        } else {
+          expect(project.repoId).toBeNull();
+          expect(project.repoFullName).toBeNull();
+          expect(project.installationId).toBeNull();
+          expect(project.mcpFingerprint).toMatch(/^[a-f0-9]{64}$/);
+        }
         expect(validStatuses.has(project.status)).toBe(true);
         expect(Array.isArray(project.detectedAnalytics)).toBe(true);
         expect(project.eventsThisMonth).toBeGreaterThanOrEqual(0);
@@ -113,5 +128,35 @@ describe('E2E scenario contracts', () => {
       expect(scenario.expectations.startPath).toMatch(/^\//);
       expect(scenario.expectations.assertions.length).toBeGreaterThan(0);
     }
+  });
+
+  it('defines MCP scenarios with nullable GitHub fields and local fixture coverage', () => {
+    const scenarios = readScenarios();
+    const mcpNoEvents = scenarios.find(({ scenario }) => scenario.id === 'mcp-active-no-events')?.scenario;
+    const mcpWithEvents = scenarios.find(({ scenario }) => scenario.id === 'mcp-active-with-events')?.scenario;
+
+    expect(mcpNoEvents?.projects[0]).toMatchObject({
+      source: 'mcp_codex',
+      displayName: 'MCP Empty Demo',
+      repoId: null,
+      repoFullName: null,
+      installationId: null,
+      status: 'active',
+      lastEventAt: null,
+    });
+    expect(mcpNoEvents?.analytics?.events).toHaveLength(0);
+
+    expect(mcpWithEvents?.projects[0]).toMatchObject({
+      source: 'mcp_codex',
+      displayName: 'MCP Events Demo',
+      repoId: null,
+      repoFullName: null,
+      installationId: null,
+      status: 'active',
+    });
+    expect(mcpWithEvents?.analytics?.events?.map((event) => event.project_id)).toEqual([
+      'proj_mcp_events',
+      'proj_mcp_events',
+    ]);
   });
 });

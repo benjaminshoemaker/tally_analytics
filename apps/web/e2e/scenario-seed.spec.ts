@@ -72,3 +72,23 @@ test('@scenario seeded campaign events are queryable through analytics APIs', as
     hasMore: true,
   });
 });
+
+test('@scenario seeded MCP active no-event project shows waiting state', async ({ page }) => {
+  const scenario = seedScenario('mcp-active-no-events');
+  const project = scenario.projects[0];
+  if (!project) throw new Error('Scenario must include a project');
+
+  await loginScenarioUser(page, scenario);
+  await page.goto(`/projects/${project.id}`);
+
+  await expect(page.getByRole('heading', { name: project.displayName ?? project.id })).toBeVisible();
+  await expect(
+    page.getByText('Waiting for first event. Tally is installed, but no production events have been received yet.')
+  ).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Re-run Analysis' })).toHaveCount(0);
+
+  await page.goto(`/projects/${project.id}/live`);
+  await expect(
+    page.getByText('Waiting for first event. Tally is installed, but no production events have been received yet.')
+  ).toBeVisible();
+});

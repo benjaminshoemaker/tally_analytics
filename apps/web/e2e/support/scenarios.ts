@@ -6,9 +6,17 @@ import type { Page } from '@playwright/test';
 
 export type ScenarioProject = {
   id: string;
-  repoId: number;
-  repoFullName: string;
-  installationId: number;
+  source?: 'github_app' | 'mcp_codex';
+  displayName?: string;
+  repoId: number | null;
+  repoFullName: string | null;
+  installationId: number | null;
+  mcpNormalizedGitRemote?: string;
+  mcpRepoName?: string;
+  mcpAppRoot?: string;
+  mcpFramework?: string;
+  mcpPackageManager?: string;
+  mcpFingerprint?: string;
   status: string;
   prNumber: number | null;
   prUrl: string | null;

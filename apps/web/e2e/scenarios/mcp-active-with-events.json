@@ -1,0 +1,77 @@
+{
+  "id": "mcp-active-with-events",
+  "description": "An MCP-created active project with deterministic local analytics event fixtures.",
+  "tags": ["local", "state", "analytics", "mcp"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000202",
+    "email": "e2e+mcp-events@example.com",
+    "githubUserId": 910000202,
+    "githubUsername": "fpa-mcp-events-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000202?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_mcp_events",
+      "source": "mcp_codex",
+      "displayName": "MCP Events Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/mcp-events-demo",
+      "mcpRepoName": "mcp-events-demo",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "2222222222222222222222222222222222222222222222222222222222222222",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 2,
+      "lastEventAt": "2026-05-01T12:16:00.000Z",
+      "createdAt": "2026-05-01T11:00:00.000Z",
+      "updatedAt": "2026-05-01T12:16:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_mcp_events",
+        "session_id": "sess_mcp_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:15:00.000Z",
+        "url": "https://mcp-demo.test/",
+        "path": "/",
+        "referrer": "",
+        "user_agent": "Mozilla/5.0 MCPAgentScenario",
+        "screen_width": 1440,
+        "visitor_id": "visitor_mcp_001",
+        "is_returning": 0
+      },
+      {
+        "project_id": "proj_mcp_events",
+        "session_id": "sess_mcp_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:16:00.000Z",
+        "url": "https://mcp-demo.test/docs",
+        "path": "/docs",
+        "referrer": "",
+        "user_agent": "Mozilla/5.0 MCPAgentScenario",
+        "screen_width": 1440,
+        "engagement_time_ms": 18000,
+        "scroll_depth": 70,
+        "cta_clicks": "[]"
+      }
+    ]
+  },
+  "expectations": {
+    "startPath": "/projects/proj_mcp_events",
+    "assertions": [
+      "Project renders with the MCP display name.",
+      "Analytics APIs read local fixture events.",
+      "GitHub regenerate controls are hidden."
+    ]
+  }
+}

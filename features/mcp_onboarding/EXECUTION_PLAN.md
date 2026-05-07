@@ -880,15 +880,15 @@ Extend the agent testing harness with MCP-created active project scenarios: one 
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Integration/E2E Fixtures"; root AGENTS.md "Agent Testing Harness"
 
 **Acceptance Criteria:**
-- [ ] (CODE) E2E scenario files exist for MCP active no-event and MCP active with fixture events states.
+- [x] (CODE) E2E scenario files exist for MCP active no-event and MCP active with fixture events states.
   - Verify: `cd ../.. && ls apps/web/e2e/scenarios | rg -q 'mcp.*(no-events|with-events)|mcp.*active'`
-- [ ] (TEST) Scenario listing includes the new MCP scenarios.
+- [x] (TEST) Scenario listing includes the new MCP scenarios.
   - Verify: `cd ../.. && pnpm --filter web e2e:scenarios | rg -q 'mcp'`
-- [ ] (TEST) E2E scenario unit tests validate MCP project fields, nullable GitHub fields, and local analytics fixture wiring.
+- [x] (TEST) E2E scenario unit tests validate MCP project fields, nullable GitHub fields, and local analytics fixture wiring.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-scenarios e2e-analytics-fixtures`
-- [ ] (TEST) Seed and replay commands work for the MCP with-events scenario against a local database URL.
+- [x] (TEST) Seed and replay commands work for the MCP with-events scenario against a local database URL.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:seed mcp-active-with-events`
-- [ ] (TEST) Browser scenario grep coverage can target MCP project pages.
+- [x] (TEST) Browser scenario grep coverage can target MCP project pages.
   - Verify: `cd ../.. && E2E_TEST_MODE=1 pnpm --filter web e2e --grep @scenario`
 
 **Files to Create:**

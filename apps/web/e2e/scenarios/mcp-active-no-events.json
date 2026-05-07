@@ -1,0 +1,49 @@
+{
+  "id": "mcp-active-no-events",
+  "description": "An MCP-created active project that has not received analytics events yet.",
+  "tags": ["local", "state", "analytics", "mcp"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000201",
+    "email": "e2e+mcp-no-events@example.com",
+    "githubUserId": 910000201,
+    "githubUsername": "fpa-mcp-empty-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000201?v=4",
+    "plan": "free"
+  },
+  "projects": [
+    {
+      "id": "proj_mcp_empty",
+      "source": "mcp_codex",
+      "displayName": "MCP Empty Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/mcp-empty-demo",
+      "mcpRepoName": "mcp-empty-demo",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "1111111111111111111111111111111111111111111111111111111111111111",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 0,
+      "lastEventAt": null,
+      "createdAt": "2026-05-01T10:50:00.000Z",
+      "updatedAt": "2026-05-01T10:55:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": []
+  },
+  "expectations": {
+    "startPath": "/projects/proj_mcp_empty",
+    "assertions": [
+      "Project renders with the MCP display name.",
+      "Waiting for first event copy is visible.",
+      "GitHub regenerate controls are hidden."
+    ]
+  }
+}
