@@ -43,9 +43,29 @@ const PLAN_LIMITS = {
   team: 1_000_000,
 } as const;
 
+const REGENERATABLE_STATUSES = new Set(["analysis_failed", "pr_closed", "unsupported"]);
+
+function canRegenerateProject(project: {
+  source: string;
+  status: string;
+  githubRepoId: bigint | null;
+  githubRepoFullName: string | null;
+  githubInstallationId: bigint | null;
+}): boolean {
+  return (
+    project.source === "github_app" &&
+    REGENERATABLE_STATUSES.has(project.status) &&
+    project.githubRepoId !== null &&
+    project.githubRepoFullName !== null &&
+    project.githubInstallationId !== null
+  );
+}
+
 type ProjectDetailResponse = {
   project: {
     id: string;
+    displayName: string;
+    source: string;
     githubRepoFullName: string | null;
     status: string;
     prNumber: number | null;
@@ -56,6 +76,9 @@ type ProjectDetailResponse = {
     lastEventAt: string | null;
     createdAt: string;
     updatedAt: string;
+    actions: {
+      canRegenerate: boolean;
+    };
   };
   quotaLimit: number;
   quotaUsed: number;
@@ -77,7 +100,11 @@ export async function GET(
   const projectRows = await db
     .select({
       id: projects.id,
+      displayName: projects.displayName,
+      source: projects.source,
+      githubRepoId: projects.githubRepoId,
       githubRepoFullName: projects.githubRepoFullName,
+      githubInstallationId: projects.githubInstallationId,
       status: projects.status,
       prNumber: projects.prNumber,
       prUrl: projects.prUrl,
@@ -110,7 +137,9 @@ export async function GET(
   const responseBody: ProjectDetailResponse = {
     project: {
       id: project.id,
-      githubRepoFullName: project.githubRepoFullName,
+      displayName: project.displayName,
+      source: project.source,
+      githubRepoFullName: project.githubRepoFullName ?? null,
       status: project.status,
       prNumber: project.prNumber ?? null,
       prUrl: project.prUrl ?? null,
@@ -120,6 +149,9 @@ export async function GET(
       lastEventAt: lastEventAt ?? (project.lastEventAt ? project.lastEventAt.toISOString() : null),
       createdAt: project.createdAt.toISOString(),
       updatedAt: project.updatedAt.toISOString(),
+      actions: {
+        canRegenerate: canRegenerateProject(project),
+      },
     },
     quotaLimit,
     quotaUsed,

@@ -140,6 +140,57 @@ describe("POST /api/projects/[id]/regenerate", () => {
     expect(analyzeRepositorySpy).not.toHaveBeenCalled();
   });
 
+  it.each([
+    {
+      name: "MCP project",
+      project: {
+        id: "proj_mcp",
+        source: "mcp_codex",
+        status: "unsupported",
+        repoId: null,
+        repoFullName: null,
+        installationId: null,
+      },
+    },
+    {
+      name: "GitHub project with a missing repo name",
+      project: {
+        id: "proj_gh",
+        source: "github_app",
+        status: "analysis_failed",
+        repoId: 1n,
+        repoFullName: null,
+        installationId: 2n,
+      },
+    },
+  ])("returns 400 when $name cannot be regenerated through the GitHub App path", async ({ project }) => {
+    vi.resetModules();
+
+    getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "u1", email: "u1@example.com" });
+    const whereSpy = vi.fn().mockResolvedValue([project]);
+    const fromSpy = vi.fn(() => ({ where: whereSpy }));
+    selectSpy = vi.fn(() => ({ from: fromSpy }));
+
+    countRecentRegenerateRequestsSpy = vi.fn();
+    createRegenerateRequestSpy = vi.fn();
+    analyzeRepositorySpy = vi.fn();
+
+    const { POST } = await import("../app/api/projects/[id]/regenerate/route");
+
+    const response = await POST(new Request(`http://localhost/api/projects/${project.id}/regenerate`, { method: "POST" }), {
+      params: { id: project.id },
+    });
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      success: false,
+      message: "Regeneration is only available for GitHub App projects",
+    });
+    expect(countRecentRegenerateRequestsSpy).not.toHaveBeenCalled();
+    expect(createRegenerateRequestSpy).not.toHaveBeenCalled();
+    expect(analyzeRepositorySpy).not.toHaveBeenCalled();
+  });
+
   it("records a regenerate request and triggers analysis", async () => {
     vi.resetModules();
 
@@ -204,4 +255,3 @@ describe("POST /api/projects/[id]/regenerate", () => {
     expect(analyzeRepositorySpy).toHaveBeenCalledWith({ repoId: 1n, repoFullName: "octo/repo", installationId: 2n });
   });
 });
-

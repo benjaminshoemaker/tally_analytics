@@ -50,14 +50,32 @@ describe("GET /api/projects", () => {
 
     const orderBySpy = vi.fn().mockResolvedValue([
       {
-        id: "proj_123",
+        id: "proj_gh",
+        displayName: "octo/repo",
+        source: "github_app",
+        githubRepoId: 1n,
         githubRepoFullName: "octo/repo",
-        status: "active",
+        githubInstallationId: 2n,
+        status: "analysis_failed",
         prUrl: "https://github.com/octo/repo/pull/1",
         detectedFramework: "nextjs-app",
         eventsThisMonth: 42n,
         lastEventAt: new Date("2025-01-01T00:00:00.000Z"),
         createdAt: new Date("2024-01-01T00:00:00.000Z"),
+      },
+      {
+        id: "proj_mcp",
+        displayName: "Tally Demo",
+        source: "mcp_codex",
+        githubRepoId: null,
+        githubRepoFullName: null,
+        githubInstallationId: null,
+        status: "active",
+        prUrl: null,
+        detectedFramework: "nextjs-app",
+        eventsThisMonth: 7n,
+        lastEventAt: null,
+        createdAt: new Date("2024-01-02T00:00:00.000Z"),
       },
     ]);
     const whereSpy = vi.fn(() => ({ orderBy: orderBySpy }));
@@ -71,14 +89,34 @@ describe("GET /api/projects", () => {
     await expect(response.json()).resolves.toEqual({
       projects: [
         {
-          id: "proj_123",
+          id: "proj_gh",
+          displayName: "octo/repo",
+          source: "github_app",
           githubRepoFullName: "octo/repo",
-          status: "active",
+          status: "analysis_failed",
           prUrl: "https://github.com/octo/repo/pull/1",
           detectedFramework: "nextjs-app",
           eventsThisMonth: 42,
           lastEventAt: "2025-01-01T00:00:00.000Z",
           createdAt: "2024-01-01T00:00:00.000Z",
+          actions: {
+            canRegenerate: true,
+          },
+        },
+        {
+          id: "proj_mcp",
+          displayName: "Tally Demo",
+          source: "mcp_codex",
+          githubRepoFullName: null,
+          status: "active",
+          prUrl: null,
+          detectedFramework: "nextjs-app",
+          eventsThisMonth: 7,
+          lastEventAt: null,
+          createdAt: "2024-01-02T00:00:00.000Z",
+          actions: {
+            canRegenerate: false,
+          },
         },
       ],
     });
@@ -95,7 +133,11 @@ describe("GET /api/projects", () => {
     const orderBySpy = vi.fn().mockResolvedValue([
       {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
+        githubRepoId: 1n,
         githubRepoFullName: "octo/repo",
+        githubInstallationId: 2n,
         status: "active",
         prUrl: "https://github.com/octo/repo/pull/1",
         detectedFramework: "nextjs-app",
@@ -116,6 +158,8 @@ describe("GET /api/projects", () => {
       projects: [
         {
           id: "proj_123",
+          displayName: "octo/repo",
+          source: "github_app",
           githubRepoFullName: "octo/repo",
           status: "active",
           prUrl: "https://github.com/octo/repo/pull/1",
@@ -123,6 +167,9 @@ describe("GET /api/projects", () => {
           eventsThisMonth: 42,
           lastEventAt: "2025-02-01T12:34:56.789Z",
           createdAt: "2024-01-01T00:00:00.000Z",
+          actions: {
+            canRegenerate: false,
+          },
         },
       ],
     });

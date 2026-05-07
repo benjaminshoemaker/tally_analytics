@@ -693,15 +693,15 @@ Make MCP projects first-class in project list/detail APIs by returning `displayN
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Project List and Detail APIs"; FEATURE_SPEC.md "Product Surface"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Project list and detail responses include `displayName`, `source`, nullable `githubRepoFullName`, and `actions.canRegenerate`.
+- [x] (CODE) Project list and detail responses include `displayName`, `source`, nullable `githubRepoFullName`, and `actions.canRegenerate`.
   - Verify: `cd ../.. && rg -q 'displayName|canRegenerate|githubRepoFullName|source' apps/web/app/api/projects/route.ts 'apps/web/app/api/projects/[id]/route.ts'`
-- [ ] (TEST) Project list API tests cover GitHub App and MCP project rows.
+- [x] (TEST) Project list API tests cover GitHub App and MCP project rows.
   - Verify: `cd ../.. && pnpm --filter web test -- projects-list-api`
-- [ ] (TEST) Project detail API tests cover GitHub App and MCP project rows.
+- [x] (TEST) Project detail API tests cover GitHub App and MCP project rows.
   - Verify: `cd ../.. && pnpm --filter web test -- project-detail-api`
-- [ ] (TEST) Regenerate route rejects MCP projects or projects with null GitHub fields with a `400` JSON response.
+- [x] (TEST) Regenerate route rejects MCP projects or projects with null GitHub fields with a `400` JSON response.
   - Verify: `cd ../.. && pnpm --filter web test -- regenerate-api`
-- [ ] (TEST) Existing analytics API routes still resolve MCP-created active project IDs with local fixtures.
+- [x] (TEST) Existing analytics API routes still resolve MCP-created active project IDs with local fixtures.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-live-feed-api analytics-overview-api analytics-sessions-api`
 
 **Files to Create:**

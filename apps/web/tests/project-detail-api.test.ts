@@ -64,7 +64,11 @@ describe("GET /api/projects/[id]", () => {
     const projectWhereSpy = vi.fn().mockResolvedValue([
       {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
+        githubRepoId: 1n,
         githubRepoFullName: "octo/repo",
+        githubInstallationId: 2n,
         status: "analysis_failed",
         prNumber: 1,
         prUrl: "https://github.com/octo/repo/pull/1",
@@ -93,6 +97,8 @@ describe("GET /api/projects/[id]", () => {
     await expect(response.json()).resolves.toEqual({
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "analysis_failed",
         prNumber: 1,
@@ -103,6 +109,9 @@ describe("GET /api/projects/[id]", () => {
         lastEventAt: null,
         createdAt: "2024-01-01T00:00:00.000Z",
         updatedAt: "2024-01-02T00:00:00.000Z",
+        actions: {
+          canRegenerate: true,
+        },
       },
       quotaLimit: 10000,
       quotaUsed: 12,
@@ -120,7 +129,11 @@ describe("GET /api/projects/[id]", () => {
     const projectWhereSpy = vi.fn().mockResolvedValue([
       {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
+        githubRepoId: 1n,
         githubRepoFullName: "octo/repo",
+        githubInstallationId: 2n,
         status: "analysis_failed",
         prNumber: 1,
         prUrl: "https://github.com/octo/repo/pull/1",
@@ -149,6 +162,8 @@ describe("GET /api/projects/[id]", () => {
     await expect(response.json()).resolves.toEqual({
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "analysis_failed",
         prNumber: 1,
@@ -159,9 +174,77 @@ describe("GET /api/projects/[id]", () => {
         lastEventAt: "2025-02-01T12:34:56.789Z",
         createdAt: "2024-01-01T00:00:00.000Z",
         updatedAt: "2024-01-02T00:00:00.000Z",
+        actions: {
+          canRegenerate: true,
+        },
       },
       quotaLimit: 10000,
       quotaUsed: 12,
+      isOverQuota: false,
+      userPlan: "free",
+    });
+  });
+
+  it("returns MCP project details with nullable GitHub fields and disabled GitHub actions", async () => {
+    vi.resetModules();
+
+    getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "u1", email: "u1@example.com" });
+    tinybirdSqlSpy = vi.fn().mockResolvedValue({ data: [] });
+
+    const projectWhereSpy = vi.fn().mockResolvedValue([
+      {
+        id: "proj_mcp",
+        displayName: "Tally Demo",
+        source: "mcp_codex",
+        githubRepoId: null,
+        githubRepoFullName: null,
+        githubInstallationId: null,
+        status: "active",
+        prNumber: null,
+        prUrl: null,
+        detectedFramework: "nextjs-app",
+        detectedAnalytics: [],
+        eventsThisMonth: 5n,
+        lastEventAt: new Date("2025-01-01T00:00:00.000Z"),
+        createdAt: new Date("2024-01-01T00:00:00.000Z"),
+        updatedAt: new Date("2024-01-02T00:00:00.000Z"),
+      },
+    ]);
+    const projectFromSpy = vi.fn(() => ({ where: projectWhereSpy }));
+
+    const userWhereSpy = vi.fn().mockResolvedValue([{ plan: "free" }]);
+    const userFromSpy = vi.fn(() => ({ where: userWhereSpy }));
+
+    selectSpy = vi
+      .fn()
+      .mockImplementationOnce(() => ({ from: projectFromSpy }))
+      .mockImplementationOnce(() => ({ from: userFromSpy }));
+
+    const { GET } = await import("../app/api/projects/[id]/route");
+    const response = await GET(new Request("http://localhost/api/projects/proj_mcp"), { params: { id: "proj_mcp" } });
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+      project: {
+        id: "proj_mcp",
+        displayName: "Tally Demo",
+        source: "mcp_codex",
+        githubRepoFullName: null,
+        status: "active",
+        prNumber: null,
+        prUrl: null,
+        detectedFramework: "nextjs-app",
+        detectedAnalytics: [],
+        eventsThisMonth: 5,
+        lastEventAt: "2025-01-01T00:00:00.000Z",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-02T00:00:00.000Z",
+        actions: {
+          canRegenerate: false,
+        },
+      },
+      quotaLimit: 10000,
+      quotaUsed: 5,
       isOverQuota: false,
       userPlan: "free",
     });

@@ -48,9 +48,29 @@ async function fetchLastEventAtByProjectId(projectIds: string[]): Promise<Map<st
   return map;
 }
 
+const REGENERATABLE_STATUSES = new Set(["analysis_failed", "pr_closed", "unsupported"]);
+
+function canRegenerateProject(project: {
+  source: string;
+  status: string;
+  githubRepoId: bigint | null;
+  githubRepoFullName: string | null;
+  githubInstallationId: bigint | null;
+}): boolean {
+  return (
+    project.source === "github_app" &&
+    REGENERATABLE_STATUSES.has(project.status) &&
+    project.githubRepoId !== null &&
+    project.githubRepoFullName !== null &&
+    project.githubInstallationId !== null
+  );
+}
+
 type ProjectsResponse = {
   projects: Array<{
     id: string;
+    displayName: string;
+    source: string;
     githubRepoFullName: string | null;
     status: string;
     prUrl: string | null;
@@ -58,6 +78,9 @@ type ProjectsResponse = {
     eventsThisMonth: number;
     lastEventAt: string | null;
     createdAt: string;
+    actions: {
+      canRegenerate: boolean;
+    };
   }>;
 };
 
@@ -68,7 +91,11 @@ export async function GET(request: Request): Promise<Response> {
   const rows = await db
     .select({
       id: projects.id,
+      displayName: projects.displayName,
+      source: projects.source,
+      githubRepoId: projects.githubRepoId,
       githubRepoFullName: projects.githubRepoFullName,
+      githubInstallationId: projects.githubInstallationId,
       status: projects.status,
       prUrl: projects.prUrl,
       detectedFramework: projects.detectedFramework,
@@ -90,13 +117,18 @@ export async function GET(request: Request): Promise<Response> {
   const result: ProjectsResponse = {
     projects: rows.map((row) => ({
       id: row.id,
-      githubRepoFullName: row.githubRepoFullName,
+      displayName: row.displayName,
+      source: row.source,
+      githubRepoFullName: row.githubRepoFullName ?? null,
       status: row.status,
       prUrl: row.prUrl,
       detectedFramework: row.detectedFramework ?? null,
       eventsThisMonth: Number(row.eventsThisMonth),
       lastEventAt: lastEventAtByProjectId.get(row.id) ?? (row.lastEventAt ? row.lastEventAt.toISOString() : null),
       createdAt: row.createdAt.toISOString(),
+      actions: {
+        canRegenerate: canRegenerateProject(row),
+      },
     })),
   };
 
