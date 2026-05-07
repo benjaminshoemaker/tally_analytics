@@ -360,9 +360,9 @@ Extend existing GitHub login and callback routes so an MCP OAuth authorization r
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) OAuth token verification and MCP project helpers exist before MCP route work starts.
+- [x] (CODE) OAuth token verification and MCP project helpers exist before MCP route work starts.
   - Verify: `cd ../.. && test -f apps/web/lib/oauth/tokens.ts && rg -q 'createOrReuseMcpProject' apps/web/lib/db/queries/projects.ts`
-- [ ] (CODE) MCP dependencies are installed in the web package.
+- [x] (CODE) MCP dependencies are installed in the web package.
   - Verify: `cd ../.. && node -e "const p=require('./apps/web/package.json'); if(!p.dependencies['@modelcontextprotocol/sdk']||!p.dependencies['mcp-handler']) process.exit(1)"`
 
 ### Step 2.1: MCP Endpoint and Request Boundary
