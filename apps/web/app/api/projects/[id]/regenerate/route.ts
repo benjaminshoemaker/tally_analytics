@@ -45,6 +45,13 @@ export async function POST(
     );
   }
 
+  if (project.repoId === null || project.repoFullName === null || project.installationId === null) {
+    return Response.json(
+      { success: false, message: "Regeneration is only available for GitHub App projects" } satisfies RegenerateResponse,
+      { status: 400 },
+    );
+  }
+
   const since = new Date(Date.now() - 5 * 60 * 1000);
   const recentCount = await countRecentRegenerateRequests({ userId: user.id, projectId, since });
   if (recentCount >= 1) {
@@ -59,4 +66,3 @@ export async function POST(
 
   return Response.json({ success: true, message: "Regeneration started" } satisfies RegenerateResponse, { status: 200 });
 }
-

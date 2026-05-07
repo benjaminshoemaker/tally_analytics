@@ -108,17 +108,17 @@ Extend the database schema so projects can be created without GitHub installatio
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Data Model"; FEATURE_SPEC.md "Data Persistence"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `projects` schema contains `source`, `displayName`, `mcpNormalizedGitRemote`, `mcpRepoName`, `mcpAppRoot`, `mcpFramework`, `mcpPackageManager`, and `mcpFingerprint`.
+- [x] (CODE) `projects` schema contains `source`, `displayName`, `mcpNormalizedGitRemote`, `mcpRepoName`, `mcpAppRoot`, `mcpFramework`, `mcpPackageManager`, and `mcpFingerprint`.
   - Verify: `cd ../.. && rg -q 'mcpFingerprint|displayName|mcpNormalizedGitRemote' apps/web/lib/db/schema.ts`
-- [ ] (CODE) `githubRepoId`, `githubRepoFullName`, and `githubInstallationId` are nullable in `projects`.
+- [x] (CODE) `githubRepoId`, `githubRepoFullName`, and `githubInstallationId` are nullable in `projects`.
   - Verify: `cd ../.. && ! rg -q 'githubRepo(Id|FullName).*\\.notNull\\(\\)|githubInstallationId.*\\.notNull\\(\\)' apps/web/lib/db/schema.ts`
-- [ ] (CODE) OAuth client, authorization-code, access-token, and refresh-token tables are defined with hash primary keys for codes/tokens.
+- [x] (CODE) OAuth client, authorization-code, access-token, and refresh-token tables are defined with hash primary keys for codes/tokens.
   - Verify: `cd ../.. && rg -q 'oauthClients|oauthAuthorizationCodes|oauthAccessTokens|oauthRefreshTokens|codeHash|tokenHash' apps/web/lib/db/schema.ts`
-- [ ] (TEST) Schema and migration tests cover the new tables, nullable GitHub fields, indexes, checks, and migration journal entry.
+- [x] (TEST) Schema and migration tests cover the new tables, nullable GitHub fields, indexes, checks, and migration journal entry.
   - Verify: `cd ../.. && pnpm --filter web test -- schema migrations`
-- [ ] (CODE) Migration SQL does not drop existing project or GitHub token tables.
+- [x] (CODE) Migration SQL does not drop existing project or GitHub token tables.
   - Verify: `cd ../.. && ! rg -q 'DROP TABLE (projects|github_tokens)|DROP COLUMN (github_repo_id|github_repo_full_name|github_installation_id)' apps/web/drizzle/migrations`
-- [ ] (TEST) Migration execution notes prove the migration was generated, reviewed, applied to the local database, and followed by schema/migration tests.
+- [x] (TEST) Migration execution notes prove the migration was generated, reviewed, applied to the local database, and followed by schema/migration tests.
   - Verify: `cd ../.. && rg -q 'pnpm --filter web db:generate' features/mcp_onboarding/MIGRATION_NOTES.md && rg -q 'SQL review' features/mcp_onboarding/MIGRATION_NOTES.md && rg -q 'pnpm --filter web db:push' features/mcp_onboarding/MIGRATION_NOTES.md && rg -q 'pnpm --filter web test -- schema migrations' features/mcp_onboarding/MIGRATION_NOTES.md`
 
 **Files to Create:**

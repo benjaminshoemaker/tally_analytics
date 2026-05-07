@@ -24,6 +24,33 @@ describe("db migrations", () => {
     expect(sql).toContain("CREATE INDEX idx_users_github_user_id ON users(github_user_id)");
   });
 
+  it("adds MCP project columns and OAuth tables without rebuilding existing tables", () => {
+    const migrationPath = path.join(__dirname, "..", "drizzle", "migrations", "0006_mcp_oauth.sql");
+    const sql = fs.readFileSync(migrationPath, "utf8");
+
+    expect(sql).toContain('ALTER TABLE "projects" ADD COLUMN "source" varchar(30)');
+    expect(sql).toContain('ALTER TABLE "projects" ADD COLUMN "display_name" varchar(255)');
+    expect(sql).toContain('UPDATE "projects" SET "display_name" = "github_repo_full_name"');
+    expect(sql).toContain('ALTER TABLE "projects" ALTER COLUMN "github_repo_id" DROP NOT NULL');
+    expect(sql).toContain('ALTER TABLE "projects" ALTER COLUMN "github_repo_full_name" DROP NOT NULL');
+    expect(sql).toContain('ALTER TABLE "projects" ALTER COLUMN "github_installation_id" DROP NOT NULL');
+    expect(sql).toContain('ALTER TABLE "projects" ADD COLUMN "mcp_fingerprint" varchar(64)');
+    expect(sql).toContain('CONSTRAINT "projects_source_check"');
+    expect(sql).toContain('CREATE UNIQUE INDEX "projects_user_mcp_fingerprint_unique"');
+    expect(sql).toContain('CREATE INDEX "idx_projects_source"');
+    expect(sql).toContain('CREATE TABLE "oauth_clients"');
+    expect(sql).toContain('CREATE TABLE "oauth_authorization_codes"');
+    expect(sql).toContain('CREATE TABLE "oauth_access_tokens"');
+    expect(sql).toContain('CREATE TABLE "oauth_refresh_tokens"');
+    expect(sql).toContain('"code_hash" varchar(64) PRIMARY KEY NOT NULL');
+    expect(sql).toContain('"token_hash" varchar(64) PRIMARY KEY NOT NULL');
+    expect(sql).not.toMatch(/CREATE TABLE "projects"/);
+    expect(sql).not.toMatch(/CREATE TABLE "users"/);
+    expect(sql).not.toMatch(/CREATE TABLE "github_tokens"/);
+    expect(sql).not.toMatch(/DROP TABLE (projects|github_tokens)/i);
+    expect(sql).not.toMatch(/DROP COLUMN (github_repo_id|github_repo_full_name|github_installation_id)/i);
+  });
+
   it("tracks all migration files in the drizzle journal", () => {
     const migrationsDir = path.join(__dirname, "..", "drizzle", "migrations");
     const journalPath = path.join(migrationsDir, "meta", "_journal.json");

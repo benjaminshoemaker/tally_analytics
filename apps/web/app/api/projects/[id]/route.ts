@@ -46,7 +46,7 @@ const PLAN_LIMITS = {
 type ProjectDetailResponse = {
   project: {
     id: string;
-    githubRepoFullName: string;
+    githubRepoFullName: string | null;
     status: string;
     prNumber: number | null;
     prUrl: string | null;

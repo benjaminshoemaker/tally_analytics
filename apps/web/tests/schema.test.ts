@@ -2,10 +2,25 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 
 import { getTableConfig } from "drizzle-orm/pg-core";
 
-import { githubTokens, projects, regenerateRequests, sessions, users, waitlist } from "../lib/db/schema";
+import {
+  githubTokens,
+  oauthAccessTokens,
+  oauthAuthorizationCodes,
+  oauthClients,
+  oauthRefreshTokens,
+  projects,
+  regenerateRequests,
+  sessions,
+  users,
+  waitlist,
+} from "../lib/db/schema";
 import type {
   GithubToken,
   NewProject,
+  OAuthAccessToken,
+  OAuthAuthorizationCode,
+  OAuthClient,
+  OAuthRefreshToken,
   Project,
   RegenerateRequest,
   Session,
@@ -18,6 +33,10 @@ describe("db schema", () => {
     expect(getTableConfig(users).name).toBe("users");
     expect(getTableConfig(sessions).name).toBe("sessions");
     expect(getTableConfig(projects).name).toBe("projects");
+    expect(getTableConfig(oauthClients).name).toBe("oauth_clients");
+    expect(getTableConfig(oauthAuthorizationCodes).name).toBe("oauth_authorization_codes");
+    expect(getTableConfig(oauthAccessTokens).name).toBe("oauth_access_tokens");
+    expect(getTableConfig(oauthRefreshTokens).name).toBe("oauth_refresh_tokens");
     expect(getTableConfig(githubTokens).name).toBe("github_tokens");
     expect(getTableConfig(waitlist).name).toBe("waitlist");
     expect(getTableConfig(regenerateRequests).name).toBe("regenerate_requests");
@@ -42,9 +61,34 @@ describe("db schema", () => {
     expect(sessionColumns.find((c) => c.name === "expires_at")?.notNull).toBe(true);
 
     const projectColumns = getTableConfig(projects).columns;
-    expect(projectColumns.find((c) => c.name === "github_repo_id")?.notNull).toBe(true);
-    expect(projectColumns.find((c) => c.name === "github_repo_full_name")?.notNull).toBe(true);
-    expect(projectColumns.find((c) => c.name === "github_installation_id")?.notNull).toBe(true);
+    expect(projectColumns.find((c) => c.name === "source")?.notNull).toBe(true);
+    expect(projectColumns.find((c) => c.name === "display_name")?.notNull).toBe(true);
+    expect(projectColumns.find((c) => c.name === "github_repo_id")?.notNull).toBe(false);
+    expect(projectColumns.find((c) => c.name === "github_repo_full_name")?.notNull).toBe(false);
+    expect(projectColumns.find((c) => c.name === "github_installation_id")?.notNull).toBe(false);
+    expect(projectColumns.some((c) => c.name === "mcp_normalized_git_remote")).toBe(true);
+    expect(projectColumns.some((c) => c.name === "mcp_repo_name")).toBe(true);
+    expect(projectColumns.some((c) => c.name === "mcp_app_root")).toBe(true);
+    expect(projectColumns.some((c) => c.name === "mcp_framework")).toBe(true);
+    expect(projectColumns.some((c) => c.name === "mcp_package_manager")).toBe(true);
+    expect(projectColumns.some((c) => c.name === "mcp_fingerprint")).toBe(true);
+
+    const oauthClientColumns = getTableConfig(oauthClients).columns;
+    expect(oauthClientColumns.find((c) => c.name === "client_id")?.primary).toBe(true);
+    expect(oauthClientColumns.find((c) => c.name === "redirect_uris")?.notNull).toBe(true);
+
+    const oauthCodeColumns = getTableConfig(oauthAuthorizationCodes).columns;
+    expect(oauthCodeColumns.find((c) => c.name === "code_hash")?.primary).toBe(true);
+    expect(oauthCodeColumns.find((c) => c.name === "client_id")?.notNull).toBe(true);
+    expect(oauthCodeColumns.find((c) => c.name === "user_id")?.notNull).toBe(true);
+
+    const oauthAccessColumns = getTableConfig(oauthAccessTokens).columns;
+    expect(oauthAccessColumns.find((c) => c.name === "token_hash")?.primary).toBe(true);
+    expect(oauthAccessColumns.find((c) => c.name === "expires_at")?.notNull).toBe(true);
+
+    const oauthRefreshColumns = getTableConfig(oauthRefreshTokens).columns;
+    expect(oauthRefreshColumns.find((c) => c.name === "token_hash")?.primary).toBe(true);
+    expect(oauthRefreshColumns.find((c) => c.name === "rotated_from_hash")).toBeDefined();
   });
 
   it("uses CASCADE delete on all user-owned foreign keys", () => {
@@ -52,6 +96,15 @@ describe("db schema", () => {
     expect(getTableConfig(projects).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
     expect(getTableConfig(githubTokens).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
     expect(getTableConfig(regenerateRequests).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
+    expect(getTableConfig(oauthAuthorizationCodes).foreignKeys.map((fk) => fk.onDelete)).toEqual(
+      expect.arrayContaining(["cascade", "cascade"]),
+    );
+    expect(getTableConfig(oauthAccessTokens).foreignKeys.map((fk) => fk.onDelete)).toEqual(
+      expect.arrayContaining(["cascade", "cascade"]),
+    );
+    expect(getTableConfig(oauthRefreshTokens).foreignKeys.map((fk) => fk.onDelete)).toEqual(
+      expect.arrayContaining(["cascade", "cascade"]),
+    );
   });
 
   it("defines all indexes from the spec", () => {
@@ -64,7 +117,14 @@ describe("db schema", () => {
     );
 
     expect(getTableConfig(projects).indexes.map((i) => i.config.name)).toEqual(
-      expect.arrayContaining(["idx_projects_user_id", "idx_projects_github_repo_id", "idx_projects_status"]),
+      expect.arrayContaining([
+        "idx_projects_user_id",
+        "idx_projects_github_repo_id",
+        "idx_projects_status",
+        "idx_projects_source",
+        "idx_projects_mcp_fingerprint",
+        "projects_user_mcp_fingerprint_unique",
+      ]),
     );
 
     expect(getTableConfig(githubTokens).indexes.map((i) => i.config.name)).toEqual(
@@ -74,16 +134,54 @@ describe("db schema", () => {
     expect(getTableConfig(regenerateRequests).indexes.map((i) => i.config.name)).toEqual(
       expect.arrayContaining(["idx_regenerate_requests_project_id", "idx_regenerate_requests_created_at"]),
     );
+
+    expect(getTableConfig(oauthAuthorizationCodes).indexes.map((i) => i.config.name)).toEqual(
+      expect.arrayContaining([
+        "idx_oauth_authorization_codes_client_id",
+        "idx_oauth_authorization_codes_user_id",
+        "idx_oauth_authorization_codes_expires_at",
+      ]),
+    );
+    expect(getTableConfig(oauthAccessTokens).indexes.map((i) => i.config.name)).toEqual(
+      expect.arrayContaining([
+        "idx_oauth_access_tokens_client_id",
+        "idx_oauth_access_tokens_user_id",
+        "idx_oauth_access_tokens_expires_at",
+      ]),
+    );
+    expect(getTableConfig(oauthRefreshTokens).indexes.map((i) => i.config.name)).toEqual(
+      expect.arrayContaining([
+        "idx_oauth_refresh_tokens_client_id",
+        "idx_oauth_refresh_tokens_user_id",
+        "idx_oauth_refresh_tokens_expires_at",
+      ]),
+    );
+  });
+
+  it("defines source and status checks for project rows", () => {
+    expect(getTableConfig(projects).checks.map((c) => c.name)).toEqual(
+      expect.arrayContaining(["projects_status_check", "projects_source_check"]),
+    );
   });
 
   it("exports TypeScript types derived from the schema", () => {
     expectTypeOf<User>().toMatchTypeOf<{ id: string; email: string }>();
     expectTypeOf<Session>().toMatchTypeOf<{ id: string; userId: string }>();
-    expectTypeOf<Project>().toMatchTypeOf<{ id: string; userId: string; githubRepoId: bigint }>();
+    expectTypeOf<Project>().toMatchTypeOf<{
+      id: string;
+      userId: string;
+      displayName: string;
+      source: string;
+      githubRepoId: bigint | null;
+    }>();
     expectTypeOf<GithubToken>().toMatchTypeOf<{ id: string; userId: string; installationId: bigint }>();
+    expectTypeOf<OAuthClient>().toMatchTypeOf<{ clientId: string; redirectUris: string[] }>();
+    expectTypeOf<OAuthAuthorizationCode>().toMatchTypeOf<{ codeHash: string; userId: string }>();
+    expectTypeOf<OAuthAccessToken>().toMatchTypeOf<{ tokenHash: string; userId: string }>();
+    expectTypeOf<OAuthRefreshToken>().toMatchTypeOf<{ tokenHash: string; userId: string }>();
     expectTypeOf<WaitlistEntry>().toMatchTypeOf<{ id: string; email: string }>();
     expectTypeOf<RegenerateRequest>().toMatchTypeOf<{ id: string; projectId: string; userId: string }>();
 
-    expectTypeOf<NewProject>().toMatchTypeOf<{ id: string; userId: string; githubRepoId: bigint }>();
+    expectTypeOf<NewProject>().toMatchTypeOf<{ id: string; userId: string; displayName: string }>();
   });
 });

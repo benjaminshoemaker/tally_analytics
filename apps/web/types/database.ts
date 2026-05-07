@@ -1,6 +1,17 @@
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-import { githubTokens, projects, regenerateRequests, sessions, users, waitlist } from "../lib/db/schema";
+import {
+  githubTokens,
+  oauthAccessTokens,
+  oauthAuthorizationCodes,
+  oauthClients,
+  oauthRefreshTokens,
+  projects,
+  regenerateRequests,
+  sessions,
+  users,
+  waitlist,
+} from "../lib/db/schema";
 
 export type User = InferSelectModel<typeof users>;
 export type NewUser = InferInsertModel<typeof users>;
@@ -13,6 +24,18 @@ export type NewProject = InferInsertModel<typeof projects>;
 
 export type GithubToken = InferSelectModel<typeof githubTokens>;
 export type NewGithubToken = InferInsertModel<typeof githubTokens>;
+
+export type OAuthClient = InferSelectModel<typeof oauthClients>;
+export type NewOAuthClient = InferInsertModel<typeof oauthClients>;
+
+export type OAuthAuthorizationCode = InferSelectModel<typeof oauthAuthorizationCodes>;
+export type NewOAuthAuthorizationCode = InferInsertModel<typeof oauthAuthorizationCodes>;
+
+export type OAuthAccessToken = InferSelectModel<typeof oauthAccessTokens>;
+export type NewOAuthAccessToken = InferInsertModel<typeof oauthAccessTokens>;
+
+export type OAuthRefreshToken = InferSelectModel<typeof oauthRefreshTokens>;
+export type NewOAuthRefreshToken = InferInsertModel<typeof oauthRefreshTokens>;
 
 export type WaitlistEntry = InferSelectModel<typeof waitlist>;
 export type NewWaitlistEntry = InferInsertModel<typeof waitlist>;

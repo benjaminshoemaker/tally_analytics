@@ -71,9 +71,19 @@ export const projects = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
 
-    githubRepoId: bigint("github_repo_id", { mode: "bigint" }).notNull(),
-    githubRepoFullName: varchar("github_repo_full_name", { length: 255 }).notNull(),
-    githubInstallationId: bigint("github_installation_id", { mode: "bigint" }).notNull(),
+    source: varchar("source", { length: 30 }).notNull().default("github_app"),
+    displayName: varchar("display_name", { length: 255 }).notNull(),
+
+    githubRepoId: bigint("github_repo_id", { mode: "bigint" }),
+    githubRepoFullName: varchar("github_repo_full_name", { length: 255 }),
+    githubInstallationId: bigint("github_installation_id", { mode: "bigint" }),
+
+    mcpNormalizedGitRemote: varchar("mcp_normalized_git_remote", { length: 500 }),
+    mcpRepoName: varchar("mcp_repo_name", { length: 255 }),
+    mcpAppRoot: varchar("mcp_app_root", { length: 255 }),
+    mcpFramework: varchar("mcp_framework", { length: 50 }),
+    mcpPackageManager: varchar("mcp_package_manager", { length: 30 }),
+    mcpFingerprint: varchar("mcp_fingerprint", { length: 64 }),
 
     status: varchar("status", { length: 30 }).notNull().default("pending"),
 
@@ -101,10 +111,100 @@ export const projects = pgTable(
       "projects_status_check",
       sql`${table.status} in ('pending','analyzing','analysis_failed','pr_pending','pr_closed','active','unsupported')`,
     ),
+    check("projects_source_check", sql`${table.source} in ('github_app','mcp_codex')`),
     uniqueIndex("projects_github_repo_id_unique").on(table.githubRepoId),
+    uniqueIndex("projects_user_mcp_fingerprint_unique")
+      .on(table.userId, table.mcpFingerprint)
+      .where(sql`${table.mcpFingerprint} is not null`),
     index("idx_projects_user_id").on(table.userId),
     index("idx_projects_github_repo_id").on(table.githubRepoId),
     index("idx_projects_status").on(table.status),
+    index("idx_projects_source").on(table.source),
+    index("idx_projects_mcp_fingerprint").on(table.mcpFingerprint),
+  ],
+);
+
+export const oauthClients = pgTable("oauth_clients", {
+  clientId: varchar("client_id", { length: 80 }).primaryKey(),
+  clientName: varchar("client_name", { length: 255 }),
+  redirectUris: text("redirect_uris").array().notNull(),
+  grantTypes: text("grant_types").array(),
+  responseTypes: text("response_types").array(),
+  scope: varchar("scope", { length: 255 }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const oauthAuthorizationCodes = pgTable(
+  "oauth_authorization_codes",
+  {
+    codeHash: varchar("code_hash", { length: 64 }).primaryKey(),
+    clientId: varchar("client_id", { length: 80 })
+      .notNull()
+      .references(() => oauthClients.clientId, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    redirectUri: varchar("redirect_uri", { length: 500 }).notNull(),
+    codeChallenge: varchar("code_challenge", { length: 255 }).notNull(),
+    codeChallengeMethod: varchar("code_challenge_method", { length: 20 }).notNull(),
+    scope: varchar("scope", { length: 255 }).notNull(),
+    resource: varchar("resource", { length: 500 }).notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_oauth_authorization_codes_client_id").on(table.clientId),
+    index("idx_oauth_authorization_codes_user_id").on(table.userId),
+    index("idx_oauth_authorization_codes_expires_at").on(table.expiresAt),
+  ],
+);
+
+export const oauthAccessTokens = pgTable(
+  "oauth_access_tokens",
+  {
+    tokenHash: varchar("token_hash", { length: 64 }).primaryKey(),
+    clientId: varchar("client_id", { length: 80 })
+      .notNull()
+      .references(() => oauthClients.clientId, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    scope: varchar("scope", { length: 255 }).notNull(),
+    resource: varchar("resource", { length: 500 }).notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("idx_oauth_access_tokens_client_id").on(table.clientId),
+    index("idx_oauth_access_tokens_user_id").on(table.userId),
+    index("idx_oauth_access_tokens_expires_at").on(table.expiresAt),
+  ],
+);
+
+export const oauthRefreshTokens = pgTable(
+  "oauth_refresh_tokens",
+  {
+    tokenHash: varchar("token_hash", { length: 64 }).primaryKey(),
+    clientId: varchar("client_id", { length: 80 })
+      .notNull()
+      .references(() => oauthClients.clientId, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    scope: varchar("scope", { length: 255 }).notNull(),
+    resource: varchar("resource", { length: 500 }).notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    rotatedFromHash: varchar("rotated_from_hash", { length: 64 }),
+  },
+  (table) => [
+    index("idx_oauth_refresh_tokens_client_id").on(table.clientId),
+    index("idx_oauth_refresh_tokens_user_id").on(table.userId),
+    index("idx_oauth_refresh_tokens_expires_at").on(table.expiresAt),
   ],
 );
 

@@ -1,4 +1,4 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import crypto from "node:crypto";
 
 import { db } from "../client";
@@ -21,6 +21,8 @@ export async function upsertProjectsForRepos(params: {
   const values = params.repositories.map((repo) => ({
     id: createProjectId(),
     userId: params.userId,
+    source: "github_app",
+    displayName: repo.fullName,
     githubRepoId: BigInt(repo.id),
     githubRepoFullName: repo.fullName,
     githubInstallationId: params.installationId,
@@ -33,6 +35,9 @@ export async function upsertProjectsForRepos(params: {
       target: projects.githubRepoId,
       set: {
         userId: params.userId,
+        source: "github_app",
+        displayName: sql`excluded.display_name`,
+        githubRepoFullName: sql`excluded.github_repo_full_name`,
         githubInstallationId: params.installationId,
       },
     });

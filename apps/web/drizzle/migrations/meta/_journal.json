@@ -37,6 +37,13 @@
       "when": 1769227536701,
       "tag": "0005_drop_magic_links",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1778134730127,
+      "tag": "0006_mcp_oauth",
+      "breakpoints": true
     }
   ]
 }

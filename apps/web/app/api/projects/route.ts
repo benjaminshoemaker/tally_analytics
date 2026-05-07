@@ -51,7 +51,7 @@ async function fetchLastEventAtByProjectId(projectIds: string[]): Promise<Map<st
 type ProjectsResponse = {
   projects: Array<{
     id: string;
-    githubRepoFullName: string;
+    githubRepoFullName: string | null;
     status: string;
     prUrl: string | null;
     detectedFramework: string | null;
