@@ -24,6 +24,9 @@ describe("/projects page", () => {
 
     expect(html).toContain("Projects");
     expect(html).toContain("No projects yet");
+    expect(html).toContain("Install GitHub App");
+    expect(html).toContain("Using Codex? Add Tally from your coding agent.");
+    expect(html).toContain("codex mcp add tally --url https://usetally.xyz/api/mcp");
   });
 
   it("renders project cards that link to the detail page", () => {

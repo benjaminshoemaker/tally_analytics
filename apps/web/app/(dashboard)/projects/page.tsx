@@ -61,6 +61,12 @@ export default function ProjectsPage() {
           <p className="mt-2 max-w-sm text-sm text-warm-500">
             Connect your first Next.js repository and we&apos;ll automatically set up analytics for you.
           </p>
+          <div className="mt-5 w-full max-w-lg rounded-lg border border-warm-200 bg-white p-4 text-left shadow-warm">
+            <p className="text-sm font-medium text-warm-900">Using Codex? Add Tally from your coding agent.</p>
+            <code className="mt-3 block overflow-x-auto rounded-md bg-warm-950 px-3 py-2 text-xs text-warm-50">
+              codex mcp add tally --url https://usetally.xyz/api/mcp
+            </code>
+          </div>
           <a
             href="https://github.com/apps/tally-analytics-agent"
             target="_blank"

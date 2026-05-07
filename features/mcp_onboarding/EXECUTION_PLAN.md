@@ -794,15 +794,15 @@ Expose the hosted MCP server URL and Codex command on docs/setup and the project
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Docs Setup" and "Projects Empty State"; FEATURE_SPEC.md "Product Surface"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Docs setup page contains `codex mcp add tally --url https://usetally.xyz/api/mcp`.
+- [x] (CODE) Docs setup page contains `codex mcp add tally --url https://usetally.xyz/api/mcp`.
   - Verify: `cd ../.. && rg -q 'codex mcp add tally --url https://usetally.xyz/api/mcp' 'apps/web/app/(marketing)/docs/setup/page.tsx'`
-- [ ] (CODE) Docs setup page keeps the GitHub App setup path.
+- [x] (CODE) Docs setup page keeps the GitHub App setup path.
   - Verify: `cd ../.. && rg -q 'Connect GitHub|get a PR|GitHub App' 'apps/web/app/(marketing)/docs/setup/page.tsx'`
-- [ ] (TEST) Marketing docs tests cover the MCP command and existing GitHub App path.
+- [x] (TEST) Marketing docs tests cover the MCP command and existing GitHub App path.
   - Verify: `cd ../.. && pnpm --filter web test -- marketing-docs-pages`
-- [ ] (CODE) Projects empty state contains `Using Codex? Add Tally from your coding agent.` and the MCP command.
+- [x] (CODE) Projects empty state contains `Using Codex? Add Tally from your coding agent.` and the MCP command.
   - Verify: `cd ../.. && rg -q 'Using Codex\\? Add Tally from your coding agent\\.|codex mcp add tally --url https://usetally.xyz/api/mcp' 'apps/web/app/(dashboard)/projects/page.tsx'`
-- [ ] (TEST) Projects list page tests cover both GitHub App and MCP onboarding paths in the empty state.
+- [x] (TEST) Projects list page tests cover both GitHub App and MCP onboarding paths in the empty state.
   - Verify: `cd ../.. && pnpm --filter web test -- projects-list-page`
 
 **Files to Create:**

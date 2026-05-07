@@ -17,7 +17,10 @@ describe("marketing docs pages", () => {
   it("renders the setup guide with the GitHub install link", () => {
     const html = renderToStaticMarkup(React.createElement(DocsSetupPage));
     expect(html).toContain("Getting started");
+    expect(html).toContain("Connect GitHub and get a PR");
+    expect(html).toContain("GitHub App");
     expect(html).toContain("/api/auth/github");
+    expect(html).toContain("codex mcp add tally --url https://usetally.xyz/api/mcp");
   });
 
   it("renders the SDK docs with code examples", () => {

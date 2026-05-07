@@ -9,7 +9,7 @@ export default function DocsSetupPage() {
     <main className="mx-auto w-full max-w-3xl px-6 py-16 sm:py-20">
       <div className="prose prose-slate max-w-none">
         <h1>Getting started</h1>
-        <p>Sign in with GitHub first, then connect your repository from the dashboard. You’ll get a PR you can review and merge.</p>
+        <p>Connect GitHub and get a PR you can review and merge.</p>
 
         <ol>
           <li>
@@ -31,6 +31,13 @@ export default function DocsSetupPage() {
             <strong>Open your dashboard</strong> and confirm you’re receiving events.
           </li>
         </ol>
+
+        <h2>Using Codex?</h2>
+        <p>Using Codex? Add Tally from your coding agent.</p>
+        <pre>
+          <code>codex mcp add tally --url https://usetally.xyz/api/mcp</code>
+        </pre>
+        <p>After the MCP is connected, ask Codex to add Tally analytics to your Next.js app.</p>
 
         <h2>Troubleshooting</h2>
         <ul>
