@@ -973,15 +973,15 @@ Exercise the feature as close to the intended Codex flow as local automation all
 **Requirement:** FEATURE_SPEC.md "Happy Path"; FEATURE_TECHNICAL_SPEC.md "Requirement Coverage"
 
 **Acceptance Criteria:**
-- [ ] (TEST) Authenticated tool-call tests cover ready responses for supported App Router and Pages Router fixtures.
+- [x] (TEST) Authenticated tool-call tests cover ready responses for supported App Router and Pages Router fixtures.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route mcp-next-install`
-- [ ] (TEST) Local fixture tests prove `git apply --check` succeeds for every ready response.
+- [x] (TEST) Local fixture tests prove `git apply --check` succeeds for every ready response.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (TEST) Tool response tests include dashboard URL and the deployment verification checklist.
+- [x] (TEST) Tool response tests include dashboard URL and the deployment verification checklist.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install mcp-route`
-- [ ] (TEST) Rerunning against an already-installed fixture returns `already_installed`, existing project ID, existing dashboard URL, and empty `unifiedDiff`.
+- [x] (TEST) Rerunning against an already-installed fixture returns `already_installed`, existing project ID, existing dashboard URL, and empty `unifiedDiff`.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (CODE) Completion copy does not claim local automation proves production events before deployment.
+- [x] (CODE) Completion copy does not claim local automation proves production events before deployment.
   - Verify: `cd ../.. && ! rg -n 'production events (verified|confirmed|proven)|telemetry (verified|confirmed|proven)' apps/web/lib/mcp apps/web/app`
 
 **Files to Create:**
