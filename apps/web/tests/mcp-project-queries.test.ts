@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 let insertSpy: ReturnType<typeof vi.fn> | undefined;
-let deleteSpy: ReturnType<typeof vi.fn> | undefined;
 let selectSpy: ReturnType<typeof vi.fn> | undefined;
 
 vi.mock("../lib/db/client", () => ({
@@ -14,38 +13,10 @@ vi.mock("../lib/db/client", () => ({
       if (!selectSpy) throw new Error("selectSpy not initialized");
       return selectSpy(...args);
     },
-    delete: (...args: unknown[]) => {
-      if (!deleteSpy) throw new Error("deleteSpy not initialized");
-      return deleteSpy(...args);
-    },
   },
 }));
 
-describe("project queries", () => {
-  it("upsertProjectsForRepos does nothing when repositories is empty", async () => {
-    vi.resetModules();
-    insertSpy = vi.fn(() => {
-      throw new Error("db.insert called unexpectedly");
-    });
-    selectSpy = vi.fn();
-    deleteSpy = vi.fn();
-
-    const { upsertProjectsForRepos } = await import("../lib/db/queries/projects");
-    await expect(upsertProjectsForRepos({ userId: "u1", installationId: 1n, repositories: [] })).resolves.toBeUndefined();
-  });
-
-  it("deleteProjectsByInstallationAndRepoIds does nothing when repoIds is empty", async () => {
-    vi.resetModules();
-    insertSpy = vi.fn();
-    selectSpy = vi.fn();
-    deleteSpy = vi.fn(() => {
-      throw new Error("db.delete called unexpectedly");
-    });
-
-    const { deleteProjectsByInstallationAndRepoIds } = await import("../lib/db/queries/projects");
-    await expect(deleteProjectsByInstallationAndRepoIds({ installationId: 1n, repoIds: [] })).resolves.toBeUndefined();
-  });
-
+describe("MCP project queries", () => {
   it("normalizes GitHub remote URLs and preserves parseable non-GitHub paths", async () => {
     vi.resetModules();
 
@@ -104,7 +75,6 @@ describe("project queries", () => {
     const onConflictDoNothingSpy = vi.fn(() => ({ returning: returningSpy }));
     const valuesSpy = vi.fn(() => ({ onConflictDoNothing: onConflictDoNothingSpy }));
     insertSpy = vi.fn(() => ({ values: valuesSpy }));
-    deleteSpy = vi.fn();
 
     const { createOrReuseMcpProject } = await import("../lib/db/queries/projects");
     const result = await createOrReuseMcpProject({
@@ -123,6 +93,7 @@ describe("project queries", () => {
       dashboardUrl: "https://usetally.xyz/projects/proj_new",
       created: true,
     });
+
     const insertedValue = (valuesSpy.mock.calls as unknown[][])[0]?.[0] as Record<string, unknown>;
     expect(insertedValue).toEqual(
       expect.objectContaining({
@@ -153,7 +124,6 @@ describe("project queries", () => {
     insertSpy = vi.fn(() => {
       throw new Error("db.insert called unexpectedly");
     });
-    deleteSpy = vi.fn();
 
     const { createOrReuseMcpProject } = await import("../lib/db/queries/projects");
     const result = await createOrReuseMcpProject({
@@ -176,7 +146,6 @@ describe("project queries", () => {
     const whereSpy = vi.fn().mockResolvedValue([{ id: "proj_1" }, { id: "proj_2" }]);
     selectSpy = vi.fn(() => ({ from: () => ({ where: whereSpy }) }));
     insertSpy = vi.fn();
-    deleteSpy = vi.fn();
 
     const { createOrReuseMcpProject } = await import("../lib/db/queries/projects");
     const result = await createOrReuseMcpProject({
@@ -203,7 +172,6 @@ describe("project queries", () => {
     const onConflictDoNothingSpy = vi.fn(() => ({ returning: returningSpy }));
     const valuesSpy = vi.fn(() => ({ onConflictDoNothing: onConflictDoNothingSpy }));
     insertSpy = vi.fn(() => ({ values: valuesSpy }));
-    deleteSpy = vi.fn();
 
     const { createOrReuseMcpProject } = await import("../lib/db/queries/projects");
     const result = await createOrReuseMcpProject({

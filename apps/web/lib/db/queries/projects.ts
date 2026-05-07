@@ -11,6 +11,189 @@ function createProjectId(): string {
 export type GitHubRepoRef = { id: number; fullName: string };
 export type ProjectStatus = "pending" | "analyzing" | "analysis_failed" | "pr_pending" | "pr_closed" | "active" | "unsupported";
 
+export type McpProjectFingerprintInput =
+  | {
+      source: "mcp_codex";
+      identity: "remote";
+      normalizedGitRemote: string;
+      appRoot: string;
+    }
+  | {
+      source: "mcp_codex";
+      identity: "repo_name";
+      repoName: string;
+      packageName: string;
+      appRoot: string;
+    };
+
+export type CreateOrReuseMcpProjectParams = {
+  userId: string;
+  repoName: string;
+  packageName?: string | null;
+  gitRemote?: string | null;
+  appRoot: string;
+  framework: string;
+  packageManager: string;
+};
+
+export type CreateOrReuseMcpProjectResult =
+  | {
+      status: "ready";
+      projectId: string;
+      dashboardUrl: string;
+      created: boolean;
+      mcpFingerprint: string;
+    }
+  | {
+      status: "unsupported";
+      reason: "multiple_matching_projects";
+      mcpFingerprint: string;
+    };
+
+function normalizeBaseUrl(value: string): string {
+  return value.replace(/\/+$/, "");
+}
+
+function dashboardUrlForProject(projectId: string): string {
+  return `${normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL ?? "https://usetally.xyz")}/projects/${projectId}`;
+}
+
+function stripTrailingGitSuffix(value: string): string {
+  return value.replace(/\.git$/i, "");
+}
+
+export function normalizeGitRemote(remote: string | null | undefined): string | null {
+  const trimmed = remote?.trim();
+  if (!trimmed) return null;
+
+  const scpLike = /^git@([^:]+):(.+)$/i.exec(trimmed);
+  if (scpLike) {
+    const host = scpLike[1].toLowerCase();
+    const path = stripTrailingGitSuffix(scpLike[2].replace(/^\/+|\/+$/g, ""));
+    return `${host}/${host === "github.com" ? path.toLowerCase() : path}`;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    const host = url.hostname.toLowerCase();
+    const path = stripTrailingGitSuffix(url.pathname.replace(/^\/+|\/+$/g, ""));
+    if (!host || !path) return null;
+    return `${host}/${host === "github.com" ? path.toLowerCase() : path}`;
+  } catch {
+    return null;
+  }
+}
+
+export function mcpFingerprint(input: McpProjectFingerprintInput): string {
+  return crypto.createHash("sha256").update(JSON.stringify(input)).digest("hex");
+}
+
+export function buildMcpProjectFingerprintInput(params: {
+  repoName: string;
+  packageName?: string | null;
+  gitRemote?: string | null;
+  appRoot: string;
+}): McpProjectFingerprintInput {
+  const normalizedGitRemote = normalizeGitRemote(params.gitRemote);
+  if (normalizedGitRemote) {
+    return {
+      source: "mcp_codex",
+      identity: "remote",
+      normalizedGitRemote,
+      appRoot: params.appRoot,
+    };
+  }
+
+  return {
+    source: "mcp_codex",
+    identity: "repo_name",
+    repoName: params.repoName,
+    packageName: params.packageName || params.repoName,
+    appRoot: params.appRoot,
+  };
+}
+
+async function selectMcpProjectsByFingerprint(params: { userId: string; fingerprint: string }): Promise<Array<{ id: string }>> {
+  return db
+    .select({ id: projects.id })
+    .from(projects)
+    .where(and(eq(projects.userId, params.userId), eq(projects.mcpFingerprint, params.fingerprint)));
+}
+
+export async function createOrReuseMcpProject(
+  params: CreateOrReuseMcpProjectParams,
+): Promise<CreateOrReuseMcpProjectResult> {
+  const fingerprintInput = buildMcpProjectFingerprintInput(params);
+  const fingerprint = mcpFingerprint(fingerprintInput);
+  const existingRows = await selectMcpProjectsByFingerprint({ userId: params.userId, fingerprint });
+
+  if (existingRows.length > 1) {
+    return { status: "unsupported", reason: "multiple_matching_projects", mcpFingerprint: fingerprint };
+  }
+
+  const existingProjectId = existingRows[0]?.id;
+  if (existingProjectId) {
+    return {
+      status: "ready",
+      projectId: existingProjectId,
+      dashboardUrl: dashboardUrlForProject(existingProjectId),
+      created: false,
+      mcpFingerprint: fingerprint,
+    };
+  }
+
+  const projectId = createProjectId();
+  const normalizedGitRemote = fingerprintInput.identity === "remote" ? fingerprintInput.normalizedGitRemote : null;
+  const repoName = params.repoName;
+
+  const insertedRows = await db
+    .insert(projects)
+    .values({
+      id: projectId,
+      userId: params.userId,
+      source: "mcp_codex",
+      displayName: repoName,
+      status: "active",
+      detectedFramework: params.framework,
+      mcpNormalizedGitRemote: normalizedGitRemote,
+      mcpRepoName: repoName,
+      mcpAppRoot: params.appRoot,
+      mcpFramework: params.framework,
+      mcpPackageManager: params.packageManager,
+      mcpFingerprint: fingerprint,
+    })
+    .onConflictDoNothing({
+      target: [projects.userId, projects.mcpFingerprint],
+      where: sql`${projects.mcpFingerprint} is not null`,
+    })
+    .returning();
+
+  const insertedProjectId = insertedRows[0]?.id;
+  if (insertedProjectId) {
+    return {
+      status: "ready",
+      projectId: insertedProjectId,
+      dashboardUrl: dashboardUrlForProject(insertedProjectId),
+      created: true,
+      mcpFingerprint: fingerprint,
+    };
+  }
+
+  const conflictRows = await selectMcpProjectsByFingerprint({ userId: params.userId, fingerprint });
+  if (conflictRows.length === 1) {
+    const conflictProjectId = conflictRows[0].id;
+    return {
+      status: "ready",
+      projectId: conflictProjectId,
+      dashboardUrl: dashboardUrlForProject(conflictProjectId),
+      created: false,
+      mcpFingerprint: fingerprint,
+    };
+  }
+
+  return { status: "unsupported", reason: "multiple_matching_projects", mcpFingerprint: fingerprint };
+}
+
 export async function upsertProjectsForRepos(params: {
   userId: string;
   installationId: bigint;

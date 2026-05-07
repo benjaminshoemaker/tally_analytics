@@ -155,15 +155,15 @@ Add project query helpers for MCP-created projects, reuse by fingerprint, and co
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Project Reuse Implementation"; FEATURE_SPEC.md "Project Reuse"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Project query module exports MCP create/reuse helpers and fingerprint generation helpers.
+- [x] (CODE) Project query module exports MCP create/reuse helpers and fingerprint generation helpers.
   - Verify: `cd ../.. && rg -q 'createOrReuseMcpProject|mcpFingerprint|normalizeGitRemote' apps/web/lib/db/queries/projects.ts`
-- [ ] (TEST) MCP project query tests cover new project creation with `status = "active"` and null GitHub fields.
+- [x] (TEST) MCP project query tests cover new project creation with `status = "active"` and null GitHub fields.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-project-queries`
-- [ ] (TEST) MCP project query tests cover exact reuse, multiple-match unsupported behavior, and concurrent conflict reselect.
+- [x] (TEST) MCP project query tests cover exact reuse, multiple-match unsupported behavior, and concurrent conflict reselect.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-project-queries`
-- [ ] (TEST) Tests prove framework/package-manager changes do not change the reuse fingerprint.
+- [x] (TEST) Tests prove framework/package-manager changes do not change the reuse fingerprint.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-project-queries`
-- [ ] (TEST) Existing GitHub project query tests still pass.
+- [x] (TEST) Existing GitHub project query tests still pass.
   - Verify: `cd ../.. && pnpm --filter web test -- projects-queries github-webhook-installation-handler`
 
 **Files to Create:**
