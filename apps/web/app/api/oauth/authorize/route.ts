@@ -1,4 +1,5 @@
 import { validateSession } from "../../../../lib/auth/session";
+import { getUserById } from "../../../../lib/db/queries/users";
 import { createAuthorizationCode } from "../../../../lib/oauth/codes";
 import { getOAuthClient } from "../../../../lib/oauth/clients";
 import {
@@ -18,6 +19,72 @@ function redirectWithParams(redirectUri: string, params: Record<string, string>)
 
 function authorizeReturnPath(requestUrl: URL): string {
   return `${requestUrl.pathname}${requestUrl.search}`;
+}
+
+const LOCALHOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
+
+function hostnameFromHostHeader(hostHeader: string | null): string | null {
+  if (!hostHeader) return null;
+
+  try {
+    return new URL(`http://${hostHeader}`).hostname.replace(/^\[|\]$/g, "");
+  } catch {
+    return null;
+  }
+}
+
+async function resolveE2EAutoAuthorizeUserId(request: Request): Promise<
+  | { status: "disabled" }
+  | { status: "forbidden"; reason: string }
+  | { status: "authorized"; userId: string }
+> {
+  if (process.env.E2E_TEST_MODE !== "1") return { status: "disabled" };
+  if (process.env.NODE_ENV === "production") return { status: "forbidden", reason: "production" };
+
+  const hostname = hostnameFromHostHeader(request.headers.get("host"));
+  if (!hostname || !LOCALHOSTS.has(hostname)) {
+    return { status: "forbidden", reason: "non_localhost_host" };
+  }
+
+  const userId = process.env.E2E_MCP_AUTH_USER_ID;
+  if (!userId) return { status: "forbidden", reason: "missing_user_id" };
+
+  try {
+    const user = await getUserById(userId);
+    if (!user) return { status: "forbidden", reason: "unknown_user_id" };
+  } catch {
+    return { status: "forbidden", reason: "user_lookup_failed" };
+  }
+
+  return { status: "authorized", userId };
+}
+
+function e2eForbidden(reason: string): Response {
+  console.warn("MCP OAuth E2E auto-authorize blocked", { reason });
+  return Response.json({ error: "e2e_auto_authorize_forbidden" }, { status: 403 });
+}
+
+async function createCodeRedirect(params: {
+  clientId: string;
+  userId: string;
+  redirectUri: string;
+  codeChallenge: string;
+  codeChallengeMethod: string;
+  scope: string;
+  resource: string;
+  state: string;
+}): Promise<Response> {
+  const authorizationCode = await createAuthorizationCode({
+    clientId: params.clientId,
+    userId: params.userId,
+    redirectUri: params.redirectUri,
+    codeChallenge: params.codeChallenge,
+    codeChallengeMethod: params.codeChallengeMethod,
+    scope: params.scope,
+    resource: params.resource,
+  });
+
+  return redirectWithParams(params.redirectUri, { code: authorizationCode.code, state: params.state });
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -53,6 +120,23 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
+  const e2eAutoAuthorize = await resolveE2EAutoAuthorizeUserId(request);
+  if (e2eAutoAuthorize.status === "forbidden") {
+    return e2eForbidden(e2eAutoAuthorize.reason);
+  }
+  if (e2eAutoAuthorize.status === "authorized") {
+    return createCodeRedirect({
+      clientId,
+      userId: e2eAutoAuthorize.userId,
+      redirectUri,
+      codeChallenge,
+      codeChallengeMethod,
+      scope,
+      resource: normalizedResource,
+      state,
+    });
+  }
+
   const session = await validateSession(request);
   if (!session) {
     const loginUrl = new URL("/api/auth/github", url.origin);
@@ -60,7 +144,7 @@ export async function GET(request: Request): Promise<Response> {
     return Response.redirect(loginUrl.toString(), 302);
   }
 
-  const authorizationCode = await createAuthorizationCode({
+  return createCodeRedirect({
     clientId,
     userId: session.userId,
     redirectUri,
@@ -68,7 +152,6 @@ export async function GET(request: Request): Promise<Response> {
     codeChallengeMethod,
     scope,
     resource: normalizedResource,
+    state,
   });
-
-  return redirectWithParams(redirectUri, { code: authorizationCode.code, state });
 }
