@@ -517,15 +517,15 @@ Generate SDK-based wrapper files for App Router and Pages Router, infer `.tsx` v
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Patch Templates"; FEATURE_SPEC.md "Patch Requirements"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Template and package JSON helpers exist.
+- [x] (CODE) Template and package JSON helpers exist.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/next-install/templates.ts && test -f apps/web/lib/mcp/next-install/package-json.ts`
-- [ ] (TEST) App Router output creates `TallyAnalytics`, imports `AnalyticsAppRouter` and `init` from `@tally-analytics/sdk`, and inserts `<TallyAnalytics />` before `</body>`.
+- [x] (TEST) App Router output creates `TallyAnalytics`, imports `AnalyticsAppRouter` and `init` from `@tally-analytics/sdk`, and inserts `<TallyAnalytics />` before `</body>`.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (TEST) Pages Router output creates `useTallyAnalytics`, imports `useAnalyticsPagesRouter` and `init` from `@tally-analytics/sdk`, and calls `useTallyAnalytics();` inside the default App function.
+- [x] (TEST) Pages Router output creates `useTallyAnalytics`, imports `useAnalyticsPagesRouter` and `init` from `@tally-analytics/sdk`, and calls `useTallyAnalytics();` inside the default App function.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (TEST) `.tsx` fixtures emit `tally-analytics.tsx` and `.jsx` fixtures emit `tally-analytics.jsx` with no TypeScript-only syntax.
+- [x] (TEST) `.tsx` fixtures emit `tally-analytics.tsx` and `.jsx` fixtures emit `tally-analytics.jsx` with no TypeScript-only syntax.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (TEST) Package JSON edits add `@tally-analytics/sdk` only to the target app `dependencies`, preserve other version ranges, and do not create lockfile edits in returned diffs.
+- [x] (TEST) Package JSON edits add `@tally-analytics/sdk` only to the target app `dependencies`, preserve other version ranges, and do not create lockfile edits in returned diffs.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
 
 **Files to Create:**

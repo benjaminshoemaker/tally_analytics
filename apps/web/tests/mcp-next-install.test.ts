@@ -253,4 +253,103 @@ describe("MCP Next.js install service detection", () => {
       reason: "multiple_matching_projects",
     });
   });
+
+  it("renders App Router SDK wrapper and inserts TallyAnalytics before body close", async () => {
+    vi.resetModules();
+
+    const { insertTallyIntoEntrypoint, renderTallyWrapper, resolveTallyWrapperPaths } = await import(
+      "../lib/mcp/next-install/templates"
+    );
+
+    const target = {
+      router: "app" as const,
+      entrypointPath: "app/layout.tsx",
+    };
+    const paths = resolveTallyWrapperPaths(target);
+    const wrapper = renderTallyWrapper({ router: "app", projectId: "proj_123" });
+    const updatedEntrypoint = insertTallyIntoEntrypoint({
+      target,
+      wrapperImportPath: paths.wrapperImportPath,
+      content: "export default function RootLayout({ children }) {\n  return <html><body>{children}</body></html>;\n}\n",
+    });
+
+    expect(paths.wrapperFilePath).toBe("components/tally-analytics.tsx");
+    expect(wrapper).toContain("import { AnalyticsAppRouter, init } from '@tally-analytics/sdk';");
+    expect(wrapper).toContain("init({ projectId: 'proj_123' });");
+    expect(wrapper).toContain("export function TallyAnalytics()");
+    expect(updatedEntrypoint).toContain("import { TallyAnalytics } from '../components/tally-analytics';");
+    expect(updatedEntrypoint.indexOf("<TallyAnalytics />")).toBeLessThan(updatedEntrypoint.indexOf("</body>"));
+  });
+
+  it("renders Pages Router SDK wrapper and calls useTallyAnalytics inside the App function", async () => {
+    vi.resetModules();
+
+    const { insertTallyIntoEntrypoint, renderTallyWrapper, resolveTallyWrapperPaths } = await import(
+      "../lib/mcp/next-install/templates"
+    );
+
+    const target = {
+      router: "pages" as const,
+      entrypointPath: "src/pages/_app.jsx",
+    };
+    const paths = resolveTallyWrapperPaths(target);
+    const wrapper = renderTallyWrapper({ router: "pages", projectId: "proj_123" });
+    const updatedEntrypoint = insertTallyIntoEntrypoint({
+      target,
+      wrapperImportPath: paths.wrapperImportPath,
+      content: "export default function App({ Component, pageProps }) {\n  return <Component {...pageProps} />;\n}\n",
+    });
+
+    expect(paths.wrapperFilePath).toBe("src/components/tally-analytics.jsx");
+    expect(wrapper).toContain("import { init, useAnalyticsPagesRouter } from '@tally-analytics/sdk';");
+    expect(wrapper).toContain("export function useTallyAnalytics()");
+    expect(wrapper).not.toContain(": string");
+    expect(wrapper).not.toContain("React.");
+    expect(updatedEntrypoint).toContain("import { useTallyAnalytics } from '../components/tally-analytics';");
+    expect(updatedEntrypoint).toContain("useTallyAnalytics();");
+    expect(updatedEntrypoint.indexOf("useTallyAnalytics();")).toBeLessThan(updatedEntrypoint.indexOf("return <Component"));
+  });
+
+  it("infers wrapper extension from TSX and JSX entrypoints", async () => {
+    vi.resetModules();
+
+    const { resolveTallyWrapperPaths } = await import("../lib/mcp/next-install/templates");
+
+    expect(resolveTallyWrapperPaths({ entrypointPath: "apps/web/app/layout.tsx" }).wrapperFilePath).toBe(
+      "apps/web/components/tally-analytics.tsx",
+    );
+    expect(resolveTallyWrapperPaths({ entrypointPath: "apps/web/app/layout.jsx" }).wrapperFilePath).toBe(
+      "apps/web/components/tally-analytics.jsx",
+    );
+  });
+
+  it("adds @tally-analytics/sdk to dependencies without touching other ranges or lockfiles", async () => {
+    vi.resetModules();
+
+    const { addTallySdkDependency, TALLY_SDK_PACKAGE } = await import("../lib/mcp/next-install/package-json");
+    const result = addTallySdkDependency(
+      JSON.stringify({
+        scripts: { dev: "next dev" },
+        dependencies: {
+          next: "^14.2.0",
+          react: "^18.3.1",
+        },
+        devDependencies: {
+          typescript: "^5.7.2",
+        },
+      }),
+    );
+    const parsed = JSON.parse(result.content) as {
+      dependencies: Record<string, string>;
+      devDependencies: Record<string, string>;
+    };
+
+    expect(result.changed).toBe(true);
+    expect(parsed.dependencies.next).toBe("^14.2.0");
+    expect(parsed.dependencies.react).toBe("^18.3.1");
+    expect(parsed.dependencies[TALLY_SDK_PACKAGE]).toBe("^0.1.0");
+    expect(parsed.devDependencies.typescript).toBe("^5.7.2");
+    expect(result.content).not.toContain("pnpm-lock.yaml");
+    expect(result.content).not.toContain("package-lock.json");
+  });
 });
