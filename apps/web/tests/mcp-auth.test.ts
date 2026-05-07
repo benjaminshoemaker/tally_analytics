@@ -12,11 +12,36 @@ vi.mock("../lib/db/client", () => ({
 }));
 
 describe("MCP bearer token auth", () => {
+  it("does not query tokens when bearer auth is missing", async () => {
+    vi.resetModules();
+
+    selectSpy = vi.fn();
+
+    const { verifyMcpBearerToken } = await import("../lib/mcp/auth");
+    await expect(verifyMcpBearerToken(new Request("https://usetally.xyz/api/mcp"))).resolves.toBeUndefined();
+    expect(selectSpy).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid OAuth access tokens", async () => {
+    vi.resetModules();
+
+    selectSpy = vi.fn(() => ({
+      from: () => ({
+        where: vi.fn().mockResolvedValue([]),
+      }),
+    }));
+
+    const { verifyMcpBearerToken } = await import("../lib/mcp/auth");
+    await expect(
+      verifyMcpBearerToken(new Request("https://usetally.xyz/api/mcp"), "invalid-token"),
+    ).resolves.toBeUndefined();
+  });
+
   it("maps valid OAuth access tokens to the authenticated MCP owner", async () => {
     vi.resetModules();
 
     const { hashOAuthSecret } = await import("../lib/oauth/crypto");
-    const { validateAccessToken } = await import("../lib/oauth/tokens");
+    const { verifyMcpBearerToken } = await import("../lib/mcp/auth");
 
     selectSpy = vi.fn(() => ({
       from: () => ({
@@ -27,7 +52,7 @@ describe("MCP bearer token auth", () => {
             userId: "user_1",
             scope: "mcp:install",
             resource: "https://usetally.xyz/api/mcp",
-            expiresAt: new Date("2026-05-07T01:00:00.000Z"),
+            expiresAt: new Date("2030-05-07T01:00:00.000Z"),
             revokedAt: null,
             createdAt: new Date("2026-05-07T00:00:00.000Z"),
           },
@@ -36,17 +61,15 @@ describe("MCP bearer token auth", () => {
     }));
 
     await expect(
-      validateAccessToken({
-        accessToken: "access-token",
-        requiredScope: "mcp:install",
-        resource: "https://usetally.xyz/api/mcp",
-        now: new Date("2026-05-07T00:30:00.000Z"),
-      }),
+      verifyMcpBearerToken(new Request("https://usetally.xyz/api/mcp"), "access-token"),
     ).resolves.toMatchObject({
+      token: "access-token",
       clientId: "client_1",
-      userId: "user_1",
-      scope: "mcp:install",
-      resource: "https://usetally.xyz/api/mcp",
+      scopes: ["mcp:install"],
+      resource: new URL("https://usetally.xyz/api/mcp"),
+      extra: {
+        userId: "user_1",
+      },
     });
   });
 });

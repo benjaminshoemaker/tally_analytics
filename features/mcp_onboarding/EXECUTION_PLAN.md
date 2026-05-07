@@ -379,15 +379,15 @@ Create the web app MCP route using `mcp-handler`, validate bearer tokens through
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "MCP Route"; FEATURE_SPEC.md "MCP Tool Behavior"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP route and server/auth modules exist.
+- [x] (CODE) MCP route and server/auth modules exist.
   - Verify: `cd ../.. && test -f apps/web/app/api/mcp/route.ts && test -f apps/web/lib/mcp/server.ts && test -f apps/web/lib/mcp/auth.ts`
-- [ ] (CODE) MCP route uses Node runtime and creates an MCP handler with auth wrapping.
+- [x] (CODE) MCP route uses Node runtime and creates an MCP handler with auth wrapping.
   - Verify: `cd ../.. && rg -q 'runtime.*nodejs|mcpHandler|withMcpAuth|mcp:install' apps/web/app/api/mcp/route.ts apps/web/lib/mcp`
-- [ ] (TEST) Missing and invalid bearer tokens are rejected and do not create projects.
+- [x] (TEST) Missing and invalid bearer tokens are rejected and do not create projects.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-auth`
-- [ ] (TEST) Valid bearer tokens map to user ID, client ID, resource, and `mcp:install` scope.
+- [x] (TEST) Valid bearer tokens map to user ID, client ID, resource, and `mcp:install` scope.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-auth`
-- [ ] (TEST) MCP route exposes a minimal authenticated tool-list or smoke path without invoking patch generation.
+- [x] (TEST) MCP route exposes a minimal authenticated tool-list or smoke path without invoking patch generation.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route`
 
 **Files to Create:**
