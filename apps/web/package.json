@@ -16,6 +16,7 @@
     "e2e:scenarios": "node ./scripts/seed-e2e-scenario.mjs --list",
     "e2e:seed": "node ./scripts/seed-e2e-scenario.mjs",
     "e2e:replay-events": "node ./scripts/seed-e2e-scenario.mjs --replay-events",
+    "e2e:mcp-self-test": "node ./scripts/mcp-self-test.mjs",
     "github:sandbox:sync": "node ./scripts/sync-github-sandbox.mjs",
     "e2e": "node ./scripts/playwright-test.mjs"
   },

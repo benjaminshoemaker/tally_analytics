@@ -2,6 +2,7 @@ import { validateSession } from "../../../../lib/auth/session";
 import { getUserById } from "../../../../lib/db/queries/users";
 import { createAuthorizationCode } from "../../../../lib/oauth/codes";
 import { getOAuthClient } from "../../../../lib/oauth/clients";
+import { mcpResourceUrl } from "../../../../lib/oauth/metadata";
 import {
   assertValidPkce,
   isRedirectUriRegistered,
@@ -110,7 +111,7 @@ export async function GET(request: Request): Promise<Response> {
   let normalizedResource: string;
   try {
     scope = normalizeOAuthScope(url.searchParams.get("scope"));
-    normalizedResource = validateResourceUrl(resource);
+    normalizedResource = validateResourceUrl(resource || mcpResourceUrl());
     assertValidPkce({ codeChallenge, codeChallengeMethod });
   } catch (error) {
     return redirectWithParams(redirectUri, {

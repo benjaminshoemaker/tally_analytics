@@ -158,6 +158,35 @@ describe("GET /api/oauth/authorize", () => {
     expect(location.searchParams.get("state")).toBe("state_1");
   });
 
+  it("defaults missing resource to the MCP resource URL for Codex OAuth clients", async () => {
+    vi.resetModules();
+
+    getOAuthClientSpy = vi.fn().mockResolvedValue(clientRecord());
+    validateSessionSpy = vi.fn().mockResolvedValue({
+      id: "session_1",
+      userId: "user_1",
+      expiresAt: new Date("2030-01-01T00:00:00.000Z"),
+    });
+    createAuthorizationCodeSpy = vi.fn().mockResolvedValue({
+      code: "code_1",
+      codeHash: "hash_1",
+      expiresAt: new Date("2026-05-07T00:10:00.000Z"),
+    });
+
+    const requestUrl = new URL(authorizeUrl());
+    requestUrl.searchParams.delete("resource");
+
+    const { GET } = await import("../app/api/oauth/authorize/route");
+    const response = await GET(new Request(requestUrl));
+
+    expect(response.status).toBe(302);
+    expect(createAuthorizationCodeSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        resource: "https://usetally.xyz/api/mcp",
+      }),
+    );
+  });
+
   it("auto-authorizes a seeded E2E user on localhost without a session", async () => {
     const restoreEnv = withE2EEnv({ testMode: "1", nodeEnv: "test", userId: e2eUserId });
 
