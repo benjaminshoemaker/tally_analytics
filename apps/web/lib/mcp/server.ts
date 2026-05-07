@@ -1,5 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
+import { registerPrepareNextjsInstallPatchTool } from "./tools/prepare-nextjs-install-patch";
+
 export function registerTallyMcpTools(server: McpServer): void {
   server.registerTool(
     "tally_mcp_smoke",
@@ -17,6 +19,8 @@ export function registerTallyMcpTools(server: McpServer): void {
       ],
     }),
   );
+
+  registerPrepareNextjsInstallPatchTool(server);
 }
 
 export function initializeTallyMcpServer(server: McpServer): void {

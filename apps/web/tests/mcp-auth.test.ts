@@ -37,6 +37,51 @@ describe("MCP bearer token auth", () => {
     ).resolves.toBeUndefined();
   });
 
+  it("rejects unauthenticated MCP route requests before handler work can run", async () => {
+    vi.resetModules();
+
+    selectSpy = vi.fn();
+    const handlerSpy = vi.fn().mockResolvedValue(new Response("should-not-run"));
+    const { withMcpAuth } = await import("mcp-handler");
+    const { verifyMcpBearerToken } = await import("../lib/mcp/auth");
+
+    const protectedHandler = withMcpAuth(handlerSpy, verifyMcpBearerToken, {
+      required: true,
+      requiredScopes: ["mcp:install"],
+      resourceMetadataPath: "/.well-known/oauth-protected-resource",
+    });
+
+    const response = await protectedHandler(new Request("https://usetally.xyz/api/mcp"));
+    expect(response.status).toBe(401);
+    expect(handlerSpy).not.toHaveBeenCalled();
+    expect(selectSpy).not.toHaveBeenCalled();
+  });
+
+  it("rejects invalid MCP bearer tokens before handler work can run", async () => {
+    vi.resetModules();
+
+    selectSpy = vi.fn(() => ({
+      from: () => ({
+        where: vi.fn().mockResolvedValue([]),
+      }),
+    }));
+    const handlerSpy = vi.fn().mockResolvedValue(new Response("should-not-run"));
+    const { withMcpAuth } = await import("mcp-handler");
+    const { verifyMcpBearerToken } = await import("../lib/mcp/auth");
+
+    const protectedHandler = withMcpAuth(handlerSpy, verifyMcpBearerToken, {
+      required: true,
+      requiredScopes: ["mcp:install"],
+      resourceMetadataPath: "/.well-known/oauth-protected-resource",
+    });
+
+    const response = await protectedHandler(
+      new Request("https://usetally.xyz/api/mcp", { headers: { authorization: "Bearer invalid-token" } }),
+    );
+    expect(response.status).toBe(401);
+    expect(handlerSpy).not.toHaveBeenCalled();
+  });
+
   it("maps valid OAuth access tokens to the authenticated MCP owner", async () => {
     vi.resetModules();
 

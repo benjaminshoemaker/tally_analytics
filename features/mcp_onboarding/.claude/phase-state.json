@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_onboarding",
-  "last_updated": "2026-05-07T07:00:37Z",
+  "last_updated": "2026-05-07T07:04:28Z",
   "main": {
     "current_phase": 2,
     "total_phases": 3,
@@ -131,6 +131,15 @@
           "2.2.C": {
             "status": "COMPLETE",
             "completed_at": "2026-05-07T07:00:37Z",
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "2.2.D": {
+            "status": "COMPLETE",
+            "completed_at": "2026-05-07T07:04:28Z",
             "failures": {
               "consecutive": 0,
               "verification_attempts": {},

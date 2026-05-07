@@ -613,15 +613,15 @@ Register `prepare_nextjs_install_patch` as the primary MCP tool and return struc
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "API Contracts"; FEATURE_SPEC.md "MCP Tool Behavior"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP tool module exists and is registered by the MCP server.
+- [x] (CODE) MCP tool module exists and is registered by the MCP server.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/tools/prepare-nextjs-install-patch.ts && rg -q 'prepare_nextjs_install_patch' apps/web/lib/mcp`
-- [ ] (TEST) Unauthenticated MCP requests cannot create projects and return OAuth-required behavior.
+- [x] (TEST) Unauthenticated MCP requests cannot create projects and return OAuth-required behavior.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route mcp-auth`
-- [ ] (TEST) Authenticated ready responses include `status`, `projectId`, `dashboardUrl`, `patchFormat`, `unifiedDiff`, `filesChanged`, `packageInstallCommand`, and verification checklist.
+- [x] (TEST) Authenticated ready responses include `status`, `projectId`, `dashboardUrl`, `patchFormat`, `unifiedDiff`, `filesChanged`, `packageInstallCommand`, and verification checklist.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install mcp-route`
-- [ ] (TEST) Unsupported, needs-context, and already-installed responses match the documented JSON shapes.
+- [x] (TEST) Unsupported, needs-context, and already-installed responses match the documented JSON shapes.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install mcp-route`
-- [ ] (CODE) MCP modules do not log submitted file contents, generated diffs, auth codes, access tokens, or refresh tokens.
+- [x] (CODE) MCP modules do not log submitted file contents, generated diffs, auth codes, access tokens, or refresh tokens.
   - Verify: `cd ../.. && ! rg -n 'console\\.(log|info|warn|error).*(files|unifiedDiff|access_token|refresh_token|auth code|code)' apps/web/lib/mcp apps/web/app/api/mcp`
 
 **Files to Create:**
