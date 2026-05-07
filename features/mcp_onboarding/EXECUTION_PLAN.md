@@ -1010,23 +1010,23 @@ Exercise the feature as close to the intended Codex flow as local automation all
 ### Phase 3 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) Full web test suite passes.
+- [x] (TEST) Full web test suite passes.
   - Verify: `cd ../.. && pnpm --filter web test`
-- [ ] (TYPE) Web type checking passes.
+- [x] (TYPE) Web type checking passes.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
-- [ ] (BUILD) Web build passes.
+- [x] (BUILD) Web build passes.
   - Verify: `cd ../.. && pnpm --filter web build`
-- [ ] (TEST) SDK tests pass.
+- [x] (TEST) SDK tests pass.
   - Verify: `cd ../.. && pnpm --filter sdk test`
-- [ ] (BUILD) SDK build passes.
+- [x] (BUILD) SDK build passes.
   - Verify: `cd ../.. && pnpm --filter sdk build`
 
 **Regression Verification:**
-- [ ] (TEST) GitHub App OAuth, installation, webhook, detection, generation, regenerate, and dashboard tests pass.
+- [x] (TEST) GitHub App OAuth, installation, webhook, detection, generation, regenerate, and dashboard tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- github oauth installation webhook detection generate regenerate project`
-- [ ] (TEST) Events ingestion and analytics fixture tests pass.
+- [x] (TEST) Events ingestion and analytics fixture tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- events analytics tinybird e2e-analytics-fixtures`
-- [ ] (BROWSER:DOM) Docs setup page displays the MCP command and the GitHub App path.
+- [x] (BROWSER:DOM) Docs setup page displays the MCP command and the GitHub App path.
   - Verify: route=`/docs/setup`, selector=`body`, expect=`codex mcp add tally --url https://usetally.xyz/api/mcp`
-- [ ] (BROWSER:DOM) Seeded MCP no-event project displays the exact waiting-for-first-event copy.
+- [x] (BROWSER:DOM) Seeded MCP no-event project displays the exact waiting-for-first-event copy.
   - Verify: route=`/projects/{mcpProjectId}`, selector=`body`, expect=`Waiting for first event. Tally is installed, but no production events have been received yet.`
