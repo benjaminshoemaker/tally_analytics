@@ -839,13 +839,13 @@ Show the exact pending copy for active projects with no received production even
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Project Pending State"; FEATURE_SPEC.md "User-Facing Done State"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Project detail and live feed surfaces include the exact pending copy.
+- [x] (CODE) Project detail and live feed surfaces include the exact pending copy.
   - Verify: `cd ../.. && rg -q 'Waiting for first event\\. Tally is installed, but no production events have been received yet\\.' 'apps/web/app/(dashboard)/projects/[id]/page.tsx' 'apps/web/app/(dashboard)/projects/[id]/live/page.tsx'`
-- [ ] (TEST) Project detail page tests cover active project with null `lastEventAt`.
+- [x] (TEST) Project detail page tests cover active project with null `lastEventAt`.
   - Verify: `cd ../.. && pnpm --filter web test -- project-detail-page`
-- [ ] (TEST) Live feed page tests cover active project with null `lastEventAt`.
+- [x] (TEST) Live feed page tests cover active project with null `lastEventAt`.
   - Verify: `cd ../.. && pnpm --filter web test -- live-feed-page`
-- [ ] (TEST) Existing live feed behavior with fixture events still renders event rows.
+- [x] (TEST) Existing live feed behavior with fixture events still renders event rows.
   - Verify: `cd ../.. && pnpm --filter web test -- live-feed-page live-event`
 
 **Files to Create:**

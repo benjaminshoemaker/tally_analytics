@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import LiveEvent from "../../../../../components/dashboard/live-event";
 import Skeleton from "../../../../../components/dashboard/skeleton";
 import { useLiveFeed } from "../../../../../lib/hooks/use-live-feed";
+import { useProject } from "../../../../../lib/hooks/use-project";
 
 function ActivityIcon() {
   return (
@@ -35,6 +36,7 @@ function SkeletonEvent() {
 export default function LiveFeedPage({ params }: { params: { id: string } }) {
   const projectId = params.id;
   const feedQuery = useLiveFeed(projectId);
+  const projectQuery = useProject(projectId);
 
   const [seenEventIds, setSeenEventIds] = useState<Set<string>>(() => new Set());
 
@@ -57,6 +59,13 @@ export default function LiveFeedPage({ params }: { params: { id: string } }) {
     return map;
   }, [feedQuery.data, seenEventIds]);
 
+  const project = useMemo(() => {
+    const data = projectQuery.data as null | { project?: unknown };
+    return (data?.project as null | Record<string, unknown>) ?? null;
+  }, [projectQuery.data]);
+
+  const isWaitingForFirstEvent = project?.status === "active" && project?.lastEventAt === null;
+
   return (
     <div className="flex w-full flex-col gap-6">
       <header className="flex flex-col gap-1">
@@ -77,8 +86,19 @@ export default function LiveFeedPage({ params }: { params: { id: string } }) {
       ) : feedQuery.data.events.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
           <ActivityIcon />
-          <h3 className="mt-4 font-display text-sm font-semibold text-slate-900">No events yet</h3>
-          <p className="mt-1 text-sm text-slate-600">Events will appear here as visitors browse your site.</p>
+          {isWaitingForFirstEvent ? (
+            <>
+              <h3 className="mt-4 font-display text-sm font-semibold text-slate-900">Waiting for first event</h3>
+              <p className="mt-1 text-sm text-slate-600">
+                Waiting for first event. Tally is installed, but no production events have been received yet.
+              </p>
+            </>
+          ) : (
+            <>
+              <h3 className="mt-4 font-display text-sm font-semibold text-slate-900">No events yet</h3>
+              <p className="mt-1 text-sm text-slate-600">Events will appear here as visitors browse your site.</p>
+            </>
+          )}
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -90,4 +110,3 @@ export default function LiveFeedPage({ params }: { params: { id: string } }) {
     </div>
   );
 }
-

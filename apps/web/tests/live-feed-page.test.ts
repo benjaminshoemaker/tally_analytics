@@ -26,6 +26,44 @@ describe("/projects/[id]/live page", () => {
     expect(html).toContain("No events yet");
   });
 
+  it("renders the waiting-for-first-event state for active projects with no events", () => {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(["project", "proj_mcp"], {
+      project: {
+        id: "proj_mcp",
+        displayName: "Tally Demo",
+        source: "mcp_codex",
+        githubRepoFullName: null,
+        status: "active",
+        prNumber: null,
+        prUrl: null,
+        detectedFramework: "nextjs-app",
+        detectedAnalytics: [],
+        eventsThisMonth: 0,
+        lastEventAt: null,
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z",
+        actions: {
+          canRegenerate: false,
+        },
+      },
+      quotaLimit: 10000,
+      quotaUsed: 0,
+      isOverQuota: false,
+      userPlan: "free",
+    });
+    queryClient.setQueryData(["live-feed", "proj_mcp"], { events: [], hasMore: false });
+
+    const html = renderToStaticMarkup(
+      React.createElement(QueryClientProvider, {
+        client: queryClient,
+        children: React.createElement(LiveFeedPage, { params: { id: "proj_mcp" } }),
+      }),
+    );
+
+    expect(html).toContain("Waiting for first event. Tally is installed, but no production events have been received yet.");
+  });
+
   it("renders recent events", () => {
     const queryClient = new QueryClient();
     queryClient.setQueryData(["live-feed", "proj_123"], {

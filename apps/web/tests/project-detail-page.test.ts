@@ -85,4 +85,41 @@ describe("/projects/[id] page", () => {
     expect(html).not.toContain("Repository Not Supported");
     expect(html).not.toContain("View PR");
   });
+
+  it("renders the waiting-for-first-event state for active projects with no events", () => {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(["project", "proj_mcp"], {
+      project: {
+        id: "proj_mcp",
+        displayName: "Tally Demo",
+        source: "mcp_codex",
+        githubRepoFullName: null,
+        status: "active",
+        prNumber: null,
+        prUrl: null,
+        detectedFramework: "nextjs-app",
+        detectedAnalytics: [],
+        eventsThisMonth: 0,
+        lastEventAt: null,
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z",
+        actions: {
+          canRegenerate: false,
+        },
+      },
+      quotaLimit: 10000,
+      quotaUsed: 0,
+      isOverQuota: false,
+      userPlan: "free",
+    });
+
+    const html = renderToStaticMarkup(
+      React.createElement(QueryClientProvider, {
+        client: queryClient,
+        children: React.createElement(ProjectDetailPage, { params: { id: "proj_mcp" } }),
+      }),
+    );
+
+    expect(html).toContain("Waiting for first event. Tally is installed, but no production events have been received yet.");
+  });
 });

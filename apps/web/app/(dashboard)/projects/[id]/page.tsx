@@ -226,6 +226,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const quotaUsed = Number((projectQuery.data as Record<string, unknown>)?.quotaUsed ?? 0);
   const isOverQuota = Boolean((projectQuery.data as Record<string, unknown>)?.isOverQuota);
   const canRegenerate = getCanRegenerateAction(project, realStatus);
+  const isWaitingForFirstEvent = displayStatus === "active" && lastEventAt === null;
 
   const showRerunButton = canRegenerate && !optimisticStatus;
   const isRateLimited = retryCountdown > 0;
@@ -242,6 +243,14 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
 
       {/* Status-specific empty state card */}
       {!optimisticStatus && canRegenerate && <StatusCard status={realStatus} />}
+
+      {isWaitingForFirstEvent && (
+        <div className="rounded-lg border border-sky-200 bg-sky-50 p-4">
+          <p className="text-sm font-medium text-sky-900">
+            Waiting for first event. Tally is installed, but no production events have been received yet.
+          </p>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="flex flex-wrap items-center gap-3">
