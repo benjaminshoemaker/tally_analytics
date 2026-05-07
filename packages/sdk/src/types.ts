@@ -1,5 +1,6 @@
 export interface InitOptions {
   projectId: string;
+  eventsUrl?: string;
   respectDNT?: boolean;
   debug?: boolean;
 }
@@ -29,4 +30,3 @@ export interface AnalyticsEvent {
   utm_content?: string;
   cta_clicks?: string;
 }
-

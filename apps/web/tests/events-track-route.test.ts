@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 const appendEvents = vi.fn(async () => undefined);
@@ -39,6 +42,49 @@ describe("events track route (Task 4.2.A)", () => {
     expect(appendEvents).toHaveBeenCalledTimes(1);
     expect(appendEvents).toHaveBeenCalledWith([validEvent]);
     expect(isProjectActive).toHaveBeenCalledTimes(1);
+  });
+
+  it("writes E2E fixture events instead of forwarding to Tinybird when the local sink is enabled", async () => {
+    const previousTestMode = process.env.E2E_TEST_MODE;
+    const previousScenario = process.env.E2E_EVENTS_FIXTURE_SCENARIO;
+    const previousFixtureDir = process.env.E2E_ANALYTICS_FIXTURE_DIR;
+    const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), "fpa-event-sink-"));
+
+    try {
+      process.env.E2E_TEST_MODE = "1";
+      process.env.E2E_EVENTS_FIXTURE_SCENARIO = "mcp-self-test";
+      process.env.E2E_ANALYTICS_FIXTURE_DIR = fixtureDir;
+
+      vi.resetModules();
+      appendEvents.mockClear();
+      isProjectActive.mockClear();
+
+      const { POST } = await import("../../events/app/v1/track/route");
+      const request = new Request("http://localhost/v1/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ events: [validEvent] }),
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({ success: true, received: 1, stored: 1 });
+      expect(appendEvents).toHaveBeenCalledTimes(0);
+      expect(isProjectActive).toHaveBeenCalledTimes(1);
+
+      const eventsPath = path.join(fixtureDir, "mcp-self-test", "events.jsonl");
+      const lines = fs.readFileSync(eventsPath, "utf8").trim().split("\n");
+      expect(lines).toHaveLength(1);
+      expect(JSON.parse(lines[0])).toMatchObject(validEvent);
+    } finally {
+      fs.rmSync(fixtureDir, { recursive: true, force: true });
+      if (previousTestMode === undefined) delete process.env.E2E_TEST_MODE;
+      else process.env.E2E_TEST_MODE = previousTestMode;
+      if (previousScenario === undefined) delete process.env.E2E_EVENTS_FIXTURE_SCENARIO;
+      else process.env.E2E_EVENTS_FIXTURE_SCENARIO = previousScenario;
+      if (previousFixtureDir === undefined) delete process.env.E2E_ANALYTICS_FIXTURE_DIR;
+      else process.env.E2E_ANALYTICS_FIXTURE_DIR = previousFixtureDir;
+    }
   });
 
   it("rejects invalid payloads via Zod validation", async () => {

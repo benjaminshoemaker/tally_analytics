@@ -84,6 +84,32 @@ function writeFixture(root: string): void {
       2
     )}\n`
   );
+
+  const jsonlScenarioDir = path.join(root, 'mcp-self-test');
+  fs.mkdirSync(jsonlScenarioDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(jsonlScenarioDir, 'events.jsonl'),
+    [
+      JSON.stringify({
+        project_id: 'proj_mcp_jsonl',
+        session_id: 'sess_jsonl_001',
+        event_type: 'session_start',
+        timestamp: '2026-05-01T12:20:00.000Z',
+        path: '/',
+        referrer: '',
+        is_returning: 0,
+      }),
+      JSON.stringify({
+        project_id: 'proj_mcp_jsonl',
+        session_id: 'sess_jsonl_001',
+        event_type: 'page_view',
+        timestamp: '2026-05-01T12:21:00.000Z',
+        path: '/jsonl',
+        referrer: '',
+      }),
+      '',
+    ].join('\n')
+  );
 }
 
 describe('E2E analytics fixtures', () => {
@@ -162,6 +188,25 @@ describe('E2E analytics fixtures', () => {
       events: [
         { eventType: 'page_view', path: '/docs', timestamp: '2026-05-01T12:16:00.000Z' },
         { eventType: 'session_start', path: '/', timestamp: '2026-05-01T12:15:00.000Z' },
+      ],
+      hasMore: false,
+    });
+
+    expect(buildE2EOverview('proj_mcp_jsonl', '7d')).toMatchObject({
+      period: '7d',
+      pageViews: {
+        total: 1,
+        change: 100,
+        timeSeries: [{ date: '2026-05-01', count: 1 }],
+      },
+      sessions: { total: 1, change: 100 },
+      topPages: [{ path: '/jsonl', views: 1, percentage: 100 }],
+    });
+
+    expect(buildE2ELiveFeed({ projectId: 'proj_mcp_jsonl', limit: 5 })).toMatchObject({
+      events: [
+        { eventType: 'page_view', path: '/jsonl', timestamp: '2026-05-01T12:21:00.000Z' },
+        { eventType: 'session_start', path: '/', timestamp: '2026-05-01T12:20:00.000Z' },
       ],
       hasMore: false,
     });

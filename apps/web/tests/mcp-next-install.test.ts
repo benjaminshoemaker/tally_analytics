@@ -386,7 +386,8 @@ describe("MCP Next.js install service detection", () => {
 
     expect(paths.wrapperFilePath).toBe("components/tally-analytics.tsx");
     expect(wrapper).toContain("import { AnalyticsAppRouter, init } from '@tally-analytics/sdk';");
-    expect(wrapper).toContain("init({ projectId: 'proj_123' });");
+    expect(wrapper).toContain("projectId: 'proj_123'");
+    expect(wrapper).toContain("eventsUrl: process.env.NEXT_PUBLIC_TALLY_EVENTS_URL");
     expect(wrapper).toContain("export function TallyAnalytics()");
     expect(updatedEntrypoint).toContain("import { TallyAnalytics } from '../components/tally-analytics';");
     expect(updatedEntrypoint.indexOf("<TallyAnalytics />")).toBeLessThan(updatedEntrypoint.indexOf("</body>"));
@@ -413,6 +414,8 @@ describe("MCP Next.js install service detection", () => {
 
     expect(paths.wrapperFilePath).toBe("src/components/tally-analytics.jsx");
     expect(wrapper).toContain("import { init, useAnalyticsPagesRouter } from '@tally-analytics/sdk';");
+    expect(wrapper).toContain("projectId: 'proj_123'");
+    expect(wrapper).toContain("eventsUrl: process.env.NEXT_PUBLIC_TALLY_EVENTS_URL");
     expect(wrapper).toContain("export function useTallyAnalytics()");
     expect(wrapper).not.toContain(": string");
     expect(wrapper).not.toContain("React.");

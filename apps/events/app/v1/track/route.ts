@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { createTinybirdClientFromEnv } from "../../../lib/tinybird";
 import { createProjectCacheFromEnv } from "../../../lib/project-cache";
+import { appendE2EFixtureEvents } from "../../../lib/e2e-fixture-sink";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -86,6 +87,22 @@ export async function POST(request: Request) {
     }
 
     return Response.json({ success: false, error: "Project validation failed" }, { status: 500, headers: corsHeaders });
+  }
+
+  try {
+    const fixtureSink = await appendE2EFixtureEvents(activeEvents);
+    if (fixtureSink.enabled) {
+      return Response.json(
+        { success: true, received: parsed.data.events.length, stored: fixtureSink.stored },
+        { headers: corsHeaders },
+      );
+    }
+  } catch (error) {
+    const details = error instanceof Error ? error.message : String(error);
+    return Response.json(
+      { success: false, error: "Event fixture sink failed", details },
+      { status: 500, headers: corsHeaders },
+    );
   }
 
   const client = createTinybirdClientFromEnv();

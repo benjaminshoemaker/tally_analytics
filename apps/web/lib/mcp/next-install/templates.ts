@@ -36,7 +36,10 @@ export function renderTallyWrapper(params: { router: NextInstallTarget["router"]
 
 import { AnalyticsAppRouter, init } from '@tally-analytics/sdk';
 
-init({ projectId: '${params.projectId}' });
+init({
+  projectId: '${params.projectId}',
+  eventsUrl: process.env.NEXT_PUBLIC_TALLY_EVENTS_URL,
+});
 
 export function ${TALLY_ANALYTICS_COMPONENT}() {
   return <AnalyticsAppRouter />;
@@ -46,7 +49,10 @@ export function ${TALLY_ANALYTICS_COMPONENT}() {
 
   return `import { init, useAnalyticsPagesRouter } from '@tally-analytics/sdk';
 
-init({ projectId: '${params.projectId}' });
+init({
+  projectId: '${params.projectId}',
+  eventsUrl: process.env.NEXT_PUBLIC_TALLY_EVENTS_URL,
+});
 
 export function ${TALLY_ANALYTICS_HOOK}() {
   useAnalyticsPagesRouter();

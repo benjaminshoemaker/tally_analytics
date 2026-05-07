@@ -76,6 +76,29 @@ describe("Task 3.2.C - Public API", () => {
     expect(body.events.some((e: any) => e.event_type === "page_view")).toBe(true);
   });
 
+  it("init(options) can override the events URL", async () => {
+    installCookieDocument();
+    installWindow();
+    Object.defineProperty(globalThis, "navigator", {
+      value: { doNotTrack: "0" },
+      configurable: true,
+    });
+
+    const fetchSpy = vi.fn(async () => new Response(null, { status: 204 }));
+    // @ts-expect-error test stub
+    globalThis.fetch = fetchSpy;
+
+    vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue(
+      "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+    );
+
+    init({ projectId: "proj_123", eventsUrl: "http://localhost:3001/v1/track" });
+    await trackPageView("/");
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy.mock.calls[0][0]).toBe("http://localhost:3001/v1/track");
+  });
+
   it("identify(userId) associates events with user", async () => {
     installCookieDocument();
     installWindow();

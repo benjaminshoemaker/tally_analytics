@@ -95,7 +95,7 @@ function parseEvent(raw: unknown): ParsedFixtureEvent | null {
   };
 }
 
-function readFixtureFile(filePath: string): ParsedFixtureEvent[] {
+function readFixtureJsonFile(filePath: string): ParsedFixtureEvent[] {
   try {
     const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8')) as unknown;
     if (!isRecord(parsed) || !Array.isArray(parsed.events)) return [];
@@ -108,6 +108,27 @@ function readFixtureFile(filePath: string): ParsedFixtureEvent[] {
   }
 }
 
+function readFixtureJsonlFile(filePath: string): ParsedFixtureEvent[] {
+  try {
+    return fs
+      .readFileSync(filePath, 'utf8')
+      .split(/\r?\n/)
+      .flatMap((line) => {
+        const trimmed = line.trim();
+        if (!trimmed) return [];
+
+        try {
+          const normalized = parseEvent(JSON.parse(trimmed) as unknown);
+          return normalized ? [normalized] : [];
+        } catch {
+          return [];
+        }
+      });
+  } catch {
+    return [];
+  }
+}
+
 export function loadE2EAnalyticsEvents(projectId: string): ParsedFixtureEvent[] {
   const root = fixtureRoot();
   if (!fs.existsSync(root)) return [];
@@ -115,9 +136,10 @@ export function loadE2EAnalyticsEvents(projectId: string): ParsedFixtureEvent[] 
   const events: ParsedFixtureEvent[] = [];
   for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
-    const eventsPath = path.join(root, entry.name, 'events.json');
-    if (!fs.existsSync(eventsPath)) continue;
-    events.push(...readFixtureFile(eventsPath));
+    const jsonPath = path.join(root, entry.name, 'events.json');
+    const jsonlPath = path.join(root, entry.name, 'events.jsonl');
+    if (fs.existsSync(jsonPath)) events.push(...readFixtureJsonFile(jsonPath));
+    if (fs.existsSync(jsonlPath)) events.push(...readFixtureJsonlFile(jsonlPath));
   }
 
   return events

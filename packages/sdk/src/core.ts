@@ -11,10 +11,11 @@ import { getOrCreateVisitorId, type VisitorIdResult } from "./visitor";
 import { captureUTMParams, type UTMParams } from "./utm";
 import { setupCTATracking, type CTATracker } from "./cta";
 
-const EVENTS_URL = "https://events.usetally.xyz/v1/track";
+const DEFAULT_EVENTS_URL = "https://events.usetally.xyz/v1/track";
 
 type SDKConfig = {
   projectId: string;
+  eventsUrl: string;
   respectDNT: boolean;
   debug: boolean;
 };
@@ -92,9 +93,8 @@ function sendFinalPageData() {
 
   // Use sendBeacon for reliability during unload
   if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-    const url = EVENTS_URL;
     const data = JSON.stringify({ events: [event] });
-    navigator.sendBeacon(url, data);
+    navigator.sendBeacon(config.eventsUrl, data);
   }
 }
 
@@ -104,6 +104,7 @@ export function init(options: InitOptions) {
 
   config = {
     projectId: options.projectId,
+    eventsUrl: options.eventsUrl || DEFAULT_EVENTS_URL,
     respectDNT: options.respectDNT ?? true,
     debug: options.debug ?? false,
   };
@@ -206,7 +207,7 @@ export async function trackPageView(path?: string): Promise<void> {
     }),
   );
 
-  await postEvents(EVENTS_URL, events, { respectDNT: config.respectDNT });
+  await postEvents(config.eventsUrl, events, { respectDNT: config.respectDNT });
 
   // Reset trackers for next page view
   engagementTracker?.reset();
