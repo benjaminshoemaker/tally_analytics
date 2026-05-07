@@ -932,15 +932,15 @@ Run the complete verification matrix required by the technical spec and confirm 
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Verification Commands"; root AGENTS.md "SDK Constraints"
 
 **Acceptance Criteria:**
-- [ ] (TEST) Full web Vitest suite passes.
+- [x] (TEST) Full web Vitest suite passes.
   - Verify: `cd ../.. && pnpm --filter web test`
-- [ ] (TYPE) Web type checking passes.
+- [x] (TYPE) Web type checking passes.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
-- [ ] (BUILD) Web build passes.
+- [x] (BUILD) Web build passes.
   - Verify: `cd ../.. && pnpm --filter web build`
-- [ ] (TEST) SDK tests pass.
+- [x] (TEST) SDK tests pass.
   - Verify: `cd ../.. && pnpm --filter sdk test`
-- [ ] (BUILD) SDK build passes, and SDK gzip size is checked if files under `packages/sdk/src` changed.
+- [x] (BUILD) SDK build passes, and SDK gzip size is checked if files under `packages/sdk/src` changed.
   - Verify: `cd ../.. && pnpm --filter sdk build && (git diff --name-only -- packages/sdk/src | grep -q . && gzip -c packages/sdk/dist/index.js | wc -c || true)`
 
 **Files to Create:**
