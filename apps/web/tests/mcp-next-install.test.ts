@@ -1,3 +1,8 @@
+import { execFileSync } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
 import { describe, expect, it, vi } from "vitest";
 
 let createOrReuseMcpProjectSpy: ReturnType<typeof vi.fn> | undefined;
@@ -26,7 +31,7 @@ function contextInput(overrides: Record<string, unknown> = {}) {
       hasAtAlias: true,
     },
     files: {
-      "package.json": JSON.stringify({ name: "my-app", dependencies: { next: "^14.0.0" } }),
+      "package.json": `${JSON.stringify({ name: "my-app", dependencies: { next: "^14.0.0" } })}\n`,
       "app/layout.tsx": "export default function RootLayout() { return <html><body /></html>; }\n",
     },
     ...overrides,
@@ -252,6 +257,112 @@ describe("MCP Next.js install service detection", () => {
       status: "unsupported",
       reason: "multiple_matching_projects",
     });
+  });
+
+  it("returns ready patch contract and a git-applyable unified diff for ready fixtures", async () => {
+    const result = await readyResult();
+    expect(result).toMatchObject({
+      status: "ready",
+      projectId: "proj_existing",
+      patchFormat: "unified_diff_v1",
+      filesChanged: ["package.json", "components/tally-analytics.tsx", "app/layout.tsx"],
+      packageInstallCommand: "pnpm install",
+    });
+    if (result.status !== "ready") throw new Error("Expected ready result");
+    expect(result.unifiedDiff).toContain("diff --git a/package.json b/package.json");
+    expect(result.unifiedDiff).toContain("new file mode 100644");
+    expect(result.unifiedDiff).toContain("@@");
+    expect(result.verification).toContain("Apply the unified diff with git apply --check before git apply.");
+
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mcp-next-install-"));
+    fs.mkdirSync(path.join(tempDir, "app"), { recursive: true });
+    fs.writeFileSync(path.join(tempDir, "package.json"), contextInput().files["package.json"]);
+    fs.writeFileSync(path.join(tempDir, "app/layout.tsx"), contextInput().files["app/layout.tsx"]);
+    execFileSync("git", ["init"], { cwd: tempDir, stdio: "ignore" });
+    execFileSync("git", ["apply", "--check"], { cwd: tempDir, input: result.unifiedDiff });
+  });
+
+  it("creates the required fixture matrix directories", () => {
+    const base = path.join(__dirname, "fixtures", "mcp-nextjs");
+    for (const fixture of [
+      "app-router-root",
+      "pages-router-root",
+      "app-router-src",
+      "pages-router-src",
+      "app-router-jsx",
+      "pages-router-jsx",
+      "non-next",
+      "ambiguous-monorepo",
+      "already-installed",
+      "existing-conflict",
+    ]) {
+      expect(fs.statSync(path.join(base, fixture)).isDirectory()).toBe(true);
+    }
+  });
+
+  it("returns already_installed when submitted files already match the project", async () => {
+    vi.resetModules();
+    createOrReuseMcpProjectSpy = vi.fn().mockResolvedValue({
+      status: "ready",
+      projectId: "proj_existing",
+      dashboardUrl: "https://usetally.xyz/projects/proj_existing",
+      created: false,
+      mcpFingerprint: "fingerprint",
+    });
+
+    const { renderTallyWrapper } = await import("../lib/mcp/next-install/templates");
+    const { prepareNextjsInstallPatch } = await import("../lib/mcp/next-install/prepare-nextjs-install-patch");
+    const input = contextInput({
+      files: {
+        "package.json": JSON.stringify({
+          dependencies: { next: "^14.0.0", "@tally-analytics/sdk": "^0.1.0" },
+        }),
+        "app/layout.tsx":
+          "import { TallyAnalytics } from '../components/tally-analytics';\nexport default function RootLayout() { return <html><body><TallyAnalytics /></body></html>; }\n",
+        "components/tally-analytics.tsx": renderTallyWrapper({ router: "app", projectId: "proj_existing" }),
+      },
+    });
+
+    await expect(prepareNextjsInstallPatch({ userId: "user_1", input })).resolves.toEqual({
+      status: "already_installed",
+      projectId: "proj_existing",
+      dashboardUrl: "https://usetally.xyz/projects/proj_existing",
+      unifiedDiff: "",
+    });
+  });
+
+  it("returns existing_integration_conflict when Tally files do not match the current project", async () => {
+    vi.resetModules();
+    createOrReuseMcpProjectSpy = vi.fn().mockResolvedValue({
+      status: "ready",
+      projectId: "proj_current",
+      dashboardUrl: "https://usetally.xyz/projects/proj_current",
+      created: false,
+      mcpFingerprint: "fingerprint",
+    });
+
+    const { prepareNextjsInstallPatch } = await import("../lib/mcp/next-install/prepare-nextjs-install-patch");
+    await expect(
+      prepareNextjsInstallPatch({
+        userId: "user_1",
+        input: contextInput({
+          files: {
+            "package.json": JSON.stringify({
+              dependencies: { next: "^14.0.0", "@tally-analytics/sdk": "^0.1.0" },
+            }),
+            "app/layout.tsx": "export default function RootLayout() { return <html><body /></html>; }\n",
+          },
+        }),
+      }),
+    ).resolves.toMatchObject({ status: "unsupported", reason: "existing_integration_conflict" });
+  });
+
+  it("ready diffs only include package JSON, wrapper file, and selected entrypoint", async () => {
+    const result = await readyResult();
+    if (result.status !== "ready") throw new Error("Expected ready result");
+    expect(result.filesChanged).toEqual(["package.json", "components/tally-analytics.tsx", "app/layout.tsx"]);
+    expect(result.unifiedDiff).not.toContain("pnpm-lock.yaml");
+    expect(result.unifiedDiff).not.toContain("README.md");
   });
 
   it("renders App Router SDK wrapper and inserts TallyAnalytics before body close", async () => {

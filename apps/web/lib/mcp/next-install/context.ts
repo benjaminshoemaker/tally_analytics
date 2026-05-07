@@ -99,6 +99,10 @@ export function isNextEntrypointPath(path: string): boolean {
   return /(^|\/)(src\/)?app\/layout\.(tsx|jsx)$/.test(path) || /(^|\/)(src\/)?pages\/_app\.(tsx|jsx)$/.test(path);
 }
 
+function isTallyWrapperPath(path: string): boolean {
+  return /(^|\/)(src\/)?components\/tally-analytics\.(tsx|jsx)$/.test(path);
+}
+
 function isSensitiveOrUnsupportedFile(path: string): boolean {
   const basename = pathBasename(path).toLowerCase();
   if (basename === ".env" || basename.startsWith(".env.")) return true;
@@ -117,6 +121,7 @@ function isAllowedContextPath(path: string, context: { appRoot: string; dependen
   if (path === context.entrypoint) return true;
   if (pathBasename(path) === "package.json") return true;
   if (isNextEntrypointPath(path)) return true;
+  if (isTallyWrapperPath(path)) return true;
   if (path === "pnpm-workspace.yaml") return true;
 
   for (const name of CONFIG_FILE_NAMES) {

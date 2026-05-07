@@ -562,15 +562,15 @@ Implement a narrow internal unified diff builder for full-file replacements and 
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Patch Generation"; FEATURE_SPEC.md "Patch Contract"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Unified diff builder exists and is used by the install service.
+- [x] (CODE) Unified diff builder exists and is used by the install service.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/next-install/unified-diff.ts && rg -q 'unifiedDiff|unified_diff_v1' apps/web/lib/mcp/next-install`
-- [ ] (CODE) Required fixture directories exist under `apps/web/tests/fixtures/mcp-nextjs/`.
+- [x] (CODE) Required fixture directories exist under `apps/web/tests/fixtures/mcp-nextjs/`.
   - Verify: `cd ../.. && for d in app-router-root pages-router-root app-router-src pages-router-src app-router-jsx pages-router-jsx non-next ambiguous-monorepo already-installed existing-conflict; do test -d apps/web/tests/fixtures/mcp-nextjs/$d || exit 1; done`
-- [ ] (TEST) Ready fixture diffs pass `git apply --check` in a temporary git repo.
+- [x] (TEST) Ready fixture diffs pass `git apply --check` in a temporary git repo.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (TEST) `already_installed`, `existing_integration_conflict`, `needs_context`, and unsupported reason responses match the API contract.
+- [x] (TEST) `already_installed`, `existing_integration_conflict`, `needs_context`, and unsupported reason responses match the API contract.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
-- [ ] (TEST) Generated diffs contain only the target package JSON, wrapper file, and selected entrypoint for supported fixtures.
+- [x] (TEST) Generated diffs contain only the target package JSON, wrapper file, and selected entrypoint for supported fixtures.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install`
 
 **Files to Create:**
