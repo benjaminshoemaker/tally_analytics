@@ -69,13 +69,13 @@ Add the MCP server packages to the web app package and keep dependency scope lim
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Dependencies"; FEATURE_SPEC.md "MCP Setup Flow"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `apps/web/package.json` includes `@modelcontextprotocol/sdk` and `mcp-handler` in `dependencies`.
+- [x] (CODE) `apps/web/package.json` includes `@modelcontextprotocol/sdk` and `mcp-handler` in `dependencies`.
   - Verify: `cd ../.. && node -e "const p=require('./apps/web/package.json'); if(!p.dependencies['@modelcontextprotocol/sdk']||!p.dependencies['mcp-handler']) process.exit(1)"`
-- [ ] (CODE) `packages/sdk/package.json` does not add MCP server dependencies.
+- [x] (CODE) `packages/sdk/package.json` does not add MCP server dependencies.
   - Verify: `cd ../.. && node -e "const p=require('./packages/sdk/package.json'); if((p.dependencies&&p.dependencies['mcp-handler'])||(p.dependencies&&p.dependencies['@modelcontextprotocol/sdk'])) process.exit(1)"`
-- [ ] (TYPE) Existing web TypeScript config still compiles after dependency installation.
+- [x] (TYPE) Existing web TypeScript config still compiles after dependency installation.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
-- [ ] (TEST) Existing package metadata tests still pass.
+- [x] (TEST) Existing package metadata tests still pass.
   - Verify: `cd ../.. && pnpm --filter web test -- env app-url`
 
 **Files to Create:**

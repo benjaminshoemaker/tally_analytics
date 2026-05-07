@@ -20,6 +20,7 @@
     "e2e": "node ./scripts/playwright-test.mjs"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "@neondatabase/serverless": "^1.0.2",
     "@octokit/app": "^16.1.2",
     "@octokit/rest": "^22.0.1",
@@ -28,6 +29,7 @@
     "@tanstack/react-query": "^5.28.0",
     "@vercel/analytics": "^1.6.1",
     "drizzle-orm": "^0.44.0",
+    "mcp-handler": "^1.1.0",
     "next": "^14.2.20",
     "pg": "^8.16.0",
     "react": "^18.3.1",
