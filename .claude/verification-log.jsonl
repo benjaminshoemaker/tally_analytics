@@ -135,3 +135,6 @@
 {"timestamp":"2026-05-07T07:06:52Z","scope":"phase-checkpoint","phase":2,"check":"lint","status":"PASS","evidence":"pnpm --filter web lint; existing no-img-element warnings only"}
 {"timestamp":"2026-05-07T07:06:52Z","scope":"phase-checkpoint","phase":2,"check":"build","status":"PASS","evidence":"pnpm --filter web build"}
 {"timestamp":"2026-05-07T07:06:52Z","scope":"phase-checkpoint","phase":2,"check":"regression","status":"PASS","evidence":"pnpm --filter web test -- detect-framework github-detection github-insertion github-templates github-generate; pnpm --filter sdk test"}
+{"timestamp":"2026-05-07T07:08:28Z","scope":"phase-prep","phase":3,"check":"pre-phase-setup","status":"PASS","evidence":"MCP install tool and fixture tests exist; project schema has displayName/source"}
+{"timestamp":"2026-05-07T07:08:28Z","scope":"phase-prep","phase":3,"check":"prior-phases","status":"PASS","evidence":"Phase 2 CHECKPOINTED in features/mcp_onboarding/.claude/phase-state.json"}
+{"timestamp":"2026-05-07T07:08:28Z","scope":"phase-prep","phase":3,"check":"git-worktree","status":"PASS","evidence":"clean working tree before phase-prep updates on branch phase-2"}

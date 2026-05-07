@@ -674,9 +674,9 @@ Register `prepare_nextjs_install_patch` as the primary MCP tool and return struc
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) MCP install tool and fixture tests exist before UI/API work starts.
+- [x] (CODE) MCP install tool and fixture tests exist before UI/API work starts.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/tools/prepare-nextjs-install-patch.ts && test -f apps/web/tests/mcp-next-install.test.ts`
-- [ ] (CODE) Project schema includes `displayName` and `source`.
+- [x] (CODE) Project schema includes `displayName` and `source`.
   - Verify: `cd ../.. && rg -q 'displayName|source' apps/web/lib/db/schema.ts`
 
 ### Step 3.1: Project API and Dashboard Data
