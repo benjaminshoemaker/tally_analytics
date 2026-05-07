@@ -4,15 +4,24 @@ import { useQuery } from "@tanstack/react-query";
 
 export const PROJECT_LIST_REFETCH_INTERVAL_MS = 10_000;
 
+export type ProjectSource = "github_app" | "mcp_codex";
+
+export type ProjectActions = {
+  canRegenerate: boolean;
+};
+
 export type ProjectsListItem = {
   id: string;
-  githubRepoFullName: string;
+  displayName: string;
+  source: ProjectSource;
+  githubRepoFullName: string | null;
   status: string;
   prUrl: string | null;
   detectedFramework: string | null;
   eventsThisMonth: number;
   lastEventAt: string | null;
   createdAt: string;
+  actions: ProjectActions;
 };
 
 export type ProjectsListResponse = { projects: ProjectsListItem[] };
@@ -47,4 +56,3 @@ export function useProjects() {
     refetchInterval: PROJECT_LIST_REFETCH_INTERVAL_MS,
   });
 }
-

@@ -11,6 +11,8 @@ describe("/projects/[id] page", () => {
     queryClient.setQueryData(["project", "proj_123"], {
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "analysis_failed",
         prNumber: 1,
@@ -21,6 +23,9 @@ describe("/projects/[id] page", () => {
         lastEventAt: null,
         createdAt: "2024-01-01T00:00:00.000Z",
         updatedAt: "2024-01-01T00:00:00.000Z",
+        actions: {
+          canRegenerate: true,
+        },
       },
       quotaLimit: 10000,
       quotaUsed: 0,
@@ -40,5 +45,44 @@ describe("/projects/[id] page", () => {
     expect(html).toContain("Getting Started");
     expect(html).toContain("Re-run Analysis"); // Button text changed from "Regenerate PR"
     expect(html).toContain("Analysis Failed"); // Status-specific card for failed state
+  });
+
+  it("does not render GitHub-only regenerate controls for MCP projects", () => {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(["project", "proj_mcp"], {
+      project: {
+        id: "proj_mcp",
+        displayName: "Tally Demo",
+        source: "mcp_codex",
+        githubRepoFullName: null,
+        status: "unsupported",
+        prNumber: null,
+        prUrl: null,
+        detectedFramework: "nextjs-app",
+        detectedAnalytics: [],
+        eventsThisMonth: 0,
+        lastEventAt: null,
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z",
+        actions: {
+          canRegenerate: false,
+        },
+      },
+      quotaLimit: 10000,
+      quotaUsed: 0,
+      isOverQuota: false,
+      userPlan: "free",
+    });
+
+    const html = renderToStaticMarkup(
+      React.createElement(QueryClientProvider, {
+        client: queryClient,
+        children: React.createElement(ProjectDetailPage, { params: { id: "proj_mcp" } }),
+      }),
+    );
+
+    expect(html).not.toContain("Re-run Analysis");
+    expect(html).not.toContain("Repository Not Supported");
+    expect(html).not.toContain("View PR");
   });
 });

@@ -740,15 +740,15 @@ Update project hooks, cards, layouts, detail pages, and action visibility to use
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Project Cards, Headers, and Actions"; FEATURE_SPEC.md "Product Surface"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Project hooks/types expose `displayName`, `source`, nullable `githubRepoFullName`, and `actions.canRegenerate`.
+- [x] (CODE) Project hooks/types expose `displayName`, `source`, nullable `githubRepoFullName`, and `actions.canRegenerate`.
   - Verify: `cd ../.. && rg -q 'displayName|source|canRegenerate|githubRepoFullName: string \\| null' apps/web/lib/hooks/use-projects.ts apps/web/lib/hooks/use-project.ts`
-- [ ] (TEST) Project list page/card tests render `displayName` for MCP projects with null GitHub repo names.
+- [x] (TEST) Project list page/card tests render `displayName` for MCP projects with null GitHub repo names.
   - Verify: `cd ../.. && pnpm --filter web test -- projects-list-page`
-- [ ] (TEST) Project layout and detail page tests render MCP `displayName` in headers/breadcrumbs and do not render empty titles.
+- [x] (TEST) Project layout and detail page tests render MCP `displayName` in headers/breadcrumbs and do not render empty titles.
   - Verify: `cd ../.. && pnpm --filter web test -- project-layout project-detail-page`
-- [ ] (TEST) MCP projects do not render regenerate/reanalyze controls.
+- [x] (TEST) MCP projects do not render regenerate/reanalyze controls.
   - Verify: `cd ../.. && pnpm --filter web test -- project-detail-page project-layout`
-- [ ] (TEST) Existing GitHub App project rendering still shows GitHub repo context and eligible actions.
+- [x] (TEST) Existing GitHub App project rendering still shows GitHub repo context and eligible actions.
   - Verify: `cd ../.. && pnpm --filter web test -- projects-list-page project-detail-page project-layout`
 
 **Files to Create:**

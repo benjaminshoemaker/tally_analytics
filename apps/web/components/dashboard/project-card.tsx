@@ -20,6 +20,10 @@ function formatRelativeTime(dateString: string): string {
 
 export default function ProjectCard({ project }: { project: ProjectsListItem }) {
   const lastEventLabel = project.lastEventAt ? formatRelativeTime(project.lastEventAt) : "No events yet";
+  const githubContext =
+    project.source === "github_app" && project.githubRepoFullName && project.githubRepoFullName !== project.displayName
+      ? project.githubRepoFullName
+      : null;
 
   return (
     <a
@@ -30,8 +34,9 @@ export default function ProjectCard({ project }: { project: ProjectsListItem }) 
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <h2 className="truncate font-display text-sm font-semibold text-warm-900 transition-colors group-hover:text-brand-600">
-            {project.githubRepoFullName}
+            {project.displayName}
           </h2>
+          {githubContext && <p className="mt-1 truncate text-xs text-warm-500">{githubContext}</p>}
           <p className="mt-1 flex items-center gap-1.5 text-xs text-warm-500">
             <svg className="size-3" viewBox="0 0 12 12" fill="none">
               <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.5"/>
@@ -47,4 +52,3 @@ export default function ProjectCard({ project }: { project: ProjectsListItem }) 
     </a>
   );
 }
-

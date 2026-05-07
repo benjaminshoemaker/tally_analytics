@@ -15,7 +15,7 @@ type RegenerateState = {
   retryAfter?: number;
 };
 
-function canRegenerate(status: string): boolean {
+function canRegenerateByStatus(status: string): boolean {
   return status === "analysis_failed" || status === "pr_closed" || status === "unsupported";
 }
 
@@ -99,6 +99,15 @@ function ExternalLinkIcon() {
       <path d="M6.667 9.333L14 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
+}
+
+function getCanRegenerateAction(project: Record<string, unknown> | null, status: string): boolean {
+  const actions = project?.actions;
+  if (actions && typeof actions === "object" && "canRegenerate" in actions) {
+    return Boolean((actions as { canRegenerate?: unknown }).canRegenerate);
+  }
+
+  return canRegenerateByStatus(status);
 }
 
 export default function ProjectDetailPage({ params }: { params: { id: string } }) {
@@ -216,8 +225,9 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const quotaLimit = Number((projectQuery.data as Record<string, unknown>)?.quotaLimit ?? 0);
   const quotaUsed = Number((projectQuery.data as Record<string, unknown>)?.quotaUsed ?? 0);
   const isOverQuota = Boolean((projectQuery.data as Record<string, unknown>)?.isOverQuota);
+  const canRegenerate = getCanRegenerateAction(project, realStatus);
 
-  const showRerunButton = canRegenerate(realStatus) && !optimisticStatus;
+  const showRerunButton = canRegenerate && !optimisticStatus;
   const isRateLimited = retryCountdown > 0;
 
   return (
@@ -231,7 +241,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
       )}
 
       {/* Status-specific empty state card */}
-      {!optimisticStatus && canRegenerate(realStatus) && <StatusCard status={realStatus} />}
+      {!optimisticStatus && canRegenerate && <StatusCard status={realStatus} />}
 
       {/* Quick Actions */}
       <div className="flex flex-wrap items-center gap-3">

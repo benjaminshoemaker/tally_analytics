@@ -15,6 +15,8 @@ describe("project layout", () => {
     queryClient.setQueryData(["project", "proj_123"], {
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "active",
       },
@@ -39,6 +41,8 @@ describe("project layout", () => {
     queryClient.setQueryData(["project", "proj_123"], {
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "active",
       },
@@ -62,6 +66,8 @@ describe("project layout", () => {
     queryClient.setQueryData(["project", "proj_123"], {
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "active",
       },
@@ -85,6 +91,8 @@ describe("project layout", () => {
     queryClient.setQueryData(["project", "proj_123"], {
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "active",
       },
@@ -149,11 +157,39 @@ describe("project layout", () => {
     expect(html).toContain("proj_789");
   });
 
+  it("renders MCP display name when GitHub repo name is not available", () => {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(["project", "proj_mcp"], {
+      project: {
+        id: "proj_mcp",
+        displayName: "Tally Demo",
+        source: "mcp_codex",
+        githubRepoFullName: null,
+        status: "active",
+      },
+    });
+
+    const html = renderToStaticMarkup(
+      React.createElement(QueryClientProvider, {
+        client: queryClient,
+        children: React.createElement(
+          ProjectLayout,
+          { params: { id: "proj_mcp" }, children: React.createElement("div", null, "Child") },
+        ),
+      }),
+    );
+
+    expect(html).toContain("Tally Demo");
+    expect(html).toContain("Active");
+  });
+
   it("renders children content", () => {
     const queryClient = new QueryClient();
     queryClient.setQueryData(["project", "proj_123"], {
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "active",
       },
@@ -181,6 +217,8 @@ describe("project layout", () => {
     queryClient.setQueryData(["project", "proj_123"], {
       project: {
         id: "proj_123",
+        displayName: "octo/repo",
+        source: "github_app",
         githubRepoFullName: "octo/repo",
         status: "active",
       },
@@ -204,6 +242,8 @@ describe("project layout", () => {
     queryClient.setQueryData(["project", "proj_analyzing"], {
       project: {
         id: "proj_analyzing",
+        displayName: "user/analyzing-repo",
+        source: "github_app",
         githubRepoFullName: "user/analyzing-repo",
         status: "analyzing",
       },

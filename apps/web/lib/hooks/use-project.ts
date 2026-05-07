@@ -2,13 +2,38 @@
 
 import { useQuery } from "@tanstack/react-query";
 
+import type { ProjectActions, ProjectSource } from "./use-projects";
+
 export const ANALYSIS_POLL_INTERVAL_MS = 2000;
 
 export function getProjectRefetchIntervalMs(status: string): number | false {
   return status === "analyzing" ? ANALYSIS_POLL_INTERVAL_MS : false;
 }
 
-export type ProjectDetailResponse = Record<string, unknown>;
+export type ProjectDetail = {
+  id: string;
+  displayName: string;
+  source: ProjectSource;
+  githubRepoFullName: string | null;
+  status: string;
+  prNumber: number | null;
+  prUrl: string | null;
+  detectedFramework: string | null;
+  detectedAnalytics: string[];
+  eventsThisMonth: number;
+  lastEventAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  actions: ProjectActions;
+};
+
+export type ProjectDetailResponse = {
+  project: ProjectDetail;
+  quotaLimit: number;
+  quotaUsed: number;
+  isOverQuota: boolean;
+  userPlan: string;
+};
 
 type ErrorResponse = { error?: string; message?: string };
 

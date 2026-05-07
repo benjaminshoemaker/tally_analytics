@@ -32,6 +32,8 @@ describe("/projects page", () => {
       projects: [
         {
           id: "proj_123",
+          displayName: "octo/repo",
+          source: "github_app",
           githubRepoFullName: "octo/repo",
           status: "active",
           prUrl: null,
@@ -39,6 +41,24 @@ describe("/projects page", () => {
           eventsThisMonth: 0,
           lastEventAt: null,
           createdAt: "2024-01-01T00:00:00.000Z",
+          actions: {
+            canRegenerate: false,
+          },
+        },
+        {
+          id: "proj_mcp",
+          displayName: "Tally Demo",
+          source: "mcp_codex",
+          githubRepoFullName: null,
+          status: "active",
+          prUrl: null,
+          detectedFramework: "nextjs-app",
+          eventsThisMonth: 0,
+          lastEventAt: null,
+          createdAt: "2024-01-02T00:00:00.000Z",
+          actions: {
+            canRegenerate: false,
+          },
         },
       ],
     });
@@ -51,7 +71,9 @@ describe("/projects page", () => {
     );
 
     expect(html).toContain("octo/repo");
+    expect(html).toContain("Tally Demo");
     expect(html).toContain('href="/projects/proj_123"');
+    expect(html).toContain('href="/projects/proj_mcp"');
     expect(html).toContain("Active");
   });
 });

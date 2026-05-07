@@ -38,7 +38,12 @@ export default function ProjectLayout({ children, params }: { children: React.Re
     return (data?.project as null | Record<string, unknown>) ?? null;
   }, [projectQuery.data]);
 
-  const repoName = project?.githubRepoFullName ? String(project.githubRepoFullName) : null;
+  const displayName =
+    typeof project?.displayName === "string" && project.displayName.trim().length > 0
+      ? project.displayName
+      : project?.githubRepoFullName
+        ? String(project.githubRepoFullName)
+        : projectId;
   const status = project?.status ? String(project.status) : null;
 
   return (
@@ -52,7 +57,7 @@ export default function ProjectLayout({ children, params }: { children: React.Re
         {projectQuery.isPending ? (
           <Skeleton className="h-4 w-32" />
         ) : (
-          <span className="font-medium text-slate-900">{repoName ?? projectId}</span>
+          <span className="font-medium text-slate-900">{displayName}</span>
         )}
       </nav>
 
@@ -68,7 +73,7 @@ export default function ProjectLayout({ children, params }: { children: React.Re
             ) : (
               <>
                 <h1 className="break-words font-display text-2xl font-semibold tracking-tight text-slate-900">
-                  {repoName ?? projectId}
+                  {displayName}
                 </h1>
                 {status && <StatusBadge status={status} />}
               </>
