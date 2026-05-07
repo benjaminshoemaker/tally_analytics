@@ -201,15 +201,15 @@ Create reusable OAuth modules for hashing secrets, validating clients/redirect U
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "OAuth Tables" and "OAuth/Authorization Server"; FEATURE_SPEC.md "MCP Setup Flow"
 
 **Acceptance Criteria:**
-- [ ] (CODE) OAuth library modules exist under `apps/web/lib/oauth/`.
+- [x] (CODE) OAuth library modules exist under `apps/web/lib/oauth/`.
   - Verify: `cd ../.. && test -f apps/web/lib/oauth/crypto.ts && test -f apps/web/lib/oauth/clients.ts && test -f apps/web/lib/oauth/codes.ts && test -f apps/web/lib/oauth/tokens.ts && test -f apps/web/lib/oauth/validation.ts`
-- [ ] (TEST) Client registration validation accepts HTTPS and localhost loopback redirect URIs and rejects invalid redirect URIs.
+- [x] (TEST) Client registration validation accepts HTTPS and localhost loopback redirect URIs and rejects invalid redirect URIs.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth-register`
-- [ ] (TEST) Authorization-code and token helpers store hashes and never persist raw token/code strings.
+- [x] (TEST) Authorization-code and token helpers store hashes and never persist raw token/code strings.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth-token`
-- [ ] (TEST) Token tests cover PKCE S256 verification, one-time code use, 1-hour access token expiry, 30-day refresh token expiry, and refresh rotation.
+- [x] (TEST) Token tests cover PKCE S256 verification, one-time code use, 1-hour access token expiry, 30-day refresh token expiry, and refresh rotation.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth-token`
-- [ ] (CODE) OAuth modules do not log raw authorization codes, access tokens, refresh tokens, or submitted file bodies.
+- [x] (CODE) OAuth modules do not log raw authorization codes, access tokens, refresh tokens, or submitted file bodies.
   - Verify: `cd ../.. && ! rg -n 'console\\.(log|info|warn|error).*token|console\\.(log|info|warn|error).*code|console\\.(log|info|warn|error).*files' apps/web/lib/oauth apps/web/app/api/oauth`
 
 **Files to Create:**
