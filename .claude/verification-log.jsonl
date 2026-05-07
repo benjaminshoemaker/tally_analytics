@@ -122,3 +122,8 @@
 {"timestamp":"2026-05-07T06:13:42Z","scope":"phase-prep","phase":1,"check":"pre-phase-setup","status":"PASS","evidence":"features/mcp_onboarding/EXECUTION_PLAN.md"}
 {"timestamp":"2026-05-07T06:13:42Z","scope":"phase-prep","phase":1,"check":"criteria-audit","status":"PASS","evidence":"features/mcp_onboarding/EXECUTION_PLAN.md"}
 {"timestamp":"2026-05-07T06:13:42Z","scope":"phase-prep","phase":1,"check":"git-worktree","status":"PASS","evidence":"clean working tree before phase-start"}
+{"timestamp":"2026-05-07T06:42:48Z","scope":"phase-checkpoint","phase":1,"check":"tests","status":"PASS","evidence":"pnpm --filter web test -- schema migrations mcp-project-queries mcp-oauth github-oauth"}
+{"timestamp":"2026-05-07T06:42:48Z","scope":"phase-checkpoint","phase":1,"check":"typecheck","status":"PASS","evidence":"pnpm --filter web typecheck"}
+{"timestamp":"2026-05-07T06:42:48Z","scope":"phase-checkpoint","phase":1,"check":"lint","status":"PASS","evidence":"pnpm --filter web lint; existing no-img-element warnings only"}
+{"timestamp":"2026-05-07T06:42:48Z","scope":"phase-checkpoint","phase":1,"check":"build","status":"PASS","evidence":"pnpm --filter web build"}
+{"timestamp":"2026-05-07T06:42:48Z","scope":"phase-checkpoint","phase":1,"check":"regression","status":"PASS","evidence":"pnpm --filter web test -- github-callback-api github-webhook-installation-handler github-oauth; OAuth logging rg scan passed"}

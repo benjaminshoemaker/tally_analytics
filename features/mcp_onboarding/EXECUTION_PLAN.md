@@ -338,17 +338,17 @@ Extend existing GitHub login and callback routes so an MCP OAuth authorization r
 ### Phase 1 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) OAuth, schema, migration, project query, and GitHub OAuth regression tests pass.
+- [x] (TEST) OAuth, schema, migration, project query, and GitHub OAuth regression tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- schema migrations mcp-project-queries mcp-oauth github-oauth`
-- [ ] (TYPE) Web type checking passes.
+- [x] (TYPE) Web type checking passes.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
-- [ ] (LINT) Web linting passes.
+- [x] (LINT) Web linting passes.
   - Verify: `cd ../.. && pnpm --filter web lint`
 
 **Regression Verification:**
-- [ ] (TEST) Existing GitHub installation and callback behavior still passes.
+- [x] (TEST) Existing GitHub installation and callback behavior still passes.
   - Verify: `cd ../.. && pnpm --filter web test -- github-callback-api github-webhook-installation-handler github-oauth`
-- [ ] (CODE) No OAuth module logs raw tokens, codes, or submitted repo file content.
+- [x] (CODE) No OAuth module logs raw tokens, codes, or submitted repo file content.
   - Verify: `cd ../.. && ! rg -n 'console\\.(log|info|warn|error).*token|console\\.(log|info|warn|error).*code|console\\.(log|info|warn|error).*files' apps/web/lib/oauth apps/web/app/api/oauth`
 
 ---
