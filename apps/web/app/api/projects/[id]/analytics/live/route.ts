@@ -1,9 +1,13 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq } from 'drizzle-orm';
 
-import { getUserFromRequest } from "../../../../../../lib/auth/get-user";
-import { db } from "../../../../../../lib/db/client";
-import { projects } from "../../../../../../lib/db/schema";
-import { createTinybirdClientFromEnv, tinybirdSql } from "../../../../../../lib/tinybird/client";
+import { getUserFromRequest } from '../../../../../../lib/auth/get-user';
+import {
+  buildE2ELiveFeed,
+  isE2EAnalyticsFixtureMode,
+} from '../../../../../../lib/analytics/e2e-fixtures';
+import { db } from '../../../../../../lib/db/client';
+import { projects } from '../../../../../../lib/db/schema';
+import { createTinybirdClientFromEnv, tinybirdSql } from '../../../../../../lib/tinybird/client';
 
 type LiveFeedResponse = {
   events: Array<{
@@ -26,43 +30,49 @@ function escapeSqlString(value: string): string {
 }
 
 function toTinybirdDateTime64String(date: Date): string {
-  return date.toISOString().replace("T", " ").replace("Z", "");
+  return date.toISOString().replace('T', ' ').replace('Z', '');
 }
 
 function normalizeTimestamp(value: unknown): string {
-  const raw = String(value ?? "");
-  if (!raw) return "";
-  if (raw.includes("T")) return raw;
+  const raw = String(value ?? '');
+  if (!raw) return '';
+  if (raw.includes('T')) return raw;
 
-  const iso = raw.replace(" ", "T");
-  return iso.endsWith("Z") ? iso : `${iso}Z`;
+  const iso = raw.replace(' ', 'T');
+  return iso.endsWith('Z') ? iso : `${iso}Z`;
 }
 
 export async function GET(
   request: Request,
-  context: { params: Promise<{ id: string }> | { id: string } },
+  context: { params: Promise<{ id: string }> | { id: string } }
 ): Promise<Response> {
   const user = await getUserFromRequest(request);
-  if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const params = "then" in context.params ? await context.params : context.params;
+  const params = 'then' in context.params ? await context.params : context.params;
   const projectId = params.id;
-  if (!projectId) return Response.json({ error: "Missing project id" }, { status: 400 });
+  if (!projectId) return Response.json({ error: 'Missing project id' }, { status: 400 });
 
   const ownedRows = await db
     .select({ id: projects.id })
     .from(projects)
     .where(and(eq(projects.id, projectId), eq(projects.userId, user.id)));
 
-  if (!ownedRows[0]) return Response.json({ error: "Project not found" }, { status: 404 });
+  if (!ownedRows[0]) return Response.json({ error: 'Project not found' }, { status: 404 });
 
   const url = new URL(request.url);
-  const limitRaw = url.searchParams.get("limit");
-  const limit = clamp(Number.parseInt(limitRaw ?? "20", 10) || 20, 1, 100);
-  const sinceRaw = url.searchParams.get("since") ?? "";
+  const limitRaw = url.searchParams.get('limit');
+  const limit = clamp(Number.parseInt(limitRaw ?? '20', 10) || 20, 1, 100);
+  const sinceRaw = url.searchParams.get('since') ?? '';
   const sinceDate = sinceRaw ? new Date(sinceRaw) : null;
-  const since = sinceDate && !Number.isNaN(sinceDate.getTime()) ? toTinybirdDateTime64String(sinceDate) : "";
-  const sinceFilter = since || "2024-01-01 00:00:00.000";
+
+  if (isE2EAnalyticsFixtureMode()) {
+    return Response.json(buildE2ELiveFeed({ projectId, limit, since: sinceDate }), { status: 200 });
+  }
+
+  const since =
+    sinceDate && !Number.isNaN(sinceDate.getTime()) ? toTinybirdDateTime64String(sinceDate) : '';
+  const sinceFilter = since || '2024-01-01 00:00:00.000';
 
   const client = createTinybirdClientFromEnv();
   const projectIdSql = escapeSqlString(projectId);
@@ -88,27 +98,27 @@ export async function GET(
       AND e.timestamp > toDateTime64('${sinceSql}', 3)
       ORDER BY e.timestamp DESC
       LIMIT ${limit}
-    `.trim(),
+    `.trim()
   );
 
   const data = result.data;
-  const events: LiveFeedResponse["events"] = data.map((row, index) => {
+  const events: LiveFeedResponse['events'] = data.map((row, index) => {
     const typed = row as Record<string, unknown>;
     const timestamp = normalizeTimestamp(typed.timestamp);
-    const referrer = typeof typed.referrer === "string" && typed.referrer.length > 0 ? typed.referrer : null;
+    const referrer =
+      typeof typed.referrer === 'string' && typed.referrer.length > 0 ? typed.referrer : null;
 
     return {
       id: `${timestamp}-${index}`,
-      eventType: String(typed.event_type ?? ""),
-      path: String(typed.path ?? ""),
+      eventType: String(typed.event_type ?? ''),
+      path: String(typed.path ?? ''),
       referrer,
       timestamp,
-      relativeTime: String(typed.relative_time ?? ""),
+      relativeTime: String(typed.relative_time ?? ''),
     };
   });
 
-  return Response.json(
-    { events, hasMore: events.length >= limit } satisfies LiveFeedResponse,
-    { status: 200 },
-  );
+  return Response.json({ events, hasMore: events.length >= limit } satisfies LiveFeedResponse, {
+    status: 200,
+  });
 }

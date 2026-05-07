@@ -1,11 +1,15 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq } from 'drizzle-orm';
 
-import { getUserFromRequest } from "../../../../../../lib/auth/get-user";
-import { db } from "../../../../../../lib/db/client";
-import { projects } from "../../../../../../lib/db/schema";
-import { createTinybirdClientFromEnv, tinybirdSql } from "../../../../../../lib/tinybird/client";
+import { getUserFromRequest } from '../../../../../../lib/auth/get-user';
+import {
+  buildE2EOverview,
+  isE2EAnalyticsFixtureMode,
+} from '../../../../../../lib/analytics/e2e-fixtures';
+import { db } from '../../../../../../lib/db/client';
+import { projects } from '../../../../../../lib/db/schema';
+import { createTinybirdClientFromEnv, tinybirdSql } from '../../../../../../lib/tinybird/client';
 
-type Period = "24h" | "7d" | "30d";
+type Period = '24h' | '7d' | '30d';
 
 type OverviewResponse = {
   period: Period;
@@ -16,18 +20,18 @@ type OverviewResponse = {
 };
 
 function parsePeriod(raw: string | null): Period | null {
-  if (!raw) return "7d";
-  if (raw === "24h" || raw === "7d" || raw === "30d") return raw;
+  if (!raw) return '7d';
+  if (raw === '24h' || raw === '7d' || raw === '30d') return raw;
   return null;
 }
 
 function periodMs(period: Period): number {
   switch (period) {
-    case "24h":
+    case '24h':
       return 24 * 60 * 60 * 1000;
-    case "7d":
+    case '7d':
       return 7 * 24 * 60 * 60 * 1000;
-    case "30d":
+    case '30d':
       return 30 * 24 * 60 * 60 * 1000;
   }
 }
@@ -42,10 +46,14 @@ function escapeSqlString(value: string): string {
 }
 
 function toTinybirdDateTime64String(date: Date): string {
-  return date.toISOString().replace("T", " ").replace("Z", "");
+  return date.toISOString().replace('T', ' ').replace('Z', '');
 }
 
-async function runTinybirdQuery<T>(client: ReturnType<typeof createTinybirdClientFromEnv>, name: string, query: string) {
+async function runTinybirdQuery<T>(
+  client: ReturnType<typeof createTinybirdClientFromEnv>,
+  name: string,
+  query: string
+) {
   try {
     return await tinybirdSql<T>(client, query);
   } catch (error) {
@@ -56,24 +64,28 @@ async function runTinybirdQuery<T>(client: ReturnType<typeof createTinybirdClien
 
 export async function GET(
   request: Request,
-  context: { params: Promise<{ id: string }> | { id: string } },
+  context: { params: Promise<{ id: string }> | { id: string } }
 ): Promise<Response> {
   const user = await getUserFromRequest(request);
-  if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const params = "then" in context.params ? await context.params : context.params;
+  const params = 'then' in context.params ? await context.params : context.params;
   const projectId = params.id;
-  if (!projectId) return Response.json({ error: "Missing project id" }, { status: 400 });
+  if (!projectId) return Response.json({ error: 'Missing project id' }, { status: 400 });
 
   const ownedRows = await db
     .select({ id: projects.id })
     .from(projects)
     .where(and(eq(projects.id, projectId), eq(projects.userId, user.id)));
-  if (!ownedRows[0]) return Response.json({ error: "Project not found" }, { status: 404 });
+  if (!ownedRows[0]) return Response.json({ error: 'Project not found' }, { status: 404 });
 
   const url = new URL(request.url);
-  const period = parsePeriod(url.searchParams.get("period"));
-  if (!period) return Response.json({ error: "Invalid period" }, { status: 400 });
+  const period = parsePeriod(url.searchParams.get('period'));
+  if (!period) return Response.json({ error: 'Invalid period' }, { status: 400 });
+
+  if (isE2EAnalyticsFixtureMode()) {
+    return Response.json(buildE2EOverview(projectId, period), { status: 200 });
+  }
 
   const now = new Date();
   const duration = periodMs(period);
@@ -98,7 +110,7 @@ export async function GET(
   ] = await Promise.all([
     runTinybirdQuery<{ date: string; count: number }>(
       client,
-      "current_page_views_timeseries",
+      'current_page_views_timeseries',
       `
         SELECT
           toDate(timestamp) AS date,
@@ -110,11 +122,11 @@ export async function GET(
         AND timestamp < toDateTime64('${endSql}', 3)
         GROUP BY date
         ORDER BY date
-      `.trim(),
+      `.trim()
     ),
     runTinybirdQuery<{ date: string; count: number }>(
       client,
-      "previous_page_views_timeseries",
+      'previous_page_views_timeseries',
       `
         SELECT
           toDate(timestamp) AS date,
@@ -126,33 +138,33 @@ export async function GET(
         AND timestamp < toDateTime64('${previousEndSql}', 3)
         GROUP BY date
         ORDER BY date
-      `.trim(),
+      `.trim()
     ),
     runTinybirdQuery<{ total: number }>(
       client,
-      "current_sessions_total",
+      'current_sessions_total',
       `
         SELECT countIf(event_type = 'session_start') AS total
         FROM events
         WHERE project_id = '${projectIdSql}'
         AND timestamp >= toDateTime64('${startSql}', 3)
         AND timestamp < toDateTime64('${endSql}', 3)
-      `.trim(),
+      `.trim()
     ),
     runTinybirdQuery<{ total: number }>(
       client,
-      "previous_sessions_total",
+      'previous_sessions_total',
       `
         SELECT countIf(event_type = 'session_start') AS total
         FROM events
         WHERE project_id = '${projectIdSql}'
         AND timestamp >= toDateTime64('${previousStartSql}', 3)
         AND timestamp < toDateTime64('${previousEndSql}', 3)
-      `.trim(),
+      `.trim()
     ),
     runTinybirdQuery<{ path: string; views: number; percentage: number }>(
       client,
-      "top_pages",
+      'top_pages',
       `
         WITH total AS (
           SELECT count() AS total
@@ -175,11 +187,11 @@ export async function GET(
         GROUP BY path, total.total
         ORDER BY views DESC
         LIMIT 10
-      `.trim(),
+      `.trim()
     ),
     runTinybirdQuery<{ referrer_host: string; count: number; percentage: number }>(
       client,
-      "top_referrers",
+      'top_referrers',
       `
         WITH total AS (
           SELECT count() AS total
@@ -202,12 +214,18 @@ export async function GET(
         GROUP BY referrer_host, total.total
         ORDER BY count DESC
         LIMIT 10
-      `.trim(),
+      `.trim()
     ),
   ]);
 
-  const currentPageViewsTotal = currentPageViews.data.reduce((sum, row) => sum + Number(row.count), 0);
-  const previousPageViewsTotal = previousPageViews.data.reduce((sum, row) => sum + Number(row.count), 0);
+  const currentPageViewsTotal = currentPageViews.data.reduce(
+    (sum, row) => sum + Number(row.count),
+    0
+  );
+  const previousPageViewsTotal = previousPageViews.data.reduce(
+    (sum, row) => sum + Number(row.count),
+    0
+  );
 
   const currentSessionsTotal = Number(currentSessionsResult.data[0]?.total ?? 0);
   const previousSessionsTotal = Number(previousSessionsResult.data[0]?.total ?? 0);
@@ -217,7 +235,10 @@ export async function GET(
     pageViews: {
       total: currentPageViewsTotal,
       change: percentChange(currentPageViewsTotal, previousPageViewsTotal),
-      timeSeries: currentPageViews.data.map((row) => ({ date: String(row.date), count: Number(row.count) })),
+      timeSeries: currentPageViews.data.map((row) => ({
+        date: String(row.date),
+        count: Number(row.count),
+      })),
     },
     sessions: {
       total: currentSessionsTotal,

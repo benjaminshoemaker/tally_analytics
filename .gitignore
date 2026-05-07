@@ -42,6 +42,7 @@ coverage/
 playwright-report/
 test-results/
 .playwright-browsers/
+.e2e-fixtures/
 
 # Turbo
 .turbo/

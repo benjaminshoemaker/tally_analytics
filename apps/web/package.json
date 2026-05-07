@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node ./scripts/dev.mjs",
     "dev:e2e": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
@@ -13,6 +13,10 @@
     "db:push": "drizzle-kit migrate",
     "test": "vitest run",
     "e2e:install": "node ./scripts/playwright-install.mjs",
+    "e2e:scenarios": "node ./scripts/seed-e2e-scenario.mjs --list",
+    "e2e:seed": "node ./scripts/seed-e2e-scenario.mjs",
+    "e2e:replay-events": "node ./scripts/seed-e2e-scenario.mjs --replay-events",
+    "github:sandbox:sync": "node ./scripts/sync-github-sandbox.mjs",
     "e2e": "node ./scripts/playwright-test.mjs"
   },
   "dependencies": {

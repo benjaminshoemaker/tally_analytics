@@ -5,13 +5,39 @@ Project-wide workflow guidance for AI agents working in this project.
 ## Instruction Hierarchy
 
 - This file is the durable, project-wide baseline.
-- Initial greenfield execution guidance lives in `plans/greenfield/AGENTS.md`.
-- Feature execution guidance lives in `features/<name>/AGENTS.md`.
-- When working in a scoped directory, read this file first, then the local `AGENTS.md` or `CLAUDE.md` in that directory.
+- Archived plans and feature specs live under `plans/archive/`.
+- Treat files in `plans/archive/` as historical context only. Do not use them as the current product plan unless the human explicitly says to resurrect a specific archived plan.
+- Active exploration should start from the current path in `plans/PLAN_STATUS.md` when that file exists. New implementation planning should create a fresh, explicitly current plan instead of editing archived plans in place.
+- When working in a scoped directory with a local `AGENTS.md` or `CLAUDE.md`, read this file first, then the local instructions.
 
 ## Project Context
 
-Greenfield planning documents now live in `plans/greenfield/`. Project-specific durable guidance appears below.
+Historical greenfield and feature planning documents have been archived to avoid confusing agents about the current direction. The current product direction is tracked in `plans/PLAN_STATUS.md`; at the time of writing, the active feature is MCP-first analytics onboarding in `features/mcp_onboarding/`.
+
+## Agent Testing Harness
+
+Agent-readable local testing guidance lives in `docs/agent-testing.md`. Use this harness when you need to test product states, onboarding, project status, quota, regenerate actions, or analytics data without a human GitHub account.
+
+Core commands:
+
+```bash
+pnpm --filter web e2e:scenarios
+pnpm --filter web e2e:seed <scenario-id>
+pnpm --filter web e2e:replay-events <scenario-id>
+pnpm --filter web e2e --grep @scenario
+```
+
+Local scenarios live in `apps/web/e2e/scenarios/*.json`. The seeder creates deterministic app users, project records, GitHub installation-token records, and local analytics fixtures. Login through `/api/auth/e2e-login` only when `E2E_TEST_MODE=1`; never use a human GitHub account or personal OAuth/PAT credentials for local E2E.
+
+When `E2E_TEST_MODE=1`, analytics API routes read `.e2e-fixtures/*/events.json` before Tinybird so campaign/session/live-feed tests are deterministic and account-free. Treat these fixtures as local product-state proof, not proof that Tinybird staging or production is healthy.
+
+The seeder refuses non-local database URLs unless `E2E_ALLOW_REMOTE_SEED=1` is explicitly set. If `.env.local` points at a stale local Postgres port, override it explicitly for test runs, for example:
+
+```bash
+DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:seed analysis-failed-can-regenerate
+```
+
+GitHub sandbox guidance lives in `docs/github-sandbox.md`. Real GitHub App tests must target the sandbox org only. Use `pnpm --filter web github:sandbox:sync -- --org fast-pr-analytics-sandbox --dry-run` before creating or updating sandbox fixture repos.
 
 ## Follow-Up Items (TODOS.md)
 
@@ -22,8 +48,10 @@ During development, you may discover items outside the current task scope: refac
 1. If `TODOS.md` doesn't exist yet, ask the human if it should be created to track follow-ups.
 
 2. Add it to `TODOS.md` with context:
+
    ```markdown
    ## TODO: {Brief title}
+
    - **Source:** Task {id} or {file:line}
    - **Description:** {What needs to be done}
    - **Priority:** {Suggested: High/Medium/Low}
@@ -44,12 +72,12 @@ Do not silently ignore discovered issues. Do not scope-creep by fixing them with
 
 ## Git Rules
 
-| Rule | Details |
-|------|---------|
+| Rule   | Details                                                          |
+| ------ | ---------------------------------------------------------------- |
 | Branch | `task-{id}` (e.g., `task-1.1.A`) or `phase-{N}` for feature work |
-| Commit | `task({id}): {description}` |
-| Scope | Only modify task-relevant files |
-| Ignore | Never commit `.env`, `node_modules`, build output |
+| Commit | `task({id}): {description}`                                      |
+| Scope  | Only modify task-relevant files                                  |
+| Ignore | Never commit `.env`, `node_modules`, build output                |
 
 ### Phase-Based Branching (Feature Work)
 
@@ -62,6 +90,7 @@ git checkout -b phase-1-foundation
 ```
 
 **Branch lifecycle:**
+
 1. Create branch from main before starting first task in phase
 2. Commit after each task completion
 3. Do not push until human reviews at checkpoint
@@ -110,6 +139,7 @@ For tasks involving PostgreSQL schema changes:
 6. Document rollback if migration is destructive (e.g., dropping tables)
 
 For destructive migrations (DROP TABLE, DROP COLUMN):
+
 - Ensure all code references are removed first
 - Confirm in acceptance criteria that dependent code is deleted
 - Note that this is irreversible in the completion report
@@ -134,6 +164,7 @@ For tasks involving Tinybird schema changes:
 ### One-Time Scripts
 
 For data migrations or one-time operations:
+
 - Place in `scripts/` directory
 - Make idempotent when possible
 - Log success/failure for each operation
@@ -150,4 +181,4 @@ For data migrations or one-time operations:
 
 ---
 
-*The agent discovers project conventions (error handling, mocking strategies, naming patterns) from the existing codebase. This document only covers workflow mechanics.*
+_The agent discovers project conventions (error handling, mocking strategies, naming patterns) from the existing codebase. This document only covers workflow mechanics._

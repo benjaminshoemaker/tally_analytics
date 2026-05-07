@@ -1,0 +1,7 @@
+{
+  "phase": 1,
+  "status": "BLOCKED",
+  "auto_advanced": false,
+  "reason": "Working tree has 109 uncommitted entries; autonomous phase-start is paused to avoid mixing unrelated changes.",
+  "timestamp": "2026-05-07T06:09:40Z"
+}

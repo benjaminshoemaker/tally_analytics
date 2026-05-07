@@ -1,11 +1,15 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq } from 'drizzle-orm';
 
-import { getUserFromRequest } from "../../../../../../lib/auth/get-user";
-import { db } from "../../../../../../lib/db/client";
-import { projects } from "../../../../../../lib/db/schema";
-import { createTinybirdClientFromEnv, tinybirdSql } from "../../../../../../lib/tinybird/client";
+import { getUserFromRequest } from '../../../../../../lib/auth/get-user';
+import {
+  buildE2ESessions,
+  isE2EAnalyticsFixtureMode,
+} from '../../../../../../lib/analytics/e2e-fixtures';
+import { db } from '../../../../../../lib/db/client';
+import { projects } from '../../../../../../lib/db/schema';
+import { createTinybirdClientFromEnv, tinybirdSql } from '../../../../../../lib/tinybird/client';
 
-type Period = "24h" | "7d" | "30d";
+type Period = '24h' | '7d' | '30d';
 
 type SessionsResponse = {
   period: Period;
@@ -16,18 +20,18 @@ type SessionsResponse = {
 };
 
 function parsePeriod(raw: string | null): Period | null {
-  if (!raw) return "7d";
-  if (raw === "24h" || raw === "7d" || raw === "30d") return raw;
+  if (!raw) return '7d';
+  if (raw === '24h' || raw === '7d' || raw === '30d') return raw;
   return null;
 }
 
 function periodMs(period: Period): number {
   switch (period) {
-    case "24h":
+    case '24h':
       return 24 * 60 * 60 * 1000;
-    case "7d":
+    case '7d':
       return 7 * 24 * 60 * 60 * 1000;
-    case "30d":
+    case '30d':
       return 30 * 24 * 60 * 60 * 1000;
   }
 }
@@ -37,29 +41,33 @@ function escapeSqlString(value: string): string {
 }
 
 function toTinybirdDateTime64String(date: Date): string {
-  return date.toISOString().replace("T", " ").replace("Z", "");
+  return date.toISOString().replace('T', ' ').replace('Z', '');
 }
 
 export async function GET(
   request: Request,
-  context: { params: Promise<{ id: string }> | { id: string } },
+  context: { params: Promise<{ id: string }> | { id: string } }
 ): Promise<Response> {
   const user = await getUserFromRequest(request);
-  if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const params = "then" in context.params ? await context.params : context.params;
+  const params = 'then' in context.params ? await context.params : context.params;
   const projectId = params.id;
-  if (!projectId) return Response.json({ error: "Missing project id" }, { status: 400 });
+  if (!projectId) return Response.json({ error: 'Missing project id' }, { status: 400 });
 
   const ownedRows = await db
     .select({ id: projects.id })
     .from(projects)
     .where(and(eq(projects.id, projectId), eq(projects.userId, user.id)));
-  if (!ownedRows[0]) return Response.json({ error: "Project not found" }, { status: 404 });
+  if (!ownedRows[0]) return Response.json({ error: 'Project not found' }, { status: 404 });
 
   const url = new URL(request.url);
-  const period = parsePeriod(url.searchParams.get("period"));
-  if (!period) return Response.json({ error: "Invalid period" }, { status: 400 });
+  const period = parsePeriod(url.searchParams.get('period'));
+  if (!period) return Response.json({ error: 'Invalid period' }, { status: 400 });
+
+  if (isE2EAnalyticsFixtureMode()) {
+    return Response.json(buildE2ESessions(projectId, period), { status: 200 });
+  }
 
   const now = new Date();
   const start = new Date(now.getTime() - periodMs(period));
@@ -80,7 +88,7 @@ export async function GET(
       AND timestamp < toDateTime64('${endSql}', 3)
       GROUP BY date
       ORDER BY date
-    `.trim(),
+    `.trim()
   );
 
   const timeSeries = result.data.map((row) => ({
@@ -89,7 +97,10 @@ export async function GET(
     returningSessions: 0,
   }));
 
-  const totalSessions = timeSeries.reduce((sum, row) => sum + row.newSessions + row.returningSessions, 0);
+  const totalSessions = timeSeries.reduce(
+    (sum, row) => sum + row.newSessions + row.returningSessions,
+    0
+  );
 
   const responseBody: SessionsResponse = {
     period,
