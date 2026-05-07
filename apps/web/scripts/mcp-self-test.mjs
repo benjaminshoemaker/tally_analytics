@@ -17,6 +17,7 @@ const appDir = path.resolve(__dirname, '..');
 const repoRoot = path.resolve(appDir, '..', '..');
 const tmpRoot = path.join(repoRoot, 'tmp', 'mcp-self-test');
 const fixturesDir = path.join(tmpRoot, 'fixtures');
+const screenshotsDir = path.join(tmpRoot, 'screenshots');
 const targetDir = path.join(tmpRoot, 'target-app');
 const codexOutputPath = path.join(tmpRoot, 'codex-last-message.txt');
 const defaultDatabaseUrl = 'postgres://postgres:postgres@127.0.0.1:5432/postgres';
@@ -33,11 +34,12 @@ function loadEnv() {
 }
 
 function parseArgs(argv) {
-  const args = { fromSandbox: false, keep: false, help: false };
+  const args = { fromSandbox: false, keep: false, screenshots: false, help: false };
   for (const arg of argv) {
     if (arg === '--') continue;
     else if (arg === '--from-sandbox') args.fromSandbox = true;
     else if (arg === '--keep') args.keep = true;
+    else if (arg === '--screenshots') args.screenshots = true;
     else if (arg === '--help' || arg === '-h') args.help = true;
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -45,10 +47,11 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log('Usage: pnpm --filter web e2e:mcp-self-test [--from-sandbox] [--keep]');
+  console.log('Usage: pnpm --filter web e2e:mcp-self-test [--from-sandbox] [--keep] [--screenshots]');
   console.log('');
   console.log('Runs the local MCP onboarding self-test against a disposable Next.js app.');
   console.log('Default target app source is a local fixture; --from-sandbox clones the sandbox GitHub repo.');
+  console.log('--screenshots saves target and dashboard PNGs under tmp/mcp-self-test/screenshots/.');
 }
 
 function log(message) {
@@ -146,6 +149,7 @@ function resetWorkspace() {
   fs.rmSync(tmpRoot, { recursive: true, force: true });
   fs.mkdirSync(tmpRoot, { recursive: true });
   fs.mkdirSync(fixturesDir, { recursive: true });
+  fs.mkdirSync(screenshotsDir, { recursive: true });
   fs.mkdirSync(path.join(fixturesDir, 'mcp-self-test'), { recursive: true });
   fs.writeFileSync(path.join(fixturesDir, 'mcp-self-test', 'events.jsonl'), '');
 }
@@ -355,6 +359,48 @@ async function driveTargetBrowser() {
   }
 }
 
+async function captureScreenshots({ projectId, userId }) {
+  fs.mkdirSync(screenshotsDir, { recursive: true });
+
+  const browser = await chromium.launch();
+  try {
+    const targetPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    await targetPage.goto('http://localhost:3002/', { waitUntil: 'networkidle' });
+    await targetPage.screenshot({
+      path: path.join(screenshotsDir, '01-target-app.png'),
+      fullPage: true,
+    });
+
+    const dashboardContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const loginResponse = await dashboardContext.request.post('http://localhost:3000/api/auth/e2e-login', {
+      data: { userId },
+    });
+    if (!loginResponse.ok()) {
+      throw new Error(`Screenshot login failed: ${loginResponse.status()}`);
+    }
+
+    const overviewPage = await dashboardContext.newPage();
+    await overviewPage.goto(`http://localhost:3000/projects/${projectId}/overview`, {
+      waitUntil: 'networkidle',
+    });
+    await overviewPage.screenshot({
+      path: path.join(screenshotsDir, '02-dashboard-overview.png'),
+      fullPage: true,
+    });
+
+    const livePage = await dashboardContext.newPage();
+    await livePage.goto(`http://localhost:3000/projects/${projectId}/live`, {
+      waitUntil: 'networkidle',
+    });
+    await livePage.screenshot({
+      path: path.join(screenshotsDir, '03-dashboard-live-feed.png'),
+      fullPage: true,
+    });
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -372,6 +418,7 @@ async function main() {
     existingOAuthClientIds: null,
     processes: [],
     keep: args.keep,
+    screenshots: args.screenshots,
   };
 
   async function stage(name, fn) {
@@ -499,6 +546,12 @@ async function main() {
     await stage('assert-dashboard-event', async () => {
       await assertLiveFeedShowsEvent({ projectId, userId: context.userId });
     });
+
+    if (context.screenshots) {
+      await stage('capture-screenshots', async () => {
+        await captureScreenshots({ projectId, userId: context.userId });
+      });
+    }
 
     summary.ok = true;
   } catch {
