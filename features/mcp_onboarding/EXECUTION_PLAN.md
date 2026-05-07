@@ -301,13 +301,13 @@ Extend existing GitHub login and callback routes so an MCP OAuth authorization r
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Extend existing GitHub OAuth routes"; FEATURE_SPEC.md "Require only one Tally OAuth login"
 
 **Acceptance Criteria:**
-- [ ] (CODE) GitHub login route accepts and stores a safe `return_to` cookie only for relative same-origin paths.
+- [x] (CODE) GitHub login route accepts and stores a safe `return_to` cookie only for relative same-origin paths.
   - Verify: `cd ../.. && rg -q 'return_to' apps/web/app/api/auth/github/route.ts apps/web/lib/auth/cookies.ts`
-- [ ] (TEST) GitHub OAuth redirect tests reject absolute URLs, protocol-relative URLs, and traversal-style return paths.
+- [x] (TEST) GitHub OAuth redirect tests reject absolute URLs, protocol-relative URLs, and traversal-style return paths.
   - Verify: `cd ../.. && pnpm --filter web test -- github-oauth-redirect github-oauth-callback`
-- [ ] (TEST) GitHub callback redirects to stored `return_to` after session creation and clears the cookie.
+- [x] (TEST) GitHub callback redirects to stored `return_to` after session creation and clears the cookie.
   - Verify: `cd ../.. && pnpm --filter web test -- github-oauth-callback`
-- [ ] (TEST) Existing GitHub login without `return_to` still redirects to `/projects`.
+- [x] (TEST) Existing GitHub login without `return_to` still redirects to `/projects`.
   - Verify: `cd ../.. && pnpm --filter web test -- github-oauth github-oauth-redirect`
 
 **Files to Create:**

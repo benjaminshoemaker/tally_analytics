@@ -185,8 +185,38 @@ describe("GET /api/auth/github/callback", () => {
     const setCookies = getSetCookies(response);
     expect(setCookies.some((cookie) => cookie.startsWith("oauth_state=") && cookie.includes("Max-Age=0"))).toBe(true);
     expect(setCookies.some((cookie) => cookie.startsWith("fpa_session="))).toBe(true);
+    expect(setCookies.some((cookie) => cookie.startsWith("oauth_return_to=") && cookie.includes("Max-Age=0"))).toBe(true);
 
     vi.useRealTimers();
   });
-});
 
+  it("redirects to stored return_to after session creation and clears the return cookie", async () => {
+    vi.resetModules();
+
+    const userId = "11111111-1111-1111-1111-111111111111";
+    const sessionId = "22222222-2222-2222-2222-222222222222";
+    const returnTo = "/api/oauth/authorize?client_id=client_1&response_type=code";
+
+    exchangeSpy = vi.fn().mockResolvedValue("token");
+    fetchUserSpy = vi.fn().mockResolvedValue({ id: 8659979, login: "emriedel", avatar_url: "https://example/avatar" });
+    fetchEmailSpy = vi.fn().mockResolvedValue("emriedel@example.com");
+    findOrCreateSpy = vi.fn().mockResolvedValue({ id: userId });
+    createSessionSpy = vi.fn().mockResolvedValue({ id: sessionId, userId, expiresAt: new Date("2030-01-01T00:00:00.000Z") });
+
+    const { GET } = await import("../app/api/auth/github/callback/route");
+
+    const response = await GET(
+      new Request("http://localhost/api/auth/github/callback?code=good&state=state", {
+        headers: { cookie: `oauth_state=state; oauth_return_to=${encodeURIComponent(returnTo)}` },
+      }),
+    );
+
+    expect(response.status).toBe(302);
+    const location = new URL(response.headers.get("location") ?? "", "http://localhost");
+    expect(location.pathname + location.search).toBe(returnTo);
+
+    const setCookies = getSetCookies(response);
+    expect(setCookies.some((cookie) => cookie.startsWith("oauth_return_to=") && cookie.includes("Max-Age=0"))).toBe(true);
+    expect(setCookies.some((cookie) => cookie.startsWith("fpa_session="))).toBe(true);
+  });
+});

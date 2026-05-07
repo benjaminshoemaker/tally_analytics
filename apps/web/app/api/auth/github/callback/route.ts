@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { buildClearedOAuthStateCookie, buildSessionCookie, OAUTH_STATE_COOKIE_NAME } from "../../../../../lib/auth/cookies";
+import {
+  buildClearedOAuthReturnToCookie,
+  buildClearedOAuthStateCookie,
+  buildSessionCookie,
+  getOAuthReturnToFromRequest,
+  OAUTH_STATE_COOKIE_NAME,
+} from "../../../../../lib/auth/cookies";
 import { exchangeCodeForToken, fetchGitHubUser, fetchGitHubUserEmail } from "../../../../../lib/auth/github-oauth";
 import { createSession } from "../../../../../lib/auth/session";
 import { findOrCreateUserByGitHub } from "../../../../../lib/db/queries/users";
@@ -58,12 +64,13 @@ export async function GET(request: Request): Promise<Response> {
 
     const session = await createSession(user.id);
 
-    const response = NextResponse.redirect(new URL("/projects", request.url), { status: 302 });
+    const returnTo = getOAuthReturnToFromRequest(request);
+    const response = NextResponse.redirect(new URL(returnTo ?? "/projects", request.url), { status: 302 });
     response.cookies.set(buildSessionCookie(session.id));
     response.cookies.set(buildClearedOAuthStateCookie());
+    response.cookies.set(buildClearedOAuthReturnToCookie());
     return response;
   } catch {
     return redirectToLogin(request, "github_error");
   }
 }
-
