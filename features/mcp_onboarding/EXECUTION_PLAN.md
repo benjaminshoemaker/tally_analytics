@@ -652,17 +652,17 @@ Register `prepare_nextjs_install_patch` as the primary MCP tool and return struc
 ### Phase 2 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) MCP route, auth, repo context, project reuse, install service, and diff fixture tests pass.
+- [x] (TEST) MCP route, auth, repo context, project reuse, install service, and diff fixture tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-auth mcp-route mcp-repo-context mcp-project-queries mcp-next-install`
-- [ ] (TYPE) Web type checking passes.
+- [x] (TYPE) Web type checking passes.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
-- [ ] (LINT) Web linting passes.
+- [x] (LINT) Web linting passes.
   - Verify: `cd ../.. && pnpm --filter web lint`
 
 **Regression Verification:**
-- [ ] (TEST) Existing GitHub detection, insertion, template, and generation tests still pass.
+- [x] (TEST) Existing GitHub detection, insertion, template, and generation tests still pass.
   - Verify: `cd ../.. && pnpm --filter web test -- detect-framework github-detection github-insertion github-templates github-generate`
-- [ ] (TEST) SDK tests still pass without SDK source changes.
+- [x] (TEST) SDK tests still pass without SDK source changes.
   - Verify: `cd ../.. && pnpm --filter sdk test`
 
 ---
