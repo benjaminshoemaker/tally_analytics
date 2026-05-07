@@ -424,15 +424,15 @@ Add Zod schemas and context parsing for `prepare_nextjs_install_patch` input. Re
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "MCP Tool Input Schema"; FEATURE_SPEC.md "Repo Context Boundary"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP tool input schemas exist and include repo, framework, and files fields.
+- [x] (CODE) MCP tool input schemas exist and include repo, framework, and files fields.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/tools/schemas.ts && rg -q 'repo|framework|files|appRoot|dependencyTarget' apps/web/lib/mcp/tools/schemas.ts`
-- [ ] (TEST) Allowed minimal App Router and Pages Router file sets pass validation.
+- [x] (TEST) Allowed minimal App Router and Pages Router file sets pass validation.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-repo-context`
-- [ ] (TEST) `.env*`, lockfiles, private keys, absolute paths, traversal paths, URL schemes, Windows drive prefixes, unrelated files, binary content, and size-limit violations fail validation.
+- [x] (TEST) `.env*`, lockfiles, private keys, absolute paths, traversal paths, URL schemes, Windows drive prefixes, unrelated files, binary content, and size-limit violations fail validation.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-repo-context`
-- [ ] (TEST) `.tsx` and `.jsx` selected entrypoints are accepted while unsupported entrypoint extensions are rejected.
+- [x] (TEST) `.tsx` and `.jsx` selected entrypoints are accepted while unsupported entrypoint extensions are rejected.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-repo-context`
-- [ ] (CODE) Validation runs before MCP project creation or patch generation.
+- [x] (CODE) Validation runs before MCP project creation or patch generation.
   - Verify: `cd ../.. && rg -n 'parse|safeParse|validateRepoContext' apps/web/lib/mcp/tools apps/web/lib/mcp/next-install`
 
 **Files to Create:**
