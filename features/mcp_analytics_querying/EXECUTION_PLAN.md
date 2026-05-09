@@ -520,9 +520,9 @@ Add deterministic recommendations based on observed pages, referrers, event name
 
 ### Pre-Phase Setup
 
-- [ ] (TEST) Analytics service tests pass before MCP handlers are added.
+- [x] (TEST) Analytics service tests pass before MCP handlers are added.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-overview analytics-service-events analytics-service-paths analytics-service-recommendations`
-- [ ] (CODE) Existing MCP server registration files exist.
+- [x] (CODE) Existing MCP server registration files exist.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/server.ts && test -f apps/web/lib/mcp/tools/prepare-nextjs-install-patch.ts && test -f apps/web/lib/mcp/tools/schemas.ts`
 
 ### Step 3.1: Schemas And Result Shaping
