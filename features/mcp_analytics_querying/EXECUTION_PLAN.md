@@ -709,15 +709,15 @@ Register read-only MCP tools for event discovery, event schema inspection, paths
 ### Phase 3 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) MCP analytics tool, route, project-query, and service tests pass.
+- [x] (TEST) MCP analytics tool, route, project-query, and service tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools mcp-route mcp-project-queries analytics-service-overview analytics-service-events analytics-service-paths analytics-service-recommendations`
-- [ ] (TYPE) Web type checking passes after MCP tool registration.
+- [x] (TYPE) Web type checking passes after MCP tool registration.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] (TEST) Existing MCP install and OAuth tests still pass with the same `mcp:install` authority.
+- [x] (TEST) Existing MCP install and OAuth tests still pass with the same `mcp:install` authority.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-auth mcp-oauth-register mcp-oauth-token prepare-nextjs-install-patch`
-- [ ] (CODE) No free-form natural-language analytics endpoint, raw SQL MCP tool, or prompt-generated dashboard tool is registered.
+- [x] (CODE) No free-form natural-language analytics endpoint, raw SQL MCP tool, or prompt-generated dashboard tool is registered.
   - Verify: `cd ../.. && ! rg -n 'natural_language|freeform|raw_sql|sql_query|generated_dashboard|create_dashboard' apps/web/lib/mcp apps/web/app/api/mcp`
 
 ---
