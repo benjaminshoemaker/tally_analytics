@@ -179,6 +179,28 @@ export type PathsToEventErrorResult = AnalyticsServiceResultBase & {
 
 export type PathsToEventResult = PathsToEventSuccessResult | PathsToEventErrorResult;
 
+export type NextEventRecommendationsSuccessResult = AnalyticsServiceResultBase & {
+  status: 'ok' | 'partial_data' | 'no_events' | 'insufficient_data';
+  projectId: string;
+  period: AnalyticsPeriod;
+  evidence: string[];
+  recommendations: AnalyticsRecommendation[];
+  createsPendingTasks: false;
+  provenance: AnalyticsProvenance;
+  dashboardUrls: AnalyticsDashboardUrls;
+};
+
+export type NextEventRecommendationsErrorResult = AnalyticsServiceResultBase & {
+  status: 'invalid_goal' | 'project_not_found' | 'service_error';
+  createsPendingTasks: false;
+  dashboardUrls?: AnalyticsDashboardUrls;
+  provenance?: AnalyticsProvenance;
+};
+
+export type NextEventRecommendationsResult =
+  | NextEventRecommendationsSuccessResult
+  | NextEventRecommendationsErrorResult;
+
 export function createAnalyticsProvenance(params: {
   projectName: string;
   tool: string;
@@ -845,6 +867,212 @@ function buildPathsToEvent(params: {
     paths,
     coverage,
     limitations: limitations.length > 0 ? limitations : undefined,
+  };
+}
+
+type RecommendationCategory = 'signup' | 'onboarding' | 'pricing' | 'checkout' | 'featureUsage';
+
+const RECOMMENDATION_TERMS: Array<{ category: RecommendationCategory; terms: string[] }> = [
+  { category: 'signup', terms: ['signup', 'sign up', 'account', 'registration', 'funnel'] },
+  { category: 'onboarding', terms: ['onboarding', 'onboard', 'activation'] },
+  { category: 'pricing', terms: ['pricing', 'price', 'cta', 'button', 'conversion'] },
+  { category: 'checkout', terms: ['checkout', 'payment', 'purchase', 'billing'] },
+  { category: 'featureUsage', terms: ['feature', 'usage', 'used', 'engagement', 'dashboard'] },
+];
+
+const RECOMMENDATIONS_BY_CATEGORY: Record<RecommendationCategory, AnalyticsRecommendation[]> = {
+  signup: [
+    {
+      eventName: 'signup_started',
+      reason: 'Helps measure how many visitors begin account creation.',
+      priority: 'medium',
+    },
+    {
+      eventName: 'signup_completed',
+      reason: 'Needed to answer which pages users visit before signup.',
+      priority: 'high',
+    },
+  ],
+  onboarding: [
+    {
+      eventName: 'onboarding_started',
+      reason: 'Helps measure how many new users begin onboarding.',
+      priority: 'medium',
+    },
+    {
+      eventName: 'onboarding_completed',
+      reason: 'Needed to measure whether new users finish onboarding.',
+      priority: 'high',
+    },
+  ],
+  pricing: [
+    {
+      eventName: 'pricing_cta_clicked',
+      reason: 'Useful for connecting pricing-page visits to signup intent.',
+      priority: 'medium',
+    },
+  ],
+  checkout: [
+    {
+      eventName: 'checkout_started',
+      reason: 'Helps measure how many users begin checkout.',
+      priority: 'medium',
+    },
+    {
+      eventName: 'checkout_completed',
+      reason: 'Needed to measure completed purchases or payments.',
+      priority: 'high',
+    },
+  ],
+  featureUsage: [
+    {
+      eventName: 'feature_used',
+      reason: 'Needed to connect product usage to activation and engagement.',
+      priority: 'medium',
+    },
+  ],
+};
+
+function validateRecommendationGoal(value: string | undefined): string | null | undefined {
+  if (value === undefined) return undefined;
+  const bounded = boundAnalyticsString(value, 201);
+  if (!bounded || bounded.length > 200) return null;
+  return bounded;
+}
+
+function recommendationTextCorpus(params: {
+  goal?: string;
+  overview: DashboardOverviewResponse;
+  events: AnalyticsEventSummary[];
+}): string {
+  return [
+    params.goal ?? '',
+    ...params.overview.topPages.map((page) => page.path),
+    ...params.overview.topReferrers.map((referrer) => referrer.referrer),
+    ...params.events.map((event) => event.eventName),
+  ]
+    .join(' ')
+    .toLowerCase();
+}
+
+function matchedRecommendationCategories(params: {
+  goal?: string;
+  overview: DashboardOverviewResponse;
+  events: AnalyticsEventSummary[];
+}): RecommendationCategory[] {
+  const corpus = recommendationTextCorpus(params);
+  const matched = new Set<RecommendationCategory>();
+
+  for (const matcher of RECOMMENDATION_TERMS) {
+    if (matcher.terms.some((term) => corpus.includes(term))) {
+      matched.add(matcher.category);
+    }
+  }
+
+  return Array.from(matched);
+}
+
+function buildRecommendationEvidence(params: {
+  overview: DashboardOverviewResponse;
+  events: AnalyticsEventSummary[];
+}): string[] {
+  const evidence: string[] = [];
+  const pageViews = params.overview.pageViews.total;
+  const sessions = params.overview.sessions.total;
+
+  if (pageViews > 0 || sessions > 0) {
+    evidence.push(`Observed ${pageViews} page views and ${sessions} sessions in the selected period.`);
+  }
+
+  const topPages = params.overview.topPages
+    .slice(0, 3)
+    .map((page) => sanitizeAnalyticsPath(page.path))
+    .filter(Boolean);
+  if (topPages.length > 0) {
+    evidence.push(`Top pages include ${topPages.join(', ')}.`);
+  }
+
+  const topReferrer = params.overview.topReferrers[0]?.referrer;
+  if (topReferrer) {
+    evidence.push(`Top referrer: ${sanitizeAnalyticsReferrer(topReferrer)}.`);
+  }
+
+  const observedEvents = params.events.slice(0, 6).map((event) => event.eventName);
+  if (observedEvents.length > 0) {
+    evidence.push(`Observed event names include ${observedEvents.join(', ')}.`);
+  }
+
+  return evidence;
+}
+
+function buildNextEventRecommendations(params: {
+  goal?: string;
+  overview: DashboardOverviewResponse;
+  events: AnalyticsEventSummary[];
+}): Pick<
+  NextEventRecommendationsSuccessResult,
+  'status' | 'summary' | 'evidence' | 'recommendations' | 'limitations'
+> {
+  if (params.events.length === 0) {
+    return {
+      status: 'no_events',
+      summary:
+        'Tally needs production events before usage-based recommendations are available.',
+      evidence: [],
+      recommendations: [],
+    };
+  }
+
+  const matchedCategories = matchedRecommendationCategories(params);
+  const evidence = buildRecommendationEvidence(params);
+  const observedEventNames = new Set(params.events.map((event) => event.eventName));
+  const recommendations = matchedCategories
+    .flatMap((category) => RECOMMENDATIONS_BY_CATEGORY[category])
+    .filter((recommendation, index, allRecommendations) => {
+      const firstIndex = allRecommendations.findIndex(
+        (candidate) => candidate.eventName === recommendation.eventName
+      );
+      return firstIndex === index && !observedEventNames.has(recommendation.eventName);
+    });
+
+  if (matchedCategories.length === 0) {
+    return {
+      status: 'insufficient_data',
+      summary: 'Current analytics data could not connect the requested goal to observed pages or events.',
+      evidence,
+      limitations: [
+        'No observed page, referrer, or event pattern matched the requested analytics goal.',
+      ],
+      recommendations: observedEventNames.has('feature_used')
+        ? []
+        : [
+            {
+              eventName: 'feature_used',
+              reason: 'Needed to connect product usage to the stated goal.',
+              priority: 'low',
+            },
+          ],
+    };
+  }
+
+  if (recommendations.length === 0) {
+    return {
+      status: 'ok',
+      summary: 'Observed events already cover the selected recommendation pattern.',
+      evidence,
+      recommendations: [],
+    };
+  }
+
+  return {
+    status: 'partial_data',
+    summary:
+      'Current data can partially support the goal, but missing lifecycle events would make it more accurate.',
+    evidence,
+    limitations: [
+      'Current analytics data is missing one or more lifecycle events needed for a more complete answer.',
+    ],
+    recommendations,
   };
 }
 
@@ -1546,6 +1774,82 @@ export async function getPathsToEvent(params: {
         projectName: project.displayName,
         tool: 'get_paths_to_event',
         semantics: 'paths_to_event',
+        dataWindow,
+        generatedAt: params.now,
+      }),
+    };
+  }
+}
+
+export async function suggestNextEvents(params: {
+  userId: string;
+  projectId: string;
+  period: AnalyticsPeriod;
+  goal?: string;
+  now?: Date;
+}): Promise<NextEventRecommendationsResult> {
+  const goal = validateRecommendationGoal(params.goal);
+  if (goal === null) {
+    return {
+      status: 'invalid_goal',
+      summary: 'Goal must be a string from 1 to 200 characters when provided.',
+      createsPendingTasks: false,
+    };
+  }
+
+  const project = await getOwnedAnalyticsProject({
+    userId: params.userId,
+    projectId: params.projectId,
+  });
+
+  if (!project) {
+    return {
+      status: 'project_not_found',
+      summary: 'Project not found.',
+      createsPendingTasks: false,
+    };
+  }
+
+  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+
+  try {
+    const overview = isE2EAnalyticsFixtureMode()
+      ? buildE2EOverview(params.projectId, params.period)
+      : await queryProjectOverviewFromTinybird({
+          projectId: params.projectId,
+          period: params.period,
+          dataWindow,
+        });
+    const events = isE2EAnalyticsFixtureMode()
+      ? summarizeEvents(eventsInDataWindow(fixtureEventRows(params.projectId), dataWindow))
+      : await listEventsFromTinybird({ projectId: params.projectId, dataWindow });
+    const result = buildNextEventRecommendations({ goal, overview, events });
+
+    return {
+      ...result,
+      projectId: params.projectId,
+      period: params.period,
+      createsPendingTasks: false,
+      provenance: createAnalyticsProvenance({
+        projectName: project.displayName,
+        tool: 'suggest_next_events',
+        semantics: 'next_event_recommendations',
+        dataWindow,
+        generatedAt: params.now,
+      }),
+      dashboardUrls: project.dashboardUrls,
+    };
+  } catch (error) {
+    const serviceError = toAnalyticsServiceError(error);
+    return {
+      status: serviceError.status,
+      summary: serviceError.message,
+      createsPendingTasks: false,
+      dashboardUrls: project.dashboardUrls,
+      provenance: createAnalyticsProvenance({
+        projectName: project.displayName,
+        tool: 'suggest_next_events',
+        semantics: 'next_event_recommendations',
         dataWindow,
         generatedAt: params.now,
       }),

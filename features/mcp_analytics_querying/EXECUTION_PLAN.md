@@ -464,15 +464,15 @@ Add deterministic recommendations based on observed pages, referrers, event name
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "`suggest_next_events`"; FEATURE_SPEC.md "suggest_next_events"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Shared service exports `suggestNextEvents`.
+- [x] (CODE) Shared service exports `suggestNextEvents`.
   - Verify: `cd ../.. && rg -q 'suggestNextEvents' apps/web/lib/analytics/service.ts`
-- [ ] (TEST) Recommendation tests cover signup, onboarding, pricing/CTA, checkout/payment, and feature-usage goal terms.
+- [x] (TEST) Recommendation tests cover signup, onboarding, pricing/CTA, checkout/payment, and feature-usage goal terms.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-recommendations`
-- [ ] (TEST) Recommendation tests suppress events already observed in the selected period.
+- [x] (TEST) Recommendation tests suppress events already observed in the selected period.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-recommendations`
-- [ ] (TEST) Recommendation tests cover `no_events`, `partial_data`, and `insufficient_data` statuses with evidence and limitations where required.
+- [x] (TEST) Recommendation tests cover `no_events`, `partial_data`, and `insufficient_data` statuses with evidence and limitations where required.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-recommendations`
-- [ ] (TEST) `createsPendingTasks` is always false and no pending-task write function is called.
+- [x] (TEST) `createsPendingTasks` is always false and no pending-task write function is called.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-recommendations`
 
 **Files to Create:**
