@@ -49,6 +49,28 @@ export type AnalyticsProjectContext = {
   dashboardUrls: AnalyticsDashboardUrls;
 };
 
+export type AnalyticsEventSummary = {
+  eventName: string;
+  count: number;
+  firstSeenAt: string;
+  lastSeenAt: string;
+  commonProperties: string[];
+};
+
+export type AnalyticsEventProperty = {
+  name: string;
+  observedCount: number;
+  examples: string[];
+};
+
+export type AnalyticsEventSchema = {
+  eventName: string;
+  count: number;
+  firstSeenAt: string;
+  lastSeenAt: string;
+  properties: AnalyticsEventProperty[];
+};
+
 export type AnalyticsServiceResultBase = {
   status: AnalyticsStatus;
   summary: string;

@@ -4,6 +4,7 @@ import path from 'node:path';
 export type Period = '24h' | '7d' | '30d';
 
 type FixtureEvent = {
+  [key: string]: unknown;
   project_id: string;
   session_id: string;
   event_type: string;
@@ -82,6 +83,7 @@ function parseEvent(raw: unknown): ParsedFixtureEvent | null {
   if (!Number.isFinite(timestampMs)) return null;
 
   return {
+    ...raw,
     project_id: projectId,
     session_id: sessionId,
     event_type: eventType,

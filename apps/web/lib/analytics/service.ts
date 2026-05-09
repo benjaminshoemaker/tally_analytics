@@ -3,6 +3,7 @@ import {
   buildE2ELiveFeed,
   buildE2ESessions,
   isE2EAnalyticsFixtureMode,
+  loadE2EAnalyticsEvents,
 } from './e2e-fixtures';
 import {
   resolveAnalyticsDataWindow,
@@ -21,8 +22,16 @@ import type {
   AnalyticsProvenance,
   AnalyticsQuerySemantics,
   AnalyticsServiceResultBase,
+  AnalyticsEventSchema,
+  AnalyticsEventSummary,
 } from './types';
 import type { AnalyticsDashboardUrls } from './urls';
+import {
+  boundAnalyticsString,
+  sanitizeAnalyticsPath,
+  sanitizeAnalyticsReferrer,
+  sanitizeAnalyticsUrl,
+} from './urls';
 import { getOwnedAnalyticsProject } from '../db/queries/projects';
 
 export * from './periods';
@@ -121,6 +130,31 @@ export type TopReferrersSuccessResult = AnalyticsServiceResultBase & {
 
 export type TopPagesResult = TopPagesSuccessResult | ProjectOverviewErrorResult;
 export type TopReferrersResult = TopReferrersSuccessResult | ProjectOverviewErrorResult;
+
+export type ListEventsSuccessResult = AnalyticsServiceResultBase & {
+  status: 'ok' | 'no_events';
+  period: AnalyticsPeriod;
+  events: AnalyticsEventSummary[];
+  provenance: AnalyticsProvenance;
+  dashboardUrls: AnalyticsDashboardUrls;
+};
+
+export type EventSchemaSuccessResult = AnalyticsServiceResultBase & {
+  status: 'ok';
+  event: AnalyticsEventSchema;
+  provenance: AnalyticsProvenance;
+  dashboardUrls: AnalyticsDashboardUrls;
+};
+
+export type EventSchemaErrorResult = AnalyticsServiceResultBase & {
+  status: 'invalid_event_name' | 'no_events' | 'project_not_found' | 'service_error';
+  availableEvents?: string[];
+  dashboardUrls?: AnalyticsDashboardUrls;
+  provenance?: AnalyticsProvenance;
+};
+
+export type ListEventsResult = ListEventsSuccessResult | ProjectOverviewErrorResult;
+export type EventSchemaResult = EventSchemaSuccessResult | EventSchemaErrorResult;
 
 export function createAnalyticsProvenance(params: {
   projectName: string;
@@ -478,6 +512,242 @@ function normalizeTimestamp(value: unknown): string {
   return iso.endsWith('Z') ? iso : `${iso}Z`;
 }
 
+const PROPERTY_NAME_MAP: Record<string, string> = {
+  session_id: 'sessionId',
+  user_id: 'userId',
+  visitor_id: 'visitorId',
+  utm_source: 'utmSource',
+  utm_medium: 'utmMedium',
+  utm_campaign: 'utmCampaign',
+  utm_term: 'utmTerm',
+  utm_content: 'utmContent',
+  engagement_time_ms: 'engagementTimeMs',
+  scroll_depth: 'scrollDepth',
+  cta_clicks: 'ctaClicks',
+  screen_width: 'screenWidth',
+  is_returning: 'isReturning',
+  signup_method: 'signupMethod',
+};
+
+const RAW_IDENTIFIER_PROPERTY_NAMES = new Set([
+  'project_id',
+  'projectId',
+  'session_id',
+  'sessionId',
+  'visitor_id',
+  'visitorId',
+  'user_id',
+  'userId',
+  'event_type',
+  'eventType',
+  'timestamp',
+  'user_agent',
+  'userAgent',
+]);
+
+type AnalyticsFixtureEventRow = Record<string, unknown> & { event_type: string; timestampMs: number };
+
+function fixtureEventRows(projectId: string): AnalyticsFixtureEventRow[] {
+  return loadE2EAnalyticsEvents(projectId).flatMap((event) => {
+    const eventType = event.event_type;
+    const timestampMs = event.timestampMs;
+    if (typeof eventType !== 'string' || !Number.isFinite(timestampMs)) return [];
+    return [{ ...event, event_type: eventType, timestampMs }];
+  });
+}
+
+function camelCasePropertyName(name: string): string {
+  return name.replace(/_([a-z0-9])/g, (_, char: string) => char.toUpperCase());
+}
+
+function normalizeEventPropertyName(name: string): string {
+  return PROPERTY_NAME_MAP[name] ?? camelCasePropertyName(name);
+}
+
+function safeEventPropertyValue(name: string, value: unknown, limit = 128): string | null {
+  if (value === null || value === undefined || value === '') return null;
+  if (name === 'url') return boundAnalyticsString(sanitizeAnalyticsUrl(value), limit);
+  if (name === 'path') return boundAnalyticsString(sanitizeAnalyticsPath(value), limit);
+  if (name === 'referrer') return boundAnalyticsString(sanitizeAnalyticsReferrer(value), limit);
+  return boundAnalyticsString(value, limit);
+}
+
+function safeEventProperties(event: Record<string, unknown>): Map<string, string> {
+  const properties = new Map<string, string>();
+
+  for (const [rawName, rawValue] of Object.entries(event)) {
+    const normalizedName = normalizeEventPropertyName(rawName);
+    if (RAW_IDENTIFIER_PROPERTY_NAMES.has(rawName) || RAW_IDENTIFIER_PROPERTY_NAMES.has(normalizedName)) {
+      continue;
+    }
+
+    const value = safeEventPropertyValue(rawName, rawValue);
+    if (!value) continue;
+    properties.set(normalizedName, value);
+  }
+
+  return properties;
+}
+
+function eventsInDataWindow(
+  events: AnalyticsFixtureEventRow[],
+  dataWindow: ResolvedAnalyticsDataWindow
+): AnalyticsFixtureEventRow[] {
+  return events.filter(
+    (event) =>
+      event.timestampMs >= dataWindow.start.getTime() && event.timestampMs < dataWindow.end.getTime()
+  );
+}
+
+function summarizeEvents(
+  events: AnalyticsFixtureEventRow[]
+): AnalyticsEventSummary[] {
+  const summaries = new Map<
+    string,
+    { count: number; firstSeenMs: number; lastSeenMs: number; propertyCounts: Map<string, number> }
+  >();
+
+  for (const event of events) {
+    const current =
+      summaries.get(event.event_type) ??
+      {
+        count: 0,
+        firstSeenMs: event.timestampMs,
+        lastSeenMs: event.timestampMs,
+        propertyCounts: new Map<string, number>(),
+      };
+
+    current.count += 1;
+    current.firstSeenMs = Math.min(current.firstSeenMs, event.timestampMs);
+    current.lastSeenMs = Math.max(current.lastSeenMs, event.timestampMs);
+    for (const propertyName of safeEventProperties(event).keys()) {
+      current.propertyCounts.set(propertyName, (current.propertyCounts.get(propertyName) ?? 0) + 1);
+    }
+    summaries.set(event.event_type, current);
+  }
+
+  return Array.from(summaries.entries())
+    .sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0]))
+    .map(([eventName, summary]) => ({
+      eventName,
+      count: summary.count,
+      firstSeenAt: new Date(summary.firstSeenMs).toISOString(),
+      lastSeenAt: new Date(summary.lastSeenMs).toISOString(),
+      commonProperties: Array.from(summary.propertyCounts.entries())
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 12)
+        .map(([propertyName]) => propertyName),
+    }));
+}
+
+function buildEventSchema(
+  eventName: string,
+  events: AnalyticsFixtureEventRow[]
+): AnalyticsEventSchema | null {
+  const matching = events.filter((event) => event.event_type === eventName);
+  if (matching.length === 0) return null;
+
+  const propertySummaries = new Map<string, { observedCount: number; examples: string[] }>();
+  for (const event of matching) {
+    for (const [propertyName, value] of safeEventProperties(event).entries()) {
+      const current = propertySummaries.get(propertyName) ?? { observedCount: 0, examples: [] };
+      current.observedCount += 1;
+      if (!current.examples.includes(value) && current.examples.length < 3) {
+        current.examples.push(value);
+      }
+      propertySummaries.set(propertyName, current);
+    }
+  }
+
+  const timestamps = matching.map((event) => event.timestampMs);
+  return {
+    eventName,
+    count: matching.length,
+    firstSeenAt: new Date(Math.min(...timestamps)).toISOString(),
+    lastSeenAt: new Date(Math.max(...timestamps)).toISOString(),
+    properties: Array.from(propertySummaries.entries())
+      .sort((a, b) => b[1].observedCount - a[1].observedCount || a[0].localeCompare(b[0]))
+      .map(([name, property]) => ({ name, ...property })),
+  };
+}
+
+async function listEventsFromTinybird(params: {
+  projectId: string;
+  dataWindow: ResolvedAnalyticsDataWindow;
+}): Promise<AnalyticsEventSummary[]> {
+  const client = createAnalyticsTinybirdClient();
+  const projectIdSql = escapeAnalyticsSqlString(params.projectId);
+  const startSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.start));
+  const endSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.end));
+
+  const result = await runAnalyticsTinybirdQuery<{
+    event_type: string;
+    count: number;
+    first_seen_at: string;
+    last_seen_at: string;
+  }>(
+    client,
+    'event_discovery',
+    `
+      SELECT
+        event_type,
+        count() AS count,
+        toString(min(timestamp)) AS first_seen_at,
+        toString(max(timestamp)) AS last_seen_at
+      FROM events
+      WHERE project_id = '${projectIdSql}'
+      AND timestamp >= toDateTime64('${startSql}', 3)
+      AND timestamp < toDateTime64('${endSql}', 3)
+      GROUP BY event_type
+      ORDER BY count DESC, event_type ASC
+      LIMIT 100
+    `.trim()
+  );
+
+  return result.data.map((row) => ({
+    eventName: String(row.event_type),
+    count: Number(row.count),
+    firstSeenAt: normalizeTimestamp(row.first_seen_at),
+    lastSeenAt: normalizeTimestamp(row.last_seen_at),
+    commonProperties: [],
+  }));
+}
+
+async function eventSchemaFromTinybird(params: {
+  projectId: string;
+  eventName: string;
+  dataWindow: ResolvedAnalyticsDataWindow;
+}): Promise<AnalyticsEventSchema | null> {
+  const client = createAnalyticsTinybirdClient();
+  const projectIdSql = escapeAnalyticsSqlString(params.projectId);
+  const eventNameSql = escapeAnalyticsSqlString(params.eventName);
+  const startSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.start));
+  const endSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.end));
+
+  const result = await runAnalyticsTinybirdQuery<Record<string, unknown>>(
+    client,
+    'event_schema',
+    `
+      SELECT *
+      FROM events
+      WHERE project_id = '${projectIdSql}'
+      AND event_type = '${eventNameSql}'
+      AND timestamp >= toDateTime64('${startSql}', 3)
+      AND timestamp < toDateTime64('${endSql}', 3)
+      ORDER BY timestamp DESC
+      LIMIT 100
+    `.trim()
+  );
+
+  const events: AnalyticsFixtureEventRow[] = result.data.flatMap((row) => {
+    const timestamp = Date.parse(String(row.timestamp ?? ''));
+    if (!Number.isFinite(timestamp)) return [];
+    return [{ ...row, event_type: params.eventName, timestampMs: timestamp }];
+  });
+
+  return buildEventSchema(params.eventName, events);
+}
+
 async function queryLiveEventsFromTinybird(params: {
   projectId: string;
   limit: number;
@@ -818,4 +1088,151 @@ export async function getTopReferrers(params: {
     }),
     dashboardUrls: overview.dashboardUrls,
   };
+}
+
+export async function listEvents(params: {
+  userId: string;
+  projectId: string;
+  period: AnalyticsPeriod;
+  now?: Date;
+}): Promise<ListEventsResult> {
+  const project = await getOwnedAnalyticsProject({
+    userId: params.userId,
+    projectId: params.projectId,
+  });
+
+  if (!project) {
+    return {
+      status: 'project_not_found',
+      summary: 'Project not found.',
+    };
+  }
+
+  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+
+  try {
+    const events = isE2EAnalyticsFixtureMode()
+      ? summarizeEvents(eventsInDataWindow(fixtureEventRows(params.projectId), dataWindow))
+      : await listEventsFromTinybird({ projectId: params.projectId, dataWindow });
+
+    return {
+      status: events.length === 0 ? 'no_events' : 'ok',
+      summary: events.length === 0 ? 'No analytics events were found.' : `${events.length} event types found.`,
+      period: params.period,
+      events,
+      provenance: createAnalyticsProvenance({
+        projectName: project.displayName,
+        tool: 'list_events',
+        semantics: 'event_discovery',
+        dataWindow,
+        generatedAt: params.now,
+      }),
+      dashboardUrls: project.dashboardUrls,
+    };
+  } catch (error) {
+    const serviceError = toAnalyticsServiceError(error);
+    return {
+      status: serviceError.status,
+      summary: serviceError.message,
+      dashboardUrls: project.dashboardUrls,
+      provenance: createAnalyticsProvenance({
+        projectName: project.displayName,
+        tool: 'list_events',
+        semantics: 'event_discovery',
+        dataWindow,
+        generatedAt: params.now,
+      }),
+    };
+  }
+}
+
+export async function getEventSchema(params: {
+  userId: string;
+  projectId: string;
+  period: AnalyticsPeriod;
+  eventName: string;
+  now?: Date;
+}): Promise<EventSchemaResult> {
+  const eventName = boundAnalyticsString(params.eventName, 128);
+  if (!eventName) {
+    return {
+      status: 'invalid_event_name',
+      summary: 'Event name is required.',
+    };
+  }
+
+  const project = await getOwnedAnalyticsProject({
+    userId: params.userId,
+    projectId: params.projectId,
+  });
+
+  if (!project) {
+    return {
+      status: 'project_not_found',
+      summary: 'Project not found.',
+    };
+  }
+
+  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+
+  try {
+    const eventSchema = isE2EAnalyticsFixtureMode()
+      ? buildEventSchema(
+          eventName,
+          eventsInDataWindow(fixtureEventRows(params.projectId), dataWindow)
+        )
+      : await eventSchemaFromTinybird({ projectId: params.projectId, eventName, dataWindow });
+
+    if (!eventSchema) {
+      const availableEvents = isE2EAnalyticsFixtureMode()
+        ? summarizeEvents(eventsInDataWindow(fixtureEventRows(params.projectId), dataWindow)).map(
+            (event) => event.eventName
+          )
+        : [];
+      return {
+        status: availableEvents.length === 0 ? 'no_events' : 'invalid_event_name',
+        summary:
+          availableEvents.length === 0
+            ? 'No analytics events were found.'
+            : 'Exact event name was not found.',
+        availableEvents,
+        dashboardUrls: project.dashboardUrls,
+        provenance: createAnalyticsProvenance({
+          projectName: project.displayName,
+          tool: 'get_event_schema',
+          semantics: 'event_schema',
+          dataWindow,
+          generatedAt: params.now,
+        }),
+      };
+    }
+
+    return {
+      status: 'ok',
+      summary: `${eventSchema.eventName} was observed ${eventSchema.count} times.`,
+      event: eventSchema,
+      provenance: createAnalyticsProvenance({
+        projectName: project.displayName,
+        tool: 'get_event_schema',
+        semantics: 'event_schema',
+        dataWindow,
+        generatedAt: params.now,
+      }),
+      dashboardUrls: project.dashboardUrls,
+    };
+  } catch (error) {
+    const serviceError = toAnalyticsServiceError(error);
+    return {
+      status: serviceError.status,
+      summary: serviceError.message,
+      dashboardUrls: project.dashboardUrls,
+      provenance: createAnalyticsProvenance({
+        projectName: project.displayName,
+        tool: 'get_event_schema',
+        semantics: 'event_schema',
+        dataWindow,
+        generatedAt: params.now,
+      }),
+    };
+  }
 }

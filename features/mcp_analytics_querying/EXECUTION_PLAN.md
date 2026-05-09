@@ -380,15 +380,15 @@ Add services that list observed event names and summarize safe properties for on
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "`list_events`" and "`get_event_schema`"; FEATURE_SPEC.md "Event Matching"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Shared service exports `listEvents` and `getEventSchema`.
+- [x] (CODE) Shared service exports `listEvents` and `getEventSchema`.
   - Verify: `cd ../.. && rg -q 'listEvents|getEventSchema' apps/web/lib/analytics/service.ts`
-- [ ] (TEST) Event discovery tests cover observed custom event names, counts, first/last seen timestamps, safe common properties, and no-events state.
+- [x] (TEST) Event discovery tests cover observed custom event names, counts, first/last seen timestamps, safe common properties, and no-events state.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-events`
-- [ ] (TEST) Event schema tests exclude raw identifiers, bound example values to 128 characters, and cap example values at three per property.
+- [x] (TEST) Event schema tests exclude raw identifiers, bound example values to 128 characters, and cap example values at three per property.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-events`
-- [ ] (TEST) Event-specific services require exact event names and do not silently choose between multiple signup-like events.
+- [x] (TEST) Event-specific services require exact event names and do not silently choose between multiple signup-like events.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-events`
-- [ ] (CODE) Common property normalization maps warehouse snake_case fields to MCP camelCase names.
+- [x] (CODE) Common property normalization maps warehouse snake_case fields to MCP camelCase names.
   - Verify: `cd ../.. && rg -q 'sessionId|utmSource|engagementTimeMs|scrollDepth|ctaClicks' apps/web/lib/analytics/service.ts apps/web/lib/analytics/types.ts`
 
 **Files to Create:**
