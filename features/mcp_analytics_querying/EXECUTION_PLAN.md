@@ -271,9 +271,9 @@ Extract sessions and live route behavior into shared service functions and add t
 
 ### Pre-Phase Setup
 
-- [ ] (TEST) Phase 1 service and route tests pass before event-specific services are added.
+- [x] (TEST) Phase 1 service and route tests pass before event-specific services are added.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-overview-api analytics-sessions-api analytics-live-feed-api analytics-service-overview`
-- [ ] (CODE) Existing scenario seeder and fixture parser are present.
+- [x] (CODE) Existing scenario seeder and fixture parser are present.
   - Verify: `cd ../.. && test -f apps/web/scripts/seed-e2e-scenario.mjs && test -f apps/web/lib/analytics/e2e-fixtures.ts`
 
 ### Step 2.1: Fixture And Scenario Support
