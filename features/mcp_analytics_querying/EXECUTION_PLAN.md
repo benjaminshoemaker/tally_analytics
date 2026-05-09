@@ -51,13 +51,13 @@ Phase 1: Shared Analytics Foundation
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) This workstream is recorded as planned or active without changing the primary active workstream.
+- [x] (CODE) This workstream is recorded as planned or active without changing the primary active workstream.
   - Verify: `cd ../.. && rg -q '\`features/mcp_analytics_querying/\` \| feature \| (planned|active)' plans/PLAN_STATUS.md && rg -q 'Primary active workstream: \`features/mcp_onboarding/\`' plans/PLAN_STATUS.md`
-- [ ] (CODE) Feature specification inputs exist.
+- [x] (CODE) Feature specification inputs exist.
   - Verify: `test -f FEATURE_SPEC.md && test -f FEATURE_TECHNICAL_SPEC.md && test -f FLOW_VERIFICATION_PLAN.md`
-- [ ] (CODE) Dashboard analytics route tests exist before refactor work starts.
+- [x] (CODE) Dashboard analytics route tests exist before refactor work starts.
   - Verify: `cd ../.. && rg -l 'analytics.*(overview|sessions|live)|overview.*analytics|sessions.*analytics|live.*analytics' apps/web/tests`
-- [ ] (CODE) SDK and event ingestion packages are present but out of scope.
+- [x] (CODE) SDK and event ingestion packages are present but out of scope.
   - Verify: `cd ../.. && test -d packages/sdk && test -d apps/events`
 
 ### Step 1.1: Shared Analytics Primitives
@@ -167,15 +167,15 @@ Move overview route logic into the shared analytics service and keep the route a
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Dashboard Semantics"; FEATURE_SPEC.md "get_project_overview"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `getProjectOverview` is exported from the shared analytics service and called by the overview route.
+- [x] (CODE) `getProjectOverview` is exported from the shared analytics service and called by the overview route.
   - Verify: `cd ../.. && rg -q 'getProjectOverview' apps/web/lib/analytics apps/web/app/api/projects/[id]/analytics/overview/route.ts`
-- [ ] (TEST) Existing overview API tests pass after the route delegates to the shared service.
+- [x] (TEST) Existing overview API tests pass after the route delegates to the shared service.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-overview-api`
-- [ ] (TEST) Service tests cover `ok` and `no_events` overview statuses with zero metrics for empty projects.
+- [x] (TEST) Service tests cover `ok` and `no_events` overview statuses with zero metrics for empty projects.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-overview`
-- [ ] (TEST) Overview service output includes project provenance and exact resolved data-window timestamps for period-based MCP responses.
+- [x] (TEST) Overview service output includes project provenance and exact resolved data-window timestamps for period-based MCP responses.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-overview`
-- [ ] (CODE) The dashboard overview route response does not include MCP-only provenance fields.
+- [x] (CODE) The dashboard overview route response does not include MCP-only provenance fields.
   - Verify: `cd ../.. && ! rg -n 'projectName|queryBasis|dataWindow' apps/web/app/api/projects/[id]/analytics/overview/route.ts`
 
 **Files to Create:**
