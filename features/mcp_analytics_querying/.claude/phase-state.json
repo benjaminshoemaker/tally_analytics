@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_analytics_querying",
-  "last_updated": "2026-05-09T09:28:31.422Z",
+  "last_updated": "2026-05-09T09:29:53.189Z",
   "generated_by": "phase-start",
   "main": {
     "current_phase": 2,
@@ -123,8 +123,65 @@
         "name": "Event Insight Services",
         "status": "IN_PROGRESS",
         "tasks_total": 5,
-        "tasks_complete": 0,
-        "started_at": "2026-05-09T09:28:31.422Z"
+        "tasks_complete": 1,
+        "started_at": "2026-05-09T09:28:31.422Z",
+        "tasks": {
+          "2.1.A": {
+            "status": "COMPLETE",
+            "title": "Broaden Local Analytics Fixture Parsing For Custom Event Types",
+            "completed_at": "2026-05-09T09:29:53.189Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "4/4",
+              "commands": [
+                "rg -q 'event_type.*string|string.*event_type' apps/web/lib/analytics/e2e-fixtures.ts",
+                "pnpm --filter web test -- e2e-analytics-fixtures",
+                "pnpm --filter web test -- e2e-scenarios"
+              ]
+            },
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "2.1.B": {
+            "status": "NOT_STARTED",
+            "title": "Add MCP Analytics Scenario Fixtures",
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "2.2.A": {
+            "status": "NOT_STARTED",
+            "title": "Implement Event Discovery And Event Schema Services",
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "2.2.B": {
+            "status": "NOT_STARTED",
+            "title": "Implement Paths-To-Event Service",
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "2.2.C": {
+            "status": "NOT_STARTED",
+            "title": "Implement Deterministic Next-Event Recommendation Service",
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          }
+        }
       },
       {
         "number": 3,

@@ -6,7 +6,7 @@ export type Period = '24h' | '7d' | '30d';
 type FixtureEvent = {
   project_id: string;
   session_id: string;
-  event_type: 'page_view' | 'session_start';
+  event_type: string;
   timestamp: string;
   url?: string;
   path?: string;
@@ -75,7 +75,7 @@ function parseEvent(raw: unknown): ParsedFixtureEvent | null {
 
   if (typeof projectId !== 'string' || projectId.length === 0) return null;
   if (typeof sessionId !== 'string' || sessionId.length === 0) return null;
-  if (eventType !== 'page_view' && eventType !== 'session_start') return null;
+  if (typeof eventType !== 'string' || eventType.length === 0) return null;
   if (typeof timestamp !== 'string' || timestamp.length === 0) return null;
 
   const timestampMs = Date.parse(timestamp);

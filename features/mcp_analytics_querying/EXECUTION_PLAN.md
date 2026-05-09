@@ -290,13 +290,13 @@ Allow local E2E analytics fixtures to include custom event types such as `signup
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Scenario Fixtures"; FEATURE_SPEC.md "Data Persistence" and "Verification Guidance"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `ParsedFixtureEvent.event_type` accepts generic strings in fixture mode.
+- [x] (CODE) `ParsedFixtureEvent.event_type` accepts generic strings in fixture mode.
   - Verify: `cd ../.. && rg -q 'event_type.*string|string.*event_type' apps/web/lib/analytics/e2e-fixtures.ts`
-- [ ] (TEST) Fixture tests prove custom event names parse successfully.
+- [x] (TEST) Fixture tests prove custom event names parse successfully.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-analytics-fixtures`
-- [ ] (TEST) Fixture tests prove dashboard page/session aggregations still filter to dashboard-compatible event names.
+- [x] (TEST) Fixture tests prove dashboard page/session aggregations still filter to dashboard-compatible event names.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-analytics-fixtures`
-- [ ] (TEST) Scenario contract tests permit custom analytics event names without weakening required scenario fields.
+- [x] (TEST) Scenario contract tests permit custom analytics event names without weakening required scenario fields.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-scenarios`
 
 **Files to Create:**

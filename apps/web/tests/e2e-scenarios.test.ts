@@ -122,7 +122,8 @@ describe('E2E scenario contracts', () => {
 
       for (const event of scenario.analytics?.events ?? []) {
         expect(knownProjectIds.has(String(event.project_id))).toBe(true);
-        expect(['page_view', 'session_start']).toContain(event.event_type);
+        expect(typeof event.event_type).toBe('string');
+        expect(String(event.event_type).length).toBeGreaterThan(0);
       }
 
       expect(scenario.expectations.startPath).toMatch(/^\//);

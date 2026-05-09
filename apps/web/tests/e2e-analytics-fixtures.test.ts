@@ -78,6 +78,14 @@ function writeFixture(root: string): void {
             path: '/docs',
             referrer: '',
           },
+          {
+            project_id: 'proj_mcp_events',
+            session_id: 'sess_mcp_001',
+            event_type: 'signup_completed',
+            timestamp: '2026-05-01T12:17:00.000Z',
+            path: '/signup',
+            referrer: '',
+          },
         ],
       },
       null,
@@ -135,7 +143,7 @@ describe('E2E analytics fixtures', () => {
   });
 
   it('builds deterministic overview, sessions, and live-feed responses', async () => {
-    const { buildE2EOverview, buildE2ESessions, buildE2ELiveFeed } =
+    const { buildE2EOverview, buildE2ESessions, buildE2ELiveFeed, loadE2EAnalyticsEvents } =
       await import('../lib/analytics/e2e-fixtures');
 
     expect(buildE2EOverview('proj_e2e_campaign', '7d')).toMatchObject({
@@ -184,8 +192,23 @@ describe('E2E analytics fixtures', () => {
       topReferrers: [{ referrer: 'Direct', count: 1, percentage: 100 }],
     });
 
+    expect(buildE2ESessions('proj_mcp_events', '7d')).toEqual({
+      period: '7d',
+      totalSessions: 1,
+      newVisitors: 1,
+      returningVisitors: 0,
+      timeSeries: [{ date: '2026-05-01', newSessions: 1, returningSessions: 0 }],
+    });
+
+    expect(loadE2EAnalyticsEvents('proj_mcp_events').map((event) => event.event_type)).toEqual([
+      'session_start',
+      'page_view',
+      'signup_completed',
+    ]);
+
     expect(buildE2ELiveFeed({ projectId: 'proj_mcp_events', limit: 5 })).toMatchObject({
       events: [
+        { eventType: 'signup_completed', path: '/signup', timestamp: '2026-05-01T12:17:00.000Z' },
         { eventType: 'page_view', path: '/docs', timestamp: '2026-05-01T12:16:00.000Z' },
         { eventType: 'session_start', path: '/', timestamp: '2026-05-01T12:15:00.000Z' },
       ],
