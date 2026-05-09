@@ -210,15 +210,15 @@ Extract sessions and live route behavior into shared service functions and add t
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Dashboard Semantics"; FEATURE_SPEC.md "`get_sessions_summary`", "`get_live_events`", "`get_top_pages`", and "`get_top_referrers`"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Shared service exports `getSessionsSummary`, `getLiveEvents`, `getTopPages`, and `getTopReferrers`.
+- [x] (CODE) Shared service exports `getSessionsSummary`, `getLiveEvents`, `getTopPages`, and `getTopReferrers`.
   - Verify: `cd ../.. && rg -q 'getSessionsSummary|getLiveEvents|getTopPages|getTopReferrers' apps/web/lib/analytics/service.ts`
-- [ ] (TEST) Existing sessions and live API tests pass after route extraction.
+- [x] (TEST) Existing sessions and live API tests pass after route extraction.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-sessions-api analytics-live-feed-api`
-- [ ] (TEST) Service tests verify sessions keep existing dashboard semantics, including Tinybird returning visitors behavior.
+- [x] (TEST) Service tests verify sessions keep existing dashboard semantics, including Tinybird returning visitors behavior.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-overview`
-- [ ] (TEST) Top pages and top referrers match overview values for the same project, period, and limit.
+- [x] (TEST) Top pages and top referrers match overview values for the same project, period, and limit.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-overview`
-- [ ] (TEST) Live event service validates `limit` and `since`, preserves ordering, and returns `no_events` with `hasMore: false` when empty.
+- [x] (TEST) Live event service validates `limit` and `since`, preserves ordering, and returns `no_events` with `hasMore: false` when empty.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-overview`
 
 **Files to Create:**
