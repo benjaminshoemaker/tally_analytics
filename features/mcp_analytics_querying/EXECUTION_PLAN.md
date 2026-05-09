@@ -539,15 +539,15 @@ Add a shared MCP auth helper for extracting `userId` from `extra.authInfo` and d
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "MCP Tool Implementation" and "Validation Matrix"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP auth helper exists and install and analytics tools use the same `userIdFromAuth` helper.
+- [x] (CODE) MCP auth helper exists and install and analytics tools use the same `userIdFromAuth` helper.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/tools/auth.ts && rg -q 'userIdFromAuth' apps/web/lib/mcp/tools`
-- [ ] (CODE) Analytics schema file exports input and output schemas for all 11 analytics tools.
+- [x] (CODE) Analytics schema file exports input and output schemas for all 11 analytics tools.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/tools/analytics-schemas.ts && rg -q 'listProjects|resolveProject|listEvents|getEventSchema|getPathsToEvent|getProjectOverview|getLiveEvents|getSessionsSummary|getTopPages|getTopReferrers|suggestNextEvents' apps/web/lib/mcp/tools/analytics-schemas.ts`
-- [ ] (TEST) Schema tests prove invalid `period`, `limit`, `since`, `goal`, `eventName`, `targetEvent`, `maxSteps`, and repo path values reach handler validation and return structured `invalid_period`, `invalid_limit`, `invalid_since`, `invalid_goal`, `invalid_event_name`, `invalid_steps`, and `invalid_repo_context` statuses.
+- [x] (TEST) Schema tests prove invalid `period`, `limit`, `since`, `goal`, `eventName`, `targetEvent`, `maxSteps`, and repo path values reach handler validation and return structured `invalid_period`, `invalid_limit`, `invalid_since`, `invalid_goal`, `invalid_event_name`, `invalid_steps`, and `invalid_repo_context` statuses.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
-- [ ] (CODE) Tool schemas define `outputSchema` for documented `structuredContent`.
+- [x] (CODE) Tool schemas define `outputSchema` for documented `structuredContent`.
   - Verify: `cd ../.. && rg -q 'outputSchema' apps/web/lib/mcp/tools/analytics-schemas.ts apps/web/lib/mcp/tools/analytics.ts`
-- [ ] (CODE) No new OAuth scope constant is introduced for analytics reads.
+- [x] (CODE) No new OAuth scope constant is introduced for analytics reads.
   - Verify: `cd ../.. && ! rg -n 'mcp:analytics|ANALYTICS.*SCOPE|MCP_ANALYTICS' apps/web/lib apps/web/app`
 
 **Files to Create:**

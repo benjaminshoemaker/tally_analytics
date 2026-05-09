@@ -1,8 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
-import type { TallyMcpAuthInfo } from "../auth";
 import { prepareNextjsInstallPatch, type PrepareNextjsInstallPatchResult } from "../next-install/prepare-nextjs-install-patch";
+import { userIdFromAuth } from "./auth";
 import { mcpRepoContextSchema } from "./schemas";
 
 function resultSummary(result: PrepareNextjsInstallPatchResult): string {
@@ -23,12 +23,6 @@ export function toMcpToolResult(result: PrepareNextjsInstallPatchResult): CallTo
     structuredContent: result as unknown as Record<string, unknown>,
     content: [{ type: "text", text: resultSummary(result) }],
   };
-}
-
-function userIdFromAuth(authInfo: unknown): string | null {
-  const auth = authInfo as Partial<TallyMcpAuthInfo> | undefined;
-  const userId = auth?.extra?.userId;
-  return typeof userId === "string" && userId.length > 0 ? userId : null;
 }
 
 export function registerPrepareNextjsInstallPatchTool(server: McpServer): void {
