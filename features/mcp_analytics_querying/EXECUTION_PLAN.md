@@ -251,15 +251,15 @@ Extract sessions and live route behavior into shared service functions and add t
 ### Phase 1 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) Dashboard route and service tests for overview, sessions, and live analytics pass.
+- [x] (TEST) Dashboard route and service tests for overview, sessions, and live analytics pass.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-overview-api analytics-sessions-api analytics-live-feed-api analytics-service-overview`
-- [ ] (TYPE) Web type checking passes after service extraction.
+- [x] (TYPE) Web type checking passes after service extraction.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] (TEST) Existing MCP install route tests still pass after shared auth/project code changes.
+- [x] (TEST) Existing MCP install route tests still pass after shared auth/project code changes.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route mcp-auth prepare-nextjs-install-patch`
-- [ ] (CODE) SDK and event ingestion files are not modified for this feature.
+- [x] (CODE) SDK and event ingestion files are not modified for this feature.
   - Verify: `cd ../.. && git diff --name-only -- packages/sdk apps/events | wc -l | tr -d ' ' | grep -q '^0$'`
 
 ---
