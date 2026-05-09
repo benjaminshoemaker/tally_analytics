@@ -9,7 +9,7 @@ type Feature = {
 const FEATURES: Feature[] = [
   {
     title: "Zero Configuration",
-    description: "No script tags to copy-paste. No API keys to manage. Just merge the PR and you're live.",
+    description: "No script tags to copy-paste. No API keys to manage. Your AI coding agent applies the Tally SDK patch locally.",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-7">
         <path fill="currentColor" d="M11 2h2l1 7h7v2l-7 1-1 10h-2l-1-10-7-1V9h7l1-7z" />

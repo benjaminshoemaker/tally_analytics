@@ -10,17 +10,25 @@ describe("marketing docs pages", () => {
   it("renders the docs landing page with links", () => {
     const html = renderToStaticMarkup(React.createElement(DocsIndexPage));
     expect(html).toContain("Documentation");
+    expect(html).toContain("MCP setup");
+    expect(html).toContain("First path");
+    expect(html).toContain("Managed PR automation");
     expect(html).toContain('href="/docs/setup"');
     expect(html).toContain('href="/docs/sdk"');
   });
 
-  it("renders the setup guide with the GitHub install link", () => {
+  it("renders the setup guide with MCP-first agent commands", () => {
     const html = renderToStaticMarkup(React.createElement(DocsSetupPage));
-    expect(html).toContain("Getting started");
-    expect(html).toContain("Connect GitHub and get a PR");
-    expect(html).toContain("GitHub App");
+    expect(html).toContain("Install from your coding agent");
+    expect(html).toContain("Claude Code");
+    expect(html).toContain("Codex");
+    expect(html).toContain("Cursor");
+    expect(html).toContain("Your agent");
+    expect(html).toContain("claude mcp add --transport http tally https://usetally.xyz/api/mcp");
     expect(html).toContain("/api/auth/github");
-    expect(html).toContain("codex mcp add tally --url https://usetally.xyz/api/mcp");
+    expect(html).toContain("What happens after you connect Tally");
+    expect(html).toContain("Optional");
+    expect(html).toContain("Managed PR automation");
   });
 
   it("renders the SDK docs with code examples", () => {

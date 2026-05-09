@@ -14,8 +14,8 @@ type Step = {
 const STEPS: Step[] = [
   {
     number: '1',
-    title: 'Connect Repository',
-    description: 'Log in with GitHub and select the Next.js repository you want to track.',
+    title: 'Choose your agent',
+    description: 'Connect Tally to Claude Code, Codex, Cursor, or another MCP-capable coding agent.',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
         <path
@@ -27,8 +27,8 @@ const STEPS: Step[] = [
   },
   {
     number: '2',
-    title: 'Merge the PR',
-    description: 'We automatically create a PR with the lightweight analytics hook. Merge it.',
+    title: 'Ask for analytics',
+    description: 'Your agent calls Tally, gets a safe SDK patch, and applies it locally.',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
         <path
@@ -40,8 +40,8 @@ const STEPS: Step[] = [
   },
   {
     number: '3',
-    title: 'See Insights',
-    description: 'Data starts flowing immediately. View your dashboard for real-time insights.',
+    title: 'Review and deploy',
+    description: 'You approve the local change, run verification, and deploy normally.',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
         <path
@@ -53,9 +53,9 @@ const STEPS: Step[] = [
   },
   {
     number: '4',
-    title: 'Stay in Sync',
+    title: 'Confirm events',
     description:
-      'Add new pages or refactor your routes — we detect changes and keep your tracking up to date. No manual maintenance.',
+      'Tally shows a waiting state until production events arrive, then turns into your usage dashboard.',
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -86,7 +86,7 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
               How it works
             </h2>
             <p className="text-[#9a734c]">
-              From zero to data in less than 2 minutes.
+              From no analytics to real usage data without wiring the SDK by hand.
             </p>
           </div>
           <a

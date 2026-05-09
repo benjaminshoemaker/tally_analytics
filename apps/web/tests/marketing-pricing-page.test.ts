@@ -57,7 +57,7 @@ describe("marketing pricing page", () => {
     expect(html).toContain("Support");
   });
 
-  it("links logged-out users to /api/auth/github for sign in", async () => {
+  it("links logged-out users to MCP setup", async () => {
     vi.resetModules();
 
     cookieGetSpy = vi.fn().mockReturnValue(null);
@@ -67,7 +67,8 @@ describe("marketing pricing page", () => {
     const element = await PricingPage();
     const html = renderToStaticMarkup(element);
 
-    expect(html).toContain('href="/api/auth/github"');
+    expect(html).toContain("Start with MCP");
+    expect(html).toContain('href="/docs/setup"');
   });
 
   it("renders checkout CTAs when a free user is logged in", async () => {

@@ -1,36 +1,46 @@
 # Tally Analytics
 
-The easiest way to add analytics to your app. Connect GitHub, merge one PR, done.
+MCP-first analytics for apps built with AI coding agents.
 
-## The Problem
+Tally lets developers add analytics from Codex, Claude Code, Cursor, or another MCP-capable coding agent. The coding agent installs the SDK in the local repo; the Tally dashboard shows usage, first-event status, billing, and later analytics tasks.
 
-Setting up product analytics is a tedious, multi-step process that typically takes 2-4 hours: research providers, create accounts, obtain API keys, install SDKs, find the right initialization point, add tracking calls, deploy, and verify. For solo developers and early-stage startups, this friction causes analytics setup to be perpetually postponed — leaving founders flying blind during the critical early days.
+## Current Direction
 
-## How It Works
+The core product flow is:
 
-1. **Install the GitHub App** — click "Add to GitHub" and select your repos
-2. **We analyze your codebase** — framework detection, entry point identification, done in under 60 seconds
-3. **Review & merge the PR** — we open a PR that adds page view tracking with zero config
-4. **See your analytics** — deploy via your normal process, data starts flowing immediately
+1. Add the Tally MCP server to a coding agent.
+2. Authenticate with Tally through MCP OAuth.
+3. Ask the agent to add Tally Analytics to a supported app.
+4. The agent applies the Tally SDK patch locally and runs verification.
+5. Deploy the app and confirm the first event in the Tally dashboard.
 
-No API keys. No SDK wiring. No config files.
+The GitHub App is optional future/advanced automation for hosted PR workflows. It is not required for first value.
 
-## What Gets Tracked
+## Documentation
 
-The auto-generated PR instruments your app with:
+- [Product vision](docs/product/vision.md)
+- [Canonical user flows](docs/product/user-flows.md)
+- [Architecture overview](docs/architecture.md)
+- [Agent testing harness](docs/agent-testing.md)
+- [Billing verification](docs/billing-verification.md)
+- [GitHub sandbox guidance](docs/github-sandbox.md)
+- [Workstream status](plans/PLAN_STATUS.md)
 
-- **Page views** — every route navigation
-- **Sessions** — new visitors and returning users (30-min inactivity window)
-- **Referrers** — traffic sources
-- **Device/browser** — basic user agent info
+## Development
 
-## Framework Support
+```bash
+pnpm install
+pnpm dev
+pnpm build
+pnpm --filter web test
+```
 
-| Framework | Status |
-|-----------|--------|
-| Next.js 13+ (App Router) | Supported |
-| Next.js (Pages Router) | Supported |
-| Remix, SvelteKit, Astro, Vue/Nuxt | Planned |
+Useful local verification commands:
+
+```bash
+pnpm --filter web e2e:scenarios
+pnpm --filter web e2e:mcp-self-test
+```
 
 ## Project Structure
 
@@ -38,22 +48,14 @@ This is a pnpm monorepo:
 
 ```
 apps/
-  web/        → Dashboard & GitHub App (Next.js, Tailwind, Drizzle, Neon)
-  events/     → Event ingestion service (Next.js)
+  web/        → Dashboard, auth, billing, MCP server
+  events/     → Event ingestion service
 packages/
-  sdk/        → Client SDK (@tally-analytics/sdk, <5kb gzipped)
+  sdk/        → Client SDK (@tally-analytics/sdk)
 tinybird/     → Analytics data pipeline
-supabase/     → Auth & storage
-```
-
-## Development
-
-```bash
-pnpm install
-pnpm dev          # Start the web dashboard
-pnpm build        # Production build
-pnpm lint         # Lint
-pnpm typecheck    # Type checking
+docs/         → Product, architecture, and verification docs
+features/     → Active and future feature plans/briefs
+plans/        → Workstream status and archived plans
 ```
 
 ## License

@@ -7,7 +7,7 @@ import { SESSION_COOKIE_NAME } from "../../../lib/auth/cookies";
 import { db } from "../../../lib/db/client";
 import { sessions, users } from "../../../lib/db/schema";
 
-const AUTH_URL = "/api/auth/github";
+const SETUP_URL = "/docs/setup";
 
 const TIERS = [
   {
@@ -76,7 +76,7 @@ export default async function PricingPage() {
       <div className="max-w-2xl">
         <h1 className="font-display text-4xl tracking-tight text-[#1b140d]">Pricing</h1>
         <p className="mt-4 text-lg text-[#9a734c]">
-          Start free in minutes. Upgrade when you need higher limits and retention.
+          Start by adding Tally from Claude Code, Codex, Cursor, or your AI coding agent of choice. Upgrade when you need higher limits and retention.
         </p>
       </div>
 
@@ -91,7 +91,7 @@ export default async function PricingPage() {
               let cta: PricingCta;
 
               if (!userPlan) {
-                cta = { kind: "link", label: tier.ctaLabel, href: AUTH_URL };
+                cta = { kind: "link", label: "Start with MCP", href: SETUP_URL };
               } else if (tier.name === "Free") {
                 cta = { kind: "disabled", label: userPlan === "free" ? "Current plan" : "Included" };
               } else if (userPlan === "free") {
@@ -120,7 +120,7 @@ export default async function PricingPage() {
                 );
               }
 
-              return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={AUTH_URL} ctaDisabled />;
+              return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={SETUP_URL} ctaDisabled />;
             })()}
           </div>
         ))}

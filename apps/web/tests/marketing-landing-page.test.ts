@@ -74,11 +74,16 @@ describe("marketing landing page", () => {
   it("renders the hero section", async () => {
     const { html } = await renderLandingPage({ loggedIn: false });
 
-    expect(html).toContain("V2.0 IS NOW LIVE");
-    expect(html).toContain("Analytics for Next.js, installed in one click.");
-    expect(html).toContain("Sign in with GitHub");
-    expect(html).toContain("Read the Docs");
-    expect(html).toContain('href="/api/auth/github"');
+    expect(html).toContain("Easiest analytics setup");
+    expect(html).toContain("The fastest path from no analytics to real usage data.");
+    expect(html).toContain("Claude Code");
+    expect(html).toContain("Codex");
+    expect(html).toContain("Cursor");
+    expect(html).toContain("Your agent");
+    expect(html).toContain("claude mcp add --transport http tally https://usetally.xyz/api/mcp");
+    expect(html).toContain("Start with MCP");
+    expect(html).toContain('href="/docs/setup"');
+    expect(html).toContain("See how it works");
   });
 
   it("renders features, what-you-get, how-it-works, set-and-forget, and CTA sections", async () => {
@@ -104,10 +109,10 @@ describe("marketing landing page", () => {
     expect(html).toContain("Browser");
 
     expect(html).toContain("How it works");
-    expect(html).toContain("Connect Repository");
-    expect(html).toContain("Merge the PR");
-    expect(html).toContain("See Insights");
-    expect(html).toContain("Stay in Sync");
+    expect(html).toContain("Choose your agent");
+    expect(html).toContain("Ask for analytics");
+    expect(html).toContain("Review and deploy");
+    expect(html).toContain("Confirm events");
 
     expect(html).not.toContain("Finally, analytics that doesn");
     expect(html).not.toContain("feel like spyware");
@@ -130,7 +135,7 @@ describe("marketing landing page", () => {
   it("renders sections in the expected order", async () => {
     const { html } = await renderLandingPage({ loggedIn: false });
 
-    const heroIndex = html.indexOf("Analytics for Next.js, installed in one click.");
+    const heroIndex = html.indexOf("The fastest path from no analytics to real usage data.");
     const featuresIndex = html.indexOf("Analytics without the headache");
     const whatYouGetIndex = html.indexOf("Everything you need, nothing you don");
     const howItWorksIndex = html.indexOf("How it works");

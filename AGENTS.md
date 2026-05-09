@@ -7,12 +7,21 @@ Project-wide workflow guidance for AI agents working in this project.
 - This file is the durable, project-wide baseline.
 - Archived plans and feature specs live under `plans/archive/`.
 - Treat files in `plans/archive/` as historical context only. Do not use them as the current product plan unless the human explicitly says to resurrect a specific archived plan.
-- Active exploration should start from the current path in `plans/PLAN_STATUS.md` when that file exists. New implementation planning should create a fresh, explicitly current plan instead of editing archived plans in place.
+- Use `plans/PLAN_STATUS.md` as an orientation and workstream-status manifest, not as a single-plan execution lock. Explicit human direction in the current thread can authorize work on any non-archived planned feature.
+- New implementation planning should create or update an explicitly named workstream instead of editing archived plans in place.
 - When working in a scoped directory with a local `AGENTS.md` or `CLAUDE.md`, read this file first, then the local instructions.
 
 ## Project Context
 
-Historical greenfield and feature planning documents have been archived to avoid confusing agents about the current direction. The current product direction is tracked in `plans/PLAN_STATUS.md`; at the time of writing, the active feature is MCP-first analytics onboarding in `features/mcp_onboarding/`.
+Historical greenfield and feature planning documents have been archived to avoid confusing agents about the current direction. Current and approved planned workstreams are tracked in `plans/PLAN_STATUS.md`; at the time of writing, MCP-first analytics onboarding in `features/mcp_onboarding/` is the primary active feature.
+
+Durable product context lives in:
+
+- `docs/product/vision.md` — product thesis and positioning.
+- `docs/product/user-flows.md` — canonical user flows.
+- `docs/architecture.md` — high-level technical overview.
+
+Future feature briefs may live under `features/*/FEATURE_BRIEF.md`. Treat those as scoped planning inputs until the human explicitly approves implementation or `plans/PLAN_STATUS.md` marks them active or approved planned work.
 
 ## Agent Testing Harness
 

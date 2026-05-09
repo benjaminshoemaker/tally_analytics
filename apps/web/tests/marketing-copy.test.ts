@@ -9,13 +9,12 @@ describe("marketing copy", () => {
   it("uses accurate cookie language in hero section", () => {
     const html = renderToStaticMarkup(
       React.createElement(MarketingHero, {
-        installUrl: "https://github.com/apps/tally-analytics-agent",
         docsUrl: "/docs",
         dashboardImageSrc: "/dashboard.png",
       }),
     );
 
-    expect(html).toContain("No consent banner needed, no complex setup, just clean data.");
+    expect(html).toContain("Claude Code, Codex, Cursor, or your AI coding agent of choice");
   });
 
   it("uses accurate cookie language in GDPR feature", () => {

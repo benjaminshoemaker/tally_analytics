@@ -6,16 +6,13 @@ import MarketingHowItWorks from '../../components/marketing/how-it-works';
 import MarketingSetAndForget from '../../components/marketing/set-and-forget';
 import MarketingWhatYouGet from '../../components/marketing/what-you-get';
 
-
-const AUTH_URL = "/api/auth/github";
 const DASHBOARD_IMAGE_SRC = '/marketing/dashboard.png';
 
 export default function LandingPage() {
   return (
     <main className="flex-grow">
       <MarketingHero
-        installUrl={AUTH_URL}
-        docsUrl="/docs"
+        docsUrl="/docs/setup"
         dashboardImageSrc={DASHBOARD_IMAGE_SRC}
       />
 
@@ -33,20 +30,20 @@ export default function LandingPage() {
             All the analytics, no hassle.
           </h2>
           <p className="mb-10 text-lg text-[#9a734c]">
-            Start tracking your Next.js app traffic today. Free for open source projects.
+            Start from Claude Code, Codex, Cursor, or your AI coding agent of choice. Tally handles the setup and gives you the dashboard.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <a
               className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#ec7f13] px-8 text-base font-bold text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-orange-600 hover:shadow-warm-md active:scale-[0.96]"
-              href={AUTH_URL}
+              href="/docs/setup"
             >
-              Sign in with GitHub
+              Start with MCP
             </a>
             <a
               className="flex h-12 items-center justify-center gap-2 rounded-lg bg-transparent px-8 text-base font-medium text-[#9a734c] transition-colors hover:text-[#1b140d]"
               href="/pricing"
             >
-              Free for Open Source →
+              View pricing →
             </a>
           </div>
         </div>

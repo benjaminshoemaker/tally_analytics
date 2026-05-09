@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     default: "Tally Analytics",
     template: "%s | Tally Analytics",
   },
-  description: "Add privacy-friendly analytics to your Next.js app in one click. No consent banner needed, no complex setup.",
+  description: "Add analytics from your AI coding agent, then understand usage in the Tally dashboard.",
   openGraph: {
-    title: "Tally — Analytics for Next.js",
-    description: "Add privacy-friendly analytics to your Next.js app in one click. No consent banner needed, no complex setup.",
+    title: "Tally — Analytics from your AI coding agent",
+    description: "Add analytics from your AI coding agent, then understand usage in the Tally dashboard.",
     url: "https://usetally.xyz",
     siteName: "Tally Analytics",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Tally Analytics" }],
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tally — Analytics for Next.js",
-    description: "Add privacy-friendly analytics to your Next.js app in one click. No consent banner needed, no complex setup.",
+    title: "Tally — Analytics from your AI coding agent",
+    description: "Add analytics from your AI coding agent, then understand usage in the Tally dashboard.",
     images: ["/og-image.png"],
   },
 };

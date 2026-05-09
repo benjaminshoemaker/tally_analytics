@@ -24,9 +24,13 @@ describe("/projects page", () => {
 
     expect(html).toContain("Projects");
     expect(html).toContain("No projects yet");
-    expect(html).toContain("Install GitHub App");
-    expect(html).toContain("Using Codex? Add Tally from your coding agent.");
-    expect(html).toContain("codex mcp add tally --url https://usetally.xyz/api/mcp");
+    expect(html).toContain("Add your first project from Claude Code, Codex, Cursor");
+    expect(html).toContain("Claude Code");
+    expect(html).toContain("Codex");
+    expect(html).toContain("Cursor");
+    expect(html).toContain("Your agent");
+    expect(html).toContain("Optional: managed PR automation");
+    expect(html).toContain("claude mcp add --transport http tally https://usetally.xyz/api/mcp");
   });
 
   it("renders project cards that link to the detail page", () => {

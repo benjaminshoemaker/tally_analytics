@@ -10,16 +10,16 @@ describe("root layout metadata", () => {
     expect(src).toContain('default: "Tally Analytics"');
     expect(src).toContain('template: "%s | Tally Analytics"');
     expect(src).toContain(
-      'description: "Add privacy-friendly analytics to your Next.js app in one click. No consent banner needed, no complex setup."',
+      'description: "Add analytics from your AI coding agent, then understand usage in the Tally dashboard."',
     );
     expect(src).toContain('openGraph: {');
-    expect(src).toContain('title: "Tally — Analytics for Next.js"');
+    expect(src).toContain('title: "Tally — Analytics from your AI coding agent"');
     expect(src).toContain('url: "https://usetally.xyz"');
     expect(src).toContain('siteName: "Tally Analytics"');
     expect(src).toContain('images: [{ url: "/og-image.png"');
     expect(src).toContain('twitter: {');
+    expect(src).toContain('title: "Tally — Analytics from your AI coding agent"');
     expect(src).toContain('card: "summary_large_image"');
     expect(src).toContain('images: ["/og-image.png"]');
   });
 });
-

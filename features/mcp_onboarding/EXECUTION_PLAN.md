@@ -48,8 +48,8 @@ Phase 1: Data and OAuth Foundation
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) Current plan points to this feature directory.
-  - Verify: `cd ../.. && grep -q 'Current plan: \`features/mcp_onboarding/\`' plans/PLAN_STATUS.md`
+- [ ] (CODE) Workstream status lists this feature directory as primary active.
+  - Verify: `cd ../.. && grep -q 'Primary active workstream: \`features/mcp_onboarding/\`' plans/PLAN_STATUS.md`
 - [ ] (CODE) Feature specs exist.
   - Verify: `test -f FEATURE_SPEC.md && test -f FEATURE_TECHNICAL_SPEC.md`
 - [ ] (CODE) Web Drizzle config exists before schema work starts.

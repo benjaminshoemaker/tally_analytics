@@ -1,15 +1,15 @@
 # Plan Status
 
-Current plan: `features/mcp_onboarding/`
+Primary active workstream: `features/mcp_onboarding/`
 Current type: `feature`
 Current stage: `feature-plan`
 Current status: `active`
-Last updated: 2026-05-06
-Updated by: /feature-plan mcp_onboarding
+Last updated: 2026-05-09
+Updated by: Codex MCP primary onboarding surface update
 
-Rule: Agents may implement only the Current plan above. Archived, rejected, abandoned, superseded, completed, and research-only plans are context only.
+Rule: This manifest orients agents to active and planned work; it is not a single-plan execution lock. Agents may implement any non-archived workstream that is explicitly requested by the human. Archived, rejected, abandoned, superseded, completed, and research-only plans remain context only unless the human explicitly revives them.
 
-## Current Scope
+## Primary Active Scope
 
 - What is being built: MCP-first analytics onboarding for Tally, starting with Codex, MCP OAuth, Next.js, and SDK-based patch bundles.
 - Source docs: `features/mcp_onboarding/DISCOVERY_NOTES.md`, `features/mcp_onboarding/FEATURE_SPEC.md`, `features/mcp_onboarding/FEATURE_TECHNICAL_SPEC.md`, `features/mcp_onboarding/EXECUTION_PLAN.md`
@@ -24,3 +24,7 @@ Rule: Agents may implement only the Current plan above. Archived, rejected, aban
 | `plans/archive/features/improved_metrics/` | feature | superseded | `features/mcp_onboarding/` | 2026-05-06 | V2 metrics plan, useful context only |
 | `plans/archive/features/stripe_integration/` | feature | completed |  | 2026-05-06 | Historical billing plan |
 | `features/mcp_onboarding/` | feature | active |  | 2026-05-06 | Current feature execution plan work |
+| `features/mcp_analytics_querying/` | feature | planned |  | 2026-05-09 | Planned feature and technical spec for MCP analytics read/query tools |
+| `features/mcp_primary_onboarding/` | feature | implemented |  | 2026-05-09 | Public-surface rewrite implemented by explicit human request; primary active workstream remains `features/mcp_onboarding/` |
+| `features/stripe_billing_verification/` | feature | planned |  | 2026-05-09 | Approved planned workstream for an agent-runnable Stripe billing verification harness |
+| `features/dashboard_pending_tasks/` | feature | planned |  | 2026-05-09 | Feature spec for answer-first dashboard questions and HITL pending analytics task creation |
