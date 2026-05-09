@@ -1,0 +1,26 @@
+{
+  "ok": false,
+  "provider": "real",
+  "artifactDir": "/Users/coding/Projects/fast_pr_analytics/tmp/stripe-billing-verification/moxwt3yo93f958",
+  "runId": "moxwt3yo93f958",
+  "stages": [
+    {
+      "name": "preflight",
+      "status": "passed",
+      "durationMs": 223
+    },
+    {
+      "name": "real-provider",
+      "status": "failed",
+      "durationMs": 64252,
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /subscribe|pay|start trial|continue/i }).first()\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" aria-label=\"Pay with card\" data-testid=\"card-accordion-item-button\" class=\"Button AccordionButton AccordionButton-open AccordionButton-expandedClickArea AccordionButton-expandedFocusArea Button--link Button--sm\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+    }
+  ],
+  "cleanup": {
+    "subscriptionCancelStatuses": [],
+    "customerDeleteStatuses": [
+      1
+    ]
+  },
+  "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /subscribe|pay|start trial|continue/i }).first()\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" aria-label=\"Pay with card\" data-testid=\"card-accordion-item-button\" class=\"Button AccordionButton AccordionButton-open AccordionButton-expandedClickArea AccordionButton-expandedFocusArea Button--link Button--sm\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+}

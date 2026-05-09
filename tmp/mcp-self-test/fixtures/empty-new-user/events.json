@@ -1,0 +1,6 @@
+{
+  "scenarioId": "empty-new-user",
+  "description": "A signed-in user with no projects.",
+  "generatedAt": "2026-05-07T19:48:47.936Z",
+  "events": []
+}

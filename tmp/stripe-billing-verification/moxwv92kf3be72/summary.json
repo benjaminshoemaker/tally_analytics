@@ -1,0 +1,26 @@
+{
+  "ok": false,
+  "provider": "real",
+  "artifactDir": "/Users/coding/Projects/fast_pr_analytics/tmp/stripe-billing-verification/moxwv92kf3be72",
+  "runId": "moxwv92kf3be72",
+  "stages": [
+    {
+      "name": "preflight",
+      "status": "passed",
+      "durationMs": 235
+    },
+    {
+      "name": "real-provider",
+      "status": "failed",
+      "durationMs": 123067,
+      "error": "page.waitForURL: Timeout 90000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+    }
+  ],
+  "cleanup": {
+    "subscriptionCancelStatuses": [],
+    "customerDeleteStatuses": [
+      1
+    ]
+  },
+  "error": "page.waitForURL: Timeout 90000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================"
+}

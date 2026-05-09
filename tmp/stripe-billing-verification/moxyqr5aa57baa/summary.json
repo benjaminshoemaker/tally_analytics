@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "provider": "local",
+  "artifactDir": "/Users/coding/Projects/fast_pr_analytics/tmp/stripe-billing-verification/moxyqr5aa57baa",
+  "runId": "moxyqr5aa57baa",
+  "stages": [
+    {
+      "name": "preflight",
+      "status": "passed",
+      "durationMs": 236
+    },
+    {
+      "name": "deterministic-local",
+      "status": "passed",
+      "durationMs": 11458
+    }
+  ],
+  "cleanup": {},
+  "local": {
+    "freeUser": "2b331e39-ded0-4b51-bea2-f02bcde4b5eb",
+    "paidUser": "e730df13-fea0-4245-94ae-4debf2c6e127",
+    "webhookUser": "f4bd9a9a-3513-4306-9922-01f4958b98c0",
+    "projectId": "proj_sbv_moxyqr5a"
+  }
+}

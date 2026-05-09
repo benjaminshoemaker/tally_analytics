@@ -1,0 +1,5 @@
+Applied the Tally MCP patch after `git apply --check` passed.
+
+Project ID: `proj_xQEyew_vKjbhqm8`  
+Dashboard URL: `http://localhost:3000/projects/proj_xQEyew_vKjbhqm8`
+

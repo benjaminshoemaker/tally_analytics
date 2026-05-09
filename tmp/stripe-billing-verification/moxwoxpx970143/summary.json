@@ -1,0 +1,21 @@
+{
+  "ok": false,
+  "provider": "real",
+  "artifactDir": "/Users/coding/Projects/fast_pr_analytics/tmp/stripe-billing-verification/moxwoxpx970143",
+  "runId": "moxwoxpx970143",
+  "stages": [
+    {
+      "name": "preflight",
+      "status": "passed",
+      "durationMs": 272
+    },
+    {
+      "name": "real-provider",
+      "status": "failed",
+      "durationMs": 51072,
+      "error": "Unable to fill Stripe Checkout field input[name=\"cardNumber\"] | input[autocomplete=\"cc-number\"] | input[placeholder*=\"1234\"]: "
+    }
+  ],
+  "cleanup": {},
+  "error": "Unable to fill Stripe Checkout field input[name=\"cardNumber\"] | input[autocomplete=\"cc-number\"] | input[placeholder*=\"1234\"]: "
+}

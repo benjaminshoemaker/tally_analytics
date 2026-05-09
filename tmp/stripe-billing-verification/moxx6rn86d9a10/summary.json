@@ -1,0 +1,21 @@
+{
+  "ok": false,
+  "provider": "local",
+  "artifactDir": "/Users/coding/Projects/fast_pr_analytics/tmp/stripe-billing-verification/moxx6rn86d9a10",
+  "runId": "moxx6rn86d9a10",
+  "stages": [
+    {
+      "name": "preflight",
+      "status": "passed",
+      "durationMs": 336
+    },
+    {
+      "name": "deterministic-local",
+      "status": "failed",
+      "durationMs": 13492,
+      "error": "Project detail API failed: 500"
+    }
+  ],
+  "cleanup": {},
+  "error": "Project detail API failed: 500"
+}

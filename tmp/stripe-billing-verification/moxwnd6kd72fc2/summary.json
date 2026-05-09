@@ -1,0 +1,21 @@
+{
+  "ok": false,
+  "provider": "local",
+  "artifactDir": "/Users/coding/Projects/fast_pr_analytics/tmp/stripe-billing-verification/moxwnd6kd72fc2",
+  "runId": "moxwnd6kd72fc2",
+  "stages": [
+    {
+      "name": "preflight",
+      "status": "passed",
+      "durationMs": 233
+    },
+    {
+      "name": "deterministic-local",
+      "status": "failed",
+      "durationMs": 10330,
+      "error": "reconcile expected 200, got 400"
+    }
+  ],
+  "cleanup": {},
+  "error": "reconcile expected 200, got 400"
+}

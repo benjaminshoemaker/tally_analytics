@@ -24,7 +24,7 @@ Rule: This manifest orients agents to active and planned work; it is not a singl
 | `plans/archive/features/improved_metrics/` | feature | superseded | `features/mcp_onboarding/` | 2026-05-06 | V2 metrics plan, useful context only |
 | `plans/archive/features/stripe_integration/` | feature | completed |  | 2026-05-06 | Historical billing plan |
 | `features/mcp_onboarding/` | feature | active |  | 2026-05-06 | Current feature execution plan work |
-| `features/mcp_analytics_querying/` | feature | planned |  | 2026-05-09 | Planned feature and technical spec for MCP analytics read/query tools |
+| `features/mcp_analytics_querying/` | feature | planned |  | 2026-05-09 | Planned feature, technical spec, flow verification plan, and execution plan for MCP analytics read/query tools |
 | `features/mcp_primary_onboarding/` | feature | implemented |  | 2026-05-09 | Public-surface rewrite implemented by explicit human request; primary active workstream remains `features/mcp_onboarding/` |
 | `features/stripe_billing_verification/` | feature | planned |  | 2026-05-09 | Approved planned workstream for an agent-runnable Stripe billing verification harness |
-| `features/dashboard_pending_tasks/` | feature | planned |  | 2026-05-09 | Feature spec for answer-first dashboard questions and HITL pending analytics task creation |
+| `features/dashboard_pending_tasks/` | feature | planned |  | 2026-05-09 | Feature, technical spec, flow verification plan, and execution plan for answer-first dashboard questions and HITL pending analytics task creation |

@@ -35,6 +35,12 @@ The GitHub template generation exports `TallyAnalytics` but the generated import
 ### SDK Bundle Size Limit Exceeded (Phase 2)
 - [ ] **[P1 / Medium]** Reduce SDK bundle size below 3KB gzipped — Currently 4556 bytes; slim bundle or split optional exports
 
+### Stripe Webhook Event Filter Audit
+The billing verification harness filters the Stripe CLI listener to billing-relevant events. During an earlier unfiltered real-provider run, a `charge.succeeded` delivery received a 404 from the local Next dev server even though the billing flow itself succeeded. Audit the production webhook endpoint/event subscription settings before broadening listener coverage.
+
+**Source:** Stripe billing verification harness implementation (2026-05-09)
+**Priority:** Low — not blocking the focused billing harness, but worth checking before enabling broader Stripe webhook events
+
 ---
 
 ## 🟠 Revenue & Monetization
