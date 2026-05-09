@@ -87,7 +87,7 @@ function projectNotFoundResult(): AnalyticsServiceResultBase {
   };
 }
 
-function analyticsToolErrorResult(error: AnalyticsServiceResultBase): CallToolResult {
+function analyticsToolErrorResult(error: AnalyticsServiceResultBase & Partial<Record<string, unknown>>): CallToolResult {
   return toAnalyticsToolResult(error as AnalyticsServiceResultBase & Record<string, unknown>);
 }
 
@@ -247,6 +247,110 @@ async function handleTopReferrers(input: unknown, extra: { authInfo?: unknown })
   return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
 }
 
+async function handleListEvents(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const period = parseAnalyticsToolPeriod(parsedInput.period);
+  if (!period.ok) return analyticsToolErrorResult(period.error);
+  const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 50, min: 1, max: 100 });
+  if (!limit.ok) return analyticsToolErrorResult(limit.error);
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
+
+  const { listEvents } = await import("../../analytics/service");
+  const result = await listEvents({ userId, projectId, period: period.value });
+  if ("events" in result) {
+    return toAnalyticsToolResult({
+      ...result,
+      events: result.events.slice(0, limit.value),
+    } as AnalyticsServiceResultBase & Record<string, unknown>);
+  }
+
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+async function handleEventSchema(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const period = parseAnalyticsToolPeriod(parsedInput.period);
+  if (!period.ok) return analyticsToolErrorResult(period.error);
+  const eventName = parseAnalyticsToolEventName(parsedInput.eventName);
+  if (!eventName.ok) return analyticsToolErrorResult(eventName.error);
+  const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 50, min: 1, max: 100 });
+  if (!limit.ok) return analyticsToolErrorResult(limit.error);
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
+
+  const { getEventSchema } = await import("../../analytics/service");
+  const result = await getEventSchema({ userId, projectId, period: period.value, eventName: eventName.value });
+  if (result.status === "ok") {
+    return toAnalyticsToolResult({
+      ...result,
+      event: {
+        ...result.event,
+        properties: result.event.properties.slice(0, limit.value),
+      },
+    } as AnalyticsServiceResultBase & Record<string, unknown>);
+  }
+
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+async function handlePathsToEvent(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const period = parseAnalyticsToolPeriod(parsedInput.period);
+  if (!period.ok) return analyticsToolErrorResult(period.error);
+  const targetEvent = parseAnalyticsToolEventName(parsedInput.targetEvent);
+  if (!targetEvent.ok) return analyticsToolErrorResult(targetEvent.error);
+  const maxSteps = parseAnalyticsToolSteps(parsedInput.maxSteps);
+  if (!maxSteps.ok) return analyticsToolErrorResult(maxSteps.error);
+  const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 10, min: 1, max: 50 });
+  if (!limit.ok) return analyticsToolErrorResult(limit.error);
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
+
+  const { getPathsToEvent } = await import("../../analytics/service");
+  const result = await getPathsToEvent({
+    userId,
+    projectId,
+    period: period.value,
+    targetEvent: targetEvent.value,
+    maxSteps: maxSteps.value,
+    limit: limit.value,
+  });
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+async function handleSuggestNextEvents(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult({ ...unauthorizedAnalyticsResult(), createsPendingTasks: false });
+
+  const parsedInput = inputRecord(input);
+  const period = parseAnalyticsToolPeriod(parsedInput.period);
+  if (!period.ok) return analyticsToolErrorResult({ ...period.error, createsPendingTasks: false });
+  const goal = parseAnalyticsToolGoal(parsedInput.goal);
+  if (!goal.ok) return analyticsToolErrorResult({ ...goal.error, createsPendingTasks: false });
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) {
+    return analyticsToolErrorResult({ ...projectNotFoundResult(), createsPendingTasks: false });
+  }
+
+  const { suggestNextEvents } = await import("../../analytics/service");
+  const result = await suggestNextEvents({ userId, projectId, period: period.value, goal: goal.value });
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
 export function registerAnalyticsTools(server: McpServer): void {
   server.registerTool(
     "list_projects",
@@ -323,6 +427,50 @@ export function registerAnalyticsTools(server: McpServer): void {
       annotations: READ_ONLY_ANNOTATIONS,
     },
     handleTopReferrers,
+  );
+
+  server.registerTool(
+    "list_events",
+    {
+      title: "List Analytics Events",
+      description: "List observed event names for one owned project.",
+      ...analyticsToolSchemas.listEvents,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleListEvents,
+  );
+
+  server.registerTool(
+    "get_event_schema",
+    {
+      title: "Get Event Schema",
+      description: "Summarize safe observed properties for one exact event name.",
+      ...analyticsToolSchemas.getEventSchema,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleEventSchema,
+  );
+
+  server.registerTool(
+    "get_paths_to_event",
+    {
+      title: "Get Paths To Event",
+      description: "Summarize page paths that occurred before one exact target event.",
+      ...analyticsToolSchemas.getPathsToEvent,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handlePathsToEvent,
+  );
+
+  server.registerTool(
+    "suggest_next_events",
+    {
+      title: "Suggest Next Analytics Events",
+      description: "Suggest read-only deterministic analytics events to add next.",
+      ...analyticsToolSchemas.suggestNextEvents,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleSuggestNextEvents,
   );
 }
 

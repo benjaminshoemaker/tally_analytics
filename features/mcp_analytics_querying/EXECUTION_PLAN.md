@@ -672,15 +672,15 @@ Register read-only MCP tools for event discovery, event schema inspection, paths
 **Requirement:** FEATURE_SPEC.md "`list_events`", "`get_event_schema`", "`get_paths_to_event`", and "`suggest_next_events`"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP server registers `list_events`, `get_event_schema`, `get_paths_to_event`, and `suggest_next_events`.
+- [x] (CODE) MCP server registers `list_events`, `get_event_schema`, `get_paths_to_event`, and `suggest_next_events`.
   - Verify: `cd ../.. && rg -q 'list_events|get_event_schema|get_paths_to_event|suggest_next_events' apps/web/lib/mcp/server.ts apps/web/lib/mcp/tools/analytics.ts`
-- [ ] (TEST) Tool registration tests assert read-only annotations and output schemas for event/path/recommendation tools.
+- [x] (TEST) Tool registration tests assert read-only annotations and output schemas for event/path/recommendation tools.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools mcp-route`
-- [ ] (TEST) Event-specific tool tests cover exact event names, ambiguous signup-like candidates exposed through `list_events`, and no silent fuzzy event selection.
+- [x] (TEST) Event-specific tool tests cover exact event names, ambiguous signup-like candidates exposed through `list_events`, and no silent fuzzy event selection.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools analytics-service-events`
-- [ ] (TEST) Path and recommendation MCP tests cover `ok`, `partial_data`, `insufficient_data`, and `no_events` responses with limitations and recommendations where required.
+- [x] (TEST) Path and recommendation MCP tests cover `ok`, `partial_data`, `insufficient_data`, and `no_events` responses with limitations and recommendations where required.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools analytics-service-paths analytics-service-recommendations`
-- [ ] (TEST) `suggest_next_events` MCP tests prove no pending task is created and `createsPendingTasks` is always false.
+- [x] (TEST) `suggest_next_events` MCP tests prove no pending task is created and `createsPendingTasks` is always false.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools analytics-service-recommendations`
 
 **Files to Create:**

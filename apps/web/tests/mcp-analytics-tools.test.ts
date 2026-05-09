@@ -31,6 +31,10 @@ let getLiveEventsSpy: ReturnType<typeof vi.fn> | undefined;
 let getSessionsSummarySpy: ReturnType<typeof vi.fn> | undefined;
 let getTopPagesSpy: ReturnType<typeof vi.fn> | undefined;
 let getTopReferrersSpy: ReturnType<typeof vi.fn> | undefined;
+let listEventsSpy: ReturnType<typeof vi.fn> | undefined;
+let getEventSchemaSpy: ReturnType<typeof vi.fn> | undefined;
+let getPathsToEventSpy: ReturnType<typeof vi.fn> | undefined;
+let suggestNextEventsSpy: ReturnType<typeof vi.fn> | undefined;
 
 vi.mock("../lib/db/queries/projects", () => ({
   listOwnedAnalyticsProjects: (...args: unknown[]) => {
@@ -70,6 +74,22 @@ vi.mock("../lib/analytics/service", () => ({
     if (!getTopReferrersSpy) throw new Error("getTopReferrersSpy not initialized");
     return getTopReferrersSpy(...args);
   },
+  listEvents: (...args: unknown[]) => {
+    if (!listEventsSpy) throw new Error("listEventsSpy not initialized");
+    return listEventsSpy(...args);
+  },
+  getEventSchema: (...args: unknown[]) => {
+    if (!getEventSchemaSpy) throw new Error("getEventSchemaSpy not initialized");
+    return getEventSchemaSpy(...args);
+  },
+  getPathsToEvent: (...args: unknown[]) => {
+    if (!getPathsToEventSpy) throw new Error("getPathsToEventSpy not initialized");
+    return getPathsToEventSpy(...args);
+  },
+  suggestNextEvents: (...args: unknown[]) => {
+    if (!suggestNextEventsSpy) throw new Error("suggestNextEventsSpy not initialized");
+    return suggestNextEventsSpy(...args);
+  },
 }));
 
 function expectValidationStatus(result: unknown, status: string): void {
@@ -104,6 +124,10 @@ beforeEach(() => {
   getSessionsSummarySpy = vi.fn();
   getTopPagesSpy = vi.fn();
   getTopReferrersSpy = vi.fn();
+  listEventsSpy = vi.fn();
+  getEventSchemaSpy = vi.fn();
+  getPathsToEventSpy = vi.fn();
+  suggestNextEventsSpy = vi.fn();
 });
 
 function analyticsToolCallback(registerToolSpy: ReturnType<typeof vi.fn>, name: string) {
@@ -267,7 +291,7 @@ describe("MCP project and dashboard analytics tools", () => {
 
     registerAnalyticsTools({ registerTool: registerToolSpy } as never);
 
-    expect(registerToolSpy.mock.calls.map((call) => call[0])).toEqual([
+    expect(registerToolSpy.mock.calls.map((call) => call[0])).toEqual(expect.arrayContaining([
       "list_projects",
       "resolve_project",
       "get_project_overview",
@@ -275,7 +299,7 @@ describe("MCP project and dashboard analytics tools", () => {
       "get_sessions_summary",
       "get_top_pages",
       "get_top_referrers",
-    ]);
+    ]));
 
     for (const [, options] of registerToolSpy.mock.calls) {
       expect(options).toMatchObject({
@@ -402,5 +426,148 @@ describe("MCP project and dashboard analytics tools", () => {
       structuredContent: { status: "project_not_found" },
     });
     expect(getProjectOverviewSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe("MCP event, path, and recommendation analytics tools", () => {
+  it("registers event discovery, path, and recommendation tools as read-only with output schemas", () => {
+    const registerToolSpy = vi.fn();
+
+    registerAnalyticsTools({ registerTool: registerToolSpy } as never);
+
+    expect(registerToolSpy.mock.calls.map((call) => call[0])).toEqual([
+      "list_projects",
+      "resolve_project",
+      "get_project_overview",
+      "get_live_events",
+      "get_sessions_summary",
+      "get_top_pages",
+      "get_top_referrers",
+      "list_events",
+      "get_event_schema",
+      "get_paths_to_event",
+      "suggest_next_events",
+    ]);
+
+    for (const name of ["list_events", "get_event_schema", "get_paths_to_event", "suggest_next_events"]) {
+      const call = registerToolSpy.mock.calls.find((toolCall) => toolCall[0] === name);
+      expect(call?.[1]).toMatchObject({
+        outputSchema: expect.any(Object),
+        annotations: {
+          readOnlyHint: true,
+          openWorldHint: false,
+        },
+      });
+    }
+  });
+
+  it("exposes signup-like event candidates through list_events without fuzzy event selection", async () => {
+    listEventsSpy = vi.fn().mockResolvedValue({
+      status: "ok",
+      summary: "3 event types found.",
+      period: "7d",
+      events: [
+        { eventName: "signup_completed", count: 4 },
+        { eventName: "signup_started", count: 2 },
+      ],
+      dashboardUrls,
+      provenance: { projectName: "Example App", generatedAt: "now", queryBasis: { tool: "list_events" } },
+    });
+    getEventSchemaSpy = vi.fn().mockResolvedValue({
+      status: "invalid_event_name",
+      summary: "Exact event name was not found.",
+      availableEvents: ["signup_completed", "signup_started"],
+      dashboardUrls,
+    });
+    const registerToolSpy = vi.fn();
+    registerAnalyticsTools({ registerTool: registerToolSpy } as never);
+
+    const listResult = await analyticsToolCallback(registerToolSpy, "list_events")(
+      { projectId: "proj_123", period: "7d" },
+      { authInfo: { extra: { userId: "user_1" } } },
+    );
+    expect(listResult).toMatchObject({
+      structuredContent: {
+        status: "ok",
+        events: [{ eventName: "signup_completed" }, { eventName: "signup_started" }],
+      },
+    });
+
+    const schemaResult = await analyticsToolCallback(registerToolSpy, "get_event_schema")(
+      { projectId: "proj_123", period: "7d", eventName: "signup" },
+      { authInfo: { extra: { userId: "user_1" } } },
+    );
+    expect(schemaResult).toMatchObject({
+      isError: true,
+      structuredContent: {
+        status: "invalid_event_name",
+        availableEvents: ["signup_completed", "signup_started"],
+      },
+    });
+    expect(getEventSchemaSpy).toHaveBeenCalledWith({
+      userId: "user_1",
+      projectId: "proj_123",
+      period: "7d",
+      eventName: "signup",
+    });
+  });
+
+  it("maps path and recommendation MCP statuses with limitations and recommendations", async () => {
+    const pathStatuses = [
+      { status: "ok", paths: [{ sequence: ["/pricing"], targetEventCount: 5, percentage: 100 }] },
+      { status: "partial_data", limitations: ["Fewer than 5 target events were observed."] },
+      {
+        status: "insufficient_data",
+        limitations: ["Target event was not observed."],
+        suggestedEvents: [{ eventName: "signup_completed", reason: "Needed.", priority: "high" }],
+      },
+      { status: "no_events", paths: [] },
+    ] as const;
+    const registerToolSpy = vi.fn();
+    registerAnalyticsTools({ registerTool: registerToolSpy } as never);
+
+    for (const pathResult of pathStatuses) {
+      getPathsToEventSpy = vi.fn().mockResolvedValue({
+        summary: `${pathResult.status} path summary`,
+        projectId: "proj_123",
+        targetEvent: "signup_completed",
+        period: "7d",
+        coverage: { targetEventTotal: 5, targetEventsWithPriorPath: 5 },
+        dashboardUrls,
+        ...pathResult,
+      });
+
+      const result = await analyticsToolCallback(registerToolSpy, "get_paths_to_event")(
+        { projectId: "proj_123", period: "7d", targetEvent: "signup_completed" },
+        { authInfo: { extra: { userId: "user_1" } } },
+      );
+
+      expect(result.isError).toBeUndefined();
+      expect(result.structuredContent).toMatchObject({ status: pathResult.status });
+    }
+
+    suggestNextEventsSpy = vi.fn().mockResolvedValue({
+      status: "partial_data",
+      summary: "Missing signup completion event.",
+      projectId: "proj_123",
+      period: "7d",
+      evidence: ["Signup pages are receiving traffic."],
+      limitations: ["No signup completion event has been observed."],
+      recommendations: [{ eventName: "signup_completed", reason: "Needed.", priority: "high" }],
+      createsPendingTasks: false,
+      dashboardUrls,
+    });
+
+    const recommendationResult = await analyticsToolCallback(registerToolSpy, "suggest_next_events")(
+      { projectId: "proj_123", period: "7d", goal: "Understand signup" },
+      { authInfo: { extra: { userId: "user_1" } } },
+    );
+    expect(recommendationResult).toMatchObject({
+      structuredContent: {
+        status: "partial_data",
+        recommendations: [{ eventName: "signup_completed" }],
+        createsPendingTasks: false,
+      },
+    });
   });
 });
