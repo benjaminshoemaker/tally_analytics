@@ -1,3 +1,5 @@
+import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+
 import { parseAnalyticsPeriod, type AnalyticsPeriod } from "../../analytics/periods";
 import { boundAnalyticsString } from "../../analytics/urls";
 import type { AnalyticsErrorStatus, AnalyticsServiceResultBase } from "../../analytics/types";
@@ -13,6 +15,53 @@ function validationError(status: AnalyticsErrorStatus, summary: string): Analyti
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+const ANALYTICS_TOOL_ERROR_STATUSES = new Set([
+  "invalid_period",
+  "invalid_limit",
+  "invalid_since",
+  "invalid_goal",
+  "invalid_event_name",
+  "invalid_steps",
+  "invalid_repo_context",
+  "project_not_found",
+  "unauthorized",
+  "service_error",
+]);
+
+function redactedToolText(value: unknown): string {
+  const bounded = boundAnalyticsString(value, 600);
+  if (!bounded) return "Tally analytics result returned.";
+  if (/\b(select|insert|update|delete)\b[\s\S]+\b(from|into|set|where)\b/i.test(bounded)) {
+    return "Analytics query failed.";
+  }
+
+  return bounded
+    .replace(/Bearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [redacted]")
+    .replace(/(oauth|access|refresh)[_-]?token\s*[:=]\s*\S+/gi, "$1 token=[redacted]")
+    .replace(/TINYBIRD[A-Z0-9_]*\s*[:=]\s*\S+/gi, "TINYBIRD_[redacted]")
+    .replace(/github(?:Installation)?Id\s*[:=]\s*\S+/gi, "githubId=[redacted]")
+    .replace(/billing\w*\s*[:=]\s*\S+/gi, "billing=[redacted]");
+}
+
+export function isAnalyticsToolErrorStatus(status: string): boolean {
+  return ANALYTICS_TOOL_ERROR_STATUSES.has(status);
+}
+
+export function toAnalyticsToolResult(
+  result: AnalyticsServiceResultBase & Record<string, unknown>,
+): CallToolResult {
+  const toolResult: CallToolResult = {
+    structuredContent: result,
+    content: [{ type: "text", text: redactedToolText(result.summary) }],
+  };
+
+  if (isAnalyticsToolErrorStatus(result.status)) {
+    toolResult.isError = true;
+  }
+
+  return toolResult;
 }
 
 export function unauthorizedAnalyticsResult(): AnalyticsServiceResultBase {

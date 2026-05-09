@@ -17,6 +17,7 @@ import {
   parseAnalyticsToolSince,
   parseAnalyticsToolSteps,
   parseResolveProjectRepoInput,
+  toAnalyticsToolResult,
   unauthorizedAnalyticsResult,
 } from "../lib/mcp/tools/analytics";
 import { userIdFromAuth } from "../lib/mcp/tools/auth";
@@ -95,5 +96,81 @@ describe("MCP analytics auth and schemas", () => {
       }),
       "invalid_repo_context",
     );
+  });
+});
+
+describe("MCP analytics result mapping", () => {
+  it("maps domain success statuses without setting isError", () => {
+    for (const status of [
+      "ok",
+      "no_projects",
+      "no_events",
+      "partial_data",
+      "insufficient_data",
+      "no_match",
+      "multiple_matches",
+    ] as const) {
+      const result = toAnalyticsToolResult({ status, summary: `${status} summary` });
+
+      expect(result.isError).toBeUndefined();
+      expect(result.structuredContent).toMatchObject({ status, summary: `${status} summary` });
+      expect(result.content).toEqual([{ type: "text", text: `${status} summary` }]);
+    }
+  });
+
+  it("sets isError for invalid input, unauthorized, project-not-found, and service-error statuses", () => {
+    for (const status of [
+      "invalid_period",
+      "invalid_limit",
+      "invalid_since",
+      "invalid_goal",
+      "invalid_event_name",
+      "invalid_steps",
+      "invalid_repo_context",
+      "unauthorized",
+      "project_not_found",
+      "service_error",
+    ] as const) {
+      const result = toAnalyticsToolResult({ status, summary: `${status} summary` });
+
+      expect(result.isError).toBe(true);
+      expect(result.structuredContent).toMatchObject({ status });
+    }
+  });
+
+  it("maps missing MCP auth to structured unauthorized", () => {
+    const result = toAnalyticsToolResult(unauthorizedAnalyticsResult());
+
+    expect(result).toMatchObject({
+      isError: true,
+      structuredContent: {
+        status: "unauthorized",
+        summary: "Authentication is required before querying Tally analytics.",
+      },
+      content: [{ type: "text", text: "Authentication is required before querying Tally analytics." }],
+    });
+  });
+
+  it("keeps result text compact and away from secrets or raw query details", () => {
+    const result = toAnalyticsToolResult({
+      status: "service_error",
+      summary:
+        "Bearer oauth-secret TINYBIRD_TOKEN=tb-secret SELECT * FROM events WHERE githubInstallationId=123 billingPlan=pro",
+      oauthToken: "oauth-secret",
+      tinybirdToken: "tb-secret",
+      rawSql: "SELECT * FROM events",
+      githubInstallationId: 123,
+      billingPlan: "pro",
+      privateSourceContent: "source code",
+    });
+    const text = result.content[0]?.type === "text" ? result.content[0].text : "";
+
+    expect(text).toBe("Analytics query failed.");
+    expect(text).not.toContain("oauth-secret");
+    expect(text).not.toContain("tb-secret");
+    expect(text).not.toContain("SELECT * FROM events");
+    expect(text).not.toContain("githubInstallationId=123");
+    expect(text).not.toContain("billingPlan=pro");
+    expect(text).not.toContain("source code");
   });
 });

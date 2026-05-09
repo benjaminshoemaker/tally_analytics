@@ -583,15 +583,15 @@ Implement the shared MCP result adapter that places service data in `structuredC
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Status Mapping"; FEATURE_SPEC.md "Response Design"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `toAnalyticsToolResult` maps service results into MCP `structuredContent` and `content[{ type: "text" }]`.
+- [x] (CODE) `toAnalyticsToolResult` maps service results into MCP `structuredContent` and `content[{ type: "text" }]`.
   - Verify: `cd ../.. && rg -q 'toAnalyticsToolResult|structuredContent|content' apps/web/lib/mcp/tools/analytics.ts`
-- [ ] (TEST) Domain success statuses do not set `isError`.
+- [x] (TEST) Domain success statuses do not set `isError`.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
-- [ ] (TEST) Invalid input, unauthorized, project-not-found, and service-error statuses set `isError: true`.
+- [x] (TEST) Invalid input, unauthorized, project-not-found, and service-error statuses set `isError: true`.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
-- [ ] (TEST) Missing `extra.authInfo.extra.userId` returns structured `unauthorized`.
+- [x] (TEST) Missing `extra.authInfo.extra.userId` returns structured `unauthorized`.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
-- [ ] (TEST) Result text never includes OAuth tokens, Tinybird credentials, raw SQL, GitHub installation ids, billing fields, or private source content.
+- [x] (TEST) Result text never includes OAuth tokens, Tinybird credentials, raw SQL, GitHub installation ids, billing fields, or private source content.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
 
 **Files to Create:**
