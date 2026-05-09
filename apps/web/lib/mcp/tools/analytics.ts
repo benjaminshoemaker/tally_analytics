@@ -1,9 +1,12 @@
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 import { parseAnalyticsPeriod, type AnalyticsPeriod } from "../../analytics/periods";
 import { boundAnalyticsString } from "../../analytics/urls";
 import type { AnalyticsErrorStatus, AnalyticsServiceResultBase } from "../../analytics/types";
-import type { ResolveProjectRepoInput } from "../../db/queries/projects";
+import type { OwnedAnalyticsProject, ResolveProjectRepoInput } from "../../db/queries/projects";
+import { analyticsToolSchemas } from "./analytics-schemas";
+import { userIdFromAuth } from "./auth";
 
 export type AnalyticsToolValidationResult<T> =
   | { ok: true; value: T }
@@ -62,6 +65,265 @@ export function toAnalyticsToolResult(
   }
 
   return toolResult;
+}
+
+const READ_ONLY_ANNOTATIONS = {
+  readOnlyHint: true,
+  openWorldHint: false,
+} as const;
+
+function inputRecord(input: unknown): Record<string, unknown> {
+  return isRecord(input) ? input : {};
+}
+
+function projectIdFromInput(input: Record<string, unknown>): string {
+  return typeof input.projectId === "string" ? input.projectId : "";
+}
+
+function projectNotFoundResult(): AnalyticsServiceResultBase {
+  return {
+    status: "project_not_found",
+    summary: "Project not found.",
+  };
+}
+
+function analyticsToolErrorResult(error: AnalyticsServiceResultBase): CallToolResult {
+  return toAnalyticsToolResult(error as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+function toolProject(project: OwnedAnalyticsProject): Record<string, unknown> {
+  return {
+    id: project.id,
+    name: project.displayName,
+    status: project.status,
+    source: project.source,
+    lastEventAt: project.lastEventAt ? project.lastEventAt.toISOString() : null,
+    dashboardUrls: project.dashboardUrls,
+  };
+}
+
+async function requireOwnedProject(userId: string, projectId: string): Promise<boolean> {
+  const { getOwnedAnalyticsProject } = await import("../../db/queries/projects");
+  return Boolean(await getOwnedAnalyticsProject({ userId, projectId }));
+}
+
+async function handleListProjects(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 20, min: 1, max: 100 });
+  if (!limit.ok) return analyticsToolErrorResult(limit.error);
+
+  const { listOwnedAnalyticsProjects } = await import("../../db/queries/projects");
+  const projects = await listOwnedAnalyticsProjects({ userId, limit: limit.value });
+  return toAnalyticsToolResult({
+    status: projects.length === 0 ? "no_projects" : "ok",
+    summary: projects.length === 0 ? "No Tally analytics projects were found." : `${projects.length} projects found.`,
+    projects: projects.map(toolProject),
+  });
+}
+
+async function handleResolveProject(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const repo = parseResolveProjectRepoInput(input);
+  if (!repo.ok) return analyticsToolErrorResult(repo.error);
+
+  const { resolveOwnedMcpProjectForRepoContext } = await import("../../db/queries/projects");
+  const result = await resolveOwnedMcpProjectForRepoContext({ userId, repo: repo.value });
+  if (result.status === "invalid_repo_context") {
+    return analyticsToolErrorResult({
+      status: "invalid_repo_context",
+      summary: `Invalid repo context: ${result.reason}.`,
+    });
+  }
+  if (result.status === "no_match") {
+    return toAnalyticsToolResult({
+      status: "no_match",
+      summary: "No owned Tally analytics project matched this repo context.",
+    });
+  }
+  if (result.status === "multiple_matches") {
+    return toAnalyticsToolResult({
+      status: "multiple_matches",
+      summary: `${result.candidates.length} owned projects matched this repo context.`,
+      candidates: result.candidates.map(toolProject),
+    });
+  }
+
+  return toAnalyticsToolResult({
+    status: "ok",
+    summary: `Resolved project ${result.project.displayName}.`,
+    project: toolProject(result.project),
+    match: result.match,
+  });
+}
+
+async function handleProjectOverview(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const period = parseAnalyticsToolPeriod(parsedInput.period);
+  if (!period.ok) return analyticsToolErrorResult(period.error);
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
+
+  const { getProjectOverview } = await import("../../analytics/service");
+  const result = await getProjectOverview({ userId, projectId, period: period.value });
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+async function handleLiveEvents(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 20, min: 1, max: 100 });
+  if (!limit.ok) return analyticsToolErrorResult(limit.error);
+  const since = parseAnalyticsToolSince(parsedInput.since);
+  if (!since.ok) return analyticsToolErrorResult(since.error);
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
+
+  const { getLiveEvents } = await import("../../analytics/service");
+  const result = await getLiveEvents({ userId, projectId, limit: limit.value, since: since.value });
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+async function handleSessionsSummary(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const period = parseAnalyticsToolPeriod(parsedInput.period);
+  if (!period.ok) return analyticsToolErrorResult(period.error);
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
+
+  const { getSessionsSummary } = await import("../../analytics/service");
+  const result = await getSessionsSummary({ userId, projectId, period: period.value });
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+async function handleTopPages(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const period = parseAnalyticsToolPeriod(parsedInput.period);
+  if (!period.ok) return analyticsToolErrorResult(period.error);
+  const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 10, min: 1, max: 50 });
+  if (!limit.ok) return analyticsToolErrorResult(limit.error);
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
+
+  const { getTopPages } = await import("../../analytics/service");
+  const result = await getTopPages({ userId, projectId, period: period.value, limit: limit.value });
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+async function handleTopReferrers(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+
+  const parsedInput = inputRecord(input);
+  const period = parseAnalyticsToolPeriod(parsedInput.period);
+  if (!period.ok) return analyticsToolErrorResult(period.error);
+  const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 10, min: 1, max: 50 });
+  if (!limit.ok) return analyticsToolErrorResult(limit.error);
+
+  const projectId = projectIdFromInput(parsedInput);
+  if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
+
+  const { getTopReferrers } = await import("../../analytics/service");
+  const result = await getTopReferrers({ userId, projectId, period: period.value, limit: limit.value });
+  return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
+}
+
+export function registerAnalyticsTools(server: McpServer): void {
+  server.registerTool(
+    "list_projects",
+    {
+      title: "List Tally Analytics Projects",
+      description: "List the authenticated user's Tally analytics projects.",
+      ...analyticsToolSchemas.listProjects,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleListProjects,
+  );
+
+  server.registerTool(
+    "resolve_project",
+    {
+      title: "Resolve Tally Analytics Project",
+      description: "Resolve the current repo/app context to one owned Tally analytics project.",
+      ...analyticsToolSchemas.resolveProject,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleResolveProject,
+  );
+
+  server.registerTool(
+    "get_project_overview",
+    {
+      title: "Get Project Analytics Overview",
+      description: "Summarize dashboard-compatible page view, session, top page, and referrer metrics.",
+      ...analyticsToolSchemas.getProjectOverview,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleProjectOverview,
+  );
+
+  server.registerTool(
+    "get_live_events",
+    {
+      title: "Get Live Analytics Events",
+      description: "Return recent analytics events for one owned project.",
+      ...analyticsToolSchemas.getLiveEvents,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleLiveEvents,
+  );
+
+  server.registerTool(
+    "get_sessions_summary",
+    {
+      title: "Get Sessions Summary",
+      description: "Summarize dashboard-compatible sessions for one owned project.",
+      ...analyticsToolSchemas.getSessionsSummary,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleSessionsSummary,
+  );
+
+  server.registerTool(
+    "get_top_pages",
+    {
+      title: "Get Top Pages",
+      description: "Return the most visited pages for one owned project.",
+      ...analyticsToolSchemas.getTopPages,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleTopPages,
+  );
+
+  server.registerTool(
+    "get_top_referrers",
+    {
+      title: "Get Top Referrers",
+      description: "Return the top traffic referrers for one owned project.",
+      ...analyticsToolSchemas.getTopReferrers,
+      annotations: READ_ONLY_ANNOTATIONS,
+    },
+    handleTopReferrers,
+  );
 }
 
 export function unauthorizedAnalyticsResult(): AnalyticsServiceResultBase {

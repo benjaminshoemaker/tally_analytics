@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_analytics_querying",
-  "last_updated": "2026-05-09T09:58:23.000Z",
+  "last_updated": "2026-05-09T10:02:17.000Z",
   "generated_by": "phase-start",
   "main": {
     "current_phase": 3,
@@ -248,7 +248,7 @@
         "name": "MCP Tool Surface",
         "status": "IN_PROGRESS",
         "tasks_total": 4,
-        "tasks_complete": 2,
+        "tasks_complete": 3,
         "started_at": "2026-05-09T09:52:30.000Z",
         "tasks": {
           "3.1.A": {
@@ -293,8 +293,20 @@
             }
           },
           "3.2.A": {
-            "status": "NOT_STARTED",
+            "status": "COMPLETE",
             "title": "Register Project And Dashboard-Semantics Analytics Tools",
+            "completed_at": "2026-05-09T10:02:17.000Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "5/5",
+              "commands": [
+                "rg -q 'list_projects|resolve_project|get_project_overview|get_live_events|get_sessions_summary|get_top_pages|get_top_referrers' apps/web/lib/mcp/server.ts apps/web/lib/mcp/tools/analytics.ts",
+                "pnpm --filter web test -- mcp-analytics-tools mcp-route",
+                "pnpm --filter web test -- mcp-project-queries",
+                "pnpm --filter web test -- mcp-route prepare-nextjs-install-patch",
+                "pnpm --filter web typecheck"
+              ]
+            },
             "failures": {
               "consecutive": 0,
               "verification_attempts": {},

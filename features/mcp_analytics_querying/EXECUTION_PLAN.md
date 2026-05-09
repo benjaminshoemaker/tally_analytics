@@ -629,15 +629,15 @@ Register read-only MCP tools for project discovery, repo resolution, project ove
 **Requirement:** FEATURE_SPEC.md "`list_projects`", "`resolve_project`", "`get_project_overview`", "`get_live_events`", "`get_sessions_summary`", "`get_top_pages`", and "`get_top_referrers`"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP server registers `list_projects`, `resolve_project`, `get_project_overview`, `get_live_events`, `get_sessions_summary`, `get_top_pages`, and `get_top_referrers`.
+- [x] (CODE) MCP server registers `list_projects`, `resolve_project`, `get_project_overview`, `get_live_events`, `get_sessions_summary`, `get_top_pages`, and `get_top_referrers`.
   - Verify: `cd ../.. && rg -q 'list_projects|resolve_project|get_project_overview|get_live_events|get_sessions_summary|get_top_pages|get_top_referrers' apps/web/lib/mcp/server.ts apps/web/lib/mcp/tools/analytics.ts`
-- [ ] (TEST) Tool registration tests assert titles, descriptions, input schemas, output schemas, and read-only annotations for these tools.
+- [x] (TEST) Tool registration tests assert titles, descriptions, input schemas, output schemas, and read-only annotations for these tools.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools mcp-route`
-- [ ] (TEST) Ownership tests prove project ids owned by another user return `project_not_found` before analytics queries run.
+- [x] (TEST) Ownership tests prove project ids owned by another user return `project_not_found` before analytics queries run.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools mcp-project-queries`
-- [ ] (TEST) Tool responses include dashboard URLs, compact summaries, and provenance fields for project-specific responses.
+- [x] (TEST) Tool responses include dashboard URLs, compact summaries, and provenance fields for project-specific responses.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
-- [ ] (TEST) Existing install MCP tool behavior still passes after analytics registration.
+- [x] (TEST) Existing install MCP tool behavior still passes after analytics registration.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route prepare-nextjs-install-patch`
 
 **Files to Create:**
