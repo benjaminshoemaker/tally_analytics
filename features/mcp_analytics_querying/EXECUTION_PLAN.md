@@ -500,15 +500,15 @@ Add deterministic recommendations based on observed pages, referrers, event name
 ### Phase 2 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) Event, path, recommendation, fixture, and scenario tests pass.
+- [x] (TEST) Event, path, recommendation, fixture, and scenario tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-events analytics-service-paths analytics-service-recommendations e2e-analytics-fixtures e2e-scenarios`
-- [ ] (TYPE) Web type checking passes after event service additions.
+- [x] (TYPE) Web type checking passes after event service additions.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] (TEST) Dashboard-compatible analytics route tests still pass.
+- [x] (TEST) Dashboard-compatible analytics route tests still pass.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-overview-api analytics-sessions-api analytics-live-feed-api`
-- [ ] (CODE) Production ingestion remains unchanged.
+- [x] (CODE) Production ingestion remains unchanged.
   - Verify: `cd ../.. && git diff --name-only -- apps/events packages/sdk | wc -l | tr -d ' ' | grep -q '^0$'`
 
 ---
