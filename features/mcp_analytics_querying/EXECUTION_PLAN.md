@@ -74,15 +74,15 @@ Create the common analytics utility modules that all service functions will use 
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Shared Analytics Service Layer"; FEATURE_SPEC.md "Analytics Semantics" and "Authorization And Privacy"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Shared period, URL, Tinybird, type, and service entrypoint files exist under `apps/web/lib/analytics/`.
+- [x] (CODE) Shared period, URL, Tinybird, type, and service entrypoint files exist under `apps/web/lib/analytics/`.
   - Verify: `cd ../.. && test -f apps/web/lib/analytics/periods.ts && test -f apps/web/lib/analytics/urls.ts && test -f apps/web/lib/analytics/tinybird.ts && test -f apps/web/lib/analytics/types.ts && test -f apps/web/lib/analytics/service.ts`
-- [ ] (TEST) Period tests cover only `24h`, `7d`, and `30d`, rolling UTC windows, `dataThrough`, and invalid periods.
+- [x] (TEST) Period tests cover only `24h`, `7d`, and `30d`, rolling UTC windows, `dataThrough`, and invalid periods.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-overview`
-- [ ] (TEST) Sanitization tests strip query strings/fragments, bound untrusted strings, and convert referrers to safe display values.
+- [x] (TEST) Sanitization tests strip query strings/fragments, bound untrusted strings, and convert referrers to safe display values.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-events analytics-service-recommendations`
-- [ ] (CODE) Tinybird wrappers map failures to sanitized `service_error` values without raw SQL, bearer tokens, stack traces, or credentials.
+- [x] (CODE) Tinybird wrappers map failures to sanitized `service_error` values without raw SQL, bearer tokens, stack traces, or credentials.
   - Verify: `cd ../.. && rg -q 'service_error' apps/web/lib/analytics/tinybird.ts && ! rg -n 'stack|TINYBIRD|Authorization|Bearer|rawSql' apps/web/lib/analytics/tinybird.ts`
-- [ ] (CODE) Shared response types include project provenance fields `projectName`, `generatedAt`, `dataWindow`, and `queryBasis`.
+- [x] (CODE) Shared response types include project provenance fields `projectName`, `generatedAt`, `dataWindow`, and `queryBasis`.
   - Verify: `cd ../.. && rg -q 'projectName|generatedAt|dataWindow|queryBasis' apps/web/lib/analytics/types.ts`
 
 **Files to Create:**

@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "project_name": "mcp_analytics_querying",
+  "last_updated": "2026-05-09T08:21:39.835Z",
+  "generated_by": "phase-start",
+  "main": {
+    "current_phase": 1,
+    "total_phases": 5,
+    "status": "IN_PROGRESS",
+    "phases": [
+      {
+        "number": 1,
+        "name": "Shared Analytics Foundation",
+        "status": "IN_PROGRESS",
+        "tasks_total": 4,
+        "tasks_complete": 1,
+        "started_at": "2026-05-09T08:15:54.348Z",
+        "tasks": {
+          "1.1.A": {
+            "status": "COMPLETE",
+            "title": "Add Analytics Period, URL, Provenance, And Tinybird Primitives",
+            "completed_at": "2026-05-09T08:21:39.835Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "5/5",
+              "commands": [
+                "pnpm --filter web test -- analytics-service-overview",
+                "pnpm --filter web test -- analytics-service-events analytics-service-recommendations",
+                "test -f apps/web/lib/analytics/periods.ts && test -f apps/web/lib/analytics/urls.ts && test -f apps/web/lib/analytics/tinybird.ts && test -f apps/web/lib/analytics/types.ts && test -f apps/web/lib/analytics/service.ts",
+                "rg -q 'service_error' apps/web/lib/analytics/tinybird.ts && ! rg -n 'stack|TINYBIRD|Authorization|Bearer|rawSql' apps/web/lib/analytics/tinybird.ts",
+                "rg -q 'projectName|generatedAt|dataWindow|queryBasis' apps/web/lib/analytics/types.ts",
+                "pnpm --filter web typecheck"
+              ]
+            },
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "1.1.B": {
+            "status": "NOT_STARTED",
+            "title": "Add Read-Only Project Access And Repo Resolution Helpers",
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "1.2.A": {
+            "status": "NOT_STARTED",
+            "title": "Extract Project Overview Service Without Changing Dashboard API Shape",
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "1.2.B": {
+            "status": "NOT_STARTED",
+            "title": "Extract Sessions, Live Events, Top Pages, And Top Referrers Services",
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          }
+        }
+      },
+      {
+        "number": 2,
+        "name": "Event Insight Services",
+        "status": "NOT_STARTED",
+        "tasks_total": 5,
+        "tasks_complete": 0
+      },
+      {
+        "number": 3,
+        "name": "MCP Tool Surface",
+        "status": "NOT_STARTED",
+        "tasks_total": 4,
+        "tasks_complete": 0
+      },
+      {
+        "number": 4,
+        "name": "MCP Flow Harness",
+        "status": "NOT_STARTED",
+        "tasks_total": 3,
+        "tasks_complete": 0
+      },
+      {
+        "number": 5,
+        "name": "Regression Hardening",
+        "status": "NOT_STARTED",
+        "tasks_total": 1,
+        "tasks_complete": 0
+      }
+    ]
+  }
+}
