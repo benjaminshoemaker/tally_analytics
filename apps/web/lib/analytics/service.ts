@@ -24,6 +24,9 @@ import type {
   AnalyticsServiceResultBase,
   AnalyticsEventSchema,
   AnalyticsEventSummary,
+  AnalyticsPathCoverage,
+  AnalyticsPathSummary,
+  AnalyticsRecommendation,
 } from './types';
 import type { AnalyticsDashboardUrls } from './urls';
 import {
@@ -155,6 +158,26 @@ export type EventSchemaErrorResult = AnalyticsServiceResultBase & {
 
 export type ListEventsResult = ListEventsSuccessResult | ProjectOverviewErrorResult;
 export type EventSchemaResult = EventSchemaSuccessResult | EventSchemaErrorResult;
+
+export type PathsToEventSuccessResult = AnalyticsServiceResultBase & {
+  status: 'ok' | 'partial_data' | 'no_events' | 'insufficient_data';
+  projectId: string;
+  targetEvent: string;
+  period: AnalyticsPeriod;
+  paths: AnalyticsPathSummary[];
+  coverage: AnalyticsPathCoverage;
+  suggestedEvents?: AnalyticsRecommendation[];
+  provenance: AnalyticsProvenance;
+  dashboardUrls: AnalyticsDashboardUrls;
+};
+
+export type PathsToEventErrorResult = AnalyticsServiceResultBase & {
+  status: 'invalid_event_name' | 'invalid_limit' | 'invalid_steps' | 'project_not_found' | 'service_error';
+  dashboardUrls?: AnalyticsDashboardUrls;
+  provenance?: AnalyticsProvenance;
+};
+
+export type PathsToEventResult = PathsToEventSuccessResult | PathsToEventErrorResult;
 
 export function createAnalyticsProvenance(params: {
   projectName: string;
@@ -547,6 +570,9 @@ const RAW_IDENTIFIER_PROPERTY_NAMES = new Set([
 
 type AnalyticsFixtureEventRow = Record<string, unknown> & { event_type: string; timestampMs: number };
 
+const PATH_TARGET_EVENT_QUERY_CAP = 1000;
+const PATH_PAGE_VIEW_QUERY_CAP = 10000;
+
 function fixtureEventRows(projectId: string): AnalyticsFixtureEventRow[] {
   return loadE2EAnalyticsEvents(projectId).flatMap((event) => {
     const eventType = event.event_type;
@@ -671,6 +697,157 @@ function buildEventSchema(
   };
 }
 
+function validateAnalyticsEventName(value: string): string | null {
+  const bounded = boundAnalyticsString(value, 129);
+  if (!bounded || bounded.length > 128) return null;
+  return bounded;
+}
+
+function eventSessionId(event: AnalyticsFixtureEventRow): string | null {
+  const sessionId = event.session_id;
+  return typeof sessionId === 'string' && sessionId.length > 0 ? sessionId : null;
+}
+
+function eventPath(event: AnalyticsFixtureEventRow): string {
+  return sanitizeAnalyticsPath(event.path);
+}
+
+function roundedAnalyticsPercentage(count: number, total: number): number {
+  if (total === 0) return 0;
+  return Math.round((count * 10000) / total) / 100;
+}
+
+function suggestedEventsForTarget(targetEvent: string): AnalyticsRecommendation[] {
+  const lower = targetEvent.toLowerCase();
+  const reason = lower.includes('signup')
+    ? 'Needed to answer which pages users visit before signup.'
+    : `Needed to answer which pages users visit before ${targetEvent}.`;
+
+  return [{ eventName: targetEvent, reason, priority: 'high' }];
+}
+
+function buildPathsToEvent(params: {
+  events: AnalyticsFixtureEventRow[];
+  targetEvent: string;
+  maxSteps: number;
+  limit: number;
+}): Pick<
+  PathsToEventSuccessResult,
+  'status' | 'summary' | 'paths' | 'coverage' | 'limitations' | 'suggestedEvents'
+> {
+  const events = [...params.events].sort((a, b) => a.timestampMs - b.timestampMs);
+  const coverage: AnalyticsPathCoverage = {
+    targetEventTotal: 0,
+    targetEventsWithPriorPath: 0,
+  };
+
+  if (events.length === 0) {
+    return {
+      status: 'no_events',
+      summary: 'No analytics events were found.',
+      paths: [],
+      coverage,
+    };
+  }
+
+  const targetEventsAll = events.filter((event) => event.event_type === params.targetEvent);
+  coverage.targetEventTotal = targetEventsAll.length;
+
+  if (targetEventsAll.length === 0) {
+    return {
+      status: 'insufficient_data',
+      summary: `${params.targetEvent} was not observed in the selected period.`,
+      paths: [],
+      coverage,
+      limitations: [`Target event "${params.targetEvent}" was not observed in the selected period.`],
+      suggestedEvents: suggestedEventsForTarget(params.targetEvent),
+    };
+  }
+
+  const pageViewsAll = events.filter((event) => event.event_type === 'page_view');
+  const targetCapHit = targetEventsAll.length > PATH_TARGET_EVENT_QUERY_CAP;
+  const pageViewCapHit = pageViewsAll.length > PATH_PAGE_VIEW_QUERY_CAP;
+  const targetEvents = targetEventsAll.slice(0, PATH_TARGET_EVENT_QUERY_CAP);
+  const pageViews = pageViewsAll.slice(0, PATH_PAGE_VIEW_QUERY_CAP);
+  const pageViewsBySession = new Map<string, AnalyticsFixtureEventRow[]>();
+
+  for (const pageView of pageViews) {
+    const sessionId = eventSessionId(pageView);
+    if (!sessionId) continue;
+    const current = pageViewsBySession.get(sessionId) ?? [];
+    current.push(pageView);
+    pageViewsBySession.set(sessionId, current);
+  }
+
+  const pathCounts = new Map<string, { sequence: string[]; count: number }>();
+
+  for (const targetEvent of targetEvents) {
+    const sessionId = eventSessionId(targetEvent);
+    if (!sessionId) continue;
+
+    const priorPaths = (pageViewsBySession.get(sessionId) ?? [])
+      .filter((event) => event.timestampMs < targetEvent.timestampMs)
+      .sort((a, b) => a.timestampMs - b.timestampMs)
+      .slice(-params.maxSteps)
+      .map(eventPath)
+      .filter((path) => path.length > 0);
+
+    if (priorPaths.length === 0) continue;
+
+    coverage.targetEventsWithPriorPath += 1;
+    const key = JSON.stringify(priorPaths);
+    const current = pathCounts.get(key) ?? { sequence: priorPaths, count: 0 };
+    current.count += 1;
+    pathCounts.set(key, current);
+  }
+
+  const paths = Array.from(pathCounts.values())
+    .sort(
+      (a, b) =>
+        b.count - a.count || a.sequence.join(' > ').localeCompare(b.sequence.join(' > '))
+    )
+    .slice(0, params.limit)
+    .map((path) => ({
+      sequence: path.sequence,
+      targetEventCount: path.count,
+      percentage: roundedAnalyticsPercentage(path.count, coverage.targetEventTotal),
+    }));
+
+  const coverageRate =
+    coverage.targetEventTotal === 0
+      ? 0
+      : coverage.targetEventsWithPriorPath / coverage.targetEventTotal;
+  const limitations: string[] = [];
+  if (coverage.targetEventTotal < 5) {
+    limitations.push('Fewer than 5 target events were observed in the selected period.');
+  }
+  if (coverageRate < 0.5) {
+    limitations.push('Fewer than 50% of target events had a prior page path in the same session.');
+  }
+  if (targetCapHit) {
+    limitations.push(
+      `Target event result was capped at ${PATH_TARGET_EVENT_QUERY_CAP} events.`
+    );
+  }
+  if (pageViewCapHit) {
+    limitations.push(`Page-view result was capped at ${PATH_PAGE_VIEW_QUERY_CAP} events.`);
+  }
+
+  const status: PathsToEventSuccessResult['status'] =
+    limitations.length > 0 ? 'partial_data' : 'ok';
+
+  return {
+    status,
+    summary:
+      status === 'ok'
+        ? `${paths.length} paths to ${params.targetEvent} found.`
+        : `Partial path data for ${params.targetEvent} found.`,
+    paths,
+    coverage,
+    limitations: limitations.length > 0 ? limitations : undefined,
+  };
+}
+
 async function listEventsFromTinybird(params: {
   projectId: string;
   dataWindow: ResolvedAnalyticsDataWindow;
@@ -746,6 +923,57 @@ async function eventSchemaFromTinybird(params: {
   });
 
   return buildEventSchema(params.eventName, events);
+}
+
+async function pathsToEventRowsFromTinybird(params: {
+  projectId: string;
+  targetEvent: string;
+  dataWindow: ResolvedAnalyticsDataWindow;
+}): Promise<AnalyticsFixtureEventRow[]> {
+  const client = createAnalyticsTinybirdClient();
+  const projectIdSql = escapeAnalyticsSqlString(params.projectId);
+  const targetEventSql = escapeAnalyticsSqlString(params.targetEvent);
+  const startSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.start));
+  const endSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.end));
+  const limit = PATH_TARGET_EVENT_QUERY_CAP + PATH_PAGE_VIEW_QUERY_CAP + 2;
+
+  const result = await runAnalyticsTinybirdQuery<{
+    session_id: string;
+    event_type: string;
+    path: string;
+    timestamp: string;
+  }>(
+    client,
+    'paths_to_event_events',
+    `
+      SELECT
+        ifNull(session_id, '') AS session_id,
+        event_type,
+        ifNull(path, '') AS path,
+        toString(timestamp) AS timestamp
+      FROM events
+      WHERE project_id = '${projectIdSql}'
+      AND (event_type = 'page_view' OR event_type = '${targetEventSql}')
+      AND timestamp >= toDateTime64('${startSql}', 3)
+      AND timestamp < toDateTime64('${endSql}', 3)
+      ORDER BY timestamp ASC
+      LIMIT ${limit}
+    `.trim()
+  );
+
+  return result.data.flatMap((row) => {
+    const timestampMs = Date.parse(normalizeTimestamp(row.timestamp));
+    if (!Number.isFinite(timestampMs)) return [];
+    return [
+      {
+        session_id: String(row.session_id ?? ''),
+        event_type: String(row.event_type ?? ''),
+        path: String(row.path ?? ''),
+        timestamp: normalizeTimestamp(row.timestamp),
+        timestampMs,
+      },
+    ];
+  });
 }
 
 async function queryLiveEventsFromTinybird(params: {
@@ -1230,6 +1458,94 @@ export async function getEventSchema(params: {
         projectName: project.displayName,
         tool: 'get_event_schema',
         semantics: 'event_schema',
+        dataWindow,
+        generatedAt: params.now,
+      }),
+    };
+  }
+}
+
+export async function getPathsToEvent(params: {
+  userId: string;
+  projectId: string;
+  period: AnalyticsPeriod;
+  targetEvent: string;
+  maxSteps?: number;
+  limit?: number;
+  now?: Date;
+}): Promise<PathsToEventResult> {
+  const targetEvent = validateAnalyticsEventName(params.targetEvent);
+  if (!targetEvent) {
+    return {
+      status: 'invalid_event_name',
+      summary: 'Target event name is required and must be 128 characters or fewer.',
+    };
+  }
+
+  const maxSteps = params.maxSteps ?? 5;
+  if (!Number.isInteger(maxSteps) || maxSteps < 1 || maxSteps > 10) {
+    return {
+      status: 'invalid_steps',
+      summary: 'Max steps must be an integer from 1 to 10.',
+    };
+  }
+
+  const limit = params.limit ?? 10;
+  if (!Number.isInteger(limit) || limit < 1 || limit > 50) {
+    return {
+      status: 'invalid_limit',
+      summary: 'Limit must be an integer from 1 to 50.',
+    };
+  }
+
+  const project = await getOwnedAnalyticsProject({
+    userId: params.userId,
+    projectId: params.projectId,
+  });
+
+  if (!project) {
+    return {
+      status: 'project_not_found',
+      summary: 'Project not found.',
+    };
+  }
+
+  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+
+  try {
+    const events = isE2EAnalyticsFixtureMode()
+      ? eventsInDataWindow(fixtureEventRows(params.projectId), dataWindow)
+      : await pathsToEventRowsFromTinybird({
+          projectId: params.projectId,
+          targetEvent,
+          dataWindow,
+        });
+    const result = buildPathsToEvent({ events, targetEvent, maxSteps, limit });
+
+    return {
+      ...result,
+      projectId: params.projectId,
+      targetEvent,
+      period: params.period,
+      provenance: createAnalyticsProvenance({
+        projectName: project.displayName,
+        tool: 'get_paths_to_event',
+        semantics: 'paths_to_event',
+        dataWindow,
+        generatedAt: params.now,
+      }),
+      dashboardUrls: project.dashboardUrls,
+    };
+  } catch (error) {
+    const serviceError = toAnalyticsServiceError(error);
+    return {
+      status: serviceError.status,
+      summary: serviceError.message,
+      dashboardUrls: project.dashboardUrls,
+      provenance: createAnalyticsProvenance({
+        projectName: project.displayName,
+        tool: 'get_paths_to_event',
+        semantics: 'paths_to_event',
         dataWindow,
         generatedAt: params.now,
       }),

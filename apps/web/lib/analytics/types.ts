@@ -71,6 +71,17 @@ export type AnalyticsEventSchema = {
   properties: AnalyticsEventProperty[];
 };
 
+export type AnalyticsPathSummary = {
+  sequence: string[];
+  targetEventCount: number;
+  percentage: number;
+};
+
+export type AnalyticsPathCoverage = {
+  targetEventTotal: number;
+  targetEventsWithPriorPath: number;
+};
+
 export type AnalyticsServiceResultBase = {
   status: AnalyticsStatus;
   summary: string;

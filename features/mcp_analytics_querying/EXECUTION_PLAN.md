@@ -422,15 +422,15 @@ Add a path reconstruction service that summarizes page paths before an exact tar
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "`get_paths_to_event`"; FEATURE_SPEC.md "Happy Path: Page Behavior Before Signup"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Shared service exports `getPathsToEvent`.
+- [x] (CODE) Shared service exports `getPathsToEvent`.
   - Verify: `cd ../.. && rg -q 'getPathsToEvent' apps/web/lib/analytics/service.ts`
-- [ ] (TEST) Path tests cover absent target event as `insufficient_data` with suggested events.
+- [x] (TEST) Path tests cover absent target event as `insufficient_data` with suggested events.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-paths`
-- [ ] (TEST) Path tests cover fewer than 5 target events and below-50-percent prior-path coverage as `partial_data`.
+- [x] (TEST) Path tests cover fewer than 5 target events and below-50-percent prior-path coverage as `partial_data`.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-paths`
-- [ ] (TEST) Path tests cover grouped path sequences sorted by count descending and sequence string ascending.
+- [x] (TEST) Path tests cover grouped path sequences sorted by count descending and sequence string ascending.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-paths`
-- [ ] (TEST) Path tests cover target-event and page-view query caps producing `partial_data` limitations when reached.
+- [x] (TEST) Path tests cover target-event and page-view query caps producing `partial_data` limitations when reached.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-service-paths`
 
 **Files to Create:**
