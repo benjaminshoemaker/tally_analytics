@@ -1,6 +1,7 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import crypto from "node:crypto";
 
+import { buildAnalyticsDashboardUrls, type AnalyticsDashboardUrls } from "../../analytics/urls";
 import { db } from "../client";
 import { projects } from "../schema";
 
@@ -9,7 +10,39 @@ function createProjectId(): string {
 }
 
 export type GitHubRepoRef = { id: number; fullName: string };
+export type ProjectSource = "github_app" | "mcp_codex";
 export type ProjectStatus = "pending" | "analyzing" | "analysis_failed" | "pr_pending" | "pr_closed" | "active" | "unsupported";
+
+export type OwnedAnalyticsProject = {
+  id: string;
+  displayName: string;
+  source: ProjectSource;
+  status: ProjectStatus;
+  lastEventAt: Date | null;
+  mcpRepoName: string | null;
+  mcpAppRoot: string | null;
+  mcpPackageManager: string | null;
+  dashboardUrls: AnalyticsDashboardUrls;
+};
+
+export type ResolveProjectRepoInput = {
+  name?: string;
+  packageName?: string | null;
+  gitRemote?: string | null;
+  workspaceRoot?: string;
+  appRoot?: string;
+  packageManager?: "pnpm" | "npm" | "yarn" | "bun";
+};
+
+export type ResolveOwnedMcpProjectResult =
+  | {
+      status: "ok";
+      project: OwnedAnalyticsProject;
+      match: { strategy: "fingerprint" | "remote" | "repo_name"; confidence: "exact" | "broad" };
+    }
+  | { status: "no_match" }
+  | { status: "multiple_matches"; candidates: OwnedAnalyticsProject[] }
+  | { status: "invalid_repo_context"; reason: string };
 
 export type McpProjectFingerprintInput =
   | {
@@ -50,16 +83,92 @@ export type CreateOrReuseMcpProjectResult =
       mcpFingerprint: string;
     };
 
-function normalizeBaseUrl(value: string): string {
-  return value.replace(/\/+$/, "");
+type AnalyticsProjectRow = {
+  id: string;
+  displayName: string;
+  source: string;
+  status: string;
+  lastEventAt: Date | null;
+  mcpRepoName: string | null;
+  mcpAppRoot: string | null;
+  mcpPackageManager: string | null;
+};
+
+const analyticsProjectSelect = {
+  id: projects.id,
+  displayName: projects.displayName,
+  source: projects.source,
+  status: projects.status,
+  lastEventAt: projects.lastEventAt,
+  mcpRepoName: projects.mcpRepoName,
+  mcpAppRoot: projects.mcpAppRoot,
+  mcpPackageManager: projects.mcpPackageManager,
+};
+
+export function dashboardUrlsForProject(projectId: string): AnalyticsDashboardUrls {
+  return buildAnalyticsDashboardUrls(projectId);
 }
 
 function dashboardUrlForProject(projectId: string): string {
-  return `${normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL ?? "https://usetally.xyz")}/projects/${projectId}`;
+  return dashboardUrlsForProject(projectId).project;
 }
 
 function stripTrailingGitSuffix(value: string): string {
   return value.replace(/\.git$/i, "");
+}
+
+function toProjectStatus(value: string): ProjectStatus {
+  if (
+    value === "pending" ||
+    value === "analyzing" ||
+    value === "analysis_failed" ||
+    value === "pr_pending" ||
+    value === "pr_closed" ||
+    value === "active" ||
+    value === "unsupported"
+  ) {
+    return value;
+  }
+
+  return "pending";
+}
+
+function toProjectSource(value: string): ProjectSource {
+  return value === "mcp_codex" ? "mcp_codex" : "github_app";
+}
+
+function toOwnedAnalyticsProject(row: AnalyticsProjectRow): OwnedAnalyticsProject {
+  return {
+    id: row.id,
+    displayName: row.displayName,
+    source: toProjectSource(row.source),
+    status: toProjectStatus(row.status),
+    lastEventAt: row.lastEventAt,
+    mcpRepoName: row.mcpRepoName,
+    mcpAppRoot: row.mcpAppRoot,
+    mcpPackageManager: row.mcpPackageManager,
+    dashboardUrls: dashboardUrlsForProject(row.id),
+  };
+}
+
+function normalizeRelativeRoot(value: string | undefined, fallback: string): string | null {
+  const root = (value ?? fallback).trim();
+  if (!root) return null;
+  if (root.startsWith("/") || /^[a-z]:[\\/]/i.test(root)) return null;
+  if (root.split(/[\\/]+/).some((segment) => segment === "..")) return null;
+  return root.replace(/\\/g, "/").replace(/\/+$/, "") || ".";
+}
+
+function normalizeRepoLabel(value: string | null | undefined): string | null {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed.toLowerCase() : null;
+}
+
+function repoCandidateMatches(row: AnalyticsProjectRow, labels: Set<string>): boolean {
+  return [row.mcpRepoName, row.displayName].some((value) => {
+    const normalized = normalizeRepoLabel(value);
+    return normalized ? labels.has(normalized) : false;
+  });
 }
 
 export function normalizeGitRemote(remote: string | null | undefined): string | null {
@@ -110,6 +219,173 @@ export function buildMcpProjectFingerprintInput(params: {
     repoName: params.repoName,
     packageName: params.packageName || params.repoName,
     appRoot: params.appRoot,
+  };
+}
+
+export async function listOwnedAnalyticsProjects(params: {
+  userId: string;
+  limit?: number;
+}): Promise<OwnedAnalyticsProject[]> {
+  const limit = Math.max(1, Math.min(params.limit ?? 25, 100));
+  const rows = await db
+    .select(analyticsProjectSelect)
+    .from(projects)
+    .where(eq(projects.userId, params.userId));
+
+  return (rows as AnalyticsProjectRow[]).slice(0, limit).map(toOwnedAnalyticsProject);
+}
+
+export async function getOwnedAnalyticsProject(params: {
+  userId: string;
+  projectId: string;
+}): Promise<OwnedAnalyticsProject | null> {
+  const rows = await db
+    .select(analyticsProjectSelect)
+    .from(projects)
+    .where(and(eq(projects.id, params.projectId), eq(projects.userId, params.userId)));
+
+  const row = (rows as AnalyticsProjectRow[])[0];
+  return row ? toOwnedAnalyticsProject(row) : null;
+}
+
+async function selectOwnedMcpAnalyticsProjectsByFingerprint(params: {
+  userId: string;
+  fingerprint: string;
+}): Promise<AnalyticsProjectRow[]> {
+  const rows = await db
+    .select(analyticsProjectSelect)
+    .from(projects)
+    .where(
+      and(
+        eq(projects.userId, params.userId),
+        eq(projects.source, "mcp_codex"),
+        eq(projects.mcpFingerprint, params.fingerprint),
+      ),
+    );
+
+  return rows as AnalyticsProjectRow[];
+}
+
+async function selectOwnedMcpAnalyticsProjectsByRemote(params: {
+  userId: string;
+  normalizedGitRemote: string;
+  appRoot: string;
+}): Promise<AnalyticsProjectRow[]> {
+  const rows = await db
+    .select(analyticsProjectSelect)
+    .from(projects)
+    .where(
+      and(
+        eq(projects.userId, params.userId),
+        eq(projects.source, "mcp_codex"),
+        eq(projects.mcpNormalizedGitRemote, params.normalizedGitRemote),
+        eq(projects.mcpAppRoot, params.appRoot),
+      ),
+    );
+
+  return rows as AnalyticsProjectRow[];
+}
+
+async function selectOwnedMcpAnalyticsProjectsByAppRoot(params: {
+  userId: string;
+  appRoot: string;
+}): Promise<AnalyticsProjectRow[]> {
+  const rows = await db
+    .select(analyticsProjectSelect)
+    .from(projects)
+    .where(
+      and(
+        eq(projects.userId, params.userId),
+        eq(projects.source, "mcp_codex"),
+        eq(projects.mcpAppRoot, params.appRoot),
+      ),
+    );
+
+  return rows as AnalyticsProjectRow[];
+}
+
+export async function resolveOwnedMcpProjectForRepoContext(params: {
+  userId: string;
+  repo: ResolveProjectRepoInput;
+}): Promise<ResolveOwnedMcpProjectResult> {
+  const repoName = params.repo.name?.trim();
+  const packageName = params.repo.packageName?.trim() || null;
+  const normalizedGitRemote = normalizeGitRemote(params.repo.gitRemote);
+  const appRoot = normalizeRelativeRoot(params.repo.appRoot, ".");
+  const workspaceRoot = normalizeRelativeRoot(params.repo.workspaceRoot, ".");
+
+  if (!repoName && !normalizedGitRemote) {
+    return { status: "invalid_repo_context", reason: "repo_name_or_git_remote_required" };
+  }
+
+  if (params.repo.gitRemote && !normalizedGitRemote) {
+    return { status: "invalid_repo_context", reason: "invalid_git_remote" };
+  }
+
+  if (!appRoot || !workspaceRoot) {
+    return { status: "invalid_repo_context", reason: "invalid_repo_paths" };
+  }
+
+  const fingerprintInput = buildMcpProjectFingerprintInput({
+    repoName: repoName || packageName || "repo",
+    packageName,
+    gitRemote: params.repo.gitRemote,
+    appRoot,
+  });
+  const fingerprint = mcpFingerprint(fingerprintInput);
+  const exactRows = await selectOwnedMcpAnalyticsProjectsByFingerprint({
+    userId: params.userId,
+    fingerprint,
+  });
+
+  if (exactRows.length === 1) {
+    return {
+      status: "ok",
+      project: toOwnedAnalyticsProject(exactRows[0]),
+      match: { strategy: "fingerprint", confidence: "exact" },
+    };
+  }
+
+  if (exactRows.length > 1) {
+    return {
+      status: "multiple_matches",
+      candidates: exactRows.slice(0, 10).map(toOwnedAnalyticsProject),
+    };
+  }
+
+  const broadRows = normalizedGitRemote
+    ? await selectOwnedMcpAnalyticsProjectsByRemote({
+        userId: params.userId,
+        normalizedGitRemote,
+        appRoot,
+      })
+    : (await selectOwnedMcpAnalyticsProjectsByAppRoot({ userId: params.userId, appRoot })).filter(
+        (row) => {
+          const labels = new Set(
+            [repoName, packageName].flatMap((value) => {
+              const normalized = normalizeRepoLabel(value);
+              return normalized ? [normalized] : [];
+            }),
+          );
+          return repoCandidateMatches(row, labels);
+        },
+      );
+
+  if (broadRows.length === 0) return { status: "no_match" };
+  if (broadRows.length === 1) {
+    return {
+      status: "ok",
+      project: toOwnedAnalyticsProject(broadRows[0]),
+      match: {
+        strategy: normalizedGitRemote ? "remote" : "repo_name",
+        confidence: "broad",
+      },
+    };
+  }
+
+  return {
+    status: "multiple_matches",
+    candidates: broadRows.slice(0, 10).map(toOwnedAnalyticsProject),
   };
 }
 

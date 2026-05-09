@@ -16,6 +16,20 @@ vi.mock("../lib/db/client", () => ({
   },
 }));
 
+function analyticsProjectRow(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    id: "proj_mcp",
+    displayName: "repo",
+    source: "mcp_codex",
+    status: "active",
+    lastEventAt: new Date("2026-05-01T12:00:00.000Z"),
+    mcpRepoName: "repo",
+    mcpAppRoot: "apps/web",
+    mcpPackageManager: "pnpm",
+    ...overrides,
+  };
+}
+
 describe("MCP project queries", () => {
   it("normalizes GitHub remote URLs and preserves parseable non-GitHub paths", async () => {
     vi.resetModules();
@@ -185,6 +199,205 @@ describe("MCP project queries", () => {
     });
 
     expect(result).toMatchObject({ status: "ready", projectId: "proj_existing", created: false });
+    expect(whereSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("lists owned analytics projects without exposing private project or billing fields", async () => {
+    vi.resetModules();
+    const previousAppUrl = process.env.NEXT_PUBLIC_APP_URL;
+    process.env.NEXT_PUBLIC_APP_URL = "https://usetally.xyz";
+
+    const whereSpy = vi.fn().mockResolvedValue([
+      analyticsProjectRow({
+        id: "proj_public",
+        mcpFingerprint: "private-fingerprint",
+        githubInstallationId: 123n,
+        oauthAccessToken: "private-token",
+        eventsThisMonth: 99n,
+      }),
+    ]);
+    selectSpy = vi.fn(() => ({ from: () => ({ where: whereSpy }) }));
+    insertSpy = vi.fn();
+
+    const { listOwnedAnalyticsProjects } = await import("../lib/db/queries/projects");
+    const result = await listOwnedAnalyticsProjects({ userId: "u1" });
+
+    expect(result).toEqual([
+      {
+        id: "proj_public",
+        displayName: "repo",
+        source: "mcp_codex",
+        status: "active",
+        lastEventAt: new Date("2026-05-01T12:00:00.000Z"),
+        mcpRepoName: "repo",
+        mcpAppRoot: "apps/web",
+        mcpPackageManager: "pnpm",
+        dashboardUrls: {
+          project: "https://usetally.xyz/projects/proj_public",
+          overview: "https://usetally.xyz/projects/proj_public/overview",
+          live: "https://usetally.xyz/projects/proj_public/live",
+          sessions: "https://usetally.xyz/projects/proj_public/sessions",
+        },
+      },
+    ]);
+    const serialized = JSON.stringify(result);
+    expect(serialized).not.toContain("mcpFingerprint");
+    expect(serialized).not.toContain("githubInstallationId");
+    expect(serialized).not.toContain("oauth");
+    expect(serialized).not.toContain("eventsThisMonth");
+
+    if (previousAppUrl === undefined) delete process.env.NEXT_PUBLIC_APP_URL;
+    else process.env.NEXT_PUBLIC_APP_URL = previousAppUrl;
+  });
+
+  it("gets a single owned analytics project and dashboard URLs", async () => {
+    vi.resetModules();
+
+    const whereSpy = vi.fn().mockResolvedValue([analyticsProjectRow({ id: "proj_owned" })]);
+    selectSpy = vi.fn(() => ({ from: () => ({ where: whereSpy }) }));
+    insertSpy = vi.fn();
+
+    const { getOwnedAnalyticsProject } = await import("../lib/db/queries/projects");
+    const result = await getOwnedAnalyticsProject({ userId: "u1", projectId: "proj_owned" });
+
+    expect(result).toMatchObject({
+      id: "proj_owned",
+      displayName: "repo",
+      dashboardUrls: {
+        project: "https://usetally.xyz/projects/proj_owned",
+        overview: "https://usetally.xyz/projects/proj_owned/overview",
+      },
+    });
+  });
+
+  it("resolves an owned MCP project by exact fingerprint match", async () => {
+    vi.resetModules();
+
+    const whereSpy = vi.fn().mockResolvedValueOnce([
+      analyticsProjectRow({ id: "proj_exact", mcpRepoName: "repo", mcpAppRoot: "apps/web" }),
+    ]);
+    selectSpy = vi.fn(() => ({ from: () => ({ where: whereSpy }) }));
+    insertSpy = vi.fn();
+
+    const { resolveOwnedMcpProjectForRepoContext } = await import("../lib/db/queries/projects");
+    const result = await resolveOwnedMcpProjectForRepoContext({
+      userId: "u1",
+      repo: {
+        name: "repo",
+        packageName: "pkg",
+        gitRemote: "git@github.com:Owner/Repo.git",
+        workspaceRoot: ".",
+        appRoot: "apps/web",
+        packageManager: "pnpm",
+      },
+    });
+
+    expect(result).toMatchObject({
+      status: "ok",
+      project: { id: "proj_exact", displayName: "repo" },
+      match: { strategy: "fingerprint", confidence: "exact" },
+    });
+    expect(whereSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns no_match when no owned MCP project matches the repo context", async () => {
+    vi.resetModules();
+
+    const whereSpy = vi.fn().mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    selectSpy = vi.fn(() => ({ from: () => ({ where: whereSpy }) }));
+    insertSpy = vi.fn();
+
+    const { resolveOwnedMcpProjectForRepoContext } = await import("../lib/db/queries/projects");
+    const result = await resolveOwnedMcpProjectForRepoContext({
+      userId: "u1",
+      repo: {
+        name: "repo",
+        gitRemote: "git@github.com:Owner/Repo.git",
+        workspaceRoot: ".",
+        appRoot: "apps/web",
+      },
+    });
+
+    expect(result).toEqual({ status: "no_match" });
+    expect(whereSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns multiple_matches from broad owned candidates without duplicate exact fingerprints", async () => {
+    vi.resetModules();
+
+    const whereSpy = vi
+      .fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        analyticsProjectRow({ id: "proj_1", mcpRepoName: "repo" }),
+        analyticsProjectRow({ id: "proj_2", displayName: "repo" }),
+      ]);
+    selectSpy = vi.fn(() => ({ from: () => ({ where: whereSpy }) }));
+    insertSpy = vi.fn();
+
+    const { resolveOwnedMcpProjectForRepoContext } = await import("../lib/db/queries/projects");
+    const result = await resolveOwnedMcpProjectForRepoContext({
+      userId: "u1",
+      repo: {
+        name: "repo",
+        workspaceRoot: ".",
+        appRoot: "apps/web",
+      },
+    });
+
+    expect(result).toMatchObject({
+      status: "multiple_matches",
+      candidates: [{ id: "proj_1" }, { id: "proj_2" }],
+    });
+    expect(whereSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns invalid_repo_context for malformed repo context", async () => {
+    vi.resetModules();
+    selectSpy = vi.fn(() => {
+      throw new Error("db.select called unexpectedly");
+    });
+    insertSpy = vi.fn();
+
+    const { resolveOwnedMcpProjectForRepoContext } = await import("../lib/db/queries/projects");
+
+    await expect(
+      resolveOwnedMcpProjectForRepoContext({
+        userId: "u1",
+        repo: { name: "repo", workspaceRoot: ".", appRoot: "../web" },
+      }),
+    ).resolves.toEqual({ status: "invalid_repo_context", reason: "invalid_repo_paths" });
+
+    await expect(
+      resolveOwnedMcpProjectForRepoContext({
+        userId: "u1",
+        repo: { workspaceRoot: ".", appRoot: "apps/web" },
+      }),
+    ).resolves.toEqual({
+      status: "invalid_repo_context",
+      reason: "repo_name_or_git_remote_required",
+    });
+  });
+
+  it("does not resolve another user's matching MCP project", async () => {
+    vi.resetModules();
+
+    const whereSpy = vi.fn().mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    selectSpy = vi.fn(() => ({ from: () => ({ where: whereSpy }) }));
+    insertSpy = vi.fn();
+
+    const { resolveOwnedMcpProjectForRepoContext } = await import("../lib/db/queries/projects");
+    const result = await resolveOwnedMcpProjectForRepoContext({
+      userId: "u1",
+      repo: {
+        name: "repo-owned-by-u2",
+        gitRemote: "git@github.com:Other/UserProject.git",
+        workspaceRoot: ".",
+        appRoot: "apps/web",
+      },
+    });
+
+    expect(result).toEqual({ status: "no_match" });
     expect(whereSpy).toHaveBeenCalledTimes(2);
   });
 });

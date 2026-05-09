@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_analytics_querying",
-  "last_updated": "2026-05-09T08:21:39.835Z",
+  "last_updated": "2026-05-09T08:25:48.086Z",
   "generated_by": "phase-start",
   "main": {
     "current_phase": 1,
@@ -13,7 +13,7 @@
         "name": "Shared Analytics Foundation",
         "status": "IN_PROGRESS",
         "tasks_total": 4,
-        "tasks_complete": 1,
+        "tasks_complete": 2,
         "started_at": "2026-05-09T08:15:54.348Z",
         "tasks": {
           "1.1.A": {
@@ -39,8 +39,19 @@
             }
           },
           "1.1.B": {
-            "status": "NOT_STARTED",
+            "status": "COMPLETE",
             "title": "Add Read-Only Project Access And Repo Resolution Helpers",
+            "completed_at": "2026-05-09T08:25:48.086Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "5/5",
+              "commands": [
+                "pnpm --filter web test -- mcp-project-queries",
+                "rg -q 'listOwnedAnalyticsProjects|getOwnedAnalyticsProject|resolveOwnedMcpProjectForRepoContext|dashboardUrlsForProject' apps/web/lib/db/queries/projects.ts",
+                "rg -q 'normalizeGitRemote|buildMcpProjectFingerprintInput|mcpFingerprint' apps/web/lib/db/queries/projects.ts",
+                "pnpm --filter web typecheck"
+              ]
+            },
             "failures": {
               "consecutive": 0,
               "verification_attempts": {},

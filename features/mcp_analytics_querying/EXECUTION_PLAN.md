@@ -120,15 +120,15 @@ Add read-only owned project helpers for analytics access and implement MCP repo-
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Project Access And Resolution"; FEATURE_SPEC.md "Project Selection From Current Repo"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Project query module exports `listOwnedAnalyticsProjects`, `getOwnedAnalyticsProject`, `resolveOwnedMcpProjectForRepoContext`, and `dashboardUrlsForProject`.
+- [x] (CODE) Project query module exports `listOwnedAnalyticsProjects`, `getOwnedAnalyticsProject`, `resolveOwnedMcpProjectForRepoContext`, and `dashboardUrlsForProject`.
   - Verify: `cd ../.. && rg -q 'listOwnedAnalyticsProjects|getOwnedAnalyticsProject|resolveOwnedMcpProjectForRepoContext|dashboardUrlsForProject' apps/web/lib/db/queries/projects.ts`
-- [ ] (TEST) Project query tests cover exact fingerprint match, no match, broad multiple matches, malformed repo context returning `invalid_repo_context`, and another user's matching project.
+- [x] (TEST) Project query tests cover exact fingerprint match, no match, broad multiple matches, malformed repo context returning `invalid_repo_context`, and another user's matching project.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-project-queries`
-- [ ] (TEST) Multiple-match coverage uses broad owned candidates and does not require duplicate exact fingerprints.
+- [x] (TEST) Multiple-match coverage uses broad owned candidates and does not require duplicate exact fingerprints.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-project-queries`
-- [ ] (CODE) Resolution helpers reuse `normalizeGitRemote`, `buildMcpProjectFingerprintInput`, and `mcpFingerprint` rather than creating a second fingerprint algorithm.
+- [x] (CODE) Resolution helpers reuse `normalizeGitRemote`, `buildMcpProjectFingerprintInput`, and `mcpFingerprint` rather than creating a second fingerprint algorithm.
   - Verify: `cd ../.. && rg -q 'normalizeGitRemote|buildMcpProjectFingerprintInput|mcpFingerprint' apps/web/lib/db/queries/projects.ts`
-- [ ] (TEST) Owned-project helper tests prove analytics project listing does not expose fingerprints, GitHub installation ids, OAuth token data, or billing fields.
+- [x] (TEST) Owned-project helper tests prove analytics project listing does not expose fingerprints, GitHub installation ids, OAuth token data, or billing fields.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-project-queries`
 
 **Files to Create:**
