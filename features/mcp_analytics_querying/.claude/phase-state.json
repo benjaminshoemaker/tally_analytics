@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_analytics_querying",
-  "last_updated": "2026-05-09T09:29:53.189Z",
+  "last_updated": "2026-05-09T09:34:30.053Z",
   "generated_by": "phase-start",
   "main": {
     "current_phase": 2,
@@ -123,7 +123,7 @@
         "name": "Event Insight Services",
         "status": "IN_PROGRESS",
         "tasks_total": 5,
-        "tasks_complete": 1,
+        "tasks_complete": 2,
         "started_at": "2026-05-09T09:28:31.422Z",
         "tasks": {
           "2.1.A": {
@@ -146,8 +146,19 @@
             }
           },
           "2.1.B": {
-            "status": "NOT_STARTED",
+            "status": "COMPLETE",
             "title": "Add MCP Analytics Scenario Fixtures",
+            "completed_at": "2026-05-09T09:34:30.053Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "5/5",
+              "commands": [
+                "test -f apps/web/e2e/scenarios/mcp-active-with-signup-events.json && test -f apps/web/e2e/scenarios/mcp-active-partial-signup-data.json && test -f apps/web/e2e/scenarios/mcp-multiple-projects.json",
+                "pnpm --filter web test -- e2e-scenarios",
+                "pnpm --filter web e2e:scenarios | rg 'mcp-active-with-signup-events|mcp-active-partial-signup-data|mcp-multiple-projects'",
+                "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:seed mcp-active-with-signup-events"
+              ]
+            },
             "failures": {
               "consecutive": 0,
               "verification_attempts": {},

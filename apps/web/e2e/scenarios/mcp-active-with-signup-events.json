@@ -1,0 +1,261 @@
+{
+  "id": "mcp-active-with-signup-events",
+  "description": "An MCP-created active project with deterministic signup path analytics events.",
+  "tags": ["local", "state", "analytics", "mcp", "mcp-analytics"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000203",
+    "email": "e2e+mcp-signup@example.com",
+    "githubUserId": 910000203,
+    "githubUsername": "fpa-mcp-signup-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000203?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_mcp_signup",
+      "source": "mcp_codex",
+      "displayName": "MCP Signup Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/mcp-signup-demo.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/mcp-signup-demo",
+      "mcpRepoName": "mcp-signup-demo",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "4eea43f194c02588f1877813d8559608ecbc59134063c6ad94a5b955603ae0a1",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 19,
+      "lastEventAt": "2026-05-01T12:42:00.000Z",
+      "createdAt": "2026-05-01T11:30:00.000Z",
+      "updatedAt": "2026-05-01T12:42:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:00:00.000Z",
+        "url": "https://signup-demo.test/",
+        "path": "/",
+        "referrer": "https://google.com/search?q=tally",
+        "visitor_id": "visitor_signup_001",
+        "is_returning": 0
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:00:05.000Z",
+        "url": "https://signup-demo.test/",
+        "path": "/",
+        "referrer": "https://google.com/search?q=tally",
+        "engagement_time_ms": 12000,
+        "scroll_depth": 55,
+        "cta_clicks": "[\"hero_signup\"]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:01:00.000Z",
+        "url": "https://signup-demo.test/pricing?plan=pro",
+        "path": "/pricing",
+        "referrer": "",
+        "engagement_time_ms": 25000,
+        "scroll_depth": 80,
+        "cta_clicks": "[\"pricing_signup\"]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:02:00.000Z",
+        "url": "https://signup-demo.test/signup",
+        "path": "/signup",
+        "referrer": "",
+        "engagement_time_ms": 9000,
+        "scroll_depth": 40,
+        "cta_clicks": "[]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_001",
+        "event_type": "signup_completed",
+        "timestamp": "2026-05-01T12:03:00.000Z",
+        "url": "https://signup-demo.test/signup",
+        "path": "/signup",
+        "plan": "pro",
+        "signup_method": "email"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_002",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:10:00.000Z",
+        "url": "https://signup-demo.test/",
+        "path": "/",
+        "referrer": "https://news.ycombinator.com/item?id=123",
+        "visitor_id": "visitor_signup_002",
+        "is_returning": 0
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_002",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:11:00.000Z",
+        "url": "https://signup-demo.test/docs",
+        "path": "/docs",
+        "referrer": "",
+        "engagement_time_ms": 31000,
+        "scroll_depth": 90,
+        "cta_clicks": "[\"docs_signup\"]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_002",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:12:00.000Z",
+        "url": "https://signup-demo.test/signup",
+        "path": "/signup",
+        "referrer": "",
+        "engagement_time_ms": 7000,
+        "scroll_depth": 35,
+        "cta_clicks": "[]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_002",
+        "event_type": "signup_completed",
+        "timestamp": "2026-05-01T12:13:00.000Z",
+        "url": "https://signup-demo.test/signup",
+        "path": "/signup",
+        "plan": "free",
+        "signup_method": "github"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_003",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:20:00.000Z",
+        "url": "https://signup-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "https://www.linkedin.com/feed/",
+        "visitor_id": "visitor_signup_003",
+        "is_returning": 1
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_003",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:21:00.000Z",
+        "url": "https://signup-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "https://www.linkedin.com/feed/",
+        "engagement_time_ms": 22000,
+        "scroll_depth": 75,
+        "cta_clicks": "[\"pricing_signup\"]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_003",
+        "event_type": "signup_completed",
+        "timestamp": "2026-05-01T12:22:00.000Z",
+        "url": "https://signup-demo.test/signup",
+        "path": "/signup",
+        "plan": "team",
+        "signup_method": "email"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_004",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:30:00.000Z",
+        "url": "https://signup-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_signup_004",
+        "is_returning": 0
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_004",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:31:00.000Z",
+        "url": "https://signup-demo.test/pricing",
+        "path": "/pricing",
+        "engagement_time_ms": 18000,
+        "scroll_depth": 60,
+        "cta_clicks": "[\"pricing_signup\"]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_004",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:32:00.000Z",
+        "url": "https://signup-demo.test/checkout",
+        "path": "/checkout",
+        "engagement_time_ms": 14000,
+        "scroll_depth": 50,
+        "cta_clicks": "[]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_004",
+        "event_type": "signup_completed",
+        "timestamp": "2026-05-01T12:33:00.000Z",
+        "url": "https://signup-demo.test/signup",
+        "path": "/signup",
+        "plan": "pro",
+        "signup_method": "email"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_005",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:40:00.000Z",
+        "url": "https://signup-demo.test/features",
+        "path": "/features",
+        "referrer": "",
+        "visitor_id": "visitor_signup_005",
+        "is_returning": 0
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_005",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:41:00.000Z",
+        "url": "https://signup-demo.test/features",
+        "path": "/features",
+        "engagement_time_ms": 20000,
+        "scroll_depth": 65,
+        "cta_clicks": "[\"feature_signup\"]"
+      },
+      {
+        "project_id": "proj_mcp_signup",
+        "session_id": "sess_signup_005",
+        "event_type": "signup_completed",
+        "timestamp": "2026-05-01T12:42:00.000Z",
+        "url": "https://signup-demo.test/signup",
+        "path": "/signup",
+        "plan": "free",
+        "signup_method": "email"
+      }
+    ]
+  },
+  "expectations": {
+    "startPath": "/projects/proj_mcp_signup",
+    "assertions": [
+      "Project resolves from the exact MCP repo fingerprint.",
+      "Signup path analytics can be queried from local fixtures.",
+      "Dashboard analytics continue to count page and session events."
+    ]
+  }
+}

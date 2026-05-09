@@ -330,15 +330,15 @@ Add deterministic scenarios for signup-path success, partial signup data, and mu
 **Requirement:** FLOW_VERIFICATION_PLAN.md "Setup/State"; FEATURE_TECHNICAL_SPEC.md "Scenario Fixtures"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Required MCP analytics scenario files exist.
+- [x] (CODE) Required MCP analytics scenario files exist.
   - Verify: `cd ../.. && test -f apps/web/e2e/scenarios/mcp-active-with-signup-events.json && test -f apps/web/e2e/scenarios/mcp-active-partial-signup-data.json && test -f apps/web/e2e/scenarios/mcp-multiple-projects.json`
-- [ ] (TEST) Scenario tests verify exact resolver fixtures compute `mcpFingerprint` from `buildMcpProjectFingerprintInput` and `mcpFingerprint`.
+- [x] (TEST) Scenario tests verify exact resolver fixtures compute `mcpFingerprint` from `buildMcpProjectFingerprintInput` and `mcpFingerprint`.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-scenarios`
-- [ ] (TEST) The `mcp-multiple-projects` scenario is the only scenario allowed to use null or deliberately non-matching fingerprints for broad-match ambiguity.
+- [x] (TEST) The `mcp-multiple-projects` scenario is the only scenario allowed to use null or deliberately non-matching fingerprints for broad-match ambiguity.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-scenarios`
-- [ ] (TEST) Scenario listing includes the new MCP analytics scenarios.
+- [x] (TEST) Scenario listing includes the new MCP analytics scenarios.
   - Verify: `cd ../.. && pnpm --filter web e2e:scenarios | rg 'mcp-active-with-signup-events|mcp-active-partial-signup-data|mcp-multiple-projects'`
-- [ ] (TEST) Local seeding succeeds for the new scenario fixtures against a local database URL.
+- [x] (TEST) Local seeding succeeds for the new scenario fixtures against a local database URL.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:seed mcp-active-with-signup-events`
 
 **Files to Create:**

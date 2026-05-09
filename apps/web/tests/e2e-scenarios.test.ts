@@ -1,6 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+import { buildMcpProjectFingerprintInput, mcpFingerprint } from '../lib/db/queries/projects';
+
+vi.mock('../lib/db/client', () => ({ db: {} }));
 
 const scenariosDir = path.resolve(__dirname, '../e2e/scenarios');
 
@@ -35,7 +39,11 @@ type Scenario = {
     repoId: number | null;
     repoFullName: string | null;
     installationId: number | null;
-    mcpFingerprint?: string;
+    mcpGitRemote?: string | null;
+    mcpRepoName?: string | null;
+    mcpAppRoot?: string | null;
+    mcpPackageName?: string | null;
+    mcpFingerprint?: string | null;
     status: string;
     detectedAnalytics: string[];
     eventsThisMonth: number;
@@ -113,7 +121,13 @@ describe('E2E scenario contracts', () => {
           expect(project.repoId).toBeNull();
           expect(project.repoFullName).toBeNull();
           expect(project.installationId).toBeNull();
-          expect(project.mcpFingerprint).toMatch(/^[a-f0-9]{64}$/);
+          if (scenario.id === 'mcp-multiple-projects') {
+            expect(project.mcpFingerprint === null || /^[a-f0-9]{64}$/.test(project.mcpFingerprint ?? '')).toBe(
+              true
+            );
+          } else {
+            expect(project.mcpFingerprint).toMatch(/^[a-f0-9]{64}$/);
+          }
         }
         expect(validStatuses.has(project.status)).toBe(true);
         expect(Array.isArray(project.detectedAnalytics)).toBe(true);
@@ -159,5 +173,66 @@ describe('E2E scenario contracts', () => {
       'proj_mcp_events',
       'proj_mcp_events',
     ]);
+  });
+
+  it('computes exact MCP analytics scenario fingerprints from resolver context', () => {
+    const scenarios = readScenarios();
+    const analyticsScenarioIds = new Set([
+      'mcp-active-no-events',
+      'mcp-active-with-events',
+      'mcp-active-with-signup-events',
+      'mcp-active-partial-signup-data',
+    ]);
+
+    for (const { scenario } of scenarios) {
+      for (const project of scenario.projects) {
+        if ((project.source ?? 'github_app') !== 'mcp_codex') continue;
+        if (scenario.id === 'mcp-multiple-projects') continue;
+        if (!analyticsScenarioIds.has(scenario.id)) continue;
+
+        const expected = mcpFingerprint(
+          buildMcpProjectFingerprintInput({
+            repoName: project.mcpRepoName ?? project.displayName ?? project.id,
+            packageName: project.mcpPackageName ?? project.mcpRepoName ?? project.displayName ?? project.id,
+            gitRemote: project.mcpGitRemote ?? null,
+            appRoot: project.mcpAppRoot ?? '.',
+          })
+        );
+
+        expect(project.mcpFingerprint).toBe(expected);
+      }
+    }
+  });
+
+  it('allows broad-match missing fingerprints only in the multiple-project scenario', () => {
+    const scenarios = readScenarios();
+    const broadMatchScenarios = scenarios.filter(({ scenario }) =>
+      scenario.projects.some((project) => {
+        if ((project.source ?? 'github_app') !== 'mcp_codex') return false;
+        const expected = mcpFingerprint(
+          buildMcpProjectFingerprintInput({
+            repoName: project.mcpRepoName ?? project.displayName ?? project.id,
+            packageName: project.mcpPackageName ?? project.mcpRepoName ?? project.displayName ?? project.id,
+            gitRemote: project.mcpGitRemote ?? null,
+            appRoot: project.mcpAppRoot ?? '.',
+          })
+        );
+        return project.mcpFingerprint !== expected;
+      })
+    );
+
+    expect(broadMatchScenarios.map(({ scenario }) => scenario.id)).toEqual(['mcp-multiple-projects']);
+  });
+
+  it('lists MCP analytics scenarios needed by the flow harness', () => {
+    const ids = readScenarios().map(({ scenario }) => scenario.id);
+
+    expect(ids).toEqual(
+      expect.arrayContaining([
+        'mcp-active-with-signup-events',
+        'mcp-active-partial-signup-data',
+        'mcp-multiple-projects',
+      ])
+    );
   });
 });

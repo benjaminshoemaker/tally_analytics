@@ -1,0 +1,74 @@
+{
+  "id": "mcp-multiple-projects",
+  "description": "An MCP-created user state with broad repo-context ambiguity across multiple projects.",
+  "tags": ["local", "state", "analytics", "mcp", "mcp-analytics"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000205",
+    "email": "e2e+mcp-multiple@example.com",
+    "githubUserId": 910000205,
+    "githubUsername": "fpa-mcp-multiple-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000205?v=4",
+    "plan": "free"
+  },
+  "projects": [
+    {
+      "id": "proj_mcp_multi1",
+      "source": "mcp_codex",
+      "displayName": "MCP Ambiguous Demo A",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": null,
+      "mcpNormalizedGitRemote": null,
+      "mcpRepoName": "ambiguous-demo",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": null,
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 0,
+      "lastEventAt": null,
+      "createdAt": "2026-05-01T11:50:00.000Z",
+      "updatedAt": "2026-05-01T11:50:00.000Z"
+    },
+    {
+      "id": "proj_mcp_multi2",
+      "source": "mcp_codex",
+      "displayName": "MCP Ambiguous Demo B",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": null,
+      "mcpNormalizedGitRemote": null,
+      "mcpRepoName": "ambiguous-demo",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": null,
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 0,
+      "lastEventAt": null,
+      "createdAt": "2026-05-01T11:55:00.000Z",
+      "updatedAt": "2026-05-01T11:55:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": []
+  },
+  "expectations": {
+    "startPath": "/projects/proj_mcp_multi1",
+    "assertions": [
+      "Resolve project returns multiple_matches for broad no-remote repo context.",
+      "No new project is created by analytics resolution.",
+      "The agent must ask the user to choose between candidates."
+    ]
+  }
+}

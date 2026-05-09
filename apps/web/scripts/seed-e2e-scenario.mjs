@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -24,6 +25,64 @@ const validStatuses = new Set([
   'unsupported',
 ]);
 const validSources = new Set(['github_app', 'mcp_codex']);
+
+function stripTrailingGitSuffix(value) {
+  return value.replace(/\.git$/i, '');
+}
+
+function normalizeGitRemote(remote) {
+  const trimmed = remote?.trim();
+  if (!trimmed) return null;
+
+  const scpLike = /^git@([^:]+):(.+)$/i.exec(trimmed);
+  if (scpLike) {
+    const host = scpLike[1].toLowerCase();
+    const remotePath = stripTrailingGitSuffix(scpLike[2].replace(/^\/+|\/+$/g, ''));
+    return `${host}/${host === 'github.com' ? remotePath.toLowerCase() : remotePath}`;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    const host = url.hostname.toLowerCase();
+    const remotePath = stripTrailingGitSuffix(url.pathname.replace(/^\/+|\/+$/g, ''));
+    if (!host || !remotePath) return null;
+    return `${host}/${host === 'github.com' ? remotePath.toLowerCase() : remotePath}`;
+  } catch {
+    return null;
+  }
+}
+
+function buildMcpFingerprintInput(project) {
+  const gitRemote = project.mcpGitRemote ?? project.gitRemote ?? null;
+  const normalizedGitRemote = normalizeGitRemote(gitRemote);
+  const appRoot = project.mcpAppRoot ?? '.';
+
+  if (normalizedGitRemote) {
+    return {
+      source: 'mcp_codex',
+      identity: 'remote',
+      normalizedGitRemote,
+      appRoot,
+    };
+  }
+
+  const repoName = project.mcpRepoName ?? project.displayName ?? project.id;
+  return {
+    source: 'mcp_codex',
+    identity: 'repo_name',
+    repoName,
+    packageName: project.mcpPackageName ?? repoName,
+    appRoot,
+  };
+}
+
+function mcpFingerprint(input) {
+  return crypto.createHash('sha256').update(JSON.stringify(input)).digest('hex');
+}
+
+function expectedMcpFingerprint(project) {
+  return mcpFingerprint(buildMcpFingerprintInput(project));
+}
 
 function loadEnv() {
   for (const candidate of [
@@ -102,7 +161,19 @@ function validateScenario(scenario, expectedId) {
       if (project.repoId !== null || project.repoFullName !== null || project.installationId !== null) {
         throw new Error(`MCP scenarios must use null GitHub fields in ${scenario.id}: ${project.id}`);
       }
-      if (typeof project.mcpFingerprint !== 'string' || project.mcpFingerprint.length !== 64) {
+      const allowBroadMatchFixture = scenario.id === 'mcp-multiple-projects';
+      if (
+        !allowBroadMatchFixture &&
+        (typeof project.mcpFingerprint !== 'string' ||
+          project.mcpFingerprint !== expectedMcpFingerprint(project))
+      ) {
+        throw new Error(`MCP scenario fingerprint must match repo context in ${scenario.id}: ${project.id}`);
+      }
+      if (
+        allowBroadMatchFixture &&
+        project.mcpFingerprint !== null &&
+        (typeof project.mcpFingerprint !== 'string' || project.mcpFingerprint.length !== 64)
+      ) {
         throw new Error(`Invalid mcpFingerprint in ${scenario.id}: ${project.id}`);
       }
     }

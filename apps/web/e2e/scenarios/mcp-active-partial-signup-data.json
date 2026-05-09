@@ -1,0 +1,129 @@
+{
+  "id": "mcp-active-partial-signup-data",
+  "description": "An MCP-created active project with partial signup instrumentation data.",
+  "tags": ["local", "state", "analytics", "mcp", "mcp-analytics"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000204",
+    "email": "e2e+mcp-partial-signup@example.com",
+    "githubUserId": 910000204,
+    "githubUsername": "fpa-mcp-partial-signup-agent",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000204?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_mcp_partial",
+      "source": "mcp_codex",
+      "displayName": "MCP Partial Signup Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/mcp-partial-signup-demo.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/mcp-partial-signup-demo",
+      "mcpRepoName": "mcp-partial-signup-demo",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "86effd5afb57e340c4a27e2189172ced60ac18c7dc7b341889463ea0424ff52e",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": [],
+      "eventsThisMonth": 8,
+      "lastEventAt": "2026-05-01T12:23:00.000Z",
+      "createdAt": "2026-05-01T11:40:00.000Z",
+      "updatedAt": "2026-05-01T12:23:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_mcp_partial",
+        "session_id": "sess_partial_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:00:00.000Z",
+        "url": "https://partial-signup-demo.test/",
+        "path": "/",
+        "referrer": "",
+        "visitor_id": "visitor_partial_001",
+        "is_returning": 0
+      },
+      {
+        "project_id": "proj_mcp_partial",
+        "session_id": "sess_partial_001",
+        "event_type": "signup_completed",
+        "timestamp": "2026-05-01T12:01:00.000Z",
+        "url": "https://partial-signup-demo.test/signup",
+        "path": "/signup",
+        "plan": "free"
+      },
+      {
+        "project_id": "proj_mcp_partial",
+        "session_id": "sess_partial_002",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:10:00.000Z",
+        "url": "https://partial-signup-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "https://google.com/search?q=partial",
+        "visitor_id": "visitor_partial_002",
+        "is_returning": 0
+      },
+      {
+        "project_id": "proj_mcp_partial",
+        "session_id": "sess_partial_002",
+        "event_type": "page_view",
+        "timestamp": "2026-05-01T12:11:00.000Z",
+        "url": "https://partial-signup-demo.test/pricing",
+        "path": "/pricing",
+        "engagement_time_ms": 16000,
+        "scroll_depth": 60,
+        "cta_clicks": "[\"pricing_signup\"]"
+      },
+      {
+        "project_id": "proj_mcp_partial",
+        "session_id": "sess_partial_002",
+        "event_type": "signup_started",
+        "timestamp": "2026-05-01T12:12:00.000Z",
+        "url": "https://partial-signup-demo.test/signup",
+        "path": "/signup"
+      },
+      {
+        "project_id": "proj_mcp_partial",
+        "session_id": "sess_partial_002",
+        "event_type": "signup_completed",
+        "timestamp": "2026-05-01T12:13:00.000Z",
+        "url": "https://partial-signup-demo.test/signup",
+        "path": "/signup",
+        "plan": "pro"
+      },
+      {
+        "project_id": "proj_mcp_partial",
+        "session_id": "sess_partial_003",
+        "event_type": "session_start",
+        "timestamp": "2026-05-01T12:20:00.000Z",
+        "url": "https://partial-signup-demo.test/docs",
+        "path": "/docs",
+        "referrer": "",
+        "visitor_id": "visitor_partial_003",
+        "is_returning": 0
+      },
+      {
+        "project_id": "proj_mcp_partial",
+        "session_id": "sess_partial_003",
+        "event_type": "signup_started",
+        "timestamp": "2026-05-01T12:23:00.000Z",
+        "url": "https://partial-signup-demo.test/signup",
+        "path": "/signup"
+      }
+    ]
+  },
+  "expectations": {
+    "startPath": "/projects/proj_mcp_partial",
+    "assertions": [
+      "Project resolves from the exact MCP repo fingerprint.",
+      "Signup path analytics report partial data when instrumentation is sparse.",
+      "Recommendation tools can suggest missing lifecycle events."
+    ]
+  }
+}
