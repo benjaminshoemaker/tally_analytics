@@ -1,5 +1,11 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import crypto from "node:crypto";
+import {
+  toProjectSource,
+  toProjectStatus,
+  type ProjectSource,
+  type ProjectStatus,
+} from "@fast-pr-analytics/shared-rules";
 
 import { buildAnalyticsDashboardUrls, type AnalyticsDashboardUrls } from "../../analytics/urls";
 import { db } from "../client";
@@ -10,9 +16,6 @@ function createProjectId(): string {
 }
 
 export type GitHubRepoRef = { id: number; fullName: string };
-export type ProjectSource = "github_app" | "mcp_codex";
-export type ProjectStatus = "pending" | "analyzing" | "analysis_failed" | "pr_pending" | "pr_closed" | "active" | "unsupported";
-
 export type OwnedAnalyticsProject = {
   id: string;
   displayName: string;
@@ -115,26 +118,6 @@ function dashboardUrlForProject(projectId: string): string {
 
 function stripTrailingGitSuffix(value: string): string {
   return value.replace(/\.git$/i, "");
-}
-
-function toProjectStatus(value: string): ProjectStatus {
-  if (
-    value === "pending" ||
-    value === "analyzing" ||
-    value === "analysis_failed" ||
-    value === "pr_pending" ||
-    value === "pr_closed" ||
-    value === "active" ||
-    value === "unsupported"
-  ) {
-    return value;
-  }
-
-  return "pending";
-}
-
-function toProjectSource(value: string): ProjectSource {
-  return value === "mcp_codex" ? "mcp_codex" : "github_app";
 }
 
 function toOwnedAnalyticsProject(row: AnalyticsProjectRow): OwnedAnalyticsProject {

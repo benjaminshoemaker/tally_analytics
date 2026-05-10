@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fast-pr-analytics/shared-rules": "workspace:*",
     "@neondatabase/serverless": "^1.0.2",
     "next": "^14.2.35",
     "pg": "^8.16.3",

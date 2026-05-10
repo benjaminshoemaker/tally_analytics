@@ -20,6 +20,9 @@ importers:
 
   apps/events:
     dependencies:
+      '@fast-pr-analytics/shared-rules':
+        specifier: workspace:*
+        version: link:../../packages/shared-rules
       '@neondatabase/serverless':
         specifier: ^1.0.2
         version: 1.0.2
@@ -57,6 +60,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@fast-pr-analytics/shared-rules':
+        specifier: workspace:*
+        version: link:../../packages/shared-rules
       '@modelcontextprotocol/sdk':
         specifier: ^1.26.0
         version: 1.26.0(zod@3.25.76)
@@ -190,6 +196,8 @@ importers:
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@22.19.3)(jiti@1.21.7)(jsdom@27.4.0)
+
+  packages/shared-rules: {}
 
 packages:
 

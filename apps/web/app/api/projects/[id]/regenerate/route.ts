@@ -1,4 +1,5 @@
 import { and, eq } from "drizzle-orm";
+import { canRegenerateProject } from "@fast-pr-analytics/shared-rules";
 
 import { getUserFromRequest } from "../../../../../lib/auth/get-user";
 import { db } from "../../../../../lib/db/client";
@@ -24,6 +25,7 @@ export async function POST(
   const rows = await db
     .select({
       id: projects.id,
+      source: projects.source,
       status: projects.status,
       repoId: projects.githubRepoId,
       repoFullName: projects.githubRepoFullName,
@@ -37,17 +39,16 @@ export async function POST(
     return Response.json({ success: false, message: "Project not found" } satisfies RegenerateResponse, { status: 404 });
   }
 
-  const allowedStatuses = ["analysis_failed", "pr_closed", "unsupported"];
-  if (!allowedStatuses.includes(project.status)) {
+  const regenerationCandidate = {
+    source: project.source,
+    status: project.status,
+    githubRepoId: project.repoId,
+    githubRepoFullName: project.repoFullName,
+    githubInstallationId: project.installationId,
+  };
+  if (!canRegenerateProject(regenerationCandidate)) {
     return Response.json(
-      { success: false, message: "Re-run is only allowed for failed, closed, or unsupported projects" } satisfies RegenerateResponse,
-      { status: 400 },
-    );
-  }
-
-  if (project.repoId === null || project.repoFullName === null || project.installationId === null) {
-    return Response.json(
-      { success: false, message: "Regeneration is only available for GitHub App projects" } satisfies RegenerateResponse,
+      { success: false, message: "Re-run is only available for eligible GitHub App projects" } satisfies RegenerateResponse,
       { status: 400 },
     );
   }
@@ -62,7 +63,11 @@ export async function POST(
   }
 
   await createRegenerateRequest({ userId: user.id, projectId });
-  await analyzeRepository({ repoId: project.repoId, repoFullName: project.repoFullName, installationId: project.installationId });
+  await analyzeRepository({
+    repoId: BigInt(regenerationCandidate.githubRepoId),
+    repoFullName: regenerationCandidate.githubRepoFullName,
+    installationId: BigInt(regenerationCandidate.githubInstallationId),
+  });
 
   return Response.json({ success: true, message: "Regeneration started" } satisfies RegenerateResponse, { status: 200 });
 }

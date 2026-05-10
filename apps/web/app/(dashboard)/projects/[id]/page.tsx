@@ -15,10 +15,6 @@ type RegenerateState = {
   retryAfter?: number;
 };
 
-function canRegenerateByStatus(status: string): boolean {
-  return status === "analysis_failed" || status === "pr_closed" || status === "unsupported";
-}
-
 function shouldShowQuota(status: string): boolean {
   return status === "pr_pending" || status === "active";
 }
@@ -101,13 +97,13 @@ function ExternalLinkIcon() {
   );
 }
 
-function getCanRegenerateAction(project: Record<string, unknown> | null, status: string): boolean {
+function getCanRegenerateAction(project: Record<string, unknown> | null): boolean {
   const actions = project?.actions;
   if (actions && typeof actions === "object" && "canRegenerate" in actions) {
     return Boolean((actions as { canRegenerate?: unknown }).canRegenerate);
   }
 
-  return canRegenerateByStatus(status);
+  return false;
 }
 
 export default function ProjectDetailPage({ params }: { params: { id: string } }) {
@@ -225,7 +221,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const quotaLimit = Number((projectQuery.data as Record<string, unknown>)?.quotaLimit ?? 0);
   const quotaUsed = Number((projectQuery.data as Record<string, unknown>)?.quotaUsed ?? 0);
   const isOverQuota = Boolean((projectQuery.data as Record<string, unknown>)?.isOverQuota);
-  const canRegenerate = getCanRegenerateAction(project, realStatus);
+  const canRegenerate = getCanRegenerateAction(project);
   const isWaitingForFirstEvent = displayStatus === "active" && lastEventAt === null;
 
   const showRerunButton = canRegenerate && !optimisticStatus;

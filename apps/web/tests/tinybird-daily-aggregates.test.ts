@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-describe("tinybird daily aggregates (Task 4.4.B)", () => {
+describe("legacy Tinybird daily aggregates reference", () => {
   const repoRoot = path.resolve(__dirname, "../../..");
   const datasourcePath = path.join(repoRoot, "tinybird/datasources/daily_aggregates.datasource");
   const pipePath = path.join(repoRoot, "tinybird/pipes/daily_aggregates_pipe.pipe");
@@ -37,4 +37,3 @@ describe("tinybird daily aggregates (Task 4.4.B)", () => {
     expect(contents).toContain("DATASOURCE daily_aggregates");
   });
 });
-

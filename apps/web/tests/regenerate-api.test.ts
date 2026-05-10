@@ -87,6 +87,7 @@ describe("POST /api/projects/[id]/regenerate", () => {
     const whereSpy = vi.fn().mockResolvedValue([
       {
         id: "proj_123",
+        source: "github_app",
         status: "pr_pending",
         repoId: 1n,
         repoFullName: "octo/repo",
@@ -116,6 +117,7 @@ describe("POST /api/projects/[id]/regenerate", () => {
     const whereSpy = vi.fn().mockResolvedValue([
       {
         id: "proj_123",
+        source: "github_app",
         status: "analysis_failed",
         repoId: 1n,
         repoFullName: "octo/repo",
@@ -184,7 +186,7 @@ describe("POST /api/projects/[id]/regenerate", () => {
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({
       success: false,
-      message: "Regeneration is only available for GitHub App projects",
+      message: "Re-run is only available for eligible GitHub App projects",
     });
     expect(countRecentRegenerateRequestsSpy).not.toHaveBeenCalled();
     expect(createRegenerateRequestSpy).not.toHaveBeenCalled();
@@ -198,6 +200,7 @@ describe("POST /api/projects/[id]/regenerate", () => {
     const whereSpy = vi.fn().mockResolvedValue([
       {
         id: "proj_123",
+        source: "github_app",
         status: "analysis_failed",
         repoId: 1n,
         repoFullName: "octo/repo",
@@ -230,6 +233,7 @@ describe("POST /api/projects/[id]/regenerate", () => {
     const whereSpy = vi.fn().mockResolvedValue([
       {
         id: "proj_123",
+        source: "github_app",
         status: "unsupported",
         repoId: 1n,
         repoFullName: "octo/repo",

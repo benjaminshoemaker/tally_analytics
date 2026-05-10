@@ -2,11 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-describe("tinybird top_referrers pipe (Task 4.5.D)", () => {
+describe("legacy Tinybird top_referrers pipe reference", () => {
   const repoRoot = path.resolve(__dirname, "../../..");
   const pipePath = path.join(repoRoot, "tinybird/pipes/top_referrers.pipe");
 
-  it("returns top 10 referrer hosts, mapping empty referrer to Direct", () => {
+  it("keeps the legacy top referrers pipe definition readable", () => {
     expect(fs.existsSync(pipePath)).toBe(true);
     const contents = fs.readFileSync(pipePath, "utf8");
 

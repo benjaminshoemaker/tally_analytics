@@ -1,4 +1,5 @@
 import { desc, eq } from "drizzle-orm";
+import { canRegenerateProject } from "@fast-pr-analytics/shared-rules";
 
 import { getUserFromRequest } from "../../../lib/auth/get-user";
 import { db } from "../../../lib/db/client";
@@ -46,24 +47,6 @@ async function fetchLastEventAtByProjectId(projectIds: string[]): Promise<Map<st
   }
 
   return map;
-}
-
-const REGENERATABLE_STATUSES = new Set(["analysis_failed", "pr_closed", "unsupported"]);
-
-function canRegenerateProject(project: {
-  source: string;
-  status: string;
-  githubRepoId: bigint | null;
-  githubRepoFullName: string | null;
-  githubInstallationId: bigint | null;
-}): boolean {
-  return (
-    project.source === "github_app" &&
-    REGENERATABLE_STATUSES.has(project.status) &&
-    project.githubRepoId !== null &&
-    project.githubRepoFullName !== null &&
-    project.githubInstallationId !== null
-  );
 }
 
 type ProjectsResponse = {

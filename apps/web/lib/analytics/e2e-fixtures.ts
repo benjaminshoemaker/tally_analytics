@@ -48,6 +48,13 @@ export type E2ELiveFeedResponse = {
   hasMore: boolean;
 };
 
+type FixtureDataWindow = {
+  start: Date;
+  end: Date;
+  previousStart: Date;
+  previousEnd: Date;
+};
+
 export function isE2EAnalyticsFixtureMode(): boolean {
   return process.env.E2E_TEST_MODE === '1';
 }
@@ -233,15 +240,20 @@ function referrerHost(referrer: string | undefined): string {
   }
 }
 
-export function buildE2EOverview(projectId: string, period: Period): E2EOverviewResponse {
+export function buildE2EOverview(
+  projectId: string,
+  period: Period,
+  dataWindow?: FixtureDataWindow
+): E2EOverviewResponse {
   const events = loadE2EAnalyticsEvents(projectId);
-  const now = fixtureNow(events);
+  const now = dataWindow?.end.getTime() ?? fixtureNow(events);
   const duration = periodMs(period);
-  const start = now - duration;
-  const previousStart = start - duration;
+  const start = dataWindow?.start.getTime() ?? now - duration;
+  const previousStart = dataWindow?.previousStart.getTime() ?? start - duration;
+  const previousEnd = dataWindow?.previousEnd.getTime() ?? start;
 
   const currentEvents = eventsInWindow(events, start, now);
-  const previousEvents = eventsInWindow(events, previousStart, start);
+  const previousEvents = eventsInWindow(events, previousStart, previousEnd);
 
   const currentPageViews = currentEvents.filter((event) => event.event_type === 'page_view');
   const previousPageViews = previousEvents.filter((event) => event.event_type === 'page_view');
@@ -278,11 +290,15 @@ export function buildE2EOverview(projectId: string, period: Period): E2EOverview
   };
 }
 
-export function buildE2ESessions(projectId: string, period: Period): E2ESessionsResponse {
+export function buildE2ESessions(
+  projectId: string,
+  period: Period,
+  dataWindow?: Pick<FixtureDataWindow, 'start' | 'end'>
+): E2ESessionsResponse {
   const events = loadE2EAnalyticsEvents(projectId);
-  const now = fixtureNow(events);
-  const start = now - periodMs(period);
-  const sessions = eventsInWindow(events, start, now).filter(
+  const end = dataWindow?.end.getTime() ?? fixtureNow(events);
+  const start = dataWindow?.start.getTime() ?? end - periodMs(period);
+  const sessions = eventsInWindow(events, start, end).filter(
     (event) => event.event_type === 'session_start'
   );
 

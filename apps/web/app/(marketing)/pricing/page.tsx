@@ -6,43 +6,14 @@ import PricingCard from "../../../components/marketing/pricing-card";
 import { SESSION_COOKIE_NAME } from "../../../lib/auth/cookies";
 import { db } from "../../../lib/db/client";
 import { sessions, users } from "../../../lib/db/schema";
+import { PLAN_METADATA, isUserPlan, type UserPlan } from "../../../lib/stripe/plans";
 
 const SETUP_URL = "/docs/setup";
 
 const TIERS = [
-  {
-    name: "Free",
-    priceLabel: "$0",
-    priceSuffix: "forever",
-    eventsLabel: "10,000 events/mo",
-    projectsLabel: "3",
-    retentionLabel: "90 days",
-    supportLabel: "Community",
-    ctaLabel: "Get Started",
-    highlighted: false,
-  },
-  {
-    name: "Pro",
-    priceLabel: "$9",
-    priceSuffix: "/month",
-    eventsLabel: "100,000 events/mo",
-    projectsLabel: "10",
-    retentionLabel: "Unlimited",
-    supportLabel: "Email",
-    ctaLabel: "Start Free Trial",
-    highlighted: true,
-  },
-  {
-    name: "Team",
-    priceLabel: "$29",
-    priceSuffix: "/month",
-    eventsLabel: "1,000,000 events/mo",
-    projectsLabel: "Unlimited",
-    retentionLabel: "Unlimited",
-    supportLabel: "Priority",
-    ctaLabel: "Start Free Trial",
-    highlighted: false,
-  },
+  { plan: "free", ...PLAN_METADATA.free, ctaLabel: "Get Started", highlighted: false },
+  { plan: "pro", ...PLAN_METADATA.pro, ctaLabel: "Start Free Trial", highlighted: true },
+  { plan: "team", ...PLAN_METADATA.team, ctaLabel: "Start Free Trial", highlighted: false },
 ] as const;
 
 type PricingCta =
@@ -51,7 +22,7 @@ type PricingCta =
   | { kind: "portal"; label: string }
   | { kind: "disabled"; label: string };
 
-async function getUserPlanFromCookies(): Promise<"free" | "pro" | "team" | null> {
+async function getUserPlanFromCookies(): Promise<UserPlan | null> {
   const sessionId = cookies().get(SESSION_COOKIE_NAME)?.value ?? null;
   if (!sessionId) return null;
 
@@ -65,7 +36,8 @@ async function getUserPlanFromCookies(): Promise<"free" | "pro" | "team" | null>
   if (!userId) return null;
 
   const userRows = await db.select({ plan: users.plan }).from(users).where(eq(users.id, userId));
-  return (userRows[0]?.plan as "free" | "pro" | "team" | undefined) ?? null;
+  const plan = userRows[0]?.plan;
+  return isUserPlan(plan) ? plan : null;
 }
 
 export default async function PricingPage() {
@@ -92,10 +64,10 @@ export default async function PricingPage() {
 
               if (!userPlan) {
                 cta = { kind: "link", label: "Start with MCP", href: SETUP_URL };
-              } else if (tier.name === "Free") {
+              } else if (tier.plan === "free") {
                 cta = { kind: "disabled", label: userPlan === "free" ? "Current plan" : "Included" };
               } else if (userPlan === "free") {
-                cta = { kind: "checkout", label: `Upgrade to ${tier.name}`, plan: tier.name === "Pro" ? "pro" : "team" };
+                cta = { kind: "checkout", label: `Upgrade to ${tier.name}`, plan: tier.plan };
               } else {
                 cta = { kind: "portal", label: "Manage billing" };
               }
@@ -148,15 +120,15 @@ export default async function PricingPage() {
             <tbody className="text-[#1b140d]">
               <tr className="border-b border-[#f3ede7]">
                 <td className="py-4 pr-4 text-[#9a734c]">Events</td>
-                <td className="py-4 pr-4">10,000/mo</td>
-                <td className="py-4 pr-4 font-medium">100,000/mo</td>
-                <td className="py-4">1,000,000/mo</td>
+                <td className="py-4 pr-4">{PLAN_METADATA.free.eventsLabel.replace(" events", "")}</td>
+                <td className="py-4 pr-4 font-medium">{PLAN_METADATA.pro.eventsLabel.replace(" events", "")}</td>
+                <td className="py-4">{PLAN_METADATA.team.eventsLabel.replace(" events", "")}</td>
               </tr>
               <tr className="border-b border-[#f3ede7] bg-[#f3ede7]/30">
                 <td className="py-4 pr-4 text-[#9a734c]">Projects</td>
-                <td className="py-4 pr-4">3</td>
-                <td className="py-4 pr-4 font-medium">10</td>
-                <td className="py-4">Unlimited</td>
+                <td className="py-4 pr-4">{PLAN_METADATA.free.projectsLabel}</td>
+                <td className="py-4 pr-4 font-medium">{PLAN_METADATA.pro.projectsLabel}</td>
+                <td className="py-4">{PLAN_METADATA.team.projectsLabel}</td>
               </tr>
               <tr className="border-b border-[#f3ede7]">
                 <td className="py-4 pr-4 text-[#9a734c]">Retention</td>

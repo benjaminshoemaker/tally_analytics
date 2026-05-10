@@ -1,4 +1,5 @@
 import { and, eq } from "drizzle-orm";
+import { canRegenerateProject, eventLimitForPlan } from "@fast-pr-analytics/shared-rules";
 
 import { getUserFromRequest } from "../../../../lib/auth/get-user";
 import { db } from "../../../../lib/db/client";
@@ -35,30 +36,6 @@ async function fetchTinybirdLastEventAt(projectId: string): Promise<string | nul
   );
 
   return normalizeTimestamp(result.data[0]?.last_event_at ?? null);
-}
-
-const PLAN_LIMITS = {
-  free: 10_000,
-  pro: 100_000,
-  team: 1_000_000,
-} as const;
-
-const REGENERATABLE_STATUSES = new Set(["analysis_failed", "pr_closed", "unsupported"]);
-
-function canRegenerateProject(project: {
-  source: string;
-  status: string;
-  githubRepoId: bigint | null;
-  githubRepoFullName: string | null;
-  githubInstallationId: bigint | null;
-}): boolean {
-  return (
-    project.source === "github_app" &&
-    REGENERATABLE_STATUSES.has(project.status) &&
-    project.githubRepoId !== null &&
-    project.githubRepoFullName !== null &&
-    project.githubInstallationId !== null
-  );
 }
 
 type ProjectDetailResponse = {
@@ -123,7 +100,7 @@ export async function GET(
 
   const userRows = await db.select({ plan: users.plan }).from(users).where(eq(users.id, user.id));
   const plan = userRows[0]?.plan ?? "free";
-  const quotaLimit = PLAN_LIMITS[plan as keyof typeof PLAN_LIMITS] ?? PLAN_LIMITS.free;
+  const quotaLimit = eventLimitForPlan(plan);
   const quotaUsed = Number(project.eventsThisMonth);
   const isOverQuota = quotaUsed >= quotaLimit;
 

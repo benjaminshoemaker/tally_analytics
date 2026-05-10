@@ -2,11 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-describe("tinybird top_pages pipe (Task 4.5.C)", () => {
+describe("legacy Tinybird top_pages pipe reference", () => {
   const repoRoot = path.resolve(__dirname, "../../..");
   const pipePath = path.join(repoRoot, "tinybird/pipes/top_pages.pipe");
 
-  it("returns top pages with a percentage, limited to 10", () => {
+  it("keeps the legacy top pages pipe definition readable", () => {
     expect(fs.existsSync(pipePath)).toBe(true);
     const contents = fs.readFileSync(pipePath, "utf8");
 

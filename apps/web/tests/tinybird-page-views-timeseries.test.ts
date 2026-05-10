@@ -2,11 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-describe("tinybird page_views_timeseries pipe (Task 4.5.B)", () => {
+describe("legacy Tinybird page_views_timeseries pipe reference", () => {
   const repoRoot = path.resolve(__dirname, "../../..");
   const pipePath = path.join(repoRoot, "tinybird/pipes/page_views_timeseries.pipe");
 
-  it("returns daily page_view counts in date order for a date range", () => {
+  it("keeps the legacy daily page_view pipe definition readable", () => {
     expect(fs.existsSync(pipePath)).toBe(true);
     const contents = fs.readFileSync(pipePath, "utf8");
 
@@ -21,4 +21,3 @@ describe("tinybird page_views_timeseries pipe (Task 4.5.B)", () => {
     expect(contents).toContain("ORDER BY date");
   });
 });
-

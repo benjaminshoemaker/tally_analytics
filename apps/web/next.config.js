@@ -21,7 +21,8 @@ try {
 }
 
 const nextConfig = {
-  reactStrictMode: true
+  reactStrictMode: true,
+  transpilePackages: ["@fast-pr-analytics/shared-rules"],
 };
 
 module.exports = nextConfig;

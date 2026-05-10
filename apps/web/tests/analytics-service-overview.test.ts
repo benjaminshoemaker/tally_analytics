@@ -235,11 +235,11 @@ describe('analytics service overview primitives', () => {
     });
   });
 
-  it('returns sessions summary with existing Tinybird returning visitor semantics', async () => {
+  it('returns sessions summary with Tinybird returning visitor semantics', async () => {
     tinybirdSqlSpy = vi.fn().mockResolvedValueOnce({
       data: [
-        { date: '2026-05-08', sessions: 2 },
-        { date: '2026-05-09', sessions: 3 },
+        { date: '2026-05-08', new_sessions: 2, returning_sessions: 0 },
+        { date: '2026-05-09', new_sessions: 2, returning_sessions: 1 },
       ],
     });
 
@@ -254,11 +254,11 @@ describe('analytics service overview primitives', () => {
     expect(result).toMatchObject({
       status: 'ok',
       totalSessions: 5,
-      newVisitors: 5,
-      returningVisitors: 0,
+      newVisitors: 4,
+      returningVisitors: 1,
       timeSeries: [
         { date: '2026-05-08', newSessions: 2, returningSessions: 0 },
-        { date: '2026-05-09', newSessions: 3, returningSessions: 0 },
+        { date: '2026-05-09', newSessions: 2, returningSessions: 1 },
       ],
       provenance: {
         projectName: 'Example App',

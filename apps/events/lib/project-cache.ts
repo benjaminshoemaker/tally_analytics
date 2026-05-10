@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { Pool } from "pg";
+import { isIngestibleProjectStatus } from "@fast-pr-analytics/shared-rules";
 
 type ProjectStatus = string;
 
@@ -25,7 +26,7 @@ export function createProjectCache({ ttlMs = 30_000, now = Date.now, queryStatus
     cache.delete(projectId);
 
     const status = await queryStatus(projectId);
-    const active = status === "active";
+    const active = isIngestibleProjectStatus(status);
     cache.set(projectId, { active, expiresAtMs: nowMs + ttlMs });
     return active;
   }

@@ -22,6 +22,7 @@
     "e2e": "node ./scripts/playwright-test.mjs"
   },
   "dependencies": {
+    "@fast-pr-analytics/shared-rules": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.26.0",
     "@neondatabase/serverless": "^1.0.2",
     "@octokit/app": "^16.1.2",

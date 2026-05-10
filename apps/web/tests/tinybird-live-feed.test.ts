@@ -2,11 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-describe("tinybird live_feed pipe (Task 4.5.A)", () => {
+describe("legacy Tinybird live_feed pipe reference", () => {
   const repoRoot = path.resolve(__dirname, "../../..");
   const pipePath = path.join(repoRoot, "tinybird/pipes/live_feed.pipe");
 
-  it("defines a recent-events query with relative_time and parameters", () => {
+  it("keeps the legacy recent-events pipe definition readable", () => {
     expect(fs.existsSync(pipePath)).toBe(true);
     const contents = fs.readFileSync(pipePath, "utf8");
 
@@ -18,4 +18,3 @@ describe("tinybird live_feed pipe (Task 4.5.A)", () => {
     expect(contents).toContain("LIMIT {{Int32(limit");
   });
 });
-

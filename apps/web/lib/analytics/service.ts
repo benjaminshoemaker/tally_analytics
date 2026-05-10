@@ -512,13 +512,18 @@ async function querySessionsSummaryFromTinybird(params: {
   const startSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.start));
   const endSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.end));
 
-  const result = await runAnalyticsTinybirdQuery<{ date: string; sessions: number }>(
+  const result = await runAnalyticsTinybirdQuery<{
+    date: string;
+    new_sessions: number;
+    returning_sessions: number;
+  }>(
     client,
     'sessions_timeseries',
     `
       SELECT
         toDate(timestamp) AS date,
-        countIf(event_type = 'session_start') AS sessions
+        countIf(event_type = 'session_start' AND ifNull(is_returning, 0) != 1) AS new_sessions,
+        countIf(event_type = 'session_start' AND ifNull(is_returning, 0) = 1) AS returning_sessions
       FROM events
       WHERE project_id = '${projectIdSql}'
       AND timestamp >= toDateTime64('${startSql}', 3)
@@ -530,8 +535,8 @@ async function querySessionsSummaryFromTinybird(params: {
 
   const timeSeries = result.data.map((row) => ({
     date: String(row.date),
-    newSessions: Number(row.sessions),
-    returningSessions: 0,
+    newSessions: Number(row.new_sessions),
+    returningSessions: Number(row.returning_sessions),
   }));
 
   const totalSessions = timeSeries.reduce(
@@ -542,8 +547,8 @@ async function querySessionsSummaryFromTinybird(params: {
   return {
     period: params.period,
     totalSessions,
-    newVisitors: totalSessions,
-    returningVisitors: 0,
+    newVisitors: timeSeries.reduce((sum, row) => sum + row.newSessions, 0),
+    returningVisitors: timeSeries.reduce((sum, row) => sum + row.returningSessions, 0),
     timeSeries,
   };
 }
@@ -1334,7 +1339,7 @@ export async function getProjectOverview(params: {
 
   try {
     const response = isE2EAnalyticsFixtureMode()
-      ? buildE2EOverview(params.projectId, params.period)
+      ? buildE2EOverview(params.projectId, params.period, dataWindow)
       : await queryProjectOverviewFromTinybird({
           projectId: params.projectId,
           period: params.period,
@@ -1387,7 +1392,7 @@ export async function getSessionsSummary(params: {
 
   try {
     const response = isE2EAnalyticsFixtureMode()
-      ? buildE2ESessions(params.projectId, params.period)
+      ? buildE2ESessions(params.projectId, params.period, dataWindow)
       : await querySessionsSummaryFromTinybird({
           projectId: params.projectId,
           period: params.period,
@@ -1814,7 +1819,7 @@ export async function suggestNextEvents(params: {
 
   try {
     const overview = isE2EAnalyticsFixtureMode()
-      ? buildE2EOverview(params.projectId, params.period)
+      ? buildE2EOverview(params.projectId, params.period, dataWindow)
       : await queryProjectOverviewFromTinybird({
           projectId: params.projectId,
           period: params.period,

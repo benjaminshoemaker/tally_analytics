@@ -72,8 +72,8 @@ describe("GET /api/projects/[id]/analytics/sessions", () => {
     createTinybirdClientFromEnvSpy = vi.fn().mockReturnValue({ apiUrl: "x", token: "y" });
     tinybirdSqlSpy = vi.fn().mockResolvedValue({
       data: [
-        { date: "2025-01-01", sessions: 2 },
-        { date: "2025-01-02", sessions: 3 },
+        { date: "2025-01-01", new_sessions: 2, returning_sessions: 0 },
+        { date: "2025-01-02", new_sessions: 2, returning_sessions: 1 },
       ],
     });
 
@@ -86,13 +86,12 @@ describe("GET /api/projects/[id]/analytics/sessions", () => {
     await expect(response.json()).resolves.toEqual({
       period: "7d",
       totalSessions: 5,
-      newVisitors: 5,
-      returningVisitors: 0,
+      newVisitors: 4,
+      returningVisitors: 1,
       timeSeries: [
         { date: "2025-01-01", newSessions: 2, returningSessions: 0 },
-        { date: "2025-01-02", newSessions: 3, returningSessions: 0 },
+        { date: "2025-01-02", newSessions: 2, returningSessions: 1 },
       ],
     });
   });
 });
-
