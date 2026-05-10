@@ -9,6 +9,7 @@
     "start": "pnpm -C apps/web start",
     "lint": "pnpm -C apps/web lint",
     "typecheck": "pnpm -C apps/web typecheck",
+    "env:check": "node scripts/check-local-env.mjs",
     "format": "prettier --write ."
   },
   "devDependencies": {

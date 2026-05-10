@@ -27,6 +27,8 @@ Future feature briefs may live under `features/*/FEATURE_BRIEF.md`. Treat those 
 
 Agent-readable local testing guidance lives in `docs/agent-testing.md`. Use this harness when you need to test product states, onboarding, project status, quota, regenerate actions, or analytics data without a human GitHub account.
 
+Local env guidance lives in `docs/local-env.md`. The repo-root `.env.local` is the canonical local env file. App-local files such as `apps/web/.env.local` and `apps/events/.env.local` should be symlinks to `../../.env.local` or absent; do not keep divergent copies. Check with `pnpm env:check`.
+
 Core commands:
 
 ```bash
