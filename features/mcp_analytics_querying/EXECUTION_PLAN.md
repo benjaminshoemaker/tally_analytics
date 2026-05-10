@@ -733,8 +733,8 @@ Register read-only MCP tools for event discovery, event schema inspection, paths
   - Verify: `cd ../.. && test -f apps/web/scripts/mcp-self-test.mjs`
 - [x] (CODE) Port 3000 is not already occupied by an unknown local server before the harness starts.
   - Verify: `! lsof -iTCP:3000 -sTCP:LISTEN -n -P >/dev/null 2>&1`
-- [ ] (CODE) Required local E2E database URL is set before harness runs.
-  - Verify: `test "${DATABASE_URL:-}" = "postgres://postgres:postgres@127.0.0.1:5432/postgres"`
+- [x] (CODE) Root `.env.local` includes the required local E2E database URL before the harness runs.
+  - Verify: `cd ../.. && pnpm env:check`
 
 ### Step 4.1: Self-Test Harness
 
