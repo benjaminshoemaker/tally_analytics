@@ -950,19 +950,19 @@ Add or complete final negative tests for auth, privacy, sanitization, and unsupp
 ### Phase 5 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) Full targeted feature suite passes.
+- [x] (TEST) Full targeted feature suite passes.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools mcp-project-queries analytics-service-overview analytics-service-events analytics-service-paths analytics-service-recommendations e2e-analytics-fixtures e2e-scenarios analytics-overview-api analytics-sessions-api analytics-live-feed-api`
-- [ ] (TYPE) Type checking passes.
+- [x] (TYPE) Type checking passes.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
-- [ ] (BUILD) Web build passes.
+- [x] (BUILD) Web build passes.
   - Verify: `cd ../.. && pnpm --filter web build`
-- [ ] (TEST) MCP analytics self-test passes.
+- [x] (TEST) MCP analytics self-test passes.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying`
 
 **Regression Verification:**
-- [ ] (TEST) Existing MCP onboarding self-test still passes.
+- [x] (TEST) Existing MCP onboarding self-test still passes.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-self-test`
-- [ ] (CODE) No SDK, ingestion, billing, pending-task, or prompt-generated dashboard scope was added on the feature branch.
+- [x] (CODE) No SDK, ingestion, billing, pending-task, or prompt-generated dashboard scope was added on the feature branch.
   - Verify: `cd ../.. && if git diff --name-only "$(git merge-base HEAD origin/main)"...HEAD | rg -q '^(packages/sdk|apps/events|apps/web/lib/stripe|apps/web/app/api/stripe|features/dashboard_pending_tasks)/'; then exit 1; fi && ! rg -n 'createPending|generated_dashboard|raw_sql|natural_language' apps/web/lib/mcp apps/web/lib/analytics`
 
 ## Rollback Plan
