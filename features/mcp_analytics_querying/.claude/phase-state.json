@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_analytics_querying",
-  "last_updated": "2026-05-09T20:27:04.000Z",
+  "last_updated": "2026-05-09T20:34:18.000Z",
   "generated_by": "phase-start",
   "main": {
     "current_phase": 4,
@@ -359,7 +359,7 @@
         "name": "MCP Flow Harness",
         "status": "IN_PROGRESS",
         "tasks_total": 3,
-        "tasks_complete": 2,
+        "tasks_complete": 3,
         "started_at": "2026-05-09T20:19:12.000Z",
         "tasks": {
           "4.1.A": {
@@ -402,6 +402,31 @@
               "consecutive": 0,
               "verification_attempts": {},
               "last_errors": []
+            }
+          },
+          "4.2.A": {
+            "status": "COMPLETE",
+            "title": "Add Prompt-Sequence Tests And Agent Testing Docs",
+            "completed_at": "2026-05-09T20:34:18.000Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "4/4",
+              "commands": [
+                "rg -q 'e2e:mcp-analytics-querying|MCP analytics' docs/agent-testing.md",
+                "pnpm --filter web test -- mcp-analytics-tools",
+                "pnpm --filter web test -- mcp-analytics-tools analytics-service-events",
+                "pnpm --filter web typecheck"
+              ]
+            },
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {
+                "pnpm --filter web test -- mcp-analytics-tools": 1,
+                "pnpm --filter web test -- mcp-analytics-tools analytics-service-events": 1
+              },
+              "last_errors": [
+                "Initial prompt-sequence path assertion expected a shorter paths array than the mocked MCP response returned; assertion now uses arrayContaining for the required path."
+              ]
             }
           }
         }

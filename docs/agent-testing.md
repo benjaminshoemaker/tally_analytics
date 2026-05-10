@@ -80,6 +80,20 @@ DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter 
 
 When `E2E_TEST_MODE=1`, analytics API routes read `.e2e-fixtures/*/events.json` before Tinybird. This keeps campaign/session/live-feed checks deterministic and account-free.
 
+## MCP Analytics Querying
+
+Use the MCP analytics querying harness when you need to prove that a coding agent can retrieve Tally analytics through MCP tools, not through direct service imports, dashboard HTTP APIs, or browser UI assertions.
+
+Run the harness against the local E2E database:
+
+```bash
+DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying
+```
+
+The harness seeds local analytics scenarios, creates local OAuth rows for the MCP resource at `http://localhost:3000/api/mcp`, starts the web app with `E2E_TEST_MODE=1`, connects an MCP SDK client through `StreamableHTTPClientTransport`, and calls the read-only analytics tools over the hosted MCP route. Passing output is compact JSON with `ok: true` plus named stages such as `tools-list`, `usage-summary`, `signup-path`, `missing-signup-recommendation`, `ownership-guard`, and `invalid-inputs`.
+
+The harness deletes temporary fixtures and local OAuth rows by default. Add `--keep` only when you need to inspect `tmp/mcp-analytics-querying-self-test/` after a failure.
+
 ## Agent Workflow
 
 1. Pick a scenario from `pnpm --filter web e2e:scenarios`.

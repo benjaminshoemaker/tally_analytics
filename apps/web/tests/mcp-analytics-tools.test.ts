@@ -571,3 +571,262 @@ describe("MCP event, path, and recommendation analytics tools", () => {
     });
   });
 });
+
+describe("MCP analytics prompt-shaped sequences", () => {
+  const auth = { authInfo: { extra: { userId: "user_1" } } };
+  const dataWindow = {
+    period: "7d",
+    start: "2026-05-02T00:00:00.000Z",
+    end: "2026-05-09T00:00:00.000Z",
+    dataThrough: "2026-05-09T00:00:00.000Z",
+  };
+
+  it("supports a usage-summary prompt with project resolution, exact window, and dashboard URL", async () => {
+    resolveOwnedMcpProjectForRepoContextSpy = vi.fn().mockResolvedValue({
+      status: "ok",
+      project: ownedProject,
+      match: { strategy: "fingerprint", confidence: "exact" },
+    });
+    getProjectOverviewSpy = vi.fn().mockResolvedValue({
+      status: "ok",
+      summary: "Example App had 120 page views and 42 sessions in the last 7 days.",
+      period: "7d",
+      dataWindow,
+      pageViews: { total: 120, change: 12, timeSeries: [] },
+      sessions: { total: 42, change: 4 },
+      topPages: [{ path: "/pricing", views: 36 }],
+      topReferrers: [{ referrer: "google.com", sessions: 10 }],
+      provenance: {
+        projectName: "Example App",
+        generatedAt: "2026-05-09T00:00:00.000Z",
+        dataWindow,
+        queryBasis: { tool: "get_project_overview", semantics: "dashboard_overview" },
+      },
+      dashboardUrls,
+    });
+    const registerToolSpy = vi.fn();
+    registerAnalyticsTools({ registerTool: registerToolSpy } as never);
+
+    const resolved = await analyticsToolCallback(registerToolSpy, "resolve_project")(
+      { repo: { name: "example-app", gitRemote: "git@github.com:acme/example-app.git", appRoot: "." } },
+      auth,
+    );
+    const overview = await analyticsToolCallback(registerToolSpy, "get_project_overview")(
+      { projectId: "proj_123", period: "7d" },
+      auth,
+    );
+
+    expect(resolved).toMatchObject({
+      structuredContent: {
+        status: "ok",
+        project: { id: "proj_123", dashboardUrls },
+        match: { confidence: "exact" },
+      },
+    });
+    expect(overview).toMatchObject({
+      content: [{ type: "text", text: "Example App had 120 page views and 42 sessions in the last 7 days." }],
+      structuredContent: {
+        status: "ok",
+        dataWindow,
+        pageViews: { total: 120 },
+        dashboardUrls: { overview: dashboardUrls.overview },
+      },
+    });
+  });
+
+  it("supports a pages-before-signup prompt when an exact target event exists", async () => {
+    listEventsSpy = vi.fn().mockResolvedValue({
+      status: "ok",
+      summary: "Observed signup and page events.",
+      period: "7d",
+      dataWindow,
+      events: [
+        { eventName: "signup_completed", count: 14 },
+        { eventName: "page_view", count: 120 },
+      ],
+      dashboardUrls,
+      provenance: { projectName: "Example App", generatedAt: "now", dataWindow, queryBasis: { tool: "list_events" } },
+    });
+    getPathsToEventSpy = vi.fn().mockResolvedValue({
+      status: "ok",
+      summary: "Most signup completions were preceded by /pricing or /docs.",
+      projectId: "proj_123",
+      period: "7d",
+      targetEvent: "signup_completed",
+      dataWindow,
+      paths: [
+        { sequence: ["/pricing", "/signup"], targetEventCount: 9, percentage: 64 },
+        { sequence: ["/docs", "/signup"], targetEventCount: 3, percentage: 21 },
+      ],
+      coverage: { targetEventTotal: 14, targetEventsWithPriorPath: 12 },
+      dashboardUrls,
+      provenance: {
+        projectName: "Example App",
+        generatedAt: "now",
+        dataWindow,
+        queryBasis: { tool: "get_paths_to_event", semantics: "session_paths_to_event" },
+      },
+    });
+    const registerToolSpy = vi.fn();
+    registerAnalyticsTools({ registerTool: registerToolSpy } as never);
+
+    const events = await analyticsToolCallback(registerToolSpy, "list_events")(
+      { projectId: "proj_123", period: "7d" },
+      auth,
+    );
+    const paths = await analyticsToolCallback(registerToolSpy, "get_paths_to_event")(
+      { projectId: "proj_123", period: "7d", targetEvent: "signup_completed", maxSteps: 5 },
+      auth,
+    );
+
+    expect(events).toMatchObject({
+      structuredContent: {
+        status: "ok",
+        events: [{ eventName: "signup_completed" }, { eventName: "page_view" }],
+        dashboardUrls,
+      },
+    });
+    expect(paths).toMatchObject({
+      structuredContent: {
+        status: "ok",
+        targetEvent: "signup_completed",
+        dataWindow,
+        paths: expect.arrayContaining([
+          expect.objectContaining({ sequence: ["/pricing", "/signup"], targetEventCount: 9 }),
+        ]),
+        dashboardUrls: { overview: dashboardUrls.overview },
+      },
+    });
+    expect(getPathsToEventSpy).toHaveBeenCalledWith({
+      userId: "user_1",
+      projectId: "proj_123",
+      period: "7d",
+      targetEvent: "signup_completed",
+      maxSteps: 5,
+      limit: 10,
+    });
+  });
+
+  it("supports a pages-before-signup prompt without a target event by returning limitations and suggestions", async () => {
+    listEventsSpy = vi.fn().mockResolvedValue({
+      status: "ok",
+      summary: "Only generic traffic events were observed.",
+      period: "7d",
+      dataWindow,
+      events: [
+        { eventName: "page_view", count: 120 },
+        { eventName: "cta_clicked", count: 18 },
+      ],
+      dashboardUrls,
+      provenance: { projectName: "Example App", generatedAt: "now", dataWindow, queryBasis: { tool: "list_events" } },
+    });
+    suggestNextEventsSpy = vi.fn().mockResolvedValue({
+      status: "partial_data",
+      summary: "Signup paths can only be answered partially because no signup completion event exists.",
+      projectId: "proj_123",
+      period: "7d",
+      dataWindow,
+      evidence: ["Pricing and docs pages have traffic.", "CTA clicks are observed."],
+      limitations: ["No signup_started or signup_completed event has been observed."],
+      recommendations: [
+        { eventName: "signup_started", reason: "Marks entry into the funnel.", priority: "high" },
+        { eventName: "signup_completed", reason: "Makes pages-before-signup answerable.", priority: "high" },
+      ],
+      createsPendingTasks: false,
+      dashboardUrls,
+    });
+    const registerToolSpy = vi.fn();
+    registerAnalyticsTools({ registerTool: registerToolSpy } as never);
+
+    const events = await analyticsToolCallback(registerToolSpy, "list_events")(
+      { projectId: "proj_123", period: "7d" },
+      auth,
+    );
+    const suggestions = await analyticsToolCallback(registerToolSpy, "suggest_next_events")(
+      { projectId: "proj_123", period: "7d", goal: "Which pages are users visiting before signup?" },
+      auth,
+    );
+
+    expect(events.structuredContent).toMatchObject({
+      status: "ok",
+      events: [{ eventName: "page_view" }, { eventName: "cta_clicked" }],
+    });
+    expect(JSON.stringify(events.structuredContent)).not.toContain("signup_completed");
+    expect(suggestions).toMatchObject({
+      structuredContent: {
+        status: "partial_data",
+        dataWindow,
+        limitations: ["No signup_started or signup_completed event has been observed."],
+        recommendations: [{ eventName: "signup_started" }, { eventName: "signup_completed" }],
+        createsPendingTasks: false,
+        dashboardUrls: { overview: dashboardUrls.overview },
+      },
+    });
+  });
+
+  it("supports a next-events prompt with evidence and no pending task creation", async () => {
+    suggestNextEventsSpy = vi.fn().mockResolvedValue({
+      status: "partial_data",
+      summary: "Add funnel and activation events next.",
+      projectId: "proj_123",
+      period: "30d",
+      dataWindow: { ...dataWindow, period: "30d", start: "2026-04-09T00:00:00.000Z" },
+      evidence: ["Top pages include /pricing and /dashboard.", "Only page_view and cta_clicked are observed."],
+      limitations: ["The current events do not distinguish signup from activation."],
+      recommendations: [
+        { eventName: "signup_completed", reason: "Needed for acquisition funnel analysis.", priority: "high" },
+        { eventName: "workspace_created", reason: "Needed for activation analysis.", priority: "medium" },
+      ],
+      createsPendingTasks: false,
+      dashboardUrls,
+    });
+    const registerToolSpy = vi.fn();
+    registerAnalyticsTools({ registerTool: registerToolSpy } as never);
+
+    const result = await analyticsToolCallback(registerToolSpy, "suggest_next_events")(
+      { projectId: "proj_123", period: "30d", goal: "Look at usage and suggest events we should add next." },
+      auth,
+    );
+
+    expect(result).toMatchObject({
+      structuredContent: {
+        status: "partial_data",
+        evidence: ["Top pages include /pricing and /dashboard.", "Only page_view and cta_clicked are observed."],
+        limitations: ["The current events do not distinguish signup from activation."],
+        recommendations: [{ eventName: "signup_completed" }, { eventName: "workspace_created" }],
+        createsPendingTasks: false,
+        dashboardUrls,
+      },
+    });
+  });
+
+  it("supports multiple project selection by exposing candidates instead of querying analytics", async () => {
+    resolveOwnedMcpProjectForRepoContextSpy = vi.fn().mockResolvedValue({
+      status: "multiple_matches",
+      candidates: [
+        { ...ownedProject, id: "proj_123", displayName: "Example App" },
+        { ...ownedProject, id: "proj_456", displayName: "Example App Staging" },
+      ],
+    });
+    const registerToolSpy = vi.fn();
+    registerAnalyticsTools({ registerTool: registerToolSpy } as never);
+
+    const result = await analyticsToolCallback(registerToolSpy, "resolve_project")(
+      { repo: { name: "example-app", appRoot: "." } },
+      auth,
+    );
+
+    expect(result).toMatchObject({
+      structuredContent: {
+        status: "multiple_matches",
+        candidates: [
+          { id: "proj_123", name: "Example App", dashboardUrls },
+          { id: "proj_456", name: "Example App Staging", dashboardUrls },
+        ],
+      },
+    });
+    expect(getProjectOverviewSpy).not.toHaveBeenCalled();
+    expect(getPathsToEventSpy).not.toHaveBeenCalled();
+    expect(suggestNextEventsSpy).not.toHaveBeenCalled();
+  });
+});

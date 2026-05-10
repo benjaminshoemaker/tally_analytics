@@ -837,13 +837,13 @@ Document the new MCP analytics self-test command and add test coverage for promp
 **Requirement:** FEATURE_SPEC.md "Verification Guidance"; FLOW_VERIFICATION_PLAN.md "Flow Claim"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `docs/agent-testing.md` documents `pnpm --filter web e2e:mcp-analytics-querying` and the MCP transport boundary.
+- [x] (CODE) `docs/agent-testing.md` documents `pnpm --filter web e2e:mcp-analytics-querying` and the MCP transport boundary.
   - Verify: `cd ../.. && rg -q 'e2e:mcp-analytics-querying|MCP analytics' docs/agent-testing.md`
-- [ ] (TEST) Prompt-sequence tests cover usage summary, pages before signup with a target event, pages before signup without the target event, next-event suggestions, and multiple project selection.
+- [x] (TEST) Prompt-sequence tests cover usage summary, pages before signup with a target event, pages before signup without the target event, next-event suggestions, and multiple project selection.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
-- [ ] (TEST) Prompt-sequence tests verify responses include data, limitations where needed, suggested events where needed, exact data window, and dashboard URL.
+- [x] (TEST) Prompt-sequence tests verify responses include data, limitations where needed, suggested events where needed, exact data window, and dashboard URL.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
-- [ ] (TEST) Multiple plausible signup events test proves the agent-facing data exposes candidates instead of silently selecting an event.
+- [x] (TEST) Multiple plausible signup events test proves the agent-facing data exposes candidates instead of silently selecting an event.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools analytics-service-events`
 
 **Files to Create:**
