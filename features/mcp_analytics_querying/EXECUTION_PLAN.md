@@ -729,9 +729,9 @@ Register read-only MCP tools for event discovery, event schema inspection, paths
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) Existing MCP self-test harness is available as the implementation pattern.
+- [x] (CODE) Existing MCP self-test harness is available as the implementation pattern.
   - Verify: `cd ../.. && test -f apps/web/scripts/mcp-self-test.mjs`
-- [ ] (CODE) Port 3000 is not already occupied by an unknown local server before the harness starts.
+- [x] (CODE) Port 3000 is not already occupied by an unknown local server before the harness starts.
   - Verify: `! lsof -iTCP:3000 -sTCP:LISTEN -n -P >/dev/null 2>&1`
 - [ ] (CODE) Required local E2E database URL is set before harness runs.
   - Verify: `test "${DATABASE_URL:-}" = "postgres://postgres:postgres@127.0.0.1:5432/postgres"`
@@ -750,15 +750,15 @@ Create the MCP analytics querying self-test script and package script. The harne
 **Requirement:** FLOW_VERIFICATION_PLAN.md "Harness Shape" and "Driver"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `apps/web/scripts/mcp-analytics-querying-self-test.mjs` exists and `apps/web/package.json` exposes `e2e:mcp-analytics-querying`.
+- [x] (CODE) `apps/web/scripts/mcp-analytics-querying-self-test.mjs` exists and `apps/web/package.json` exposes `e2e:mcp-analytics-querying`.
   - Verify: `cd ../.. && test -f apps/web/scripts/mcp-analytics-querying-self-test.mjs && node -e "const p=require('./apps/web/package.json'); if(!p.scripts['e2e:mcp-analytics-querying']) process.exit(1)"`
-- [ ] (CODE) Harness uses `E2E_TEST_MODE=1`, `E2E_ANALYTICS_FIXTURE_DIR`, `NEXT_PUBLIC_APP_URL=http://localhost:3000`, and the local database URL.
+- [x] (CODE) Harness uses `E2E_TEST_MODE=1`, `E2E_ANALYTICS_FIXTURE_DIR`, `NEXT_PUBLIC_APP_URL=http://localhost:3000`, and the local database URL.
   - Verify: `cd ../.. && rg -q 'E2E_TEST_MODE|E2E_ANALYTICS_FIXTURE_DIR|NEXT_PUBLIC_APP_URL|DATABASE_URL' apps/web/scripts/mcp-analytics-querying-self-test.mjs`
-- [ ] (CODE) Harness creates a local OAuth access token for resource `http://localhost:3000/api/mcp` and the v1 install/read authority.
+- [x] (CODE) Harness creates a local OAuth access token for resource `http://localhost:3000/api/mcp` and the v1 install/read authority.
   - Verify: `cd ../.. && rg -q 'http://localhost:3000/api/mcp|mcp:install|oauth' apps/web/scripts/mcp-analytics-querying-self-test.mjs`
-- [ ] (CODE) Harness uses MCP SDK `Client` and `StreamableHTTPClientTransport` rather than direct service imports or dashboard HTTP APIs.
+- [x] (CODE) Harness uses MCP SDK `Client` and `StreamableHTTPClientTransport` rather than direct service imports or dashboard HTTP APIs.
   - Verify: `cd ../.. && rg -q 'Client|StreamableHTTPClientTransport' apps/web/scripts/mcp-analytics-querying-self-test.mjs && ! rg -n 'from .*/lib/analytics/service|/api/projects/.*/analytics' apps/web/scripts/mcp-analytics-querying-self-test.mjs`
-- [ ] (TEST) Harness starts with a tools-list stage and asserts analytics tools are present with read-only annotations.
+- [x] (TEST) Harness starts with a tools-list stage and asserts analytics tools are present with read-only annotations.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
 
 **Files to Create:**

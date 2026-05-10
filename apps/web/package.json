@@ -17,6 +17,7 @@
     "e2e:seed": "node ./scripts/seed-e2e-scenario.mjs",
     "e2e:replay-events": "node ./scripts/seed-e2e-scenario.mjs --replay-events",
     "e2e:mcp-self-test": "node ./scripts/mcp-self-test.mjs",
+    "e2e:mcp-analytics-querying": "node ./scripts/mcp-analytics-querying-self-test.mjs",
     "e2e:stripe-billing": "node ./scripts/stripe-billing-harness.mjs",
     "github:sandbox:sync": "node ./scripts/sync-github-sandbox.mjs",
     "e2e": "node ./scripts/playwright-test.mjs"

@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_analytics_querying",
-  "last_updated": "2026-05-09T10:06:32.000Z",
+  "last_updated": "2026-05-09T20:19:12.000Z",
   "generated_by": "phase-start",
   "main": {
-    "current_phase": 3,
+    "current_phase": 4,
     "total_phases": 5,
     "status": "IN_PROGRESS",
     "phases": [
@@ -357,9 +357,35 @@
       {
         "number": 4,
         "name": "MCP Flow Harness",
-        "status": "NOT_STARTED",
+        "status": "IN_PROGRESS",
         "tasks_total": 3,
-        "tasks_complete": 0
+        "tasks_complete": 1,
+        "started_at": "2026-05-09T20:19:12.000Z",
+        "tasks": {
+          "4.1.A": {
+            "status": "COMPLETE",
+            "title": "Add MCP Analytics Self-Test Startup, OAuth, And Client Plumbing",
+            "completed_at": "2026-05-09T20:19:12.000Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "5/5",
+              "commands": [
+                "node --check apps/web/scripts/mcp-analytics-querying-self-test.mjs",
+                "test -f apps/web/scripts/mcp-analytics-querying-self-test.mjs && node -e \"const p=require('./apps/web/package.json'); if(!p.scripts['e2e:mcp-analytics-querying']) process.exit(1)\"",
+                "rg -q 'E2E_TEST_MODE|E2E_ANALYTICS_FIXTURE_DIR|NEXT_PUBLIC_APP_URL|DATABASE_URL' apps/web/scripts/mcp-analytics-querying-self-test.mjs",
+                "rg -q 'http://localhost:3000/api/mcp|mcp:install|oauth' apps/web/scripts/mcp-analytics-querying-self-test.mjs",
+                "rg -q 'Client|StreamableHTTPClientTransport' apps/web/scripts/mcp-analytics-querying-self-test.mjs && ! rg -n 'from .*/lib/analytics/service|/api/projects/.*/analytics' apps/web/scripts/mcp-analytics-querying-self-test.mjs",
+                "pnpm --filter web test -- mcp-analytics-tools",
+                "pnpm --filter web typecheck"
+              ]
+            },
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          }
+        }
       },
       {
         "number": 5,
