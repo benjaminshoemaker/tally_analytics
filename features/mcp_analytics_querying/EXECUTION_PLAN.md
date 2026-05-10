@@ -891,9 +891,9 @@ Document the new MCP analytics self-test command and add test coverage for promp
 
 ### Pre-Phase Setup
 
-- [ ] (TEST) MCP analytics self-test passes before final hardening.
+- [x] (TEST) MCP analytics self-test passes before final hardening.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying`
-- [ ] (CODE) No migration is required for this feature.
+- [x] (CODE) No migration is required for this feature.
   - Verify: `cd ../.. && ! git diff --name-only -- apps/web/drizzle/migrations apps/web/lib/db/schema.ts | rg -q '.'`
 
 ### Step 5.1: Final Hardening And Release Checks
@@ -910,17 +910,17 @@ Add or complete final negative tests for auth, privacy, sanitization, and unsupp
 **Requirement:** FEATURE_SPEC.md "Authorization And Privacy"; FEATURE_TECHNICAL_SPEC.md "Regression Risks And Mitigations"; FLOW_VERIFICATION_PLAN.md "Negative assertions"
 
 **Acceptance Criteria:**
-- [ ] (TEST) Tests prove unauthenticated requests, insufficient authority, and foreign project ids do not run analytics queries.
+- [x] (TEST) Tests prove unauthenticated requests, insufficient authority, and foreign project ids do not run analytics queries.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools mcp-auth mcp-project-queries`
-- [ ] (TEST) Tests prove tool outputs do not expose OAuth tokens, Tinybird credentials, GitHub installation tokens, billing fields, private source files, raw SQL, stack traces, or unrelated project metadata.
+- [x] (TEST) Tests prove tool outputs do not expose OAuth tokens, Tinybird credentials, GitHub installation tokens, billing fields, private source files, raw SQL, stack traces, or unrelated project metadata.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools analytics-service-events analytics-service-recommendations`
-- [ ] (TEST) Full targeted feature suite passes.
+- [x] (TEST) Full targeted feature suite passes.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools mcp-project-queries analytics-service-overview analytics-service-events analytics-service-paths analytics-service-recommendations e2e-analytics-fixtures e2e-scenarios analytics-overview-api analytics-sessions-api analytics-live-feed-api`
-- [ ] (TYPE) Web type checking passes.
+- [x] (TYPE) Web type checking passes.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
-- [ ] (TEST) MCP analytics flow harness passes through the hosted MCP route.
+- [x] (TEST) MCP analytics flow harness passes through the hosted MCP route.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying`
-- [ ] (BUILD) Web build passes after all feature changes.
+- [x] (BUILD) Web build passes after all feature changes.
   - Verify: `cd ../.. && pnpm --filter web build`
 
 **Files to Create:**

@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_analytics_querying",
-  "last_updated": "2026-05-09T20:45:41.000Z",
+  "last_updated": "2026-05-09T20:57:36.000Z",
   "generated_by": "phase-start",
   "main": {
-    "current_phase": 4,
+    "current_phase": 5,
     "total_phases": 5,
     "status": "IN_PROGRESS",
     "phases": [
@@ -452,9 +452,38 @@
       {
         "number": 5,
         "name": "Regression Hardening",
-        "status": "NOT_STARTED",
+        "status": "IN_PROGRESS",
         "tasks_total": 1,
-        "tasks_complete": 0
+        "tasks_complete": 1,
+        "started_at": "2026-05-09T20:47:02.000Z",
+        "tasks": {
+          "5.1.A": {
+            "status": "COMPLETE",
+            "title": "Run Privacy, Security, Regression, And Final Verification Sweep",
+            "completed_at": "2026-05-09T20:57:36.000Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "6/6",
+              "commands": [
+                "pnpm --filter web test -- mcp-analytics-tools mcp-auth mcp-project-queries",
+                "pnpm --filter web test -- mcp-analytics-tools analytics-service-events analytics-service-recommendations",
+                "pnpm --filter web test -- mcp-analytics-tools mcp-project-queries analytics-service-overview analytics-service-events analytics-service-paths analytics-service-recommendations e2e-analytics-fixtures e2e-scenarios analytics-overview-api analytics-sessions-api analytics-live-feed-api",
+                "pnpm --filter web typecheck",
+                "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying",
+                "pnpm --filter web build"
+              ]
+            },
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {
+                "pnpm --filter web build": 1
+              },
+              "last_errors": [
+                "One concurrent build run failed with a transient Next /_document module error while the MCP analytics harness dev server was compiling the same app; rerunning build by itself passed."
+              ]
+            }
+          }
+        }
       }
     ]
   }
