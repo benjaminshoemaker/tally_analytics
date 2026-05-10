@@ -791,15 +791,15 @@ Fill the harness with the required conversational tool sequences, invalid-input 
 **Requirement:** FLOW_VERIFICATION_PLAN.md "Driver", "Assertions", "Evidence", and "Teardown/Rerun"
 
 **Acceptance Criteria:**
-- [ ] (TEST) Harness passes locally and prints compact JSON with `ok: true` and named stages for tools-list, usage-summary, and signup-path.
+- [x] (TEST) Harness passes locally and prints compact JSON with `ok: true` and named stages for tools-list, usage-summary, and signup-path.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying`
-- [ ] (TEST) Harness asserts usage summary, data arrival, event discovery/schema, signup path, missing signup recommendation, no-events, ownership guard, and invalid input sequences through MCP tools.
+- [x] (TEST) Harness asserts usage summary, data arrival, event discovery/schema, signup path, missing signup recommendation, no-events, ownership guard, and invalid input sequences through MCP tools.
   - Verify: `cd ../.. && pnpm --filter web e2e:mcp-analytics-querying`
-- [ ] (TEST) Harness verifies `resolve_project` exact match does not create projects and `mcp-multiple-projects` returns `multiple_matches`.
+- [x] (TEST) Harness verifies `resolve_project` exact match does not create projects and `mcp-multiple-projects` returns `multiple_matches`.
   - Verify: `cd ../.. && pnpm --filter web e2e:mcp-analytics-querying`
-- [ ] (TEST) Harness verifies invalid recoverable inputs return structured statuses such as `invalid_period`, `invalid_limit`, `invalid_since`, `invalid_goal`, `invalid_event_name`, `invalid_steps`, and `invalid_repo_context`.
+- [x] (TEST) Harness verifies invalid recoverable inputs return structured statuses such as `invalid_period`, `invalid_limit`, `invalid_since`, `invalid_goal`, `invalid_event_name`, `invalid_steps`, and `invalid_repo_context`.
   - Verify: `cd ../.. && pnpm --filter web e2e:mcp-analytics-querying`
-- [ ] (CODE) Harness supports `--keep`, deletes temporary fixtures and OAuth rows by default, and exits before starting the web process when port 3000 is already occupied.
+- [x] (CODE) Harness supports `--keep`, deletes temporary fixtures and OAuth rows by default, and exits before starting the web process when port 3000 is already occupied.
   - Verify: `cd ../.. && rg -q -- '--keep|cleanup|3000' apps/web/scripts/mcp-analytics-querying-self-test.mjs`
 
 **Files to Create:**

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "project_name": "mcp_analytics_querying",
-  "last_updated": "2026-05-09T20:19:12.000Z",
+  "last_updated": "2026-05-09T20:27:04.000Z",
   "generated_by": "phase-start",
   "main": {
     "current_phase": 4,
@@ -359,7 +359,7 @@
         "name": "MCP Flow Harness",
         "status": "IN_PROGRESS",
         "tasks_total": 3,
-        "tasks_complete": 1,
+        "tasks_complete": 2,
         "started_at": "2026-05-09T20:19:12.000Z",
         "tasks": {
           "4.1.A": {
@@ -377,6 +377,25 @@
                 "rg -q 'Client|StreamableHTTPClientTransport' apps/web/scripts/mcp-analytics-querying-self-test.mjs && ! rg -n 'from .*/lib/analytics/service|/api/projects/.*/analytics' apps/web/scripts/mcp-analytics-querying-self-test.mjs",
                 "pnpm --filter web test -- mcp-analytics-tools",
                 "pnpm --filter web typecheck"
+              ]
+            },
+            "failures": {
+              "consecutive": 0,
+              "verification_attempts": {},
+              "last_errors": []
+            }
+          },
+          "4.1.B": {
+            "status": "COMPLETE",
+            "title": "Add Harness Scenario Assertions, Failure Output, And Cleanup",
+            "completed_at": "2026-05-09T20:27:04.000Z",
+            "verification": {
+              "passed": true,
+              "criteria_met": "5/5",
+              "commands": [
+                "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying",
+                "pnpm --filter web e2e:mcp-analytics-querying",
+                "rg -q -- '--keep|cleanup|3000' apps/web/scripts/mcp-analytics-querying-self-test.mjs"
               ]
             },
             "failures": {
