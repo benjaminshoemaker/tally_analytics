@@ -871,15 +871,15 @@ Document the new MCP analytics self-test command and add test coverage for promp
 ### Phase 4 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) MCP analytics self-test passes against local fixtures and MCP transport.
+- [x] (TEST) MCP analytics self-test passes against local fixtures and MCP transport.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying`
-- [ ] (TEST) Prompt-sequence and MCP tool tests pass.
+- [x] (TEST) Prompt-sequence and MCP tool tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tools`
 
 **Regression Verification:**
-- [ ] (TEST) Existing MCP onboarding self-test still passes.
+- [x] (TEST) Existing MCP onboarding self-test still passes.
   - Verify: `cd ../.. && DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-self-test`
-- [ ] (CODE) Harness does not use production data, a human GitHub account, personal OAuth tokens, or direct service imports.
+- [x] (CODE) Harness does not use production data, a human GitHub account, personal OAuth tokens, or direct service imports.
   - Verify: `cd ../.. && ! rg -n 'github.com/login|personal access|process.env.GITHUB_TOKEN|from .*/lib/analytics/service' apps/web/scripts/mcp-analytics-querying-self-test.mjs`
 
 ---
