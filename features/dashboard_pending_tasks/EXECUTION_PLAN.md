@@ -309,17 +309,17 @@ Add a separate MCP task scope while preserving existing install behavior. The sh
 ### Phase 1 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) Task schema/query, SDK, event ingest, fixture, OAuth, and MCP auth tests pass.
+- [x] (TEST) Task schema/query, SDK, event ingest, fixture, OAuth, and MCP auth tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- schema analytics-task-queries e2e-analytics-fixtures mcp-auth mcp-oauth mcp-route && pnpm --filter sdk test`
-- [ ] (BUILD) SDK builds and remains under the bundle limit.
+- [x] (BUILD) SDK builds and remains under the bundle limit.
   - Verify: `cd ../.. && pnpm --filter sdk build && test "$(gzip -c packages/sdk/dist/index.js | wc -c | tr -d ' ')" -lt 3072`
-- [ ] (TYPE) Web type checking passes after schema, auth, and fixture changes.
+- [x] (TYPE) Web type checking passes after schema, auth, and fixture changes.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] (TEST) Existing MCP install and dashboard analytics route tests still pass.
+- [x] (TEST) Existing MCP install and dashboard analytics route tests still pass.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route mcp-next-install analytics-overview-api analytics-sessions-api analytics-live-feed-api`
-- [ ] (TEST) Existing SDK router and tracker tests still pass.
+- [x] (TEST) Existing SDK router and tracker tests still pass.
   - Verify: `cd ../.. && pnpm --filter sdk test -- app-router pages-router tracker`
 
 ---
@@ -331,9 +331,9 @@ Add a separate MCP task scope while preserving existing install behavior. The sh
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) Phase 1 task tables, task domain modules, custom event fixture parsing, and `mcp:tasks` scope exist.
+- [x] (CODE) Phase 1 task tables, task domain modules, custom event fixture parsing, and `mcp:tasks` scope exist.
   - Verify: `cd ../.. && test -f apps/web/lib/analytics/tasks/queries.ts && rg -q 'analyticsTasks|MCP_TASKS_SCOPE|event_properties|environment' apps/web/lib/db/schema.ts apps/web/lib/oauth/validation.ts apps/web/lib/analytics/e2e-fixtures.ts`
-- [ ] (CODE) Dashboard project ownership route pattern is available for reuse.
+- [x] (CODE) Dashboard project ownership route pattern is available for reuse.
   - Verify: `cd ../.. && rg -q 'getUserFromRequest|projects.userId' 'apps/web/app/api/projects/[id]/route.ts'`
 
 ### Step 2.1: Lifecycle And Verification Services

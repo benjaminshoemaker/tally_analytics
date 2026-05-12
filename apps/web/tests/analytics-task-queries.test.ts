@@ -95,7 +95,7 @@ describe("analytics task queries", () => {
 
     const created = makeTask();
     const taskReturningSpy = vi.fn().mockResolvedValue([created]);
-    const taskValuesSpy = vi.fn(() => ({ returning: taskReturningSpy }));
+    const taskValuesSpy = vi.fn((_values: unknown) => ({ returning: taskReturningSpy }));
     const eventReturningSpy = vi.fn().mockResolvedValue([
       {
         id: "tse_123",
@@ -111,7 +111,7 @@ describe("analytics task queries", () => {
         createdAt: new Date("2026-01-01T00:00:00.000Z"),
       },
     ]);
-    const eventValuesSpy = vi.fn(() => ({ returning: eventReturningSpy }));
+    const eventValuesSpy = vi.fn((_values: unknown) => ({ returning: eventReturningSpy }));
     insertSpy = vi.fn().mockReturnValueOnce({ values: taskValuesSpy }).mockReturnValueOnce({ values: eventValuesSpy });
 
     const { createPendingAnalyticsTask } = await import("../lib/analytics/tasks/queries");
@@ -136,7 +136,7 @@ describe("analytics task queries", () => {
     expect(insertSpy).toHaveBeenCalledTimes(2);
     expect(taskValuesSpy).toHaveBeenCalledTimes(1);
     expect(eventValuesSpy).toHaveBeenCalledTimes(1);
-    const taskInsertPayload = taskValuesSpy.mock.calls[0]?.[0] as Record<string, unknown>;
+    const taskInsertPayload = taskValuesSpy.mock.calls[0]?.[0] as unknown as Record<string, unknown>;
     expect(taskInsertPayload.userId).toBe("user_123");
     expect(taskInsertPayload.projectId).toBe("proj_123");
     expect(taskInsertPayload.duplicateFingerprint).toMatch(/^[a-f0-9]{64}$/);

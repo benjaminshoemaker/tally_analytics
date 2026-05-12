@@ -119,7 +119,7 @@ describe("/api/mcp route", () => {
 
     const callback = prepareCall?.[2] as (
       input: unknown,
-      extra: { authInfo: { extra: { userId: string } } },
+      extra: { authInfo: { extra: { userId: string }; scopes: string[] } },
     ) => Promise<{
       structuredContent: Record<string, unknown>;
       content: Array<{ type: "text"; text: string }>;

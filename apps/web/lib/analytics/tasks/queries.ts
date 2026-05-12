@@ -123,7 +123,7 @@ export async function createAnalyticsTaskStatusEvent(
       reason: input.reason ?? null,
       details: input.details ?? {},
     })
-    .returning(analyticsTaskStatusEventSelect);
+    .returning();
 
   const row = (inserted as AnalyticsTaskStatusEventRecord[])[0];
   if (!row) throw new Error("Failed to create analytics task status event");
@@ -173,7 +173,7 @@ export async function createPendingAnalyticsTask(
       duplicateFingerprint,
       confirmedAt: new Date(),
     })
-    .returning(analyticsTaskSelect);
+    .returning();
 
   const created = (inserted as AnalyticsTaskRecord[])[0];
   if (!created) throw new Error("Failed to create analytics task");
