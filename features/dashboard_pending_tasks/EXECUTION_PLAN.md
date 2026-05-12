@@ -721,15 +721,15 @@ Add Zod schemas and adapter logic for resolving task project context by explicit
 **Requirement:** FEATURE_SPEC.md "MCP Behavior"; FEATURE_TECHNICAL_SPEC.md "Shared Project Resolution Input"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP task input schemas exist for list, context, and status-report tools.
+- [x] (CODE) MCP task input schemas exist for list, context, and status-report tools.
   - Verify: `cd ../.. && rg -q 'listPendingAnalyticsTasks|analyticsTaskProjectResolver|reportAnalyticsTaskStatus' apps/web/lib/mcp/tools/schemas.ts apps/web/lib/mcp/tools`
-- [ ] (CODE) Task MCP adapter reuses existing project fingerprint helpers instead of duplicating resolution.
+- [x] (CODE) Task MCP adapter reuses existing project fingerprint helpers instead of duplicating resolution.
   - Verify: `cd ../.. && rg -q 'buildMcpProjectFingerprintInput|mcpFingerprint|normalizeGitRemote' apps/web/lib/analytics/tasks/mcp.ts apps/web/lib/mcp/tools`
-- [ ] (TEST) MCP project resolution tests cover explicit project ID, exact repo context, no match, ambiguity, and missing/ambiguous context with no cross-project fallback.
+- [x] (TEST) MCP project resolution tests cover explicit project ID, exact repo context, no match, ambiguity, and missing/ambiguous context with no cross-project fallback.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks mcp-project-queries`
-- [ ] (TEST) Scope tests prove install-only tokens receive `insufficient_scope` for all three task tools.
+- [x] (TEST) Scope tests prove install-only tokens receive `insufficient_scope` for all three task tools.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks mcp-auth`
-- [ ] (CODE) Tool output candidate lists are capped at 10 projects on ambiguity.
+- [x] (CODE) Tool output candidate lists are capped at 10 projects on ambiguity.
   - Verify: `cd ../.. && rg -q 'slice\\(0, 10\\)|limit\\(10\\)' apps/web/lib/analytics/tasks/mcp.ts apps/web/lib/mcp/tools/analytics-tasks.ts`
 
 **Files to Create:**
@@ -768,15 +768,15 @@ Implement `list_pending_analytics_tasks` and `get_analytics_task_context` using 
 **Requirement:** FEATURE_SPEC.md "MCP Behavior"; FEATURE_TECHNICAL_SPEC.md "`list_pending_analytics_tasks`" and "`get_analytics_task_context`"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP server registers `list_pending_analytics_tasks` and `get_analytics_task_context`.
+- [x] (CODE) MCP server registers `list_pending_analytics_tasks` and `get_analytics_task_context`.
   - Verify: `cd ../.. && rg -q 'list_pending_analytics_tasks|get_analytics_task_context' apps/web/lib/mcp/server.ts apps/web/lib/mcp/tools/analytics-tasks.ts`
-- [ ] (TEST) Tool tests cover `ready`, `no_tasks`, `needs_project_selection`, `no_matching_project`, `unauthorized`, and `insufficient_scope` statuses.
+- [x] (TEST) Tool tests cover `ready`, `no_tasks`, `needs_project_selection`, `no_matching_project`, `unauthorized`, and `insufficient_scope` statuses.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks`
-- [ ] (TEST) Context tool tests assert original question, current answer, analytics gap, event contract, local verification, production verification, guidance, status, and dashboard URL.
+- [x] (TEST) Context tool tests assert original question, current answer, analytics gap, event contract, local verification, production verification, guidance, status, and dashboard URL.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks`
-- [ ] (TEST) MCP output sanitization tests prove no OAuth tokens, GitHub tokens, Tinybird tokens, raw visitor IDs, raw user IDs, or source code appear in tool results.
+- [x] (TEST) MCP output sanitization tests prove no OAuth tokens, GitHub tokens, Tinybird tokens, raw visitor IDs, raw user IDs, or source code appear in tool results.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks`
-- [ ] (CODE) Tool results include `structuredContent` and compact text `content`.
+- [x] (CODE) Tool results include `structuredContent` and compact text `content`.
   - Verify: `cd ../.. && rg -q 'structuredContent|content' apps/web/lib/mcp/tools/analytics-tasks.ts`
 
 **Files to Create:**
@@ -810,15 +810,15 @@ Implement `report_analytics_task_status` so an agent can report `in_progress`, `
 **Requirement:** FEATURE_SPEC.md "MCP Behavior" and "Verification Model"; FEATURE_TECHNICAL_SPEC.md "`report_analytics_task_status`"
 
 **Acceptance Criteria:**
-- [ ] (CODE) MCP server registers `report_analytics_task_status`.
+- [x] (CODE) MCP server registers `report_analytics_task_status`.
   - Verify: `cd ../.. && rg -q 'report_analytics_task_status' apps/web/lib/mcp/server.ts apps/web/lib/mcp/tools/analytics-tasks.ts`
-- [ ] (TEST) Status report tests cover `in_progress`, repeated `in_progress`, `implemented_locally`, repeated implementation fingerprint, `failed`, and foreign task denial.
+- [x] (TEST) Status report tests cover `in_progress`, repeated `in_progress`, `implemented_locally`, repeated implementation fingerprint, `failed`, and foreign task denial.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks analytics-task-transitions`
-- [ ] (TEST) Local event evidence submitted through MCP is stored as local evidence but does not verify the task.
+- [x] (TEST) Local event evidence submitted through MCP is stored as local evidence but does not verify the task.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks analytics-task-verification`
-- [ ] (TEST) `implemented_locally` reports trigger verification refresh and return `verified` when production evidence already exists, otherwise `awaiting_deploy`.
+- [x] (TEST) `implemented_locally` reports trigger verification refresh and return `verified` when production evidence already exists, otherwise `awaiting_deploy`.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks analytics-task-verification`
-- [ ] (CODE) Tool validates changed files as relative paths and bounds evidence arrays before persistence.
+- [x] (CODE) Tool validates changed files as relative paths and bounds evidence arrays before persistence.
   - Verify: `cd ../.. && rg -q 'changedFiles|relative|verificationCommands|localEventEvidence' apps/web/lib/mcp/tools/analytics-tasks.ts apps/web/lib/analytics/tasks/transitions.ts`
 
 **Files to Create:**
@@ -844,15 +844,15 @@ Implement `report_analytics_task_status` so an agent can report `in_progress`, `
 ### Phase 4 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) MCP task, auth, route, project-query, transition, and verification tests pass.
+- [x] (TEST) MCP task, auth, route, project-query, transition, and verification tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks mcp-auth mcp-route mcp-project-queries analytics-task-transitions analytics-task-verification`
-- [ ] (TYPE) Web type checking passes after MCP task tools.
+- [x] (TYPE) Web type checking passes after MCP task tools.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] (TEST) Existing install MCP tests still pass with the new scope model.
+- [x] (TEST) Existing install MCP tests still pass with the new scope model.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-next-install mcp-route mcp-auth`
-- [ ] (CODE) MCP task tools cannot create tasks through MCP.
+- [x] (CODE) MCP task tools cannot create tasks through MCP.
   - Verify: `cd ../.. && ! rg -n 'insert\\(|create.*Task|confirm.*Task' apps/web/lib/mcp/tools/analytics-tasks.ts`
 
 ---

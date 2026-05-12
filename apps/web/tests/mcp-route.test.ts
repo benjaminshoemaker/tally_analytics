@@ -19,6 +19,26 @@ vi.mock("../lib/mcp/auth", () => ({
   verifyMcpBearerToken: vi.fn(),
 }));
 
+vi.mock("../lib/mcp/tools/analytics-tasks", () => ({
+  registerAnalyticsTaskTools: (server: { registerTool: (...args: unknown[]) => void }) => {
+    server.registerTool(
+      "list_pending_analytics_tasks",
+      { title: "List Pending Analytics Tasks", inputSchema: {}, outputSchema: {} },
+      async () => ({ structuredContent: { status: "ready", summary: "ok", tasks: [] }, content: [{ type: "text", text: "ok" }] }),
+    );
+    server.registerTool(
+      "get_analytics_task_context",
+      { title: "Get Analytics Task Context", inputSchema: {}, outputSchema: {} },
+      async () => ({ structuredContent: { status: "ready", summary: "ok", context: {} }, content: [{ type: "text", text: "ok" }] }),
+    );
+    server.registerTool(
+      "report_analytics_task_status",
+      { title: "Report Analytics Task Status", inputSchema: {}, outputSchema: {} },
+      async () => ({ structuredContent: { status: "ready", summary: "ok" }, content: [{ type: "text", text: "ok" }] }),
+    );
+  },
+}));
+
 vi.mock("../lib/mcp/next-install/prepare-nextjs-install-patch", () => ({
   prepareNextjsInstallPatch: (...args: unknown[]) => {
     if (!prepareNextjsInstallPatchSpy) throw new Error("prepareNextjsInstallPatchSpy not initialized");
@@ -81,6 +101,12 @@ describe("/api/mcp route", () => {
       }),
       expect.any(Function),
     );
+    expect(registerToolSpy.mock.calls.map((call) => call[0])).toEqual(expect.arrayContaining([
+      "prepare_nextjs_install_patch",
+      "list_pending_analytics_tasks",
+      "get_analytics_task_context",
+      "report_analytics_task_status",
+    ]));
 
     const callback = registerToolSpy.mock.calls[0]?.[2] as () => Promise<{
       content: Array<{ type: "text"; text: string }>;
