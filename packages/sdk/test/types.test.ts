@@ -5,13 +5,16 @@ import { describe, expect, it } from "vitest";
 const packageRoot = path.join(__dirname, "..");
 
 describe("Task 3.1.B - Type definitions", () => {
-  it("defines InitOptions, EventType, AnalyticsEvent", () => {
+  it("defines InitOptions, event types, EventProperties, and AnalyticsEvent", () => {
     const typesPath = path.join(packageRoot, "src", "types.ts");
     expect(fs.existsSync(typesPath)).toBe(true);
 
     const src = fs.readFileSync(typesPath, "utf8");
     expect(src).toContain("export interface InitOptions");
+    expect(src).toContain("export type BuiltInEventType");
+    expect(src).toContain("export type CustomEventType");
     expect(src).toContain("export type EventType");
+    expect(src).toContain("export type EventProperties");
     expect(src).toContain("export interface AnalyticsEvent");
   });
 
@@ -64,4 +67,3 @@ describe("Task 2.2.A - V2 event fields in AnalyticsEvent", () => {
     expect(src).toMatch(/cta_clicks\?:/);
   });
 });
-

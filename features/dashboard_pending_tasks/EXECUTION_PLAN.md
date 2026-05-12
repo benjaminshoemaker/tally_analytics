@@ -170,15 +170,15 @@ Add a minimal custom event tracking API so coding agents have a first-class Tall
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "SDK API"; AGENTS.md "SDK Constraints"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `track`, `EventProperties`, and custom event types are exported from `packages/sdk/src/index.ts`.
+- [x] (CODE) `track`, `EventProperties`, and custom event types are exported from `packages/sdk/src/index.ts`.
   - Verify: `cd ../.. && rg -q 'track|EventProperties' packages/sdk/src/index.ts packages/sdk/src/types.ts`
-- [ ] (TEST) SDK tests cover custom event success, invalid event names, no-init no-op, DNT behavior, and property serialization.
+- [x] (TEST) SDK tests cover custom event success, invalid event names, no-init no-op, DNT behavior, and property serialization.
   - Verify: `cd ../.. && pnpm --filter sdk test -- tracker`
-- [ ] (TEST) Public API tests cover the new `track` export.
+- [x] (TEST) Public API tests cover the new `track` export.
   - Verify: `cd ../.. && pnpm --filter sdk test -- public-api`
-- [ ] (BUILD) SDK builds successfully after adding custom tracking.
+- [x] (BUILD) SDK builds successfully after adding custom tracking.
   - Verify: `cd ../.. && pnpm --filter sdk build`
-- [ ] (CODE) Built SDK remains under 3072 bytes gzipped.
+- [x] (CODE) Built SDK remains under 3072 bytes gzipped.
   - Verify: `cd ../.. && test "$(gzip -c packages/sdk/dist/index.js | wc -c | tr -d ' ')" -lt 3072`
 
 **Files to Create:**
@@ -189,7 +189,7 @@ Add a minimal custom event tracking API so coding agents have a first-class Tall
 - `packages/sdk/src/tracker.ts` - Add custom event builder and event-name validation helpers.
 - `packages/sdk/src/types.ts` - Add event property and custom event types.
 - `packages/sdk/src/index.ts` - Export public API.
-- `packages/sdk/test/tracker.test.ts` - Add custom event coverage.
+- `packages/sdk/test/tracker-custom-events.test.ts` - Add custom event coverage.
 - `packages/sdk/test/public-api.test.ts` - Add public export coverage.
 - `packages/sdk/test/types.test.ts` - Add type coverage if needed.
 

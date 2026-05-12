@@ -1,6 +1,6 @@
-export type { AnalyticsEvent, EventType, InitOptions } from "./types";
+export type { AnalyticsEvent, BuiltInEventType, CustomEventType, EventProperties, EventType, InitOptions } from "./types";
 
-export { identify, init, isEnabled, trackPageView } from "./core";
+export { identify, init, isEnabled, track, trackPageView } from "./core";
 
 export { AnalyticsAppRouter } from "./react/app-router";
 

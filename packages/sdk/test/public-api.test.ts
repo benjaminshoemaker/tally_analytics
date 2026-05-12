@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
-import { identify, init, isEnabled, trackPageView } from "../src/core";
+import { identify, init, isEnabled, track, trackPageView } from "../src/core";
 
 function installCookieDocument() {
   const jar = new Map<string, string>();
@@ -47,7 +47,7 @@ describe("Task 3.2.C - Public API", () => {
   it("exports public API from src/index.ts", () => {
     const indexPath = path.join(__dirname, "..", "src", "index.ts");
     const src = fs.readFileSync(indexPath, "utf8");
-    expect(src).toContain('export { identify, init, isEnabled, trackPageView }');
+    expect(src).toContain('export { identify, init, isEnabled, track, trackPageView }');
   });
 
   it("init(options) stores configuration and trackPageView sends a page_view", async () => {
@@ -152,6 +152,7 @@ describe("Task 3.2.C - Public API", () => {
 
     init({ projectId: "proj_123" });
     await expect(trackPageView("/")).resolves.toBeUndefined();
+    await expect(track("signup_completed", { step: 1 })).resolves.toBeUndefined();
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });

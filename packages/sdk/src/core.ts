@@ -1,4 +1,4 @@
-import type { AnalyticsEvent, InitOptions } from "./types";
+import type { AnalyticsEvent, EventProperties, InitOptions } from "./types";
 import { getOrCreateSessionId } from "./session";
 import {
   createPageViewEvent,
@@ -212,4 +212,26 @@ export async function trackPageView(path?: string): Promise<void> {
   // Reset trackers for next page view
   engagementTracker?.reset();
   scrollTracker?.reset();
+}
+
+export async function track(eventName: string, properties?: EventProperties): Promise<void> {
+  if (!config || !isEnabled() || !/^[a-z\d_]+$/.test(eventName)) return;
+
+  const sessionId = getOrCreateSessionId();
+  if (!sessionId) return;
+
+  await postEvents(
+    config.eventsUrl,
+    [
+      {
+        project_id: config.projectId,
+        session_id: sessionId,
+        event_type: eventName,
+        timestamp: new Date().toISOString(),
+        user_id: identifiedUserId ?? undefined,
+        properties,
+      },
+    ],
+    { respectDNT: config.respectDNT },
+  );
 }

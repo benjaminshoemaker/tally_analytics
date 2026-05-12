@@ -5,7 +5,12 @@ export interface InitOptions {
   debug?: boolean;
 }
 
-export type EventType = "page_view" | "session_start";
+export type BuiltInEventType = "page_view" | "session_start";
+export type CustomEventType = string;
+export type EventType = BuiltInEventType | CustomEventType;
+
+export type EventPropertyPrimitive = string | number | boolean | null;
+export type EventProperties = Record<string, EventPropertyPrimitive>;
 
 export interface AnalyticsEvent {
   project_id: string;
@@ -29,4 +34,5 @@ export interface AnalyticsEvent {
   utm_term?: string;
   utm_content?: string;
   cta_clicks?: string;
+  properties?: EventProperties;
 }

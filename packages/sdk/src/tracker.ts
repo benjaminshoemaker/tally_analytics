@@ -1,4 +1,4 @@
-import type { AnalyticsEvent } from "./types";
+import type { AnalyticsEvent, EventProperties } from "./types";
 
 function isDoNotTrackEnabled(): boolean {
   if (typeof navigator === "undefined") return false;
@@ -72,5 +72,22 @@ export function createSessionStartEvent(options: {
     url,
     referrer,
     user_id: options.userId,
+  };
+}
+
+export function createCustomEvent(
+  projectId: string,
+  sessionId: string,
+  eventName: string,
+  userId?: string,
+  properties?: EventProperties,
+): AnalyticsEvent {
+  return {
+    project_id: projectId,
+    session_id: sessionId,
+    event_type: eventName,
+    timestamp: new Date().toISOString(),
+    user_id: userId,
+    properties,
   };
 }
