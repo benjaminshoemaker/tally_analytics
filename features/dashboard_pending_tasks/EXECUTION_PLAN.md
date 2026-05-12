@@ -392,15 +392,15 @@ Implement verification refresh logic that derives `awaiting_deploy` and `verifie
 **Requirement:** FEATURE_SPEC.md "Verification Model"; FEATURE_TECHNICAL_SPEC.md "Verification Query"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `verification.ts` exports `refreshAnalyticsTaskVerification` and production event/property matching helpers.
+- [x] (CODE) `verification.ts` exports `refreshAnalyticsTaskVerification` and production event/property matching helpers.
   - Verify: `cd ../.. && test -f apps/web/lib/analytics/tasks/verification.ts && rg -q 'refreshAnalyticsTaskVerification|implemented_at|environment|event_properties' apps/web/lib/analytics/tasks/verification.ts`
-- [ ] (TEST) Verification tests mark matching production events after `implemented_at` as verified.
+- [x] (TEST) Verification tests mark matching production events after `implemented_at` as verified.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-verification`
-- [ ] (TEST) Verification tests keep tasks unverified for matching local/test evidence and pre-implementation events.
+- [x] (TEST) Verification tests keep tasks unverified for matching local/test evidence and pre-implementation events.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-verification`
-- [ ] (TEST) `add_event_property` tests keep tasks awaiting deploy when required properties are missing and include a sanitized missing-property reason.
+- [x] (TEST) `add_event_property` tests keep tasks awaiting deploy when required properties are missing and include a sanitized missing-property reason.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-verification`
-- [ ] (TEST) Task list refresh tests prove `implemented_locally` becomes `awaiting_deploy` when no matching production evidence exists.
+- [x] (TEST) Task list refresh tests prove `implemented_locally` becomes `awaiting_deploy` when no matching production evidence exists.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-verification`
 
 **Files to Create:**
