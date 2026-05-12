@@ -122,15 +122,15 @@ Create the core analytics task domain modules for typed task contracts, ID gener
 **Requirement:** FEATURE_SPEC.md "Idempotency And Duplicate Prevention"; FEATURE_TECHNICAL_SPEC.md "Task Domain Services"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Task domain files exist for `types`, `ids`, `fingerprint`, and `queries`.
+- [x] (CODE) Task domain files exist for `types`, `ids`, `fingerprint`, and `queries`.
   - Verify: `cd ../.. && test -f apps/web/lib/analytics/tasks/types.ts && test -f apps/web/lib/analytics/tasks/ids.ts && test -f apps/web/lib/analytics/tasks/fingerprint.ts && test -f apps/web/lib/analytics/tasks/queries.ts`
-- [ ] (TEST) Query tests cover creating a pending task, writing a status event, selecting tasks by authenticated owner/project, and hiding foreign-user rows.
+- [x] (TEST) Query tests cover creating a pending task, writing a status event, selecting tasks by authenticated owner/project, and hiding foreign-user rows.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-queries`
-- [ ] (TEST) Duplicate fingerprint tests normalize question intent, task type, event name, trigger, target surface, and property schema.
+- [x] (TEST) Duplicate fingerprint tests normalize question intent, task type, event name, trigger, target surface, and property schema.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-queries`
-- [ ] (TEST) Duplicate confirmation conflict handling returns the existing task instead of creating a second active task.
+- [x] (TEST) Duplicate confirmation conflict handling returns the existing task instead of creating a second active task.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-queries`
-- [ ] (CODE) Query helpers never select raw OAuth tokens, GitHub installation tokens, Tinybird tokens, billing fields, raw visitor IDs, or source code.
+- [x] (CODE) Query helpers never select raw OAuth tokens, GitHub installation tokens, Tinybird tokens, billing fields, raw visitor IDs, or source code.
   - Verify: `cd ../.. && ! rg -n 'accessToken|refreshToken|installationAccessToken|TINYBIRD|stripe|visitor_id|sourceCode' apps/web/lib/analytics/tasks/queries.ts`
 
 **Files to Create:**
