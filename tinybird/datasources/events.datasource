@@ -20,7 +20,9 @@ SCHEMA >
     `utm_campaign` Nullable(String) `json:$.utm_campaign`,
     `utm_term` Nullable(String) `json:$.utm_term`,
     `utm_content` Nullable(String) `json:$.utm_content`,
-    `cta_clicks` Nullable(String) `json:$.cta_clicks`
+    `cta_clicks` Nullable(String) `json:$.cta_clicks`,
+    `environment` LowCardinality(String) `json:$.environment`,
+    `event_properties` Nullable(String) `json:$.event_properties`
 
 ENGINE MergeTree
 ENGINE_PARTITION_KEY toYYYYMM(timestamp)

@@ -77,6 +77,7 @@ function writeFixture(root: string): void {
             timestamp: '2026-05-01T12:16:00.000Z',
             path: '/docs',
             referrer: '',
+            environment: 'test',
           },
           {
             project_id: 'proj_mcp_events',
@@ -85,6 +86,8 @@ function writeFixture(root: string): void {
             timestamp: '2026-05-01T12:17:00.000Z',
             path: '/signup',
             referrer: '',
+            environment: 'production',
+            event_properties: JSON.stringify({ source: 'agent', step: 2 }),
           },
         ],
       },
@@ -114,6 +117,7 @@ function writeFixture(root: string): void {
         timestamp: '2026-05-01T12:21:00.000Z',
         path: '/jsonl',
         referrer: '',
+        event_properties: { origin: 'jsonl' },
       }),
       '',
     ].join('\n')
@@ -200,11 +204,20 @@ describe('E2E analytics fixtures', () => {
       timeSeries: [{ date: '2026-05-01', newSessions: 1, returningSessions: 0 }],
     });
 
-    expect(loadE2EAnalyticsEvents('proj_mcp_events').map((event) => event.event_type)).toEqual([
+    const mcpEvents = loadE2EAnalyticsEvents('proj_mcp_events');
+    expect(mcpEvents.map((event) => event.event_type)).toEqual([
       'session_start',
       'page_view',
       'signup_completed',
     ]);
+    expect(mcpEvents.map((event) => event.environment)).toEqual([
+      'production',
+      'test',
+      'production',
+    ]);
+    expect(mcpEvents[2]?.event_properties).toBe(JSON.stringify({ source: 'agent', step: 2 }));
+    expect(mcpEvents.filter((event) => event.environment === 'production')).toHaveLength(2);
+    expect(mcpEvents.filter((event) => event.environment === 'test')).toHaveLength(1);
 
     expect(buildE2ELiveFeed({ projectId: 'proj_mcp_events', limit: 5 })).toMatchObject({
       events: [
@@ -233,5 +246,8 @@ describe('E2E analytics fixtures', () => {
       ],
       hasMore: false,
     });
+
+    const jsonlEvents = loadE2EAnalyticsEvents('proj_mcp_jsonl');
+    expect(jsonlEvents[1]?.event_properties).toBe(JSON.stringify({ origin: 'jsonl' }));
   });
 });

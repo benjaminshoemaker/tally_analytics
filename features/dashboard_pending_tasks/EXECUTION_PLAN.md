@@ -217,17 +217,17 @@ Expand the event ingestion path and local analytics fixture parser to support cu
 **Requirement:** FEATURE_SPEC.md "Verification Model"; FEATURE_TECHNICAL_SPEC.md "Ingestion Route", "Tinybird Datasource", and "E2E Fixture Parser"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Events route validation accepts lower-snake-case custom event names, `event_properties`, and `environment`.
+- [x] (CODE) Events route validation accepts lower-snake-case custom event names, `event_properties`, and `environment`.
   - Verify: `cd ../.. && rg -q 'event_properties|environment|production|development|test' apps/events/app/v1/track/route.ts`
-- [ ] (TEST) Events route tests cover custom events, invalid event names, environment defaults, oversized properties, and fixture sink preservation.
+- [x] (TEST) Events route tests cover custom events, invalid event names, environment defaults, oversized properties, and fixture sink preservation.
   - Verify: `cd ../.. && pnpm --filter web test -- events`
-- [ ] (CODE) Tinybird datasource includes `environment` and `event_properties` columns, and migration commands are documented in a script or note.
+- [x] (CODE) Tinybird datasource includes `environment` and `event_properties` columns, and migration commands are documented in a script or note.
   - Verify: `cd ../.. && rg -q 'environment|event_properties' tinybird/datasources/events.datasource && rg -q 'tb datasource alter.*events.*environment|tb datasource alter.*events.*event_properties' scripts apps/web/scripts docs`
-- [ ] (CODE) Tinybird migration documentation includes a staging-first verification gate with `tb datasource alter`, `tb sql`, expected output, and production application blocked until staging verification is recorded.
+- [x] (CODE) Tinybird migration documentation includes a staging-first verification gate with `tb datasource alter`, `tb sql`, expected output, and production application blocked until staging verification is recorded.
   - Verify: `cd ../.. && for term in 'staging' 'tb datasource alter' 'tb sql' 'production.*blocked' 'verification result'; do rg -q "$term" scripts apps/web/scripts docs || exit 1; done`
-- [ ] (TEST) E2E fixture parser tests cover generic events, environment defaults, production/test distinction, and event property parsing.
+- [x] (TEST) E2E fixture parser tests cover generic events, environment defaults, production/test distinction, and event property parsing.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-analytics-fixtures`
-- [ ] (TEST) Existing overview, sessions, and live fixture semantics still treat only `page_view` and `session_start` as dashboard traffic metrics.
+- [x] (TEST) Existing overview, sessions, and live fixture semantics still treat only `page_view` and `session_start` as dashboard traffic metrics.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-analytics-fixtures analytics-overview-api analytics-sessions-api analytics-live-feed-api`
 
 **Files to Create:**

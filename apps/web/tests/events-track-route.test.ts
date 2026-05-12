@@ -40,7 +40,7 @@ describe("events track route (Task 4.2.A)", () => {
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ success: true, received: 1 });
     expect(appendEvents).toHaveBeenCalledTimes(1);
-    expect(appendEvents).toHaveBeenCalledWith([validEvent]);
+    expect(appendEvents).toHaveBeenCalledWith([{ ...validEvent, environment: "test" }]);
     expect(isProjectActive).toHaveBeenCalledTimes(1);
   });
 
@@ -60,10 +60,16 @@ describe("events track route (Task 4.2.A)", () => {
       isProjectActive.mockClear();
 
       const { POST } = await import("../../events/app/v1/track/route");
+      const sinkEvent = {
+        ...validEvent,
+        event_type: "signup_completed",
+        environment: "test",
+        event_properties: JSON.stringify({ source: "mcp", step: 1 }),
+      };
       const request = new Request("http://localhost/v1/track", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ events: [validEvent] }),
+        body: JSON.stringify({ events: [sinkEvent] }),
       });
 
       const response = await POST(request);
@@ -75,7 +81,7 @@ describe("events track route (Task 4.2.A)", () => {
       const eventsPath = path.join(fixtureDir, "mcp-self-test", "events.jsonl");
       const lines = fs.readFileSync(eventsPath, "utf8").trim().split("\n");
       expect(lines).toHaveLength(1);
-      expect(JSON.parse(lines[0])).toMatchObject(validEvent);
+      expect(JSON.parse(lines[0])).toMatchObject(sinkEvent);
     } finally {
       fs.rmSync(fixtureDir, { recursive: true, force: true });
       if (previousTestMode === undefined) delete process.env.E2E_TEST_MODE;

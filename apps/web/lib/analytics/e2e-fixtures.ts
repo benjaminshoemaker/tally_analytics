@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export type Period = '24h' | '7d' | '30d';
+type AnalyticsEnvironment = 'production' | 'development' | 'test';
 
 type FixtureEvent = {
   [key: string]: unknown;
@@ -9,6 +10,8 @@ type FixtureEvent = {
   session_id: string;
   event_type: string;
   timestamp: string;
+  environment?: AnalyticsEnvironment;
+  event_properties?: string;
   url?: string;
   path?: string;
   referrer?: string;
@@ -17,6 +20,7 @@ type FixtureEvent = {
 };
 
 type ParsedFixtureEvent = FixtureEvent & {
+  environment: AnalyticsEnvironment;
   timestampMs: number;
 };
 
@@ -89,12 +93,27 @@ function parseEvent(raw: unknown): ParsedFixtureEvent | null {
   const timestampMs = Date.parse(timestamp);
   if (!Number.isFinite(timestampMs)) return null;
 
+  const rawEnvironment = raw.environment;
+  const environment: AnalyticsEnvironment =
+    rawEnvironment === 'production' || rawEnvironment === 'development' || rawEnvironment === 'test'
+      ? rawEnvironment
+      : 'production';
+
+  const eventProperties =
+    typeof raw.event_properties === 'string'
+      ? raw.event_properties
+      : isRecord(raw.event_properties)
+        ? JSON.stringify(raw.event_properties)
+        : undefined;
+
   return {
     ...raw,
     project_id: projectId,
     session_id: sessionId,
     event_type: eventType,
     timestamp,
+    environment,
+    event_properties: eventProperties,
     timestampMs,
     url: typeof raw.url === 'string' ? raw.url : undefined,
     path: typeof raw.path === 'string' ? raw.path : undefined,
