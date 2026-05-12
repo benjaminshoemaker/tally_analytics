@@ -58,6 +58,10 @@ GitHub sandbox guidance lives in `docs/github-sandbox.md`. Real GitHub App tests
   that can verify it.
 - Use an existing safe tool immediately. If a new tool, credentials, or external
   service is needed, propose the exact setup and why it enables verification.
+- Before escalating, record the concrete commands, tool checks, and recovery
+  paths attempted. For auth/workspace failures, check non-secret local context
+  first: nested config files, selected workspace/host, cached login state,
+  repo-local env overrides, and documented token scopes.
 - Ask the human to verify manually only after self-verification and tool-enabling
   options are exhausted or explicitly rejected.
 

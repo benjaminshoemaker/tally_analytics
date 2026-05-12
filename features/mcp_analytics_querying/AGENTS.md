@@ -39,6 +39,8 @@ Before starting a task, read:
   tools cannot verify an objective criterion, look for an MCP, CLI, API, SDK,
   seeded scenario, provider sandbox, or browser automation path that would make
   it agent-verifiable and propose that setup before escalating to the human.
+  Record commands, local context checks, and recovery paths attempted before
+  declaring a human-only blocker.
 
 ## Feature-Specific Workflow Additions
 
