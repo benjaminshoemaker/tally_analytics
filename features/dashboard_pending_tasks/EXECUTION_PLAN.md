@@ -439,15 +439,15 @@ Implement the model-ready question interpretation service that returns one of `a
 **Requirement:** FEATURE_SPEC.md "Dashboard Ask Flow"; FEATURE_TECHNICAL_SPEC.md "Decision 3"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `question.ts` exports `interpretAnalyticsQuestion` with typed answer and draft result unions.
+- [x] (CODE) `question.ts` exports `interpretAnalyticsQuestion` with typed answer and draft result unions.
   - Verify: `cd ../.. && test -f apps/web/lib/analytics/tasks/question.ts && rg -q 'interpretAnalyticsQuestion|answered|partial_answer|cannot_answer_yet|unsupported' apps/web/lib/analytics/tasks/question.ts`
-- [ ] (TEST) Question tests cover the seeded matrix for pricing visits, onboarding completion after pricing, upgrade CTA click, plan conversion after signup, and broad unsupported requests.
+- [x] (TEST) Question tests cover the seeded matrix for pricing visits, onboarding completion after pricing, upgrade CTA click, plan conversion after signup, and broad unsupported requests.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-question-api`
-- [ ] (TEST) Draft results preserve stable task type, event name, trigger, required properties, and production verification requirement for seeded questions.
+- [x] (TEST) Draft results preserve stable task type, event name, trigger, required properties, and production verification requirement for seeded questions.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-question-api`
-- [ ] (TEST) Existing duplicate tasks are returned as `existingTask` instead of a new draft.
+- [x] (TEST) Existing duplicate tasks are returned as `existingTask` instead of a new draft.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-question-api`
-- [ ] (CODE) The question service does not insert or update `analytics_tasks`.
+- [x] (CODE) The question service does not insert or update `analytics_tasks`.
   - Verify: `cd ../.. && ! rg -n 'insert\\(|update\\(|analyticsTasks' apps/web/lib/analytics/tasks/question.ts`
 
 **Files to Create:**

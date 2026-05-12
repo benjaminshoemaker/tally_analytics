@@ -138,3 +138,86 @@ export type TransitionAnalyticsTaskResult = {
   task: AnalyticsTaskRecord;
   statusEvent: AnalyticsTaskStatusEventRecord | null;
 };
+
+export type AnalyticsTaskDraft = {
+  taskType: AnalyticsTaskType;
+  title: string;
+  eventName: string;
+  triggerDescription: string;
+  propertiesSchema: Record<string, unknown>;
+  targetSurface?: string | null;
+  implementationGuidance?: string | null;
+  verificationCriteria: Record<string, unknown>;
+  verificationSource: "production_event";
+};
+
+export type AnalyticsTaskSummary = Pick<
+  AnalyticsTaskRecord,
+  | "id"
+  | "status"
+  | "taskType"
+  | "title"
+  | "eventName"
+  | "triggerDescription"
+  | "propertiesSchema"
+  | "targetSurface"
+  | "verificationCriteria"
+  | "verificationSource"
+  | "createdAt"
+  | "updatedAt"
+>;
+
+export type InterpretAnalyticsQuestionInput = {
+  userId: string;
+  projectId: string;
+  question: string;
+  period?: "24h" | "7d" | "30d";
+  now?: Date;
+};
+
+export type AnalyticsQuestionAnsweredResult = {
+  kind: "answered";
+  answer: {
+    summary: string;
+    metrics: Array<{ label: string; value: string | number }>;
+    window: { period: string; start: string; end: string };
+  };
+  draft: null;
+  existingTask: null;
+};
+
+export type AnalyticsQuestionDraftResult = {
+  kind: "partial_answer" | "cannot_answer_yet";
+  answer: {
+    summary: string;
+    limitation: string;
+  };
+  draft: AnalyticsTaskDraft;
+  existingTask: null;
+};
+
+export type AnalyticsQuestionExistingTaskResult = {
+  kind: "partial_answer" | "cannot_answer_yet";
+  answer: {
+    summary: string;
+    limitation: string;
+  };
+  draft: null;
+  existingTask: AnalyticsTaskSummary;
+};
+
+export type AnalyticsQuestionUnsupportedResult = {
+  kind: "unsupported";
+  answer: {
+    summary: string;
+    narrowingPrompt?: string;
+  };
+  draft: null;
+  existingTask: null;
+};
+
+export type AnalyticsQuestionResult =
+  | AnalyticsQuestionAnsweredResult
+  | AnalyticsQuestionDraftResult
+  | AnalyticsQuestionExistingTaskResult
+  | AnalyticsQuestionUnsupportedResult;
