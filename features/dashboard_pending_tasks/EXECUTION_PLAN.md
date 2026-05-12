@@ -702,9 +702,9 @@ Add focused tests for the dashboard flow states that are easy to regress: no tas
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) `mcp:tasks` scope, task query helpers, and transition services exist.
+- [x] (CODE) `mcp:tasks` scope, task query helpers, and transition services exist.
   - Verify: `cd ../.. && rg -q 'MCP_TASKS_SCOPE|transitionAnalyticsTask|listPending' apps/web/lib/oauth/validation.ts apps/web/lib/analytics/tasks`
-- [ ] (CODE) Existing MCP server registration and install tool tests are present.
+- [x] (CODE) Existing MCP server registration and install tool tests are present.
   - Verify: `cd ../.. && test -f apps/web/lib/mcp/server.ts && test -f apps/web/tests/mcp-route.test.ts`
 
 ### Step 4.1: MCP Schemas And Project Resolution
