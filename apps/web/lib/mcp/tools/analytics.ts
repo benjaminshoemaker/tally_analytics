@@ -5,8 +5,9 @@ import { parseAnalyticsPeriod, type AnalyticsPeriod } from "../../analytics/peri
 import { boundAnalyticsString } from "../../analytics/urls";
 import type { AnalyticsErrorStatus, AnalyticsServiceResultBase } from "../../analytics/types";
 import type { OwnedAnalyticsProject, ResolveProjectRepoInput } from "../../db/queries/projects";
+import { MCP_TASKS_SCOPE } from "../../oauth/validation";
 import { analyticsToolSchemas } from "./analytics-schemas";
-import { userIdFromAuth } from "./auth";
+import { hasMcpScope, userIdFromAuth } from "./auth";
 
 export type AnalyticsToolValidationResult<T> =
   | { ok: true; value: T }
@@ -87,6 +88,15 @@ function projectNotFoundResult(): AnalyticsServiceResultBase {
   };
 }
 
+function requireAnalyticsScopeUserId(extra: { authInfo?: unknown }): AnalyticsToolValidationResult<string> {
+  const userId = userIdFromAuth(extra.authInfo);
+  if (!userId) return { ok: false, error: unauthorizedAnalyticsResult() };
+  if (!hasMcpScope(extra.authInfo, MCP_TASKS_SCOPE)) {
+    return { ok: false, error: unauthorizedAnalyticsScopeResult() };
+  }
+  return { ok: true, value: userId };
+}
+
 function analyticsToolErrorResult(error: AnalyticsServiceResultBase & Partial<Record<string, unknown>>): CallToolResult {
   return toAnalyticsToolResult(error as AnalyticsServiceResultBase & Record<string, unknown>);
 }
@@ -108,8 +118,9 @@ async function requireOwnedProject(userId: string, projectId: string): Promise<b
 }
 
 async function handleListProjects(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 20, min: 1, max: 100 });
@@ -125,8 +136,9 @@ async function handleListProjects(input: unknown, extra: { authInfo?: unknown })
 }
 
 async function handleResolveProject(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const repo = parseResolveProjectRepoInput(input);
   if (!repo.ok) return analyticsToolErrorResult(repo.error);
@@ -162,8 +174,9 @@ async function handleResolveProject(input: unknown, extra: { authInfo?: unknown 
 }
 
 async function handleProjectOverview(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const period = parseAnalyticsToolPeriod(parsedInput.period);
@@ -178,8 +191,9 @@ async function handleProjectOverview(input: unknown, extra: { authInfo?: unknown
 }
 
 async function handleLiveEvents(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 20, min: 1, max: 100 });
@@ -196,8 +210,9 @@ async function handleLiveEvents(input: unknown, extra: { authInfo?: unknown }): 
 }
 
 async function handleSessionsSummary(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const period = parseAnalyticsToolPeriod(parsedInput.period);
@@ -212,8 +227,9 @@ async function handleSessionsSummary(input: unknown, extra: { authInfo?: unknown
 }
 
 async function handleTopPages(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const period = parseAnalyticsToolPeriod(parsedInput.period);
@@ -230,8 +246,9 @@ async function handleTopPages(input: unknown, extra: { authInfo?: unknown }): Pr
 }
 
 async function handleTopReferrers(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const period = parseAnalyticsToolPeriod(parsedInput.period);
@@ -248,8 +265,9 @@ async function handleTopReferrers(input: unknown, extra: { authInfo?: unknown })
 }
 
 async function handleListEvents(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const period = parseAnalyticsToolPeriod(parsedInput.period);
@@ -273,8 +291,9 @@ async function handleListEvents(input: unknown, extra: { authInfo?: unknown }): 
 }
 
 async function handleEventSchema(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const period = parseAnalyticsToolPeriod(parsedInput.period);
@@ -303,8 +322,9 @@ async function handleEventSchema(input: unknown, extra: { authInfo?: unknown }):
 }
 
 async function handlePathsToEvent(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult(unauthorizedAnalyticsResult());
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) return analyticsToolErrorResult(auth.error);
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const period = parseAnalyticsToolPeriod(parsedInput.period);
@@ -332,8 +352,11 @@ async function handlePathsToEvent(input: unknown, extra: { authInfo?: unknown })
 }
 
 async function handleSuggestNextEvents(input: unknown, extra: { authInfo?: unknown }): Promise<CallToolResult> {
-  const userId = userIdFromAuth(extra.authInfo);
-  if (!userId) return analyticsToolErrorResult({ ...unauthorizedAnalyticsResult(), createsPendingTasks: false });
+  const auth = requireAnalyticsScopeUserId(extra);
+  if (!auth.ok) {
+    return analyticsToolErrorResult({ ...auth.error, createsPendingTasks: false });
+  }
+  const userId = auth.value;
 
   const parsedInput = inputRecord(input);
   const period = parseAnalyticsToolPeriod(parsedInput.period);
@@ -478,6 +501,13 @@ export function unauthorizedAnalyticsResult(): AnalyticsServiceResultBase {
   return {
     status: "unauthorized",
     summary: "Authentication is required before querying Tally analytics.",
+  };
+}
+
+export function unauthorizedAnalyticsScopeResult(): AnalyticsServiceResultBase {
+  return {
+    status: "unauthorized",
+    summary: "The mcp:tasks scope is required before querying Tally analytics.",
   };
 }
 

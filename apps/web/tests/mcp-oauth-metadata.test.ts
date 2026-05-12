@@ -15,7 +15,7 @@ describe("MCP OAuth metadata routes", () => {
     await expect(response.json()).resolves.toEqual({
       resource: "https://usetally.xyz/api/mcp",
       authorization_servers: ["https://usetally.xyz"],
-      scopes_supported: ["mcp:install"],
+      scopes_supported: ["mcp:install", "mcp:tasks"],
     });
 
     const options = route.OPTIONS();
@@ -45,7 +45,7 @@ describe("MCP OAuth metadata routes", () => {
       response_types_supported: ["code"],
       grant_types_supported: ["authorization_code", "refresh_token"],
       code_challenge_methods_supported: ["S256"],
-      scopes_supported: ["mcp:install"],
+      scopes_supported: ["mcp:install", "mcp:tasks"],
     });
 
     const options = route.OPTIONS();

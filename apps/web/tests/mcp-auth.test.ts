@@ -117,4 +117,39 @@ describe("MCP bearer token auth", () => {
       },
     });
   });
+
+  it("accepts tasks-only OAuth access tokens for MCP auth context", async () => {
+    vi.resetModules();
+
+    const { hashOAuthSecret } = await import("../lib/oauth/crypto");
+    const { verifyMcpBearerToken } = await import("../lib/mcp/auth");
+
+    selectSpy = vi.fn(() => ({
+      from: () => ({
+        where: vi.fn().mockResolvedValue([
+          {
+            tokenHash: hashOAuthSecret("tasks-token"),
+            clientId: "client_1",
+            userId: "user_1",
+            scope: "mcp:tasks",
+            resource: "https://usetally.xyz/api/mcp",
+            expiresAt: new Date("2030-05-07T01:00:00.000Z"),
+            revokedAt: null,
+            createdAt: new Date("2026-05-07T00:00:00.000Z"),
+          },
+        ]),
+      }),
+    }));
+
+    await expect(
+      verifyMcpBearerToken(new Request("https://usetally.xyz/api/mcp"), "tasks-token"),
+    ).resolves.toMatchObject({
+      token: "tasks-token",
+      clientId: "client_1",
+      scopes: ["mcp:tasks"],
+      extra: {
+        userId: "user_1",
+      },
+    });
+  });
 });

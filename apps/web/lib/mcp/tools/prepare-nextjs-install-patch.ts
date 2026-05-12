@@ -2,7 +2,8 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 import { prepareNextjsInstallPatch, type PrepareNextjsInstallPatchResult } from "../next-install/prepare-nextjs-install-patch";
-import { userIdFromAuth } from "./auth";
+import { MCP_INSTALL_SCOPE } from "../../oauth/validation";
+import { hasMcpScope, userIdFromAuth } from "./auth";
 import { mcpRepoContextSchema } from "./schemas";
 
 function resultSummary(result: PrepareNextjsInstallPatchResult): string {
@@ -40,6 +41,13 @@ export function registerPrepareNextjsInstallPatchTool(server: McpServer): void {
           isError: true,
           structuredContent: { status: "unsupported", reason: "authentication_required" },
           content: [{ type: "text", text: "Authentication is required before preparing an install patch." }],
+        };
+      }
+      if (!hasMcpScope(extra.authInfo, MCP_INSTALL_SCOPE)) {
+        return {
+          isError: true,
+          structuredContent: { status: "unsupported", reason: "insufficient_scope", requiredScope: MCP_INSTALL_SCOPE },
+          content: [{ type: "text", text: "The mcp:install scope is required for this tool." }],
         };
       }
 

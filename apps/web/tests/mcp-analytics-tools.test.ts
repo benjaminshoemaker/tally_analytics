@@ -19,9 +19,10 @@ import {
   parseResolveProjectRepoInput,
   toAnalyticsToolResult,
   unauthorizedAnalyticsResult,
+  unauthorizedAnalyticsScopeResult,
   registerAnalyticsTools,
 } from "../lib/mcp/tools/analytics";
-import { userIdFromAuth } from "../lib/mcp/tools/auth";
+import { hasMcpScope, userIdFromAuth } from "../lib/mcp/tools/auth";
 
 let listOwnedAnalyticsProjectsSpy: ReturnType<typeof vi.fn> | undefined;
 let resolveOwnedMcpProjectForRepoContextSpy: ReturnType<typeof vi.fn> | undefined;
@@ -141,9 +142,15 @@ describe("MCP analytics auth and schemas", () => {
     expect(userIdFromAuth({ extra: { userId: "user_1" } })).toBe("user_1");
     expect(userIdFromAuth({ extra: { userId: "" } })).toBeNull();
     expect(userIdFromAuth(undefined)).toBeNull();
+    expect(hasMcpScope({ scopes: ["mcp:tasks"] }, "mcp:tasks")).toBe(true);
+    expect(hasMcpScope({ scopes: ["mcp:install"] }, "mcp:tasks")).toBe(false);
     expect(unauthorizedAnalyticsResult()).toEqual({
       status: "unauthorized",
       summary: "Authentication is required before querying Tally analytics.",
+    });
+    expect(unauthorizedAnalyticsScopeResult()).toEqual({
+      status: "unauthorized",
+      summary: "The mcp:tasks scope is required before querying Tally analytics.",
     });
   });
 
@@ -322,7 +329,7 @@ describe("MCP project and dashboard analytics tools", () => {
 
     const result = await analyticsToolCallback(registerToolSpy, "list_projects")(
       { limit: 1 },
-      { authInfo: { extra: { userId: "user_1" } } },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
     );
 
     expect(listOwnedAnalyticsProjectsSpy).toHaveBeenCalledWith({ userId: "user_1", limit: 1 });
@@ -357,7 +364,7 @@ describe("MCP project and dashboard analytics tools", () => {
 
     const result = await analyticsToolCallback(registerToolSpy, "resolve_project")(
       { repo: { name: "repo", workspaceRoot: ".", appRoot: ".", packageManager: "pnpm" } },
-      { authInfo: { extra: { userId: "user_1" } } },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
     );
 
     expect(result).toMatchObject({
@@ -394,7 +401,7 @@ describe("MCP project and dashboard analytics tools", () => {
 
     const result = await analyticsToolCallback(registerToolSpy, "get_project_overview")(
       { projectId: "proj_123", period: "7d" },
-      { authInfo: { extra: { userId: "user_1" } } },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
     );
 
     expect(getOwnedAnalyticsProjectSpy).toHaveBeenCalledWith({ userId: "user_1", projectId: "proj_123" });
@@ -418,7 +425,7 @@ describe("MCP project and dashboard analytics tools", () => {
 
     const result = await analyticsToolCallback(registerToolSpy, "get_project_overview")(
       { projectId: "proj_other", period: "7d" },
-      { authInfo: { extra: { userId: "user_1" } } },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
     );
 
     expect(result).toMatchObject({
@@ -484,7 +491,7 @@ describe("MCP event, path, and recommendation analytics tools", () => {
 
     const listResult = await analyticsToolCallback(registerToolSpy, "list_events")(
       { projectId: "proj_123", period: "7d" },
-      { authInfo: { extra: { userId: "user_1" } } },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
     );
     expect(listResult).toMatchObject({
       structuredContent: {
@@ -495,7 +502,7 @@ describe("MCP event, path, and recommendation analytics tools", () => {
 
     const schemaResult = await analyticsToolCallback(registerToolSpy, "get_event_schema")(
       { projectId: "proj_123", period: "7d", eventName: "signup" },
-      { authInfo: { extra: { userId: "user_1" } } },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
     );
     expect(schemaResult).toMatchObject({
       isError: true,
@@ -539,7 +546,7 @@ describe("MCP event, path, and recommendation analytics tools", () => {
 
       const result = await analyticsToolCallback(registerToolSpy, "get_paths_to_event")(
         { projectId: "proj_123", period: "7d", targetEvent: "signup_completed" },
-        { authInfo: { extra: { userId: "user_1" } } },
+        { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
       );
 
       expect(result.isError).toBeUndefined();
@@ -560,7 +567,7 @@ describe("MCP event, path, and recommendation analytics tools", () => {
 
     const recommendationResult = await analyticsToolCallback(registerToolSpy, "suggest_next_events")(
       { projectId: "proj_123", period: "7d", goal: "Understand signup" },
-      { authInfo: { extra: { userId: "user_1" } } },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
     );
     expect(recommendationResult).toMatchObject({
       structuredContent: {
@@ -573,7 +580,7 @@ describe("MCP event, path, and recommendation analytics tools", () => {
 });
 
 describe("MCP analytics prompt-shaped sequences", () => {
-  const auth = { authInfo: { extra: { userId: "user_1" } } };
+  const auth = { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } };
   const dataWindow = {
     period: "7d",
     start: "2026-05-02T00:00:00.000Z",

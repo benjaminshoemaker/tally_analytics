@@ -2,7 +2,6 @@ import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
 
 import { mcpResourceUrl } from "../oauth/metadata";
 import { validateAccessToken } from "../oauth/tokens";
-import { MCP_INSTALL_SCOPE } from "../oauth/validation";
 
 type OAuthTokenRecord = NonNullable<Awaited<ReturnType<typeof validateAccessToken>>>;
 
@@ -35,7 +34,6 @@ export async function verifyMcpBearerToken(_request: Request, bearerToken?: stri
 
   const record = await validateAccessToken({
     accessToken: bearerToken,
-    requiredScope: MCP_INSTALL_SCOPE,
     resource: mcpResourceUrl(),
   });
 

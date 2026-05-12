@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../db/client";
 import { oauthClients } from "../db/schema";
 import { generateOpaqueToken } from "./crypto";
-import { assertValidRedirectUris, MCP_INSTALL_SCOPE, normalizeOAuthScope } from "./validation";
+import { assertValidRedirectUris, normalizeOAuthScope } from "./validation";
 
 export type OAuthClientRecord = typeof oauthClients.$inferSelect;
 
@@ -22,7 +22,7 @@ export type RegisteredOAuthClient = {
   redirectUris: string[];
   grantTypes: string[];
   responseTypes: string[];
-  scope: typeof MCP_INSTALL_SCOPE;
+  scope: string;
 };
 
 export async function registerOAuthClient(params: RegisterOAuthClientParams): Promise<RegisteredOAuthClient> {

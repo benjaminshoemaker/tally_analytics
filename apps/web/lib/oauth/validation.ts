@@ -1,5 +1,11 @@
 export const MCP_INSTALL_SCOPE = "mcp:install";
+export const MCP_TASKS_SCOPE = "mcp:tasks";
 export const PKCE_S256_METHOD = "S256";
+
+export const SUPPORTED_MCP_SCOPES = [MCP_INSTALL_SCOPE, MCP_TASKS_SCOPE] as const;
+export type McpOAuthScope = (typeof SUPPORTED_MCP_SCOPES)[number];
+
+const SUPPORTED_MCP_SCOPE_SET = new Set<string>(SUPPORTED_MCP_SCOPES);
 
 export function isValidRedirectUri(value: string): boolean {
   try {
@@ -25,13 +31,22 @@ export function assertValidRedirectUris(redirectUris: string[]): void {
   }
 }
 
-export function normalizeOAuthScope(scope: string | null | undefined): typeof MCP_INSTALL_SCOPE {
+export function normalizeOAuthScope(scope: string | null | undefined): string {
   const value = scope?.trim() || MCP_INSTALL_SCOPE;
-  const scopes = value.split(/\s+/).filter(Boolean);
-  if (scopes.length !== 1 || scopes[0] !== MCP_INSTALL_SCOPE) {
+  const requestedScopes = value.split(/\s+/).filter(Boolean);
+  const uniqueScopes = Array.from(new Set(requestedScopes));
+
+  if (uniqueScopes.length === 0) return MCP_INSTALL_SCOPE;
+  if (uniqueScopes.some((requestedScope) => !SUPPORTED_MCP_SCOPE_SET.has(requestedScope))) {
     throw new Error(`Unsupported OAuth scope: ${value}`);
   }
-  return MCP_INSTALL_SCOPE;
+
+  return SUPPORTED_MCP_SCOPES.filter((supportedScope) => uniqueScopes.includes(supportedScope)).join(" ");
+}
+
+export function hasOAuthScope(scope: string | null | undefined, requiredScope: McpOAuthScope): boolean {
+  if (!scope) return false;
+  return scope.split(/\s+/).filter(Boolean).includes(requiredScope);
 }
 
 export function isRedirectUriRegistered(params: { redirectUri: string; registeredRedirectUris: string[] }): boolean {

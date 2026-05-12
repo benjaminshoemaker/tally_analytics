@@ -268,15 +268,15 @@ Add a separate MCP task scope while preserving existing install behavior. The sh
 **Requirement:** FEATURE_TECHNICAL_SPEC.md "Decision 7: Add A Dedicated MCP Task Scope"; FEATURE_SPEC.md "Security"
 
 **Acceptance Criteria:**
-- [ ] (CODE) OAuth validation and metadata expose both `mcp:install` and `mcp:tasks` and support space-delimited scope sets.
+- [x] (CODE) OAuth validation and metadata expose both `mcp:install` and `mcp:tasks` and support space-delimited scope sets.
   - Verify: `cd ../.. && rg -q 'MCP_TASKS_SCOPE|mcp:tasks|scopes_supported' apps/web/lib/oauth/validation.ts apps/web/lib/oauth/metadata.ts`
-- [ ] (TEST) OAuth validation tests cover install-only, tasks-only, combined install plus tasks, unsupported scope, and missing scope defaults.
+- [x] (TEST) OAuth validation tests cover install-only, tasks-only, combined install plus tasks, unsupported scope, and missing scope defaults.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-oauth`
-- [ ] (CODE) MCP route auth no longer globally requires only `mcp:install`; per-tool scope checks are represented in tool code or shared helper code.
+- [x] (CODE) MCP route auth no longer globally requires only `mcp:install`; per-tool scope checks are represented in tool code or shared helper code.
   - Verify: `cd ../.. && rg -q 'requiredScopes|MCP_TASKS_SCOPE|requireMcpScope|hasMcpScope' apps/web/app/api/mcp/route.ts apps/web/lib/mcp`
-- [ ] (TEST) Existing install tool tests prove `prepare_nextjs_install_patch` still works with install authority.
+- [x] (TEST) Existing install tool tests prove `prepare_nextjs_install_patch` still works with install authority.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route mcp-next-install mcp-auth`
-- [ ] (TEST) Scope tests prove install-only tokens cannot list, read, or update analytics tasks.
+- [x] (TEST) Scope tests prove install-only tokens cannot list, read, or update analytics tasks.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-analytics-tasks mcp-auth`
 
 **Files to Create:**

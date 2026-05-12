@@ -60,7 +60,6 @@ describe("/api/mcp route", () => {
       expect.any(Function),
       expect.objectContaining({
         required: true,
-        requiredScopes: ["mcp:install"],
         resourceMetadataPath: "/.well-known/oauth-protected-resource",
       }),
     );
@@ -127,7 +126,7 @@ describe("/api/mcp route", () => {
     }>;
     const result = await callback(
       { repo: {}, framework: {}, files: {} },
-      { authInfo: { extra: { userId: "user_1" } } },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:install"] } },
     );
 
     expect(prepareNextjsInstallPatchSpy).toHaveBeenCalledWith({
@@ -145,6 +144,38 @@ describe("/api/mcp route", () => {
       verification: expect.any(Array),
     });
     expect(result.content[0]?.text).toContain("Ready");
+  });
+
+  it("requires mcp:install scope for prepare_nextjs_install_patch", async () => {
+    vi.resetModules();
+
+    prepareNextjsInstallPatchSpy = vi.fn();
+    const registerToolSpy = vi.fn();
+    const { registerTallyMcpTools } = await import("../lib/mcp/server");
+
+    registerTallyMcpTools({ registerTool: registerToolSpy } as never);
+
+    const prepareCall = registerToolSpy.mock.calls.find((call) => call[0] === "prepare_nextjs_install_patch");
+    expect(prepareCall).toBeTruthy();
+
+    const callback = prepareCall?.[2] as (
+      input: unknown,
+      extra: { authInfo: { extra: { userId: string }; scopes: string[] } },
+    ) => Promise<Record<string, unknown>>;
+    const result = await callback(
+      { repo: {}, framework: {}, files: {} },
+      { authInfo: { extra: { userId: "user_1" }, scopes: ["mcp:tasks"] } },
+    );
+
+    expect(prepareNextjsInstallPatchSpy).not.toHaveBeenCalled();
+    expect(result).toMatchObject({
+      isError: true,
+      structuredContent: {
+        status: "unsupported",
+        reason: "insufficient_scope",
+        requiredScope: "mcp:install",
+      },
+    });
   });
 
   it("shapes unsupported, needs-context, and already-installed tool responses", async () => {

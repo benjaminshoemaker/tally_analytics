@@ -1,4 +1,4 @@
-import { MCP_INSTALL_SCOPE } from "./validation";
+import { SUPPORTED_MCP_SCOPES } from "./validation";
 
 function baseUrl(): string {
   return (process.env.NEXT_PUBLIC_APP_URL ?? "https://usetally.xyz").replace(/\/+$/, "");
@@ -16,7 +16,7 @@ export function protectedResourceMetadata() {
   return {
     resource: mcpResourceUrl(),
     authorization_servers: [oauthIssuer()],
-    scopes_supported: [MCP_INSTALL_SCOPE],
+    scopes_supported: [...SUPPORTED_MCP_SCOPES],
   };
 }
 
@@ -30,7 +30,7 @@ export function authorizationServerMetadata() {
     response_types_supported: ["code"],
     grant_types_supported: ["authorization_code", "refresh_token"],
     code_challenge_methods_supported: ["S256"],
-    scopes_supported: [MCP_INSTALL_SCOPE],
+    scopes_supported: [...SUPPORTED_MCP_SCOPES],
   };
 }
 
