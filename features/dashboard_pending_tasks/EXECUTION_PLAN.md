@@ -537,9 +537,9 @@ Add authenticated dashboard API routes for asking questions, confirming pending 
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) Dashboard question and task APIs exist before UI wiring starts.
+- [x] (CODE) Dashboard question and task APIs exist before UI wiring starts.
   - Verify: `cd ../.. && test -f 'apps/web/app/api/projects/[id]/analytics/questions/route.ts' && test -f 'apps/web/app/api/projects/[id]/analytics/tasks/route.ts'`
-- [ ] (CODE) Existing project detail page and React Query hook patterns are available.
+- [x] (CODE) Existing project detail page and React Query hook patterns are available.
   - Verify: `cd ../.. && test -f 'apps/web/app/(dashboard)/projects/[id]/page.tsx' && test -f apps/web/lib/hooks/use-project.ts`
 
 ### Step 3.1: Hooks And Components
@@ -556,15 +556,15 @@ Create React Query hooks and dashboard components for asking Tally, rendering an
 **Requirement:** FEATURE_SPEC.md "Dashboard Ask Flow" and "Task Draft Editing And Deletion"; FEATURE_TECHNICAL_SPEC.md "Dashboard UI"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Dashboard hooks exist for question submission and task list/mutation behavior.
+- [x] (CODE) Dashboard hooks exist for question submission and task list/mutation behavior.
   - Verify: `cd ../.. && test -f apps/web/lib/hooks/use-analytics-question.ts && test -f apps/web/lib/hooks/use-analytics-tasks.ts`
-- [ ] (CODE) Ask panel, question result, task draft card, pending task list, and task status badge components exist.
+- [x] (CODE) Ask panel, question result, task draft card, pending task list, and task status badge components exist.
   - Verify: `cd ../.. && test -f apps/web/components/dashboard/analytics-tasks/ask-tally-panel.tsx && test -f apps/web/components/dashboard/analytics-tasks/task-draft-card.tsx && test -f apps/web/components/dashboard/analytics-tasks/pending-task-list.tsx && test -f apps/web/components/dashboard/analytics-tasks/task-status-badge.tsx`
-- [ ] (TEST) Component tests prove answered results show no Add task button, while partial and cannot-answer results show answer/gap content before the draft card.
+- [x] (TEST) Component tests prove answered results show no Add task button, while partial and cannot-answer results show answer/gap content before the draft card.
   - Verify: `cd ../.. && pnpm --filter web test -- dashboard-pending-tasks-components`
-- [ ] (TEST) Component tests prove edit title/event/notes, dismiss/delete draft, confirm task, pending delete, cancel, and archive controls render with accessible labels.
+- [x] (TEST) Component tests prove edit title/event/notes, dismiss/delete draft, confirm task, pending delete, cancel, and archive controls render with accessible labels.
   - Verify: `cd ../.. && pnpm --filter web test -- dashboard-pending-tasks-components`
-- [ ] (CODE) Async result regions include `aria-live="polite"` and status badges include text labels.
+- [x] (CODE) Async result regions include `aria-live="polite"` and status badges include text labels.
   - Verify: `cd ../.. && rg -q 'aria-live=\"polite\"|aria-live=\\{\"polite\"\\}' apps/web/components/dashboard/analytics-tasks && rg -q 'pending|implemented locally|awaiting deploy|verified|failed' apps/web/components/dashboard/analytics-tasks/task-status-badge.tsx`
 
 **Files to Create:**
@@ -575,7 +575,7 @@ Create React Query hooks and dashboard components for asking Tally, rendering an
 - `apps/web/components/dashboard/analytics-tasks/task-draft-card.tsx` - Editable non-persisted draft card.
 - `apps/web/components/dashboard/analytics-tasks/pending-task-list.tsx` - Task queue.
 - `apps/web/components/dashboard/analytics-tasks/task-status-badge.tsx` - Text status badge.
-- `apps/web/tests/dashboard-pending-tasks-components.test.tsx` - Component and accessibility rendering tests.
+- `apps/web/tests/dashboard-pending-tasks-components.test.ts` - Component and accessibility rendering tests.
 
 **Files to Modify:**
 - None
