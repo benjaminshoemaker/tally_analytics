@@ -1,0 +1,77 @@
+{
+  "id": "dashboard-task-question-cannot-answer",
+  "description": "Dashboard Ask Tally question that returns cannot_answer_yet with a track_click draft.",
+  "tags": ["local", "state", "analytics", "dashboard-task"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000212",
+    "email": "e2e+dashboard-task-cannot@example.com",
+    "githubUserId": 910000212,
+    "githubUsername": "fpa-dashboard-task-cannot",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000212?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_dtask_cna",
+      "source": "mcp_codex",
+      "displayName": "Dashboard Task Cannot Answer Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/dashboard-task-cannot.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/dashboard-task-cannot",
+      "mcpRepoName": "dashboard-task-cannot",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "30a521ba66c0109a6282562f70d9dc046246ae7775e38fcc6db046b2b056068b",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 2,
+      "lastEventAt": "2026-05-08T14:05:00.000Z",
+      "createdAt": "2026-05-08T14:00:00.000Z",
+      "updatedAt": "2026-05-08T14:05:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_dtask_cna",
+        "session_id": "sess_dtask_cna_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-08T14:00:00.000Z",
+        "url": "https://cannot-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_cna_001",
+        "is_returning": 0,
+        "environment": "production"
+      },
+      {
+        "project_id": "proj_dtask_cna",
+        "session_id": "sess_dtask_cna_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-08T14:05:00.000Z",
+        "url": "https://cannot-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_cna_001",
+        "is_returning": 0,
+        "environment": "production",
+        "event_properties": {
+          "surface": "pricing"
+        }
+      }
+    ]
+  },
+  "expectations": {
+    "startPath": "/projects/proj_dtask_cna",
+    "assertions": [
+      "Asking an upgrade CTA question yields cannot_answer_yet.",
+      "The draft card can be dismissed without creating a task."
+    ]
+  }
+}

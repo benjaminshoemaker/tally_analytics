@@ -1,0 +1,104 @@
+{
+  "id": "dashboard-task-duplicate-existing",
+  "description": "Dashboard Ask Tally duplicate-task scenario where an existing pending task suppresses a new draft.",
+  "tags": ["local", "state", "analytics", "dashboard-task", "duplicate"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000214",
+    "email": "e2e+dashboard-task-duplicate@example.com",
+    "githubUserId": 910000214,
+    "githubUsername": "fpa-dashboard-task-duplicate",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000214?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_dtask_dup",
+      "source": "mcp_codex",
+      "displayName": "Dashboard Task Duplicate Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/dashboard-task-duplicate.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/dashboard-task-duplicate",
+      "mcpRepoName": "dashboard-task-duplicate",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "e7d71019575889e4b5bfb4db9a355dd4089735c48777d64d87561ae843777ba5",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 2,
+      "lastEventAt": "2026-05-08T16:05:00.000Z",
+      "createdAt": "2026-05-08T16:00:00.000Z",
+      "updatedAt": "2026-05-08T16:05:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_dtask_dup",
+        "session_id": "sess_dtask_dup_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-08T16:00:00.000Z",
+        "url": "https://duplicate-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_dup_001",
+        "is_returning": 0,
+        "environment": "production"
+      },
+      {
+        "project_id": "proj_dtask_dup",
+        "session_id": "sess_dtask_dup_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-08T16:05:00.000Z",
+        "url": "https://duplicate-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_dup_001",
+        "is_returning": 0,
+        "environment": "production"
+      }
+    ]
+  },
+  "analyticsTasks": [
+    {
+      "id": "task_dup_onboard",
+      "projectId": "proj_dtask_dup",
+      "status": "pending",
+      "taskType": "track_completion",
+      "title": "Track onboarding completion",
+      "originalQuestion": "How many users finished onboarding after visiting pricing?",
+      "answerKind": "partial_answer",
+      "answerSummary": "Pricing visits are visible, but onboarding completion is not fully instrumented yet.",
+      "analyticsGap": "Missing onboarding completion telemetry after pricing visits.",
+      "eventName": "onboarding_completed",
+      "triggerDescription": "When a user reaches the completed onboarding state.",
+      "propertiesSchema": {
+        "required": ["source_page", "plan"]
+      },
+      "targetSurface": "/onboarding",
+      "implementationGuidance": "Emit onboarding_completed once per completed onboarding flow.",
+      "verificationCriteria": {
+        "productionEvent": "onboarding_completed",
+        "requiredProperties": ["source_page", "plan"],
+        "environment": "production"
+      },
+      "verificationSource": "production_event",
+      "duplicateFingerprint": "142fca493e51a21d6ca314d990140a06610d9142ac0212f6bdc524f110691999",
+      "confirmedAt": "2026-05-08T16:10:00.000Z",
+      "createdAt": "2026-05-08T16:10:00.000Z",
+      "updatedAt": "2026-05-08T16:10:00.000Z"
+    }
+  ],
+  "expectations": {
+    "startPath": "/projects/proj_dtask_dup",
+    "assertions": [
+      "Asking the same onboarding-after-pricing question returns the existing pending task context.",
+      "No second draft is shown when a duplicate fingerprint already exists."
+    ]
+  }
+}

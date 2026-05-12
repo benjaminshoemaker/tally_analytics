@@ -1,0 +1,110 @@
+{
+  "id": "dashboard-task-question-answered",
+  "description": "Dashboard Ask Tally question that can be answered immediately from pricing page analytics.",
+  "tags": ["local", "state", "analytics", "dashboard-task"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000210",
+    "email": "e2e+dashboard-task-answered@example.com",
+    "githubUserId": 910000210,
+    "githubUsername": "fpa-dashboard-task-answered",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000210?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_dtask_ans",
+      "source": "mcp_codex",
+      "displayName": "Dashboard Task Answered Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/dashboard-task-answered.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/dashboard-task-answered",
+      "mcpRepoName": "dashboard-task-answered",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "d5add807f9787079e02a7ba8975b46794e927e23ddd1b2cd77eb1d6408427f68",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 4,
+      "lastEventAt": "2026-05-08T12:10:00.000Z",
+      "createdAt": "2026-05-08T11:00:00.000Z",
+      "updatedAt": "2026-05-08T12:10:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_dtask_ans",
+        "session_id": "sess_dtask_ans_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-08T12:00:00.000Z",
+        "url": "https://answered-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "https://google.com/search?q=pricing+analytics",
+        "visitor_id": "visitor_dtask_ans_001",
+        "is_returning": 0,
+        "environment": "production",
+        "event_properties": {
+          "entry": "search"
+        }
+      },
+      {
+        "project_id": "proj_dtask_ans",
+        "session_id": "sess_dtask_ans_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-08T12:05:00.000Z",
+        "url": "https://answered-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "https://google.com/search?q=pricing+analytics",
+        "visitor_id": "visitor_dtask_ans_001",
+        "is_returning": 0,
+        "environment": "production",
+        "event_properties": {
+          "surface": "hero"
+        }
+      },
+      {
+        "project_id": "proj_dtask_ans",
+        "session_id": "sess_dtask_ans_002",
+        "event_type": "session_start",
+        "timestamp": "2026-05-08T12:08:00.000Z",
+        "url": "https://answered-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_ans_002",
+        "is_returning": 1,
+        "environment": "production",
+        "event_properties": {
+          "entry": "direct"
+        }
+      },
+      {
+        "project_id": "proj_dtask_ans",
+        "session_id": "sess_dtask_ans_002",
+        "event_type": "page_view",
+        "timestamp": "2026-05-08T12:10:00.000Z",
+        "url": "https://answered-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_ans_002",
+        "is_returning": 1,
+        "environment": "production",
+        "event_properties": {
+          "surface": "secondary"
+        }
+      }
+    ]
+  },
+  "expectations": {
+    "startPath": "/projects/proj_dtask_ans",
+    "assertions": [
+      "Asking a pricing visits question returns an answered result with metrics.",
+      "No task draft card is shown for answered questions."
+    ]
+  }
+}

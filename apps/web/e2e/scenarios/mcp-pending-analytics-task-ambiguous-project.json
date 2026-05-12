@@ -1,0 +1,152 @@
+{
+  "id": "mcp-pending-analytics-task-ambiguous-project",
+  "description": "MCP task-tools scenario where broad repo context resolves to multiple owned projects.",
+  "tags": ["local", "state", "analytics", "mcp", "mcp-tasks"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000219",
+    "email": "e2e+mcp-pending-task-ambiguous@example.com",
+    "githubUserId": 910000219,
+    "githubUsername": "fpa-mcp-pending-task-ambiguous",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000219?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_mcp_amb1",
+      "source": "mcp_codex",
+      "displayName": "Ambiguous Pending Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/ambiguous-pending-a.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/ambiguous-pending-a",
+      "mcpRepoName": "ambiguous-pending-demo",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "bac0dba3f4b9919d90f9d9c551f9f870a154d02e58ebde22cf7ec433054d4420",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 1,
+      "lastEventAt": "2026-05-08T21:01:00.000Z",
+      "createdAt": "2026-05-08T21:00:00.000Z",
+      "updatedAt": "2026-05-08T21:01:00.000Z"
+    },
+    {
+      "id": "proj_mcp_amb2",
+      "source": "mcp_codex",
+      "displayName": "Ambiguous Pending Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/ambiguous-pending-b.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/ambiguous-pending-b",
+      "mcpRepoName": "ambiguous-pending-demo",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "751aa1959773ee3fe478552fc9559d60c5aad195034f3dc672deb198daa0d4b4",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 1,
+      "lastEventAt": "2026-05-08T21:03:00.000Z",
+      "createdAt": "2026-05-08T21:00:30.000Z",
+      "updatedAt": "2026-05-08T21:03:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_mcp_amb1",
+        "session_id": "sess_mcp_amb_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-08T21:01:00.000Z",
+        "url": "https://ambiguous-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_mcp_amb_001",
+        "is_returning": 0,
+        "environment": "production"
+      },
+      {
+        "project_id": "proj_mcp_amb2",
+        "session_id": "sess_mcp_amb_002",
+        "event_type": "page_view",
+        "timestamp": "2026-05-08T21:03:00.000Z",
+        "url": "https://ambiguous-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_mcp_amb_002",
+        "is_returning": 0,
+        "environment": "production"
+      }
+    ]
+  },
+  "analyticsTasks": [
+    {
+      "id": "task_mcp_amb1",
+      "projectId": "proj_mcp_amb1",
+      "status": "pending",
+      "taskType": "track_click",
+      "title": "Track signup CTA clicks",
+      "originalQuestion": "How many people clicked signup from pricing?",
+      "answerKind": "cannot_answer_yet",
+      "answerSummary": "Signup CTA click tracking has not been observed for this project yet.",
+      "analyticsGap": "No signup CTA click telemetry is currently available.",
+      "eventName": "signup_cta_clicked",
+      "triggerDescription": "When a user clicks signup CTA from pricing.",
+      "propertiesSchema": {
+        "required": ["surface"]
+      },
+      "targetSurface": "/pricing",
+      "implementationGuidance": "Emit signup_cta_clicked when the pricing signup CTA is clicked.",
+      "verificationCriteria": {
+        "productionEvent": "signup_cta_clicked",
+        "requiredProperties": ["surface"],
+        "environment": "production"
+      },
+      "verificationSource": "production_event",
+      "createdAt": "2026-05-08T21:01:30.000Z",
+      "updatedAt": "2026-05-08T21:01:30.000Z"
+    },
+    {
+      "id": "task_mcp_amb2",
+      "projectId": "proj_mcp_amb2",
+      "status": "pending",
+      "taskType": "track_click",
+      "title": "Track signup CTA clicks",
+      "originalQuestion": "How many people clicked signup from pricing?",
+      "answerKind": "cannot_answer_yet",
+      "answerSummary": "Signup CTA click tracking has not been observed for this project yet.",
+      "analyticsGap": "No signup CTA click telemetry is currently available.",
+      "eventName": "signup_cta_clicked",
+      "triggerDescription": "When a user clicks signup CTA from pricing.",
+      "propertiesSchema": {
+        "required": ["surface"]
+      },
+      "targetSurface": "/pricing",
+      "implementationGuidance": "Emit signup_cta_clicked when the pricing signup CTA is clicked.",
+      "verificationCriteria": {
+        "productionEvent": "signup_cta_clicked",
+        "requiredProperties": ["surface"],
+        "environment": "production"
+      },
+      "verificationSource": "production_event",
+      "createdAt": "2026-05-08T21:03:30.000Z",
+      "updatedAt": "2026-05-08T21:03:30.000Z"
+    }
+  ],
+  "expectations": {
+    "startPath": "/projects/proj_mcp_amb1",
+    "assertions": [
+      "Broad MCP repo context returns needs_project_selection when multiple candidates match.",
+      "Task list calls require explicit project context in ambiguous ownership states."
+    ]
+  }
+}

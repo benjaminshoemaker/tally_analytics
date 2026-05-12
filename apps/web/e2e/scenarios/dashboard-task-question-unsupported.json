@@ -1,0 +1,62 @@
+{
+  "id": "dashboard-task-question-unsupported",
+  "description": "Dashboard Ask Tally question that is intentionally too broad and returns unsupported guidance.",
+  "tags": ["local", "state", "analytics", "dashboard-task"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000213",
+    "email": "e2e+dashboard-task-unsupported@example.com",
+    "githubUserId": 910000213,
+    "githubUsername": "fpa-dashboard-task-unsupported",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000213?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_dtask_uns",
+      "source": "mcp_codex",
+      "displayName": "Dashboard Task Unsupported Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/dashboard-task-unsupported.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/dashboard-task-unsupported",
+      "mcpRepoName": "dashboard-task-unsupported",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "a3b4b789882b47140a270ee71d3f2e7af1e2c998cec6520426152927ba881177",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 1,
+      "lastEventAt": "2026-05-08T15:00:00.000Z",
+      "createdAt": "2026-05-08T15:00:00.000Z",
+      "updatedAt": "2026-05-08T15:00:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_dtask_uns",
+        "session_id": "sess_dtask_uns_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-08T15:00:00.000Z",
+        "url": "https://unsupported-demo.test/",
+        "path": "/",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_uns_001",
+        "is_returning": 0,
+        "environment": "production"
+      }
+    ]
+  },
+  "expectations": {
+    "startPath": "/projects/proj_dtask_uns",
+    "assertions": [
+      "Broad tracking requests return unsupported guidance.",
+      "No draft card is created for unsupported questions."
+    ]
+  }
+}

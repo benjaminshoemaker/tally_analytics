@@ -864,11 +864,11 @@ Implement `report_analytics_task_status` so an agent can report `in_progress`, `
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) Flow verification plan is applicable and names the required browser, MCP, and event-fixture channels.
+- [x] (CODE) Flow verification plan is applicable and names the required browser, MCP, and event-fixture channels.
   - Verify: `rg -q 'Status: Applicable' FLOW_VERIFICATION_PLAN.md && rg -q 'Browser UI|MCP over|fixture' FLOW_VERIFICATION_PLAN.md`
-- [ ] (CODE) Dashboard UI and MCP task tools exist before building the harness.
+- [x] (CODE) Dashboard UI and MCP task tools exist before building the harness.
   - Verify: `cd ../.. && test -f apps/web/components/dashboard/analytics-tasks/ask-tally-panel.tsx && test -f apps/web/lib/mcp/tools/analytics-tasks.ts`
-- [ ] (CODE) Local E2E scenario seeder exists and has the non-local database guard.
+- [x] (CODE) Local E2E scenario seeder exists and has the non-local database guard.
   - Verify: `cd ../.. && test -f apps/web/scripts/seed-e2e-scenario.mjs && rg -q 'E2E_ALLOW_REMOTE_SEED' apps/web/scripts/seed-e2e-scenario.mjs`
 
 ### Step 5.1: Scenarios And Seeder
@@ -885,15 +885,15 @@ Extend local scenario validation and seeding so the dashboard question matrix, p
 **Requirement:** FEATURE_SPEC.md "Account-free local testing"; FEATURE_TECHNICAL_SPEC.md "Scenario Fixtures"; FLOW_VERIFICATION_PLAN.md "Setup/State"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Scenario contracts support `analyticsTasks`, generic `analytics.events[].event_type`, `environment`, and `event_properties`.
+- [x] (CODE) Scenario contracts support `analyticsTasks`, generic `analytics.events[].event_type`, `environment`, and `event_properties`.
   - Verify: `cd ../.. && rg -q 'analyticsTasks|event_properties|environment' apps/web/scripts/seed-e2e-scenario.mjs apps/web/tests/e2e-scenarios.test.ts`
-- [ ] (CODE) Required dashboard and MCP pending-task scenario files exist.
+- [x] (CODE) Required dashboard and MCP pending-task scenario files exist.
   - Verify: `cd ../.. && test -f apps/web/e2e/scenarios/dashboard-task-question-answered.json && test -f apps/web/e2e/scenarios/dashboard-task-question-partial.json && test -f apps/web/e2e/scenarios/dashboard-task-question-cannot-answer.json && test -f apps/web/e2e/scenarios/dashboard-task-question-unsupported.json && test -f apps/web/e2e/scenarios/mcp-pending-analytics-task.json`
-- [ ] (TEST) Scenario tests validate unique users/projects/tasks, task status values, MCP fingerprints, production/test environment markers, and required property fixtures.
+- [x] (TEST) Scenario tests validate unique users/projects/tasks, task status values, MCP fingerprints, production/test environment markers, and required property fixtures.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-scenarios`
-- [ ] (TEST) Seeder tests or scenario replay prove task rows and event fixtures are written and cleaned idempotently.
+- [x] (TEST) Seeder tests or scenario replay prove task rows and event fixtures are written and cleaned idempotently.
   - Verify: `cd ../.. && pnpm --filter web test -- e2e-scenarios e2e-analytics-fixtures`
-- [ ] (CODE) Seeder cleanup deletes analytics task rows before projects/users so reruns are idempotent.
+- [x] (CODE) Seeder cleanup deletes analytics task rows before projects/users so reruns are idempotent.
   - Verify: `cd ../.. && rg -q 'DELETE FROM analytics_task_status_events|DELETE FROM analytics_tasks' apps/web/scripts/seed-e2e-scenario.mjs`
 
 **Files to Create:**
@@ -941,17 +941,17 @@ Add the agent-runnable harness that applies or validates local migrations, start
 **Requirement:** FLOW_VERIFICATION_PLAN.md "Harness Shape", "Driver", "Assertions", "Evidence", and "Teardown/Rerun"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Harness script exists and is wired to `pnpm --filter web e2e:mcp-pending-tasks`.
+- [x] (CODE) Harness script exists and is wired to `pnpm --filter web e2e:mcp-pending-tasks`.
   - Verify: `cd ../.. && test -f apps/web/scripts/mcp-pending-tasks-self-test.mjs && rg -q 'e2e:mcp-pending-tasks' apps/web/package.json`
-- [ ] (TEST) Harness drives browser UI, MCP SDK client calls, and fixture replay rather than only importing service functions.
+- [x] (TEST) Harness drives browser UI, MCP SDK client calls, and fixture replay rather than only importing service functions.
   - Verify: `cd ../.. && rg -q 'playwright|StreamableHTTPClientTransport|list_pending_analytics_tasks|report_analytics_task_status|E2E_ANALYTICS_FIXTURE_DIR' apps/web/scripts/mcp-pending-tasks-self-test.mjs`
-- [ ] (TEST) Harness asserts answered, partial, cannot-answer, unsupported, confirm, dismiss/delete, pending delete, duplicate, MCP context, idempotent status report, test-event non-verification, missing-property non-verification, production verification, ambiguity, foreign task, and install-only insufficient-scope cases.
+- [x] (TEST) Harness asserts answered, partial, cannot-answer, unsupported, confirm, dismiss/delete, pending delete, duplicate, MCP context, idempotent status report, test-event non-verification, missing-property non-verification, production verification, ambiguity, foreign task, and install-only insufficient-scope cases.
   - Verify: `cd ../.. && rg -q 'dashboard-answered|dashboard-confirm-task|mcp-task-context|agent-status-idempotency|production-verification|insufficient-scope' apps/web/scripts/mcp-pending-tasks-self-test.mjs`
-- [ ] (TEST) Harness prints compact JSON evidence with stage names on success and sanitized failure summaries on failure.
+- [x] (TEST) Harness prints compact JSON evidence with stage names on success and sanitized failure summaries on failure.
   - Verify: `cd ../.. && rg -q '\"ok\"|\"flow\"|\"stages\"|dashboard_pending_tasks' apps/web/scripts/mcp-pending-tasks-self-test.mjs`
-- [ ] (CODE) Harness applies or validates local database migrations with `pnpm --filter web db:push` before seeding task rows.
+- [x] (CODE) Harness applies or validates local database migrations with `pnpm --filter web db:push` before seeding task rows.
   - Verify: `cd ../.. && rg -q 'db:push|apply.*migration|migrations' apps/web/scripts/mcp-pending-tasks-self-test.mjs`
-- [ ] (TEST) Harness can be run locally and exits successfully against deterministic fixtures.
+- [x] (TEST) Harness can be run locally and exits successfully against deterministic fixtures.
   - Verify: `cd ../.. && pnpm --filter web e2e:mcp-pending-tasks`
 
 **Files to Create:**
@@ -984,17 +984,17 @@ Document the new agent-runnable dashboard pending task verification command and 
 **Requirement:** FEATURE_SPEC.md "Account-free local testing"; FLOW_VERIFICATION_PLAN.md "Evidence" and "Teardown/Rerun"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `docs/agent-testing.md` documents `pnpm --filter web e2e:mcp-pending-tasks`, required local env, and the no-human-account boundary.
+- [x] (CODE) `docs/agent-testing.md` documents `pnpm --filter web e2e:mcp-pending-tasks`, required local env, and the no-human-account boundary.
   - Verify: `cd ../.. && rg -q 'e2e:mcp-pending-tasks|dashboard pending|E2E_TEST_MODE|no human GitHub account' docs/agent-testing.md`
 - [ ] (TEST) Full web unit test suite passes.
   - Verify: `cd ../.. && pnpm --filter web test`
-- [ ] (TEST) Scenario contract list passes.
+- [x] (TEST) Scenario contract list passes.
   - Verify: `cd ../.. && pnpm --filter web e2e:scenarios`
 - [ ] (TEST) SDK test and build plus bundle-size guard pass.
   - Verify: `cd ../.. && pnpm --filter sdk test && pnpm --filter sdk build && test "$(gzip -c packages/sdk/dist/index.js | wc -c | tr -d ' ')" -lt 3072`
 - [ ] (TYPE) Web type checking passes after all feature work.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
-- [ ] (TEST) Final harness and docs prove the flow works without GitHub App access or a human GitHub account.
+- [x] (TEST) Final harness and docs prove the flow works without GitHub App access or a human GitHub account.
   - Verify: `cd ../.. && rg -q 'without GitHub App|no GitHub App|no human GitHub account' apps/web/scripts/mcp-pending-tasks-self-test.mjs docs/agent-testing.md`
 
 **Files to Create:**
@@ -1020,11 +1020,11 @@ Document the new agent-runnable dashboard pending task verification command and 
 ### Phase 5 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) Agent-runnable flow harness passes.
+- [x] (TEST) Agent-runnable flow harness passes.
   - Verify: `cd ../.. && pnpm --filter web e2e:mcp-pending-tasks`
 - [ ] (TEST) Full web test suite passes.
   - Verify: `cd ../.. && pnpm --filter web test`
-- [ ] (TEST) Scenario contract listing passes.
+- [x] (TEST) Scenario contract listing passes.
   - Verify: `cd ../.. && pnpm --filter web e2e:scenarios`
 - [ ] (TEST) SDK tests, build, and bundle-size guard pass.
   - Verify: `cd ../.. && pnpm --filter sdk test && pnpm --filter sdk build && test "$(gzip -c packages/sdk/dist/index.js | wc -c | tr -d ' ')" -lt 3072`
@@ -1036,5 +1036,5 @@ Document the new agent-runnable dashboard pending task verification command and 
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route mcp-next-install mcp-auth mcp-oauth project-detail-page analytics-overview-api analytics-sessions-api analytics-live-feed-api events`
 - [ ] (CODE) Primary active workstream in `plans/PLAN_STATUS.md` remains `features/mcp_onboarding/` unless the human explicitly promotes this feature.
   - Verify: `cd ../.. && rg -q 'Primary active workstream: \`features/mcp_onboarding/\`' plans/PLAN_STATUS.md`
-- [ ] (BROWSER:DOM) The flow harness proves the dashboard, MCP, and production verification channels end to end.
+- [x] (BROWSER:DOM) The flow harness proves the dashboard, MCP, and production verification channels end to end.
   - Verify: `cd ../.. && pnpm --filter web e2e:mcp-pending-tasks`

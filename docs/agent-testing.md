@@ -94,6 +94,26 @@ The harness seeds local analytics scenarios, creates local OAuth rows for the MC
 
 The harness deletes temporary fixtures and local OAuth rows by default. Add `--keep` only when you need to inspect `tmp/mcp-analytics-querying-self-test/` after a failure.
 
+## Dashboard Pending Tasks Harness
+
+Use this harness when you need end-to-end proof of the pending-task flow across:
+
+- dashboard Ask Tally UI behavior,
+- MCP analytics task tools over the hosted MCP route,
+- production-versus-test verification semantics for task status transitions.
+
+Run the harness against the local E2E database:
+
+```bash
+DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-pending-tasks
+```
+
+The harness applies local migrations with `pnpm --filter web db:push`, seeds deterministic pending-task scenarios, starts the web app in `E2E_TEST_MODE=1`, drives the dashboard with Playwright, and calls `list_pending_analytics_tasks`, `get_analytics_task_context`, and `report_analytics_task_status` using an MCP SDK client over `StreamableHTTPClientTransport`.
+
+Passing output is compact JSON with `ok: true`, `flow: "dashboard_pending_tasks"`, and named stages such as `dashboard-answered`, `dashboard-confirm-task`, `mcp-task-context`, `agent-status-idempotency`, `production-verification`, and `insufficient-scope`.
+
+This flow is explicitly account-free: it requires no human GitHub account and no GitHub App installation for verification.
+
 ## Agent Workflow
 
 1. Pick a scenario from `pnpm --filter web e2e:scenarios`.

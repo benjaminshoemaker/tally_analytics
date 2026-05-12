@@ -1,0 +1,89 @@
+{
+  "id": "dashboard-task-question-partial",
+  "description": "Dashboard Ask Tally question that returns partial_answer plus a pending task draft.",
+  "tags": ["local", "state", "analytics", "dashboard-task"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000211",
+    "email": "e2e+dashboard-task-partial@example.com",
+    "githubUserId": 910000211,
+    "githubUsername": "fpa-dashboard-task-partial",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000211?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_dtask_part",
+      "source": "mcp_codex",
+      "displayName": "Dashboard Task Partial Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/dashboard-task-partial.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/dashboard-task-partial",
+      "mcpRepoName": "dashboard-task-partial",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "c2be41601057d732669ac5de80ed3e2e7ec2dd820a7aef27a78e45d16c41a9e8",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 3,
+      "lastEventAt": "2026-05-08T13:10:00.000Z",
+      "createdAt": "2026-05-08T12:00:00.000Z",
+      "updatedAt": "2026-05-08T13:10:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_dtask_part",
+        "session_id": "sess_dtask_part_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-08T13:00:00.000Z",
+        "url": "https://partial-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_part_001",
+        "is_returning": 0,
+        "environment": "production"
+      },
+      {
+        "project_id": "proj_dtask_part",
+        "session_id": "sess_dtask_part_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-08T13:01:00.000Z",
+        "url": "https://partial-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_part_001",
+        "is_returning": 0,
+        "environment": "production",
+        "event_properties": {
+          "surface": "hero"
+        }
+      },
+      {
+        "project_id": "proj_dtask_part",
+        "session_id": "sess_dtask_part_001",
+        "event_type": "signup_started",
+        "timestamp": "2026-05-08T13:10:00.000Z",
+        "url": "https://partial-demo.test/signup",
+        "path": "/signup",
+        "referrer": "https://partial-demo.test/pricing",
+        "visitor_id": "visitor_dtask_part_001",
+        "is_returning": 0,
+        "environment": "production"
+      }
+    ]
+  },
+  "expectations": {
+    "startPath": "/projects/proj_dtask_part",
+    "assertions": [
+      "Asking an onboarding-after-pricing question yields partial_answer.",
+      "A task draft card can be confirmed into the task queue."
+    ]
+  }
+}

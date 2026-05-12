@@ -1,0 +1,96 @@
+{
+  "id": "dashboard-task-production-verified",
+  "description": "Task verification scenario where a production event confirms agent implementation.",
+  "tags": ["local", "state", "analytics", "dashboard-task", "verification"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000216",
+    "email": "e2e+dashboard-task-verified@example.com",
+    "githubUserId": 910000216,
+    "githubUsername": "fpa-dashboard-task-verified",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000216?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_dtask_ver",
+      "source": "mcp_codex",
+      "displayName": "Dashboard Task Verified Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/dashboard-task-verified.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/dashboard-task-verified",
+      "mcpRepoName": "dashboard-task-verified",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "4e0298b51db65c7b49b42d6c4f1f31061205bae606228f1838df9c13061cbb02",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 1,
+      "lastEventAt": "2099-01-02T00:00:00.000Z",
+      "createdAt": "2026-05-08T18:00:00.000Z",
+      "updatedAt": "2099-01-02T00:00:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_dtask_ver",
+        "session_id": "sess_dtask_ver_001",
+        "event_type": "upgrade_cta_clicked",
+        "timestamp": "2099-01-02T00:00:00.000Z",
+        "url": "https://verified-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_ver_001",
+        "is_returning": 1,
+        "environment": "production",
+        "event_properties": {
+          "surface": "hero",
+          "plan": "pro"
+        }
+      }
+    ]
+  },
+  "analyticsTasks": [
+    {
+      "id": "task_prod_verify",
+      "projectId": "proj_dtask_ver",
+      "status": "in_progress",
+      "taskType": "track_click",
+      "title": "Track upgrade CTA clicks",
+      "originalQuestion": "How many people clicked the upgrade CTA?",
+      "answerKind": "cannot_answer_yet",
+      "answerSummary": "Upgrade CTA click tracking has not been observed for this project yet.",
+      "analyticsGap": "No upgrade CTA click telemetry is currently available.",
+      "eventName": "upgrade_cta_clicked",
+      "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+      "propertiesSchema": {
+        "required": ["surface", "plan"]
+      },
+      "targetSurface": "/pricing",
+      "implementationGuidance": "Emit upgrade_cta_clicked on each CTA click.",
+      "verificationCriteria": {
+        "productionEvent": "upgrade_cta_clicked",
+        "requiredProperties": ["surface", "plan"],
+        "environment": "production"
+      },
+      "verificationSource": "production_event",
+      "claimedAt": "2026-05-08T18:05:00.000Z",
+      "createdAt": "2026-05-08T18:00:00.000Z",
+      "updatedAt": "2026-05-08T18:05:00.000Z",
+      "actorType": "agent"
+    }
+  ],
+  "expectations": {
+    "startPath": "/projects/proj_dtask_ver",
+    "assertions": [
+      "Agent implementation reports can become verified when production telemetry arrives.",
+      "The task transitions to verified when post-implementation production evidence matches."
+    ]
+  }
+}

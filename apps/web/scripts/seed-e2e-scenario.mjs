@@ -25,6 +25,19 @@ const validStatuses = new Set([
   'unsupported',
 ]);
 const validSources = new Set(['github_app', 'mcp_codex']);
+const validTaskStatuses = new Set([
+  'pending',
+  'in_progress',
+  'implemented_locally',
+  'awaiting_deploy',
+  'verified',
+  'failed',
+  'cancelled',
+  'archived',
+  'duplicate',
+]);
+const validTaskTypes = new Set(['track_completion', 'track_click', 'add_event_property']);
+const validAnswerKinds = new Set(['answered', 'partial_answer', 'cannot_answer_yet', 'unsupported']);
 
 function stripTrailingGitSuffix(value) {
   return value.replace(/\.git$/i, '');
@@ -179,9 +192,61 @@ function validateScenario(scenario, expectedId) {
     }
   }
 
+  const knownProjectIds = new Set(scenario.projects.map((project) => project.id));
   const events = scenario.analytics?.events ?? [];
   if (!Array.isArray(events))
     throw new Error('Scenario analytics.events must be an array when present');
+  for (const event of events) {
+    if (!knownProjectIds.has(String(event.project_id ?? ''))) {
+      throw new Error(`Event project_id must reference a seeded project in ${scenario.id}`);
+    }
+    if (typeof event.event_type !== 'string' || event.event_type.trim().length === 0) {
+      throw new Error(`Invalid analytics event_type in ${scenario.id}`);
+    }
+    if (event.environment != null && !['production', 'development', 'test'].includes(String(event.environment))) {
+      throw new Error(`Invalid analytics environment in ${scenario.id}: ${event.environment}`);
+    }
+    if (
+      event.event_properties != null &&
+      typeof event.event_properties !== 'string' &&
+      typeof event.event_properties !== 'object'
+    ) {
+      throw new Error(`Invalid analytics event_properties in ${scenario.id}`);
+    }
+  }
+
+  if (scenario.analyticsTasks != null && !Array.isArray(scenario.analyticsTasks)) {
+    throw new Error('Scenario analyticsTasks must be an array when present');
+  }
+  for (const task of scenario.analyticsTasks ?? []) {
+    if (typeof task.id !== 'string' || task.id.length === 0 || task.id.length > 24) {
+      throw new Error(`Invalid analytics task id in ${scenario.id}`);
+    }
+    if (!knownProjectIds.has(task.projectId)) {
+      throw new Error(`Analytics task projectId must reference a seeded project in ${scenario.id}: ${task.id}`);
+    }
+    if (!validTaskStatuses.has(task.status)) {
+      throw new Error(`Invalid analytics task status in ${scenario.id}: ${task.id}`);
+    }
+    if (!validTaskTypes.has(task.taskType)) {
+      throw new Error(`Invalid analytics task type in ${scenario.id}: ${task.id}`);
+    }
+    if (!validAnswerKinds.has(task.answerKind ?? 'cannot_answer_yet')) {
+      throw new Error(`Invalid analytics task answer kind in ${scenario.id}: ${task.id}`);
+    }
+    if (typeof task.title !== 'string' || task.title.trim().length === 0 || task.title.length > 180) {
+      throw new Error(`Invalid analytics task title in ${scenario.id}: ${task.id}`);
+    }
+    if (typeof task.originalQuestion !== 'string' || task.originalQuestion.trim().length === 0) {
+      throw new Error(`Invalid analytics task originalQuestion in ${scenario.id}: ${task.id}`);
+    }
+    if (typeof task.eventName !== 'string' || !/^[a-z][a-z0-9_]{0,99}$/.test(task.eventName)) {
+      throw new Error(`Invalid analytics task eventName in ${scenario.id}: ${task.id}`);
+    }
+    if (typeof task.triggerDescription !== 'string' || task.triggerDescription.trim().length === 0) {
+      throw new Error(`Invalid analytics task triggerDescription in ${scenario.id}: ${task.id}`);
+    }
+  }
 }
 
 function databaseUrlFromEnv() {
@@ -275,6 +340,14 @@ async function cleanupScenarioRows(client, scenario) {
   );
 
   await client.query(
+    'DELETE FROM analytics_task_status_events WHERE user_id = $1 OR project_id = ANY($2::varchar[])',
+    [userId, projectIds]
+  );
+  await client.query(
+    'DELETE FROM analytics_tasks WHERE user_id = $1 OR project_id = ANY($2::varchar[])',
+    [userId, projectIds]
+  );
+  await client.query(
     'DELETE FROM regenerate_requests WHERE user_id = $1 OR project_id = ANY($2::varchar[])',
     [userId, projectIds]
   );
@@ -295,6 +368,177 @@ async function cleanupScenarioRows(client, scenario) {
     );
   } else {
     await client.query('DELETE FROM users WHERE id = $1 OR email = $2', [userId, email]);
+  }
+}
+
+function compactText(value, maxLength) {
+  if (typeof value !== 'string') return null;
+  const compact = value.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!compact) return null;
+  return compact.slice(0, maxLength);
+}
+
+function normalizeTaskEventName(value) {
+  if (typeof value !== 'string') return null;
+  const normalized = value.trim().toLowerCase();
+  if (!/^[a-z][a-z0-9_]{0,99}$/.test(normalized)) return null;
+  return normalized;
+}
+
+function seededStatusEventId(taskId) {
+  return `tse_${crypto.createHash('sha256').update(taskId).digest('hex').slice(0, 20)}`;
+}
+
+async function insertAnalyticsTasks(client, scenario) {
+  for (const task of scenario.analyticsTasks ?? []) {
+    const now = new Date().toISOString();
+    const userId = task.userId ?? scenario.user.id;
+    const answerKind = task.answerKind ?? 'cannot_answer_yet';
+    const status = task.status;
+    const title = compactText(task.title, 180);
+    const originalQuestion = compactText(task.originalQuestion, 500);
+    const eventName = normalizeTaskEventName(task.eventName);
+    const triggerDescription = compactText(task.triggerDescription, 500);
+    const answerSummary = compactText(task.answerSummary ?? '', 400);
+    const analyticsGap = compactText(task.analyticsGap ?? '', 400);
+    const implementationGuidance = compactText(task.implementationGuidance ?? '', 600);
+
+    if (!title || !originalQuestion || !eventName || !triggerDescription) {
+      throw new Error(`Invalid analytics task fields for ${scenario.id}:${task.id}`);
+    }
+
+    await client.query(
+      `
+        INSERT INTO analytics_tasks (
+          id,
+          project_id,
+          user_id,
+          status,
+          task_type,
+          title,
+          original_question,
+          answer_kind,
+          answer_summary,
+          analytics_gap,
+          event_name,
+          trigger_description,
+          properties_schema,
+          target_surface,
+          implementation_guidance,
+          verification_criteria,
+          verification_source,
+          duplicate_fingerprint,
+          duplicate_of_task_id,
+          local_verification,
+          implementation_fingerprint,
+          last_error,
+          confirmed_at,
+          claimed_at,
+          implemented_at,
+          verified_at,
+          cancelled_at,
+          archived_at,
+          created_at,
+          updated_at
+        )
+        VALUES (
+          $1,
+          $2,
+          $3,
+          $4,
+          $5,
+          $6,
+          $7,
+          $8,
+          $9,
+          $10,
+          $11,
+          $12,
+          $13::jsonb,
+          $14,
+          $15,
+          $16::jsonb,
+          $17,
+          $18,
+          $19,
+          $20::jsonb,
+          $21,
+          $22,
+          $23,
+          $24,
+          $25,
+          $26,
+          $27,
+          $28,
+          $29,
+          $30
+        )
+      `,
+      [
+        task.id,
+        task.projectId,
+        userId,
+        status,
+        task.taskType,
+        title,
+        originalQuestion,
+        answerKind,
+        answerSummary ?? null,
+        analyticsGap ?? null,
+        eventName,
+        triggerDescription,
+        task.propertiesSchema ?? {},
+        task.targetSurface ?? null,
+        implementationGuidance ?? null,
+        task.verificationCriteria ?? {},
+        task.verificationSource ?? 'production_event',
+        task.duplicateFingerprint ?? null,
+        task.duplicateOfTaskId ?? null,
+        task.localVerification ?? null,
+        task.implementationFingerprint ?? null,
+        compactText(task.lastError ?? '', 320) ?? null,
+        task.confirmedAt ?? now,
+        task.claimedAt ?? null,
+        task.implementedAt ?? null,
+        task.verifiedAt ?? null,
+        task.cancelledAt ?? null,
+        task.archivedAt ?? null,
+        task.createdAt ?? now,
+        task.updatedAt ?? now,
+      ]
+    );
+
+    await client.query(
+      `
+        INSERT INTO analytics_task_status_events (
+          id,
+          task_id,
+          project_id,
+          user_id,
+          from_status,
+          to_status,
+          actor_type,
+          actor_id,
+          reason,
+          details,
+          created_at
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::jsonb, $11)
+      `,
+      [
+        task.statusEventId ?? seededStatusEventId(task.id),
+        task.id,
+        task.projectId,
+        userId,
+        task.fromStatus ?? null,
+        status,
+        task.actorType ?? (status === 'pending' ? 'user' : 'system'),
+        task.actorId ?? null,
+        task.reason ?? null,
+        task.statusDetails ?? {},
+        task.statusEventCreatedAt ?? task.updatedAt ?? now,
+      ]
+    );
   }
 }
 
@@ -459,6 +703,7 @@ export async function seedScenario(id, options = {}) {
     await insertUser(client, scenario);
     await insertInstallations(client, scenario);
     await insertProjects(client, scenario);
+    await insertAnalyticsTasks(client, scenario);
     await client.query('COMMIT');
   } catch (error) {
     await client.query('ROLLBACK');
@@ -488,6 +733,7 @@ function printScenarioSummary(result) {
     console.log(`Project: ${project.id} ${project.status} ${project.repoFullName ?? project.displayName}`);
     console.log(`Route: /projects/${project.id}`);
   }
+  console.log(`Analytics tasks: ${scenario.analyticsTasks?.length ?? 0}`);
   console.log(`Events fixture: ${path.relative(appDir, eventsPath)}`);
 }
 

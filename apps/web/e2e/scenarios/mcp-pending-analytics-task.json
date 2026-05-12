@@ -1,0 +1,133 @@
+{
+  "id": "mcp-pending-analytics-task",
+  "description": "MCP task-tools scenario with pending and in-progress analytics tasks plus deterministic context data.",
+  "tags": ["local", "state", "analytics", "mcp", "mcp-tasks"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000218",
+    "email": "e2e+mcp-pending-task@example.com",
+    "githubUserId": 910000218,
+    "githubUsername": "fpa-mcp-pending-task",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000218?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_mcp_task",
+      "source": "mcp_codex",
+      "displayName": "MCP Pending Task Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/mcp-pending-task.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/mcp-pending-task",
+      "mcpRepoName": "mcp-pending-task",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "a4ff0fb27955b5c3e9cd118ff96b9cd993790c4045f83a713feb99c691bb7503",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 2,
+      "lastEventAt": "2026-05-08T20:04:00.000Z",
+      "createdAt": "2026-05-08T20:00:00.000Z",
+      "updatedAt": "2026-05-08T20:04:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_mcp_task",
+        "session_id": "sess_mcp_task_001",
+        "event_type": "session_start",
+        "timestamp": "2026-05-08T20:00:00.000Z",
+        "url": "https://mcp-task-demo.test/",
+        "path": "/",
+        "referrer": "",
+        "visitor_id": "visitor_mcp_task_001",
+        "is_returning": 0,
+        "environment": "production"
+      },
+      {
+        "project_id": "proj_mcp_task",
+        "session_id": "sess_mcp_task_001",
+        "event_type": "page_view",
+        "timestamp": "2026-05-08T20:04:00.000Z",
+        "url": "https://mcp-task-demo.test/pricing",
+        "path": "/pricing",
+        "referrer": "",
+        "visitor_id": "visitor_mcp_task_001",
+        "is_returning": 0,
+        "environment": "production",
+        "event_properties": {
+          "surface": "hero"
+        }
+      }
+    ]
+  },
+  "analyticsTasks": [
+    {
+      "id": "task_mcp_pending",
+      "projectId": "proj_mcp_task",
+      "status": "pending",
+      "taskType": "track_click",
+      "title": "Track upgrade CTA clicks",
+      "originalQuestion": "How many people clicked the upgrade CTA?",
+      "answerKind": "cannot_answer_yet",
+      "answerSummary": "Upgrade CTA click tracking has not been observed for this project yet.",
+      "analyticsGap": "No upgrade CTA click telemetry is currently available.",
+      "eventName": "upgrade_cta_clicked",
+      "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+      "propertiesSchema": {
+        "required": ["surface", "plan"]
+      },
+      "targetSurface": "/pricing",
+      "implementationGuidance": "Emit upgrade_cta_clicked on each CTA click and include the surface plus plan.",
+      "verificationCriteria": {
+        "productionEvent": "upgrade_cta_clicked",
+        "requiredProperties": ["surface", "plan"],
+        "environment": "production"
+      },
+      "verificationSource": "production_event",
+      "createdAt": "2026-05-08T20:01:00.000Z",
+      "updatedAt": "2026-05-08T20:01:00.000Z"
+    },
+    {
+      "id": "task_mcp_active",
+      "projectId": "proj_mcp_task",
+      "status": "in_progress",
+      "taskType": "track_completion",
+      "title": "Track onboarding completion",
+      "originalQuestion": "How many users finished onboarding after visiting pricing?",
+      "answerKind": "partial_answer",
+      "answerSummary": "Pricing visits are visible, but onboarding completion is not fully instrumented yet.",
+      "analyticsGap": "Missing onboarding completion telemetry after pricing visits.",
+      "eventName": "onboarding_completed",
+      "triggerDescription": "When a user reaches the completed onboarding state.",
+      "propertiesSchema": {
+        "required": ["source_page", "plan"]
+      },
+      "targetSurface": "/onboarding",
+      "implementationGuidance": "Emit onboarding_completed once per completed onboarding flow.",
+      "verificationCriteria": {
+        "productionEvent": "onboarding_completed",
+        "requiredProperties": ["source_page", "plan"],
+        "environment": "production"
+      },
+      "verificationSource": "production_event",
+      "claimedAt": "2026-05-08T20:02:00.000Z",
+      "createdAt": "2026-05-08T20:01:30.000Z",
+      "updatedAt": "2026-05-08T20:02:00.000Z",
+      "actorType": "agent"
+    }
+  ],
+  "expectations": {
+    "startPath": "/projects/proj_mcp_task",
+    "assertions": [
+      "MCP list_pending_analytics_tasks returns pending and in-progress tasks for the resolved project.",
+      "MCP get_analytics_task_context and report_analytics_task_status support agent-run task execution."
+    ]
+  }
+}

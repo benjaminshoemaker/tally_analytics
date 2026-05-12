@@ -1,0 +1,95 @@
+{
+  "id": "dashboard-task-production-missing-property",
+  "description": "Task verification scenario where production events exist but required properties are missing.",
+  "tags": ["local", "state", "analytics", "dashboard-task", "verification"],
+  "user": {
+    "id": "00000000-0000-4000-8000-000000000217",
+    "email": "e2e+dashboard-task-missing-property@example.com",
+    "githubUserId": 910000217,
+    "githubUsername": "fpa-dashboard-task-missing-property",
+    "githubAvatarUrl": "https://avatars.githubusercontent.com/u/910000217?v=4",
+    "plan": "pro"
+  },
+  "projects": [
+    {
+      "id": "proj_dtask_prop",
+      "source": "mcp_codex",
+      "displayName": "Dashboard Task Missing Property Demo",
+      "repoId": null,
+      "repoFullName": null,
+      "installationId": null,
+      "mcpGitRemote": "git@github.com:fast-pr-sandbox/dashboard-task-missing-property.git",
+      "mcpNormalizedGitRemote": "github.com/fast-pr-sandbox/dashboard-task-missing-property",
+      "mcpRepoName": "dashboard-task-missing-property",
+      "mcpAppRoot": ".",
+      "mcpFramework": "nextjs-app",
+      "mcpPackageManager": "pnpm",
+      "mcpFingerprint": "d7d935fcce285db9ad81ee39a965cf8f234d4be16fc4e92746dd23e9da4ceab8",
+      "status": "active",
+      "prNumber": null,
+      "prUrl": null,
+      "detectedFramework": "nextjs-app",
+      "detectedAnalytics": ["tally_sdk"],
+      "eventsThisMonth": 1,
+      "lastEventAt": "2099-01-03T00:00:00.000Z",
+      "createdAt": "2026-05-08T19:00:00.000Z",
+      "updatedAt": "2099-01-03T00:00:00.000Z"
+    }
+  ],
+  "analytics": {
+    "events": [
+      {
+        "project_id": "proj_dtask_prop",
+        "session_id": "sess_dtask_prop_001",
+        "event_type": "signup_completed",
+        "timestamp": "2099-01-03T00:00:00.000Z",
+        "url": "https://missing-prop-demo.test/signup",
+        "path": "/signup",
+        "referrer": "",
+        "visitor_id": "visitor_dtask_prop_001",
+        "is_returning": 0,
+        "environment": "production",
+        "event_properties": {
+          "source_page": "/pricing"
+        }
+      }
+    ]
+  },
+  "analyticsTasks": [
+    {
+      "id": "task_missing_prop",
+      "projectId": "proj_dtask_prop",
+      "status": "in_progress",
+      "taskType": "add_event_property",
+      "title": "Add plan property to signup_completed",
+      "originalQuestion": "Which plan converts best after signup?",
+      "answerKind": "partial_answer",
+      "answerSummary": "Signup completion exists, but plan-level conversion detail is missing.",
+      "analyticsGap": "signup_completed is missing the plan property for conversion breakdowns.",
+      "eventName": "signup_completed",
+      "triggerDescription": "When signup completes, include the selected plan in the event payload.",
+      "propertiesSchema": {
+        "required": ["plan"]
+      },
+      "targetSurface": "/signup",
+      "implementationGuidance": "Keep signup_completed and add a plan property to every production payload.",
+      "verificationCriteria": {
+        "productionEvent": "signup_completed",
+        "requiredProperties": ["plan"],
+        "environment": "production"
+      },
+      "verificationSource": "production_event",
+      "claimedAt": "2026-05-08T19:05:00.000Z",
+      "createdAt": "2026-05-08T19:00:00.000Z",
+      "updatedAt": "2026-05-08T19:05:00.000Z",
+      "actorType": "agent"
+    }
+  ],
+  "expectations": {
+    "startPath": "/projects/proj_dtask_prop",
+    "assertions": [
+      "Production events without required properties do not verify add_event_property tasks.",
+      "The task remains awaiting_deploy with a missing-property error summary."
+    ]
+  }
+}
