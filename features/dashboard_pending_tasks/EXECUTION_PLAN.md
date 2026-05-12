@@ -58,14 +58,14 @@ Phase 1: Data, Event, And Auth Foundation
 
 ### Pre-Phase Setup
 
-- [ ] (CODE) This workstream is recorded as planned without changing the primary active workstream.
-  - Verify: `cd ../.. && rg -q 'Primary active workstream: \`features/mcp_onboarding/\`' plans/PLAN_STATUS.md && rg -q '\`features/dashboard_pending_tasks/\` \| feature \| planned' plans/PLAN_STATUS.md`
-- [ ] (CODE) Feature planning inputs exist.
+- [x] (CODE) This workstream is recorded as planned while `plans/PLAN_STATUS.md` keeps no primary active workstream selected.
+  - Verify: `cd ../.. && rg -q 'Primary active workstream: none' plans/PLAN_STATUS.md && rg -q '\`features/dashboard_pending_tasks/\` \| feature \| planned' plans/PLAN_STATUS.md`
+- [x] (CODE) Feature planning inputs exist.
   - Verify: `test -f FEATURE_SPEC.md && test -f FEATURE_TECHNICAL_SPEC.md && test -f FLOW_VERIFICATION_PLAN.md`
-- [ ] (CODE) SDK bundle-size guard is available before SDK work starts.
+- [x] (CODE) SDK bundle-size guard is available before SDK work starts.
   - Verify: `cd ../.. && test -f packages/sdk/package.json && rg -q 'tsup' packages/sdk/package.json`
-- [ ] (CODE) Tinybird migration instructions are available in the root project guidance.
-  - Verify: `cd ../.. && rg -q 'Tinybird column additions are non-reversible' AGENTS.md`
+- [x] (CODE) Tinybird migration instructions are available in the root project guidance.
+  - Verify: `cd ../.. && rg -q 'Tinybird schema changes as non-reversible' AGENTS.md`
 
 ### Step 1.1: Task Persistence
 
@@ -986,13 +986,13 @@ Document the new agent-runnable dashboard pending task verification command and 
 **Acceptance Criteria:**
 - [x] (CODE) `docs/agent-testing.md` documents `pnpm --filter web e2e:mcp-pending-tasks`, required local env, and the no-human-account boundary.
   - Verify: `cd ../.. && rg -q 'e2e:mcp-pending-tasks|dashboard pending|E2E_TEST_MODE|no human GitHub account' docs/agent-testing.md`
-- [ ] (TEST) Full web unit test suite passes.
+- [x] (TEST) Full web unit test suite passes.
   - Verify: `cd ../.. && pnpm --filter web test`
 - [x] (TEST) Scenario contract list passes.
   - Verify: `cd ../.. && pnpm --filter web e2e:scenarios`
-- [ ] (TEST) SDK test and build plus bundle-size guard pass.
+- [x] (TEST) SDK test and build plus bundle-size guard pass.
   - Verify: `cd ../.. && pnpm --filter sdk test && pnpm --filter sdk build && test "$(gzip -c packages/sdk/dist/index.js | wc -c | tr -d ' ')" -lt 3072`
-- [ ] (TYPE) Web type checking passes after all feature work.
+- [x] (TYPE) Web type checking passes after all feature work.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 - [x] (TEST) Final harness and docs prove the flow works without GitHub App access or a human GitHub account.
   - Verify: `cd ../.. && rg -q 'without GitHub App|no GitHub App|no human GitHub account' apps/web/scripts/mcp-pending-tasks-self-test.mjs docs/agent-testing.md`
@@ -1022,19 +1022,19 @@ Document the new agent-runnable dashboard pending task verification command and 
 **Automated Checks:**
 - [x] (TEST) Agent-runnable flow harness passes.
   - Verify: `cd ../.. && pnpm --filter web e2e:mcp-pending-tasks`
-- [ ] (TEST) Full web test suite passes.
+- [x] (TEST) Full web test suite passes.
   - Verify: `cd ../.. && pnpm --filter web test`
 - [x] (TEST) Scenario contract listing passes.
   - Verify: `cd ../.. && pnpm --filter web e2e:scenarios`
-- [ ] (TEST) SDK tests, build, and bundle-size guard pass.
+- [x] (TEST) SDK tests, build, and bundle-size guard pass.
   - Verify: `cd ../.. && pnpm --filter sdk test && pnpm --filter sdk build && test "$(gzip -c packages/sdk/dist/index.js | wc -c | tr -d ' ')" -lt 3072`
-- [ ] (TYPE) Web type checking passes.
+- [x] (TYPE) Web type checking passes.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] (TEST) Existing MCP install, OAuth, project detail, analytics, and events tests still pass.
+- [x] (TEST) Existing MCP install, OAuth, project detail, analytics, and events tests still pass.
   - Verify: `cd ../.. && pnpm --filter web test -- mcp-route mcp-next-install mcp-auth mcp-oauth project-detail-page analytics-overview-api analytics-sessions-api analytics-live-feed-api events`
-- [ ] (CODE) Primary active workstream in `plans/PLAN_STATUS.md` remains `features/mcp_onboarding/` unless the human explicitly promotes this feature.
-  - Verify: `cd ../.. && rg -q 'Primary active workstream: \`features/mcp_onboarding/\`' plans/PLAN_STATUS.md`
+- [x] (CODE) Primary active workstream in `plans/PLAN_STATUS.md` remains unchanged (`none`) unless the human explicitly promotes this feature.
+  - Verify: `cd ../.. && rg -q 'Primary active workstream: none' plans/PLAN_STATUS.md`
 - [x] (BROWSER:DOM) The flow harness proves the dashboard, MCP, and production verification channels end to end.
   - Verify: `cd ../.. && pnpm --filter web e2e:mcp-pending-tasks`

@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "project_name": "dashboard_pending_tasks",
+  "last_updated": "2026-05-12T21:53:01Z",
+  "generated_by": "manual-status-recovery",
+  "main": {
+    "current_phase": 5,
+    "total_phases": 5,
+    "status": "COMPLETE",
+    "phases": [
+      {
+        "number": 1,
+        "name": "Data, Event, And Auth Foundation",
+        "status": "CHECKPOINTED"
+      },
+      {
+        "number": 2,
+        "name": "Task Services And Dashboard APIs",
+        "status": "CHECKPOINTED"
+      },
+      {
+        "number": 3,
+        "name": "Dashboard Experience",
+        "status": "CHECKPOINTED"
+      },
+      {
+        "number": 4,
+        "name": "MCP Task Tools",
+        "status": "CHECKPOINTED"
+      },
+      {
+        "number": 5,
+        "name": "Agent-Runnable Flow Harness And Hardening",
+        "status": "CHECKPOINTED",
+        "started_at": "2026-05-12T21:50:36Z",
+        "completed_at": "2026-05-12T21:53:01Z",
+        "tasks": {
+          "5.1.A": {
+            "status": "COMPLETE"
+          },
+          "5.2.A": {
+            "status": "COMPLETE"
+          },
+          "5.2.B": {
+            "status": "COMPLETE"
+          }
+        }
+      }
+    ]
+  }
+}
