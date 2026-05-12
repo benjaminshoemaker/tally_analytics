@@ -3,6 +3,8 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 import { getTableConfig } from "drizzle-orm/pg-core";
 
 import {
+  analyticsTaskStatusEvents,
+  analyticsTasks,
   githubTokens,
   oauthAccessTokens,
   oauthAuthorizationCodes,
@@ -15,6 +17,8 @@ import {
   waitlist,
 } from "../lib/db/schema";
 import type {
+  AnalyticsTask,
+  AnalyticsTaskStatusEvent,
   GithubToken,
   NewProject,
   OAuthAccessToken,
@@ -40,6 +44,8 @@ describe("db schema", () => {
     expect(getTableConfig(githubTokens).name).toBe("github_tokens");
     expect(getTableConfig(waitlist).name).toBe("waitlist");
     expect(getTableConfig(regenerateRequests).name).toBe("regenerate_requests");
+    expect(getTableConfig(analyticsTasks).name).toBe("analytics_tasks");
+    expect(getTableConfig(analyticsTaskStatusEvents).name).toBe("analytics_task_status_events");
 
     const userColumns = getTableConfig(users).columns;
     expect(userColumns.find((c) => c.name === "email")?.notNull).toBe(true);
@@ -89,6 +95,28 @@ describe("db schema", () => {
     const oauthRefreshColumns = getTableConfig(oauthRefreshTokens).columns;
     expect(oauthRefreshColumns.find((c) => c.name === "token_hash")?.primary).toBe(true);
     expect(oauthRefreshColumns.find((c) => c.name === "rotated_from_hash")).toBeDefined();
+
+    const analyticsTaskColumns = getTableConfig(analyticsTasks).columns;
+    expect(analyticsTaskColumns.find((c) => c.name === "project_id")?.notNull).toBe(true);
+    expect(analyticsTaskColumns.find((c) => c.name === "user_id")?.notNull).toBe(true);
+    expect(analyticsTaskColumns.find((c) => c.name === "status")?.notNull).toBe(true);
+    expect(analyticsTaskColumns.find((c) => c.name === "task_type")?.notNull).toBe(true);
+    expect(analyticsTaskColumns.find((c) => c.name === "answer_kind")?.notNull).toBe(true);
+    expect(analyticsTaskColumns.some((c) => c.name === "duplicate_fingerprint")).toBe(true);
+    expect(analyticsTaskColumns.some((c) => c.name === "local_verification")).toBe(true);
+    expect(analyticsTaskColumns.some((c) => c.name === "implementation_fingerprint")).toBe(true);
+    expect(analyticsTaskColumns.some((c) => c.name === "confirmed_at")).toBe(true);
+    expect(analyticsTaskColumns.some((c) => c.name === "implemented_at")).toBe(true);
+    expect(analyticsTaskColumns.some((c) => c.name === "verified_at")).toBe(true);
+    expect(analyticsTaskColumns.some((c) => c.name === "cancelled_at")).toBe(true);
+    expect(analyticsTaskColumns.some((c) => c.name === "archived_at")).toBe(true);
+
+    const analyticsTaskEventColumns = getTableConfig(analyticsTaskStatusEvents).columns;
+    expect(analyticsTaskEventColumns.find((c) => c.name === "task_id")?.notNull).toBe(true);
+    expect(analyticsTaskEventColumns.find((c) => c.name === "project_id")?.notNull).toBe(true);
+    expect(analyticsTaskEventColumns.find((c) => c.name === "user_id")?.notNull).toBe(true);
+    expect(analyticsTaskEventColumns.find((c) => c.name === "to_status")?.notNull).toBe(true);
+    expect(analyticsTaskEventColumns.find((c) => c.name === "actor_type")?.notNull).toBe(true);
   });
 
   it("uses CASCADE delete on all user-owned foreign keys", () => {
@@ -96,6 +124,12 @@ describe("db schema", () => {
     expect(getTableConfig(projects).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
     expect(getTableConfig(githubTokens).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
     expect(getTableConfig(regenerateRequests).foreignKeys.map((fk) => fk.onDelete)).toContain("cascade");
+    expect(getTableConfig(analyticsTasks).foreignKeys.map((fk) => fk.onDelete)).toEqual(
+      expect.arrayContaining(["cascade", "cascade"]),
+    );
+    expect(getTableConfig(analyticsTaskStatusEvents).foreignKeys.map((fk) => fk.onDelete)).toEqual(
+      expect.arrayContaining(["cascade", "cascade", "cascade"]),
+    );
     expect(getTableConfig(oauthAuthorizationCodes).foreignKeys.map((fk) => fk.onDelete)).toEqual(
       expect.arrayContaining(["cascade", "cascade"]),
     );
@@ -135,6 +169,24 @@ describe("db schema", () => {
       expect.arrayContaining(["idx_regenerate_requests_project_id", "idx_regenerate_requests_created_at"]),
     );
 
+    expect(getTableConfig(analyticsTasks).indexes.map((i) => i.config.name)).toEqual(
+      expect.arrayContaining([
+        "idx_analytics_tasks_project_id",
+        "idx_analytics_tasks_user_id",
+        "idx_analytics_tasks_status",
+        "idx_analytics_tasks_created_at",
+        "analytics_tasks_active_duplicate_fingerprint_unique",
+      ]),
+    );
+    expect(getTableConfig(analyticsTaskStatusEvents).indexes.map((i) => i.config.name)).toEqual(
+      expect.arrayContaining([
+        "idx_analytics_task_status_events_task_id",
+        "idx_analytics_task_status_events_project_id",
+        "idx_analytics_task_status_events_user_id",
+        "idx_analytics_task_status_events_created_at",
+      ]),
+    );
+
     expect(getTableConfig(oauthAuthorizationCodes).indexes.map((i) => i.config.name)).toEqual(
       expect.arrayContaining([
         "idx_oauth_authorization_codes_client_id",
@@ -164,6 +216,24 @@ describe("db schema", () => {
     );
   });
 
+  it("defines analytics task and status-event checks", () => {
+    expect(getTableConfig(analyticsTasks).checks.map((c) => c.name)).toEqual(
+      expect.arrayContaining([
+        "analytics_tasks_status_check",
+        "analytics_tasks_task_type_check",
+        "analytics_tasks_answer_kind_check",
+        "analytics_tasks_verification_source_check",
+      ]),
+    );
+    expect(getTableConfig(analyticsTaskStatusEvents).checks.map((c) => c.name)).toEqual(
+      expect.arrayContaining([
+        "analytics_task_status_events_actor_type_check",
+        "analytics_task_status_events_to_status_check",
+        "analytics_task_status_events_from_status_check",
+      ]),
+    );
+  });
+
   it("exports TypeScript types derived from the schema", () => {
     expectTypeOf<User>().toMatchTypeOf<{ id: string; email: string }>();
     expectTypeOf<Session>().toMatchTypeOf<{ id: string; userId: string }>();
@@ -181,6 +251,8 @@ describe("db schema", () => {
     expectTypeOf<OAuthRefreshToken>().toMatchTypeOf<{ tokenHash: string; userId: string }>();
     expectTypeOf<WaitlistEntry>().toMatchTypeOf<{ id: string; email: string }>();
     expectTypeOf<RegenerateRequest>().toMatchTypeOf<{ id: string; projectId: string; userId: string }>();
+    expectTypeOf<AnalyticsTask>().toMatchTypeOf<{ id: string; projectId: string; userId: string; status: string }>();
+    expectTypeOf<AnalyticsTaskStatusEvent>().toMatchTypeOf<{ id: string; taskId: string; toStatus: string }>();
 
     expectTypeOf<NewProject>().toMatchTypeOf<{ id: string; userId: string; displayName: string }>();
   });

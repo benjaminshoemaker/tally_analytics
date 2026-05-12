@@ -81,15 +81,15 @@ Add durable task and status-event tables with UUID user ownership, project owner
 **Requirement:** FEATURE_SPEC.md "Data Persistence"; FEATURE_TECHNICAL_SPEC.md "`analytics_tasks`" and "`analytics_task_status_events`"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `analyticsTasks` and `analyticsTaskStatusEvents` tables are defined in `apps/web/lib/db/schema.ts` with `user_id` as `uuid`.
+- [x] (CODE) `analyticsTasks` and `analyticsTaskStatusEvents` tables are defined in `apps/web/lib/db/schema.ts` with `user_id` as `uuid`.
   - Verify: `cd ../.. && rg -q 'analyticsTasks|analyticsTaskStatusEvents|uuid\\(\"user_id\"\\)' apps/web/lib/db/schema.ts`
-- [ ] (CODE) Task table includes all required lifecycle and duplicate fields from the technical spec.
+- [x] (CODE) Task table includes all required lifecycle and duplicate fields from the technical spec.
   - Verify: `cd ../.. && rg -q 'duplicateFingerprint|localVerification|implementationFingerprint|confirmedAt|implementedAt|verifiedAt|cancelledAt|archivedAt' apps/web/lib/db/schema.ts`
-- [ ] (CODE) Status, task type, answer kind, and active duplicate-fingerprint constraints are represented in schema or generated SQL.
+- [x] (CODE) Status, task type, answer kind, and active duplicate-fingerprint constraints are represented in schema or generated SQL.
   - Verify: `cd ../.. && rg -q 'analytics.*status.*check|analytics.*task.*type|duplicate.*fingerprint' apps/web/lib/db/schema.ts apps/web/drizzle/migrations`
-- [ ] (CODE) A new Drizzle migration file exists and contains only additive `CREATE TABLE`, `CREATE INDEX`, or `ALTER TABLE ADD` statements for this feature.
+- [x] (CODE) A new Drizzle migration file exists and contains only additive `CREATE TABLE`, `CREATE INDEX`, or `ALTER TABLE ADD` statements for this feature.
   - Verify: `cd ../.. && rg -l 'analytics_tasks|analytics_task_status_events' apps/web/drizzle/migrations | xargs rg -q 'CREATE TABLE|CREATE INDEX|ALTER TABLE.*ADD'`
-- [ ] (TEST) Schema tests cover task table creation and migration journal integrity.
+- [x] (TEST) Schema tests cover task table creation and migration journal integrity.
   - Verify: `cd ../.. && pnpm --filter web test -- schema`
 
 **Files to Create:**

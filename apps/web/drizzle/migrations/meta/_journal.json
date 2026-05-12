@@ -44,6 +44,13 @@
       "when": 1778134730127,
       "tag": "0006_mcp_oauth",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1778573174457,
+      "tag": "0007_careful_penance",
+      "breakpoints": true
     }
   ]
 }

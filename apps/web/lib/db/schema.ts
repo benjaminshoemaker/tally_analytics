@@ -6,6 +6,7 @@ import {
   index,
   inet,
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -261,5 +262,148 @@ export const regenerateRequests = pgTable(
   (table) => [
     index("idx_regenerate_requests_project_id").on(table.projectId),
     index("idx_regenerate_requests_created_at").on(table.createdAt),
+  ],
+);
+
+export const analyticsTasks = pgTable(
+  "analytics_tasks",
+  {
+    id: varchar("id", { length: 24 }).primaryKey(),
+    projectId: varchar("project_id", { length: 20 })
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    status: varchar("status", { length: 40 }).notNull().default("pending"),
+    taskType: varchar("task_type", { length: 40 }).notNull(),
+    title: varchar("title", { length: 180 }).notNull(),
+    originalQuestion: text("original_question").notNull(),
+    answerKind: varchar("answer_kind", { length: 40 }).notNull(),
+    answerSummary: text("answer_summary"),
+    analyticsGap: text("analytics_gap"),
+    eventName: varchar("event_name", { length: 100 }).notNull(),
+    triggerDescription: text("trigger_description").notNull(),
+    propertiesSchema: jsonb("properties_schema").notNull().default(sql`'{}'::jsonb`),
+    targetSurface: text("target_surface"),
+    implementationGuidance: text("implementation_guidance"),
+    verificationCriteria: jsonb("verification_criteria").notNull().default(sql`'{}'::jsonb`),
+    verificationSource: varchar("verification_source", { length: 40 }).notNull().default("production_event"),
+    duplicateFingerprint: varchar("duplicate_fingerprint", { length: 64 }),
+    duplicateOfTaskId: varchar("duplicate_of_task_id", { length: 24 }),
+    localVerification: jsonb("local_verification"),
+    implementationFingerprint: varchar("implementation_fingerprint", { length: 64 }),
+    lastError: text("last_error"),
+    confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+    claimedAt: timestamp("claimed_at", { withTimezone: true }),
+    implementedAt: timestamp("implemented_at", { withTimezone: true }),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    check(
+      "analytics_tasks_status_check",
+      sql`${table.status} in (
+        'pending',
+        'in_progress',
+        'implemented_locally',
+        'awaiting_deploy',
+        'verified',
+        'failed',
+        'cancelled',
+        'archived',
+        'duplicate'
+      )`,
+    ),
+    check(
+      "analytics_tasks_task_type_check",
+      sql`${table.taskType} in ('track_completion','track_click','add_event_property')`,
+    ),
+    check(
+      "analytics_tasks_answer_kind_check",
+      sql`${table.answerKind} in ('answered','partial_answer','cannot_answer_yet','unsupported')`,
+    ),
+    check(
+      "analytics_tasks_verification_source_check",
+      sql`${table.verificationSource} in ('production_event')`,
+    ),
+    uniqueIndex("analytics_tasks_active_duplicate_fingerprint_unique")
+      .on(table.projectId, table.duplicateFingerprint)
+      .where(
+        sql`${table.duplicateFingerprint} is not null and ${table.status} in (
+          'pending',
+          'in_progress',
+          'implemented_locally',
+          'awaiting_deploy',
+          'verified',
+          'failed',
+          'duplicate'
+        )`,
+      ),
+    index("idx_analytics_tasks_project_id").on(table.projectId),
+    index("idx_analytics_tasks_user_id").on(table.userId),
+    index("idx_analytics_tasks_status").on(table.status),
+    index("idx_analytics_tasks_created_at").on(table.createdAt),
+  ],
+);
+
+export const analyticsTaskStatusEvents = pgTable(
+  "analytics_task_status_events",
+  {
+    id: varchar("id", { length: 24 }).primaryKey(),
+    taskId: varchar("task_id", { length: 24 })
+      .notNull()
+      .references(() => analyticsTasks.id, { onDelete: "cascade" }),
+    projectId: varchar("project_id", { length: 20 })
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    fromStatus: varchar("from_status", { length: 40 }),
+    toStatus: varchar("to_status", { length: 40 }).notNull(),
+    actorType: varchar("actor_type", { length: 20 }).notNull(),
+    actorId: varchar("actor_id", { length: 80 }),
+    reason: text("reason"),
+    details: jsonb("details").notNull().default(sql`'{}'::jsonb`),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    check("analytics_task_status_events_actor_type_check", sql`${table.actorType} in ('user','agent','system')`),
+    check(
+      "analytics_task_status_events_to_status_check",
+      sql`${table.toStatus} in (
+        'pending',
+        'in_progress',
+        'implemented_locally',
+        'awaiting_deploy',
+        'verified',
+        'failed',
+        'cancelled',
+        'archived',
+        'duplicate'
+      )`,
+    ),
+    check(
+      "analytics_task_status_events_from_status_check",
+      sql`${table.fromStatus} is null or ${table.fromStatus} in (
+        'pending',
+        'in_progress',
+        'implemented_locally',
+        'awaiting_deploy',
+        'verified',
+        'failed',
+        'cancelled',
+        'archived',
+        'duplicate'
+      )`,
+    ),
+    index("idx_analytics_task_status_events_task_id").on(table.taskId),
+    index("idx_analytics_task_status_events_project_id").on(table.projectId),
+    index("idx_analytics_task_status_events_user_id").on(table.userId),
+    index("idx_analytics_task_status_events_created_at").on(table.createdAt),
   ],
 );

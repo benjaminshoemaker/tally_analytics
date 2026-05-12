@@ -1,6 +1,8 @@
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 import {
+  analyticsTaskStatusEvents,
+  analyticsTasks,
   githubTokens,
   oauthAccessTokens,
   oauthAuthorizationCodes,
@@ -42,3 +44,9 @@ export type NewWaitlistEntry = InferInsertModel<typeof waitlist>;
 
 export type RegenerateRequest = InferSelectModel<typeof regenerateRequests>;
 export type NewRegenerateRequest = InferInsertModel<typeof regenerateRequests>;
+
+export type AnalyticsTask = InferSelectModel<typeof analyticsTasks>;
+export type NewAnalyticsTask = InferInsertModel<typeof analyticsTasks>;
+
+export type AnalyticsTaskStatusEvent = InferSelectModel<typeof analyticsTaskStatusEvents>;
+export type NewAnalyticsTaskStatusEvent = InferInsertModel<typeof analyticsTaskStatusEvents>;
