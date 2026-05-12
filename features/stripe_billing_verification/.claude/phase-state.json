@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "project_name": "stripe_billing_verification",
+  "last_updated": "2026-05-11T00:00:00-07:00",
+  "generated_by": "codex-flow-verification-backfill",
+  "main": {
+    "current_phase": 1,
+    "total_phases": 1,
+    "status": "COMPLETE",
+    "phases": [
+      {
+        "number": 1,
+        "name": "Stripe Billing Verification Harness",
+        "status": "CHECKPOINTED",
+        "completed_at": "2026-05-08T23:29:59-07:00",
+        "checkpoint": {
+          "tests_passed": true,
+          "type_check_passed": null,
+          "lint_passed": null,
+          "build_passed": null,
+          "security_passed": true,
+          "manual_verified": true,
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "FEATURE_BRIEF.md",
+            "harness_built": true,
+            "harness_command": "pnpm --filter web e2e:stripe-billing -- --provider=real",
+            "last_run_status": "passed",
+            "last_run_at": "2026-05-08T23:29:59-07:00",
+            "channels": [
+              "browser",
+              "stripe_provider",
+              "stripe_cli",
+              "webhook",
+              "database",
+              "local_app"
+            ],
+            "evidence": {
+              "summary": "Stripe billing harness passed deterministic local mode and real-provider smoke mode. The latest retained summary is ok=true, provider=real, with preflight and real-provider stages passed.",
+              "artifact_path": "tmp/stripe-billing-verification/last-summary.json"
+            }
+          }
+        },
+        "verification": {
+          "local_summary": {
+            "artifact_path": "tmp/stripe-billing-verification/moxyqr5aa57baa/summary.json",
+            "run_id": "moxyqr5aa57baa",
+            "provider": "local",
+            "status": "passed"
+          },
+          "real_provider_summary": {
+            "artifact_path": "tmp/stripe-billing-verification/moxyr82vf4e6d5/summary.json",
+            "run_id": "moxyr82vf4e6d5",
+            "provider": "real",
+            "status": "passed",
+            "webhook_events": [
+              "checkout.session.completed",
+              "invoice.paid"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

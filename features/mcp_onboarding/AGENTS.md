@@ -33,6 +33,10 @@ Before starting a task, read:
 
 - When touching existing code, run the relevant regression checks, not just new tests.
 - Reuse existing project patterns before introducing new ones.
+- Before asking for manual verification, try to verify directly. If current
+  tools cannot verify an objective criterion, look for an MCP, CLI, API, SDK,
+  seeded scenario, provider sandbox, or browser automation path that would make
+  it agent-verifiable and propose that setup before escalating to the human.
 
 ## Feature-Specific Workflow Additions
 

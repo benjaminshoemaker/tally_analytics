@@ -50,6 +50,17 @@ DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter 
 
 GitHub sandbox guidance lives in `docs/github-sandbox.md`. Real GitHub App tests must target the sandbox org only. Use `pnpm --filter web github:sandbox:sync -- --org fast-pr-analytics-sandbox --dry-run` before creating or updating sandbox fixture repos.
 
+## Verification-First Escalation
+
+- Verify objective claims yourself before asking the human.
+- If verification is blocked by missing tooling, first look for an MCP server,
+  CLI, API, SDK, seeded scenario, provider sandbox, or browser automation path
+  that can verify it.
+- Use an existing safe tool immediately. If a new tool, credentials, or external
+  service is needed, propose the exact setup and why it enables verification.
+- Ask the human to verify manually only after self-verification and tool-enabling
+  options are exhausted or explicitly rejected.
+
 ## Follow-Up Items (TODOS.md)
 
 During development, you may discover items outside the current task scope: refactoring opportunities, edge cases, documentation needs, technical debt, etc.

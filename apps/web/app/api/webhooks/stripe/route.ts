@@ -1,10 +1,10 @@
 import { eq } from "drizzle-orm";
+import Stripe from "stripe";
 
 import { db } from "../../../../lib/db/client";
 import { users } from "../../../../lib/db/schema";
 import { readRequiredEnv } from "../../../../lib/env/read-required-env";
 import { getPlanForPriceId } from "../../../../lib/stripe/constants";
-import { getStripe } from "../../../../lib/stripe/client";
 
 type UserForStripeWebhook = {
   id: string;
@@ -76,11 +76,9 @@ export async function POST(request: Request): Promise<Response> {
   const secret = readRequiredEnv("STRIPE_WEBHOOK_SECRET");
   const body = await request.text();
 
-  const stripe = getStripe();
-
   let event: any;
   try {
-    event = stripe.webhooks.constructEvent(body, signatureHeader, secret);
+    event = Stripe.webhooks.constructEvent(body, signatureHeader, secret);
   } catch (error) {
     console.error("stripe.webhook.signature_verification_failed", { error });
     return new Response("Invalid Stripe signature", { status: 400 });

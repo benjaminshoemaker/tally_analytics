@@ -31,6 +31,24 @@
             "fix_skipped": 0,
             "fix_reverted": false,
             "reason": "Already running in Codex session; no explicit review subagent request."
+          },
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "FLOW_VERIFICATION_PLAN.md",
+            "harness_built": false,
+            "harness_command": "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying",
+            "last_run_status": "not_run",
+            "last_run_at": null,
+            "channels": [
+              "mcp_transport",
+              "local_fixtures",
+              "local_oauth",
+              "database"
+            ],
+            "evidence": {
+              "summary": "Flow verification plan applies, but the MCP transport harness was not built or run until a later phase.",
+              "artifact_path": null
+            }
           }
         },
         "tasks": {
@@ -141,6 +159,24 @@
             "fix_skipped": 0,
             "fix_reverted": false,
             "reason": "Already running in Codex session; no explicit review subagent request."
+          },
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "FLOW_VERIFICATION_PLAN.md",
+            "harness_built": false,
+            "harness_command": "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying",
+            "last_run_status": "not_run",
+            "last_run_at": null,
+            "channels": [
+              "mcp_transport",
+              "local_fixtures",
+              "local_oauth",
+              "database"
+            ],
+            "evidence": {
+              "summary": "Flow verification plan applies, but the MCP transport harness was not built or run until a later phase.",
+              "artifact_path": null
+            }
           }
         },
         "tasks": {
@@ -266,6 +302,24 @@
             "fix_skipped": 0,
             "fix_reverted": false,
             "reason": "Already running in Codex session; no explicit review subagent request."
+          },
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "FLOW_VERIFICATION_PLAN.md",
+            "harness_built": false,
+            "harness_command": "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying",
+            "last_run_status": "not_run",
+            "last_run_at": null,
+            "channels": [
+              "mcp_transport",
+              "local_fixtures",
+              "local_oauth",
+              "database"
+            ],
+            "evidence": {
+              "summary": "Flow verification plan applies, but the MCP transport harness was not built or run until a later phase.",
+              "artifact_path": null
+            }
           }
         },
         "tasks": {
@@ -377,6 +431,24 @@
             "fix_skipped": 0,
             "fix_reverted": false,
             "reason": "Already running in Codex session; no explicit review subagent request."
+          },
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "FLOW_VERIFICATION_PLAN.md",
+            "harness_built": true,
+            "harness_command": "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying",
+            "last_run_status": "passed",
+            "last_run_at": "2026-05-09T20:45:41.000Z",
+            "channels": [
+              "mcp_transport",
+              "local_fixtures",
+              "local_oauth",
+              "database"
+            ],
+            "evidence": {
+              "summary": "MCP analytics querying self-test passed through the hosted MCP route with seeded local fixtures.",
+              "artifact_path": ".claude/verification/phase-4.md"
+            }
           }
         },
         "tasks": {
@@ -472,6 +544,24 @@
             "fix_skipped": 0,
             "fix_reverted": false,
             "reason": "Already running in Codex session; no explicit review subagent request."
+          },
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "FLOW_VERIFICATION_PLAN.md",
+            "harness_built": true,
+            "harness_command": "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-analytics-querying",
+            "last_run_status": "passed",
+            "last_run_at": "2026-05-09T21:19:12.000Z",
+            "channels": [
+              "mcp_transport",
+              "local_fixtures",
+              "local_oauth",
+              "database"
+            ],
+            "evidence": {
+              "summary": "MCP analytics querying self-test passed through the hosted MCP route with seeded local fixtures.",
+              "artifact_path": ".claude/verification/phase-5.md"
+            }
           }
         },
         "tasks": {

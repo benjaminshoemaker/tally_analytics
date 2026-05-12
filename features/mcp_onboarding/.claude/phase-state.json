@@ -27,6 +27,25 @@
             "auto_fixed": 0,
             "fix_skipped": 0,
             "fix_reverted": false
+          },
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "MCP_SELF_TEST_PLAN.md",
+            "harness_built": true,
+            "harness_command": "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-self-test",
+            "last_run_status": "passed",
+            "last_run_at": "2026-05-11T23:02:36-07:00",
+            "channels": [
+              "mcp_transport",
+              "browser",
+              "local_fixtures",
+              "local_oauth",
+              "database"
+            ],
+            "evidence": {
+              "summary": "MCP onboarding self-test passed end to end: OAuth login, MCP patch generation/application, target build, target event emission, dashboard live-event assertion, and teardown.",
+              "artifact_path": ".claude/verification/phase-3-mcp-self-test-2026-05-11.md"
+            }
           }
         },
         "tasks": {
@@ -106,6 +125,25 @@
             "auto_fixed": 0,
             "fix_skipped": 0,
             "fix_reverted": false
+          },
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "MCP_SELF_TEST_PLAN.md",
+            "harness_built": true,
+            "harness_command": "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-self-test",
+            "last_run_status": "passed",
+            "last_run_at": "2026-05-11T23:02:36-07:00",
+            "channels": [
+              "mcp_transport",
+              "browser",
+              "local_fixtures",
+              "local_oauth",
+              "database"
+            ],
+            "evidence": {
+              "summary": "MCP onboarding self-test passed end to end: OAuth login, MCP patch generation/application, target build, target event emission, dashboard live-event assertion, and teardown.",
+              "artifact_path": ".claude/verification/phase-3-mcp-self-test-2026-05-11.md"
+            }
           }
         },
         "tasks": {
@@ -186,6 +224,25 @@
             "auto_fixed": 0,
             "fix_skipped": 0,
             "fix_reverted": false
+          },
+          "flow_verification": {
+            "applicable": true,
+            "plan_path": "MCP_SELF_TEST_PLAN.md",
+            "harness_built": true,
+            "harness_command": "DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:mcp-self-test",
+            "last_run_status": "passed",
+            "last_run_at": "2026-05-11T23:02:36-07:00",
+            "channels": [
+              "mcp_transport",
+              "browser",
+              "local_fixtures",
+              "local_oauth",
+              "database"
+            ],
+            "evidence": {
+              "summary": "MCP onboarding self-test passed end to end: OAuth login, MCP patch generation/application, target build, target event emission, dashboard live-event assertion, and teardown.",
+              "artifact_path": ".claude/verification/phase-3-mcp-self-test-2026-05-11.md"
+            }
           }
         },
         "tasks": {
