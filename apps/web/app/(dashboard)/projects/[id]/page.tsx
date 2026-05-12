@@ -6,6 +6,7 @@ import OnboardingChecklist from "../../../../components/dashboard/onboarding-che
 import QuotaDisplay from "../../../../components/dashboard/quota-display";
 import Skeleton, { SkeletonList } from "../../../../components/dashboard/skeleton";
 import StatusBadge from "../../../../components/dashboard/status-badge";
+import AskTallyPanel from "../../../../components/dashboard/analytics-tasks/ask-tally-panel";
 import { useProject } from "../../../../lib/hooks/use-project";
 import type { UserPlan } from "../../../../lib/stripe/plans";
 
@@ -291,6 +292,8 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
           )}
         </div>
       )}
+
+      <AskTallyPanel projectId={projectId} />
 
       {/* QuotaDisplay only for relevant states */}
       {shouldShowQuota(displayStatus) && (

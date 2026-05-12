@@ -79,6 +79,7 @@ export default function TaskDraftCard({ draft, onConfirm, onDismiss, isSubmittin
 
       <div className="mt-3 flex items-center gap-2">
         <button
+          data-testid="add-task-to-queue"
           type="button"
           onClick={() =>
             onConfirm({
@@ -93,6 +94,7 @@ export default function TaskDraftCard({ draft, onConfirm, onDismiss, isSubmittin
           {isSubmitting ? "Adding…" : "Add task to queue"}
         </button>
         <button
+          data-testid="dismiss-task-draft"
           type="button"
           onClick={onDismiss}
           className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700"

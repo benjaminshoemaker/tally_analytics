@@ -227,6 +227,44 @@ describe("analytics tasks APIs", () => {
     expect(refreshAnalyticsTaskListVerificationSpy).toHaveBeenCalledTimes(1);
   });
 
+  it("keeps cancelled task history hidden by default and returned when includeHistory=1", async () => {
+    vi.resetModules();
+    getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "user_123", email: "u@example.com" });
+    mockOwnershipFound();
+    listOwnedAnalyticsTasksForProjectSpy = vi.fn().mockResolvedValue([
+      makeTask({ id: "task_pending", status: "pending" }),
+      makeTask({ id: "task_cancelled", status: "cancelled", cancelledAt: new Date("2026-05-12T00:00:00.000Z") }),
+    ]);
+    refreshAnalyticsTaskListVerificationSpy = vi.fn().mockResolvedValue([
+      makeTask({ id: "task_pending", status: "pending" }),
+      makeTask({ id: "task_cancelled", status: "cancelled", cancelledAt: new Date("2026-05-12T00:00:00.000Z") }),
+    ]);
+    createPendingAnalyticsTaskSpy = vi.fn();
+    findOwnedAnalyticsTaskByIdSpy = vi.fn();
+    updateOwnedAnalyticsTaskSpy = vi.fn();
+    transitionAnalyticsTaskSpy = vi.fn();
+
+    const { GET } = await import("../app/api/projects/[id]/analytics/tasks/route");
+
+    const activeResponse = await GET(new Request("http://localhost/api/projects/proj_123/analytics/tasks"), {
+      params: { id: "proj_123" },
+    });
+    const activeBody = (await activeResponse.json()) as { tasks: Array<{ id: string; status: string }> };
+    expect(activeResponse.status).toBe(200);
+    expect(activeBody.tasks).toHaveLength(1);
+    expect(activeBody.tasks[0]).toMatchObject({ id: "task_pending", status: "pending" });
+
+    const historyResponse = await GET(
+      new Request("http://localhost/api/projects/proj_123/analytics/tasks?includeHistory=1"),
+      { params: { id: "proj_123" } },
+    );
+    const historyBody = (await historyResponse.json()) as { tasks: Array<{ id: string; status: string }> };
+    expect(historyResponse.status).toBe(200);
+    expect(historyBody.tasks).toHaveLength(2);
+    expect(historyBody.tasks.map((task) => task.status)).toEqual(["pending", "cancelled"]);
+    expect(refreshAnalyticsTaskListVerificationSpy).toHaveBeenCalledTimes(2);
+  });
+
   it("edits a pending task via PATCH /tasks/[taskId]", async () => {
     vi.resetModules();
     getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "user_123", email: "u@example.com" });

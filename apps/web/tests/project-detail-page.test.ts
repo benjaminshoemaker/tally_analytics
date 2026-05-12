@@ -45,6 +45,8 @@ describe("/projects/[id] page", () => {
     expect(html).toContain("Getting Started");
     expect(html).toContain("Re-run Analysis"); // Button text changed from "Regenerate PR"
     expect(html).toContain("Analysis Failed"); // Status-specific card for failed state
+    expect(html).toContain("Ask Tally");
+    expect(html).toContain("Task queue");
   });
 
   it("does not render GitHub-only regenerate controls for MCP projects", () => {
@@ -84,6 +86,7 @@ describe("/projects/[id] page", () => {
     expect(html).not.toContain("Re-run Analysis");
     expect(html).not.toContain("Repository Not Supported");
     expect(html).not.toContain("View PR");
+    expect(html).toContain("Ask Tally");
   });
 
   it("renders the waiting-for-first-event state for active projects with no events", () => {
@@ -121,5 +124,6 @@ describe("/projects/[id] page", () => {
     );
 
     expect(html).toContain("Waiting for first event. Tally is installed, but no production events have been received yet.");
+    expect(html).toContain("Ask Tally");
   });
 });

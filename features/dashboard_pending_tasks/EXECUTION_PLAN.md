@@ -604,11 +604,11 @@ Mount the Ask Tally panel and pending task list on the project detail page witho
 **Requirement:** FEATURE_SPEC.md "Core User Experience"; FEATURE_TECHNICAL_SPEC.md "Dashboard UI"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Project detail page imports and renders the Ask Tally panel and pending task list for the current project ID.
+- [x] (CODE) Project detail page imports and renders the Ask Tally panel and pending task list for the current project ID.
   - Verify: `cd ../.. && rg -q 'AskTallyPanel|PendingTaskList|useAnalyticsTasks' 'apps/web/app/(dashboard)/projects/[id]/page.tsx'`
-- [ ] (TEST) Project detail page tests render the Ask Tally input and task queue without removing existing waiting-for-first-event and GitHub-only control behavior.
+- [x] (TEST) Project detail page tests render the Ask Tally input and task queue without removing existing waiting-for-first-event and GitHub-only control behavior.
   - Verify: `cd ../.. && pnpm --filter web test -- project-detail-page`
-- [ ] (TEST) UI tests prove task confirmation invalidates or refreshes the task list query.
+- [x] (TEST) UI tests prove task confirmation invalidates or refreshes the task list query.
   - Verify: `cd ../.. && pnpm --filter web test -- dashboard-pending-tasks-components project-detail-page`
 
 **Files to Create:**
@@ -617,7 +617,7 @@ Mount the Ask Tally panel and pending task list on the project detail page witho
 **Files to Modify:**
 - `apps/web/app/(dashboard)/projects/[id]/page.tsx` - Mount Ask Tally and task queue.
 - `apps/web/tests/project-detail-page.test.ts` - Add page integration coverage.
-- `apps/web/tests/dashboard-pending-tasks-components.test.tsx` - Add query invalidation coverage if needed.
+- `apps/web/tests/dashboard-pending-tasks-components.test.ts` - Add query invalidation coverage if needed.
 
 **Existing Code to Reference:**
 - `apps/web/app/(dashboard)/projects/[id]/page.tsx` - Current project page structure and state handling.
@@ -646,22 +646,22 @@ Add focused tests for the dashboard flow states that are easy to regress: no tas
 **Requirement:** FEATURE_SPEC.md "Acceptance Criteria"; FEATURE_TECHNICAL_SPEC.md "Dashboard UI"
 
 **Acceptance Criteria:**
-- [ ] (TEST) Dashboard tests prove `answered` results do not create or show a task draft.
+- [x] (TEST) Dashboard tests prove `answered` results do not create or show a task draft.
   - Verify: `cd ../.. && pnpm --filter web test -- dashboard-pending-tasks-components analytics-question-api`
-- [ ] (TEST) Dashboard tests prove dismiss/delete draft performs no task API persistence.
+- [x] (TEST) Dashboard tests prove dismiss/delete draft performs no task API persistence.
   - Verify: `cd ../.. && pnpm --filter web test -- dashboard-pending-tasks-components analytics-tasks-api`
-- [ ] (TEST) Dashboard tests prove pending delete hides the task from the active queue while history is preserved when requested.
+- [x] (TEST) Dashboard tests prove pending delete hides the task from the active queue while history is preserved when requested.
   - Verify: `cd ../.. && pnpm --filter web test -- dashboard-pending-tasks-components analytics-tasks-api`
-- [ ] (TEST) Dashboard tests prove `implemented_locally`, `awaiting_deploy`, `verified`, `failed`, `cancelled`, and `archived` status copy is distinguishable.
+- [x] (TEST) Dashboard tests prove `implemented_locally`, `awaiting_deploy`, `verified`, `failed`, `cancelled`, and `archived` status copy is distinguishable.
   - Verify: `cd ../.. && pnpm --filter web test -- dashboard-pending-tasks-components`
-- [ ] (BROWSER:ACCESSIBILITY) Ask, confirm, edit, dismiss/delete, cancel, and archive controls are keyboard reachable in the dashboard flow.
+- [x] (BROWSER:ACCESSIBILITY) Ask, confirm, edit, dismiss/delete, cancel, and archive controls are keyboard reachable in the dashboard flow.
   - Verify: `route=/projects/proj_dashboard_task_partial, selectors=[data-testid="ask-tally-input"],[data-testid="add-task-to-queue"],[data-testid="dismiss-task-draft"]`
 
 **Files to Create:**
 - None
 
 **Files to Modify:**
-- `apps/web/tests/dashboard-pending-tasks-components.test.tsx` - Add state and accessibility coverage.
+- `apps/web/tests/dashboard-pending-tasks-components.test.ts` - Add state and accessibility coverage.
 - `apps/web/tests/project-detail-page.test.ts` - Add status copy coverage if needed.
 
 **Existing Code to Reference:**
@@ -680,13 +680,13 @@ Add focused tests for the dashboard flow states that are easy to regress: no tas
 ### Phase 3 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) Dashboard component, project detail, question API, and task API tests pass.
+- [x] (TEST) Dashboard component, project detail, question API, and task API tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- dashboard-pending-tasks-components project-detail-page analytics-question-api analytics-tasks-api`
-- [ ] (TYPE) Web type checking passes after dashboard UI integration.
+- [x] (TYPE) Web type checking passes after dashboard UI integration.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] (TEST) Existing project detail states for GitHub projects and MCP no-event projects still pass.
+- [x] (TEST) Existing project detail states for GitHub projects and MCP no-event projects still pass.
   - Verify: `cd ../.. && pnpm --filter web test -- project-detail-page projects-list-page live-feed-page`
 
 **Browser Verification:**

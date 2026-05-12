@@ -65,6 +65,7 @@ export default function AskTallyPanel({ projectId }: Props) {
           Question
         </label>
         <textarea
+          data-testid="ask-tally-input"
           id={`ask-tally-${projectId}`}
           value={question}
           onChange={(event) => setQuestion(event.target.value)}
