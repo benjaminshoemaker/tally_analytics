@@ -481,15 +481,15 @@ Add authenticated dashboard API routes for asking questions, confirming pending 
 **Requirement:** FEATURE_SPEC.md "Task Queue Flow"; FEATURE_TECHNICAL_SPEC.md "Dashboard APIs"
 
 **Acceptance Criteria:**
-- [ ] (CODE) Question and task API route files exist under `apps/web/app/api/projects/[id]/analytics/`.
+- [x] (CODE) Question and task API route files exist under `apps/web/app/api/projects/[id]/analytics/`.
   - Verify: `cd ../.. && test -f 'apps/web/app/api/projects/[id]/analytics/questions/route.ts' && test -f 'apps/web/app/api/projects/[id]/analytics/tasks/route.ts' && test -f 'apps/web/app/api/projects/[id]/analytics/tasks/[taskId]/route.ts'`
-- [ ] (TEST) Question API tests prove `POST /questions` never persists a task and enforces authenticated project ownership.
+- [x] (TEST) Question API tests prove `POST /questions` never persists a task and enforces authenticated project ownership.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-question-api`
-- [ ] (TEST) Task API tests cover confirm, list with verification refresh, pending edit, pending delete to cancelled, archive, failed reopen, non-pending delete conflict, and duplicate confirmation.
+- [x] (TEST) Task API tests cover confirm, list with verification refresh, pending edit, pending delete to cancelled, archive, failed reopen, non-pending delete conflict, and duplicate confirmation.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-tasks-api`
-- [ ] (TEST) Foreign user tests prove task IDs and project IDs are not exposed across accounts.
+- [x] (TEST) Foreign user tests prove task IDs and project IDs are not exposed across accounts.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-tasks-api analytics-question-api`
-- [ ] (CODE) API routes use `getUserFromRequest` and `projects.userId` ownership checks before task access.
+- [x] (CODE) API routes use `getUserFromRequest` and `projects.userId` ownership checks before task access.
   - Verify: `cd ../.. && rg -q 'getUserFromRequest|projects.userId' 'apps/web/app/api/projects/[id]/analytics/questions/route.ts' 'apps/web/app/api/projects/[id]/analytics/tasks/route.ts' 'apps/web/app/api/projects/[id]/analytics/tasks/[taskId]/route.ts'`
 
 **Files to Create:**
@@ -517,15 +517,15 @@ Add authenticated dashboard API routes for asking questions, confirming pending 
 ### Phase 2 Checkpoint
 
 **Automated Checks:**
-- [ ] (TEST) Task domain, question, verification, and dashboard API tests pass.
+- [x] (TEST) Task domain, question, verification, and dashboard API tests pass.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-queries analytics-task-transitions analytics-task-verification analytics-question-api analytics-tasks-api`
-- [ ] (TYPE) Web type checking passes after new API routes and task services.
+- [x] (TYPE) Web type checking passes after new API routes and task services.
   - Verify: `cd ../.. && pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] (TEST) Existing project detail and analytics API route tests still pass.
+- [x] (TEST) Existing project detail and analytics API route tests still pass.
   - Verify: `cd ../.. && pnpm --filter web test -- project-detail-api project-detail-page analytics-overview-api analytics-live-feed-api analytics-sessions-api`
-- [ ] (CODE) `POST /api/projects/[id]/analytics/questions` has no persistence call.
+- [x] (CODE) `POST /api/projects/[id]/analytics/questions` has no persistence call.
   - Verify: `cd ../.. && ! rg -n 'insert\\(|update\\(|analyticsTasks' 'apps/web/app/api/projects/[id]/analytics/questions/route.ts'`
 
 ---

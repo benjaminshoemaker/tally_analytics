@@ -30,6 +30,10 @@ type QuestionPattern =
   | "unsupported";
 
 const DEFAULT_PERIOD: AnalyticsPeriod = "7d";
+type DraftTemplate = Omit<
+  AnalyticsTaskDraft,
+  "originalQuestion" | "answerKind" | "answerSummary" | "analyticsGap"
+>;
 
 function normalizeQuestion(value: string): string {
   return value.replace(/\s+/g, " ").trim();
@@ -70,7 +74,7 @@ function questionPattern(question: string): QuestionPattern {
   return "unsupported";
 }
 
-function draftTrackOnboardingCompletion(): AnalyticsTaskDraft {
+function draftTrackOnboardingCompletion(): DraftTemplate {
   return {
     taskType: "track_completion",
     title: "Track onboarding completion",
@@ -91,7 +95,7 @@ function draftTrackOnboardingCompletion(): AnalyticsTaskDraft {
   };
 }
 
-function draftTrackUpgradeCtaClick(): AnalyticsTaskDraft {
+function draftTrackUpgradeCtaClick(): DraftTemplate {
   return {
     taskType: "track_click",
     title: "Track upgrade CTA clicks",
@@ -112,7 +116,7 @@ function draftTrackUpgradeCtaClick(): AnalyticsTaskDraft {
   };
 }
 
-function draftAddPlanToSignupCompleted(): AnalyticsTaskDraft {
+function draftAddPlanToSignupCompleted(): DraftTemplate {
   return {
     taskType: "add_event_property",
     title: "Add plan property to signup_completed",
@@ -253,6 +257,22 @@ function answeredResult(params: {
   };
 }
 
+function withDraftContext(params: {
+  draft: DraftTemplate;
+  question: string;
+  answerKind: "partial_answer" | "cannot_answer_yet";
+  answerSummary: string;
+  analyticsGap: string;
+}): AnalyticsTaskDraft {
+  return {
+    originalQuestion: params.question,
+    answerKind: params.answerKind,
+    answerSummary: params.answerSummary,
+    analyticsGap: params.analyticsGap,
+    ...params.draft,
+  };
+}
+
 async function withDuplicateCheck(params: {
   userId: string;
   projectId: string;
@@ -380,7 +400,14 @@ export async function interpretAnalyticsQuestion(
           summary: "Pricing visits are visible, but onboarding completion is not fully instrumented yet.",
           limitation: "Tally cannot confirm how many users finished onboarding after visiting pricing.",
         },
-        draft: draftTrackOnboardingCompletion(),
+        draft: withDraftContext({
+          draft: draftTrackOnboardingCompletion(),
+          question: boundedQuestion,
+          answerKind: "partial_answer",
+          answerSummary:
+            "Pricing visits are visible, but onboarding completion is not fully instrumented yet.",
+          analyticsGap: "Missing onboarding completion telemetry after pricing visits.",
+        }),
         existingTask: null,
       },
     });
@@ -407,7 +434,13 @@ export async function interpretAnalyticsQuestion(
           summary: "Upgrade CTA click tracking has not been observed for this project yet.",
           limitation: "Without a dedicated click event, Tally cannot answer this question from production data.",
         },
-        draft: draftTrackUpgradeCtaClick(),
+        draft: withDraftContext({
+          draft: draftTrackUpgradeCtaClick(),
+          question: boundedQuestion,
+          answerKind: "cannot_answer_yet",
+          answerSummary: "Upgrade CTA click tracking has not been observed for this project yet.",
+          analyticsGap: "No upgrade CTA click telemetry is currently available.",
+        }),
         existingTask: null,
       },
     });
@@ -436,7 +469,13 @@ export async function interpretAnalyticsQuestion(
         summary: "Signup completion exists, but plan-level conversion detail is missing.",
         limitation: "Tally needs a `plan` property on `signup_completed` to answer this reliably.",
       },
-      draft: draftAddPlanToSignupCompleted(),
+      draft: withDraftContext({
+        draft: draftAddPlanToSignupCompleted(),
+        question: boundedQuestion,
+        answerKind: "partial_answer",
+        answerSummary: "Signup completion exists, but plan-level conversion detail is missing.",
+        analyticsGap: "signup_completed is missing the plan property for conversion breakdowns.",
+      }),
       existingTask: null,
     },
   });

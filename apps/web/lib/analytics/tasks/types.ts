@@ -140,6 +140,10 @@ export type TransitionAnalyticsTaskResult = {
 };
 
 export type AnalyticsTaskDraft = {
+  originalQuestion: string;
+  answerKind: "partial_answer" | "cannot_answer_yet";
+  answerSummary: string;
+  analyticsGap: string;
   taskType: AnalyticsTaskType;
   title: string;
   eventName: string;
