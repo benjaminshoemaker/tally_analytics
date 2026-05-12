@@ -1,46 +1,25 @@
 {
   "ok": true,
-  "provider": "real",
-  "artifactDir": "/Users/coding/Projects/fast_pr_analytics/tmp/stripe-billing-verification/moxyr82vf4e6d5",
-  "runId": "moxyr82vf4e6d5",
+  "provider": "local",
+  "artifactDir": "/Users/coding/Projects/fast_pr_analytics/tmp/stripe-billing-verification/mp2ajwxjdd9310",
+  "runId": "mp2ajwxjdd9310",
   "stages": [
     {
       "name": "preflight",
       "status": "passed",
-      "durationMs": 216
+      "durationMs": 245
     },
     {
-      "name": "real-provider",
+      "name": "deterministic-local",
       "status": "passed",
-      "durationMs": 51799
+      "durationMs": 12666
     }
   ],
-  "cleanup": {
-    "subscriptionCancelStatuses": [
-      1
-    ],
-    "customerDeleteStatuses": [
-      1
-    ]
-  },
-  "real": {
-    "userId": "a726a169-7e10-48f4-a9a6-c504cf4146d4",
-    "projectId": "proj_sbv_moxyr82v",
-    "customerId": "cus_redacted_YuWe",
-    "subscriptionId": "sub_redacted_6HTm",
-    "webhookEvents": [
-      {
-        "type": "checkout.session.completed",
-        "id": "evt_redacted_yHql",
-        "direction": "incoming",
-        "responseStatus": 200
-      },
-      {
-        "type": "invoice.paid",
-        "id": "evt_redacted_4BfQ",
-        "direction": "incoming",
-        "responseStatus": 200
-      }
-    ]
+  "cleanup": {},
+  "local": {
+    "freeUser": "412bfa3c-f919-461c-a072-41c4ccda04ea",
+    "paidUser": "d99a442c-12e0-448f-b613-e27621a8305f",
+    "webhookUser": "41102bba-8d65-4d68-bccd-526f3a160c66",
+    "projectId": "proj_sbv_mp2ajwxj"
   }
 }
