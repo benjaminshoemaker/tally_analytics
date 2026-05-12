@@ -350,15 +350,15 @@ Implement the task transition service that enforces allowed state changes, store
 **Requirement:** FEATURE_SPEC.md "Task Status Model" and "Idempotency And Duplicate Prevention"; FEATURE_TECHNICAL_SPEC.md "Status Transition Rules"
 
 **Acceptance Criteria:**
-- [ ] (CODE) `transitions.ts` exports one transition service used by API and MCP layers.
+- [x] (CODE) `transitions.ts` exports one transition service used by API and MCP layers.
   - Verify: `cd ../.. && test -f apps/web/lib/analytics/tasks/transitions.ts && rg -q 'transitionAnalyticsTask' apps/web/lib/analytics/tasks/transitions.ts`
-- [ ] (TEST) Transition tests cover all allowed transitions from the feature spec and reject unsupported backward transitions.
+- [x] (TEST) Transition tests cover all allowed transitions from the feature spec and reject unsupported backward transitions.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-transitions`
-- [ ] (TEST) Repeated `in_progress`, repeated `implemented_locally` with the same fingerprint, and repeated `failed` with the same error are idempotent.
+- [x] (TEST) Repeated `in_progress`, repeated `implemented_locally` with the same fingerprint, and repeated `failed` with the same error are idempotent.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-transitions`
-- [ ] (TEST) Local verification evidence is stored on the task but never sets `verified_at` or `status = 'verified'`.
+- [x] (TEST) Local verification evidence is stored on the task but never sets `verified_at` or `status = 'verified'`.
   - Verify: `cd ../.. && pnpm --filter web test -- analytics-task-transitions`
-- [ ] (CODE) File paths, command summaries, local event evidence, and error summaries are bounded and sanitized before persistence.
+- [x] (CODE) File paths, command summaries, local event evidence, and error summaries are bounded and sanitized before persistence.
   - Verify: `cd ../.. && rg -q 'sanitize|changedFiles|verificationCommands|localEventEvidence|errorSummary' apps/web/lib/analytics/tasks/transitions.ts`
 
 **Files to Create:**

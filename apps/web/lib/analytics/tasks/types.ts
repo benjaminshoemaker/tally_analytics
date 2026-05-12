@@ -105,3 +105,36 @@ export type AnalyticsTaskStatusEventRecord = {
   details: Record<string, unknown>;
   createdAt: Date;
 };
+
+export type AnalyticsTaskVerificationCommand = {
+  command: string;
+  exitCode: number;
+  summary?: string;
+};
+
+export type AnalyticsTaskLocalEventEvidence = {
+  eventName: string;
+  properties?: Record<string, unknown>;
+};
+
+export type TransitionAnalyticsTaskInput = {
+  taskId: string;
+  userId: string;
+  projectId?: string;
+  toStatus: AnalyticsTaskStatus;
+  actorType: AnalyticsTaskActorType;
+  actorId?: string | null;
+  reason?: string | null;
+  changedFiles?: string[];
+  verificationCommands?: AnalyticsTaskVerificationCommand[];
+  localEventEvidence?: AnalyticsTaskLocalEventEvidence[];
+  implementationFingerprint?: string | null;
+  errorSummary?: string | null;
+  now?: Date;
+};
+
+export type TransitionAnalyticsTaskResult = {
+  status: "transitioned" | "idempotent";
+  task: AnalyticsTaskRecord;
+  statusEvent: AnalyticsTaskStatusEventRecord | null;
+};

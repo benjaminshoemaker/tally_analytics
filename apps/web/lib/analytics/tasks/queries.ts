@@ -105,6 +105,61 @@ export async function findActiveTaskByDuplicateFingerprint(params: {
   return match ?? null;
 }
 
+export async function findOwnedAnalyticsTaskById(params: {
+  userId: string;
+  taskId: string;
+  projectId?: string;
+}): Promise<AnalyticsTaskRecord | null> {
+  const predicates = [eq(analyticsTasks.userId, params.userId), eq(analyticsTasks.id, params.taskId)];
+  if (params.projectId) predicates.push(eq(analyticsTasks.projectId, params.projectId));
+
+  const rows = await db
+    .select(analyticsTaskSelect)
+    .from(analyticsTasks)
+    .where(and(...predicates))
+    .limit(1);
+
+  const row = (rows as AnalyticsTaskRecord[])[0];
+  return row ?? null;
+}
+
+type UpdateOwnedAnalyticsTaskInput = {
+  userId: string;
+  taskId: string;
+  projectId?: string;
+  patch: Partial<
+    Pick<
+      AnalyticsTaskRecord,
+      | "status"
+      | "localVerification"
+      | "implementationFingerprint"
+      | "lastError"
+      | "claimedAt"
+      | "implementedAt"
+      | "verifiedAt"
+      | "cancelledAt"
+      | "archivedAt"
+      | "updatedAt"
+    >
+  >;
+};
+
+export async function updateOwnedAnalyticsTask(
+  input: UpdateOwnedAnalyticsTaskInput,
+): Promise<AnalyticsTaskRecord | null> {
+  const predicates = [eq(analyticsTasks.userId, input.userId), eq(analyticsTasks.id, input.taskId)];
+  if (input.projectId) predicates.push(eq(analyticsTasks.projectId, input.projectId));
+
+  const updated = await db
+    .update(analyticsTasks)
+    .set(input.patch)
+    .where(and(...predicates))
+    .returning();
+
+  const row = (updated as AnalyticsTaskRecord[])[0];
+  return row ?? null;
+}
+
 export async function createAnalyticsTaskStatusEvent(
   input: CreateAnalyticsTaskStatusEventInput,
 ): Promise<AnalyticsTaskStatusEventRecord> {
