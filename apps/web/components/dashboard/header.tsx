@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import UserDropdown from "./user-dropdown";
+import UserDropdown from './user-dropdown';
 
 export type DashboardHeaderUser = {
   username: string;
@@ -12,7 +12,7 @@ export default function DashboardHeader({ user }: { user?: DashboardHeaderUser }
     <header className="flex items-center justify-between border-b border-warm-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex items-center gap-3">
         {/* Mobile logo */}
-        <a href="/" className="flex items-center gap-2 md:hidden">
+        <a href="/" className="flex min-h-11 items-center gap-2 md:hidden">
           <div className="flex size-7 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500">
             <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
               <path
@@ -31,10 +31,21 @@ export default function DashboardHeader({ user }: { user?: DashboardHeaderUser }
         <form action="/api/auth/logout" method="post">
           <button
             type="submit"
-            className="group flex items-center gap-2 rounded-lg border border-warm-200 bg-white px-3 py-1.5 text-sm font-medium text-warm-700 shadow-sm transition-all hover:border-warm-300 hover:bg-warm-50 hover:text-warm-900"
+            className="group flex min-h-11 items-center gap-2 rounded-lg border border-warm-200 bg-white px-3 py-1.5 text-sm font-medium text-warm-700 shadow-sm transition-all hover:border-warm-300 hover:bg-warm-50 hover:text-warm-900"
           >
-            <svg className="size-4 text-warm-400 transition-colors group-hover:text-warm-600" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg
+              className="size-4 text-warm-400 transition-colors group-hover:text-warm-600"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M6 14H3a1 1 0 01-1-1V3a1 1 0 011-1h3M11 11l3-3-3-3M14 8H6"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             Log out
           </button>

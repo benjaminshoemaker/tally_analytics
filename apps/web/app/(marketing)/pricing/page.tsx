@@ -1,26 +1,26 @@
-import React from "react";
-import { and, eq, gt } from "drizzle-orm";
-import { cookies } from "next/headers";
+import React from 'react';
+import { and, eq, gt } from 'drizzle-orm';
+import { cookies } from 'next/headers';
 
-import PricingCard from "../../../components/marketing/pricing-card";
-import { SESSION_COOKIE_NAME } from "../../../lib/auth/cookies";
-import { db } from "../../../lib/db/client";
-import { sessions, users } from "../../../lib/db/schema";
-import { PLAN_METADATA, isUserPlan, type UserPlan } from "../../../lib/stripe/plans";
+import PricingCard from '../../../components/marketing/pricing-card';
+import { SESSION_COOKIE_NAME } from '../../../lib/auth/cookies';
+import { db } from '../../../lib/db/client';
+import { sessions, users } from '../../../lib/db/schema';
+import { PLAN_METADATA, isUserPlan, type UserPlan } from '../../../lib/stripe/plans';
 
-const SETUP_URL = "/docs/setup";
+const SETUP_URL = '/docs/setup';
 
 const TIERS = [
-  { plan: "free", ...PLAN_METADATA.free, ctaLabel: "Get Started", highlighted: false },
-  { plan: "pro", ...PLAN_METADATA.pro, ctaLabel: "Start Free Trial", highlighted: true },
-  { plan: "team", ...PLAN_METADATA.team, ctaLabel: "Start Free Trial", highlighted: false },
+  { plan: 'free', ...PLAN_METADATA.free, ctaLabel: 'Get Started', highlighted: false },
+  { plan: 'pro', ...PLAN_METADATA.pro, ctaLabel: 'Start Free Trial', highlighted: true },
+  { plan: 'team', ...PLAN_METADATA.team, ctaLabel: 'Start Free Trial', highlighted: false },
 ] as const;
 
 type PricingCta =
-  | { kind: "link"; label: string; href: string }
-  | { kind: "checkout"; label: string; plan: "pro" | "team" }
-  | { kind: "portal"; label: string }
-  | { kind: "disabled"; label: string };
+  | { kind: 'link'; label: string; href: string }
+  | { kind: 'checkout'; label: string; plan: 'pro' | 'team' }
+  | { kind: 'portal'; label: string }
+  | { kind: 'disabled'; label: string };
 
 async function getUserPlanFromCookies(): Promise<UserPlan | null> {
   const sessionId = cookies().get(SESSION_COOKIE_NAME)?.value ?? null;
@@ -47,8 +47,9 @@ export default async function PricingPage() {
     <main className="mx-auto w-full max-w-5xl px-6 py-16 sm:py-20">
       <div className="max-w-2xl">
         <h1 className="font-display text-4xl tracking-tight text-[#1b140d]">Pricing</h1>
-        <p className="mt-4 text-lg text-[#9a734c]">
-          Start by adding Tally from Claude Code, Codex, Cursor, or your AI coding agent of choice. Upgrade when you need higher limits and retention.
+        <p className="mt-4 text-lg text-[#57534e]">
+          Start by adding Tally from Claude Code, Codex, Cursor, or your AI coding agent of choice.
+          Upgrade when you need higher limits and retention.
         </p>
       </div>
 
@@ -63,32 +64,43 @@ export default async function PricingPage() {
               let cta: PricingCta;
 
               if (!userPlan) {
-                cta = { kind: "link", label: "Start with MCP", href: SETUP_URL };
-              } else if (tier.plan === "free") {
-                cta = { kind: "disabled", label: userPlan === "free" ? "Current plan" : "Included" };
-              } else if (userPlan === "free") {
-                cta = { kind: "checkout", label: `Upgrade to ${tier.name}`, plan: tier.plan };
+                cta = { kind: 'link', label: 'Start with MCP', href: SETUP_URL };
+              } else if (tier.plan === 'free') {
+                cta = {
+                  kind: 'disabled',
+                  label: userPlan === 'free' ? 'Current plan' : 'Included',
+                };
+              } else if (userPlan === 'free') {
+                cta = { kind: 'checkout', label: `Upgrade to ${tier.name}`, plan: tier.plan };
               } else {
-                cta = { kind: "portal", label: "Manage billing" };
+                cta = { kind: 'portal', label: 'Manage billing' };
               }
 
-              if (cta.kind === "link") {
+              if (cta.kind === 'link') {
                 return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={cta.href} />;
               }
 
-              if (cta.kind === "checkout") {
+              if (cta.kind === 'checkout') {
                 return (
                   <PricingCard
                     {...tier}
                     ctaLabel={cta.label}
-                    ctaForm={{ action: "/api/stripe/checkout", method: "post", hiddenFields: { plan: cta.plan } }}
+                    ctaForm={{
+                      action: '/api/stripe/checkout',
+                      method: 'post',
+                      hiddenFields: { plan: cta.plan },
+                    }}
                   />
                 );
               }
 
-              if (cta.kind === "portal") {
+              if (cta.kind === 'portal') {
                 return (
-                  <PricingCard {...tier} ctaLabel={cta.label} ctaForm={{ action: "/api/stripe/portal", method: "post" }} />
+                  <PricingCard
+                    {...tier}
+                    ctaLabel={cta.label}
+                    ctaForm={{ action: '/api/stripe/portal', method: 'post' }}
+                  />
                 );
               }
 
@@ -105,13 +117,15 @@ export default async function PricingPage() {
         <div className="overflow-x-auto p-6">
           <table className="w-full min-w-[520px] text-left text-sm">
             <thead>
-              <tr className="border-b border-[#e8e0d9] text-[#9a734c]">
+              <tr className="border-b border-[#e8e0d9] text-[#57534e]">
                 <th className="pb-4 pr-4 font-medium">Feature</th>
                 <th className="pb-4 pr-4 font-medium">Free</th>
                 <th className="pb-4 pr-4 font-medium">
                   <span className="inline-flex items-center gap-1.5">
                     Pro
-                    <span className="rounded bg-[#ec7f13]/10 px-1.5 py-0.5 text-xs font-semibold text-[#ec7f13]">Popular</span>
+                    <span className="rounded bg-[#0f766e]/10 px-1.5 py-0.5 text-xs font-semibold text-[#0f766e]">
+                      Popular
+                    </span>
                   </span>
                 </th>
                 <th className="pb-4 font-medium">Team</th>
@@ -119,25 +133,29 @@ export default async function PricingPage() {
             </thead>
             <tbody className="text-[#1b140d]">
               <tr className="border-b border-[#f3ede7]">
-                <td className="py-4 pr-4 text-[#9a734c]">Events</td>
-                <td className="py-4 pr-4">{PLAN_METADATA.free.eventsLabel.replace(" events", "")}</td>
-                <td className="py-4 pr-4 font-medium">{PLAN_METADATA.pro.eventsLabel.replace(" events", "")}</td>
-                <td className="py-4">{PLAN_METADATA.team.eventsLabel.replace(" events", "")}</td>
+                <td className="py-4 pr-4 text-[#57534e]">Events</td>
+                <td className="py-4 pr-4">
+                  {PLAN_METADATA.free.eventsLabel.replace(' events', '')}
+                </td>
+                <td className="py-4 pr-4 font-medium">
+                  {PLAN_METADATA.pro.eventsLabel.replace(' events', '')}
+                </td>
+                <td className="py-4">{PLAN_METADATA.team.eventsLabel.replace(' events', '')}</td>
               </tr>
               <tr className="border-b border-[#f3ede7] bg-[#f3ede7]/30">
-                <td className="py-4 pr-4 text-[#9a734c]">Projects</td>
+                <td className="py-4 pr-4 text-[#57534e]">Projects</td>
                 <td className="py-4 pr-4">{PLAN_METADATA.free.projectsLabel}</td>
                 <td className="py-4 pr-4 font-medium">{PLAN_METADATA.pro.projectsLabel}</td>
                 <td className="py-4">{PLAN_METADATA.team.projectsLabel}</td>
               </tr>
               <tr className="border-b border-[#f3ede7]">
-                <td className="py-4 pr-4 text-[#9a734c]">Retention</td>
+                <td className="py-4 pr-4 text-[#57534e]">Retention</td>
                 <td className="py-4 pr-4">90 days</td>
                 <td className="py-4 pr-4 font-medium">Unlimited</td>
                 <td className="py-4">Unlimited</td>
               </tr>
               <tr className="bg-[#f3ede7]/30">
-                <td className="py-4 pr-4 text-[#9a734c]">Support</td>
+                <td className="py-4 pr-4 text-[#57534e]">Support</td>
                 <td className="py-4 pr-4">Community</td>
                 <td className="py-4 pr-4 font-medium">Email</td>
                 <td className="py-4">Priority</td>

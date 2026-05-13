@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
-import type { AnalyticsTaskRecord } from "../../../lib/analytics/tasks/types";
-import TaskStatusBadge from "./task-status-badge";
+import type { AnalyticsTaskRecord } from '../../../lib/analytics/tasks/types';
+import TaskStatusBadge from './task-status-badge';
 
 type Props = {
   tasks: AnalyticsTaskRecord[];
@@ -14,17 +14,17 @@ type Props = {
 };
 
 function statusDetail(task: AnalyticsTaskRecord): string | null {
-  if (task.status === "implemented_locally") {
-    return "Local implementation was reported. Waiting for production verification.";
+  if (task.status === 'implemented_locally') {
+    return 'Local implementation was reported. Waiting for production verification.';
   }
-  if (task.status === "awaiting_deploy") {
-    return task.lastError ?? "Waiting for matching production telemetry.";
+  if (task.status === 'awaiting_deploy') {
+    return task.lastError ?? 'Waiting for matching production telemetry.';
   }
-  if (task.status === "verified") {
-    return "Verified from production telemetry.";
+  if (task.status === 'verified') {
+    return 'Verified from production telemetry.';
   }
-  if (task.status === "failed") {
-    return task.lastError ?? "Implementation failed. Reopen after fixing the issue.";
+  if (task.status === 'failed') {
+    return task.lastError ?? 'Implementation failed. Reopen after fixing the issue.';
   }
   return null;
 }
@@ -62,34 +62,34 @@ export default function PendingTaskList({
                 <TaskStatusBadge status={task.status} />
               </div>
               <div className="mt-2 flex items-center gap-2">
-                {task.status === "pending" && (
+                {task.status === 'pending' && (
                   <button
                     type="button"
                     onClick={() => onDeletePending?.(task.id)}
                     disabled={isMutating}
-                    className="rounded-md border border-red-200 px-2 py-1 text-xs font-medium text-red-700 disabled:opacity-50"
+                    className="min-h-11 rounded-md border border-red-200 px-3 py-2 text-xs font-medium text-red-700 disabled:opacity-50"
                   >
                     Delete
                   </button>
                 )}
 
-                {task.status === "failed" && (
+                {task.status === 'failed' && (
                   <button
                     type="button"
                     onClick={() => onReopen?.(task.id)}
                     disabled={isMutating}
-                    className="rounded-md border border-blue-200 px-2 py-1 text-xs font-medium text-blue-700 disabled:opacity-50"
+                    className="min-h-11 rounded-md border border-blue-200 px-3 py-2 text-xs font-medium text-blue-700 disabled:opacity-50"
                   >
                     Reopen
                   </button>
                 )}
 
-                {task.status !== "pending" && task.status !== "archived" && (
+                {task.status !== 'pending' && task.status !== 'archived' && (
                   <button
                     type="button"
                     onClick={() => onArchive?.(task.id)}
                     disabled={isMutating}
-                    className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 disabled:opacity-50"
+                    className="min-h-11 rounded-md border border-slate-300 px-3 py-2 text-xs font-medium text-slate-700 disabled:opacity-50"
                   >
                     Archive
                   </button>

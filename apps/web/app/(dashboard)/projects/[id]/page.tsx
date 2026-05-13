@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 
-import OnboardingChecklist from "../../../../components/dashboard/onboarding-checklist";
-import QuotaDisplay from "../../../../components/dashboard/quota-display";
-import Skeleton, { SkeletonList } from "../../../../components/dashboard/skeleton";
-import StatusBadge from "../../../../components/dashboard/status-badge";
-import AskTallyPanel from "../../../../components/dashboard/analytics-tasks/ask-tally-panel";
-import { useProject } from "../../../../lib/hooks/use-project";
-import type { UserPlan } from "../../../../lib/stripe/plans";
+import OnboardingChecklist from '../../../../components/dashboard/onboarding-checklist';
+import QuotaDisplay from '../../../../components/dashboard/quota-display';
+import Skeleton, { SkeletonList } from '../../../../components/dashboard/skeleton';
+import StatusBadge from '../../../../components/dashboard/status-badge';
+import AskTallyPanel from '../../../../components/dashboard/analytics-tasks/ask-tally-panel';
+import { useProject } from '../../../../lib/hooks/use-project';
+import type { UserPlan } from '../../../../lib/stripe/plans';
 
 type RegenerateState = {
-  status: "idle" | "loading" | "success" | "error";
+  status: 'idle' | 'loading' | 'success' | 'error';
   message: string;
   retryAfter?: number;
 };
 
 function shouldShowQuota(status: string): boolean {
-  return status === "pr_pending" || status === "active";
+  return status === 'pr_pending' || status === 'active';
 }
 
 type StatusCardConfig = {
@@ -30,28 +30,28 @@ type StatusCardConfig = {
 
 const STATUS_CARD_CONFIG: Record<string, StatusCardConfig> = {
   unsupported: {
-    title: "Repository Not Supported",
+    title: 'Repository Not Supported',
     description:
       "This repository may use an unsupported framework or structure. Click 'Re-run Analysis' to try again after making changes to your repository.",
-    bgClass: "bg-amber-50",
-    borderClass: "border-amber-200",
-    iconClass: "text-amber-500",
+    bgClass: 'bg-amber-50',
+    borderClass: 'border-amber-200',
+    iconClass: 'text-amber-500',
   },
   analysis_failed: {
-    title: "Analysis Failed",
+    title: 'Analysis Failed',
     description:
       "Something went wrong during analysis. This could be a temporary issue. Click 'Re-run Analysis' to try again.",
-    bgClass: "bg-red-50",
-    borderClass: "border-red-200",
-    iconClass: "text-red-500",
+    bgClass: 'bg-red-50',
+    borderClass: 'border-red-200',
+    iconClass: 'text-red-500',
   },
   pr_closed: {
-    title: "Pull Request Closed",
+    title: 'Pull Request Closed',
     description:
       "The analytics PR was closed without merging. Click 'Re-run Analysis' to generate a new PR.",
-    bgClass: "bg-slate-50",
-    borderClass: "border-slate-200",
-    iconClass: "text-slate-400",
+    bgClass: 'bg-slate-50',
+    borderClass: 'border-slate-200',
+    iconClass: 'text-slate-400',
   },
 };
 
@@ -92,15 +92,27 @@ function ExternalLinkIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M10 2H14V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M6.667 9.333L14 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M10 2H14V6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.667 9.333L14 2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
 function getCanRegenerateAction(project: Record<string, unknown> | null): boolean {
   const actions = project?.actions;
-  if (actions && typeof actions === "object" && "canRegenerate" in actions) {
+  if (actions && typeof actions === 'object' && 'canRegenerate' in actions) {
     return Boolean((actions as { canRegenerate?: unknown }).canRegenerate);
   }
 
@@ -111,7 +123,10 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const projectId = params.id;
   const projectQuery = useProject(projectId);
 
-  const [regenerateState, setRegenerateState] = useState<RegenerateState>({ status: "idle", message: "" });
+  const [regenerateState, setRegenerateState] = useState<RegenerateState>({
+    status: 'idle',
+    message: '',
+  });
   const [optimisticStatus, setOptimisticStatus] = useState<string | null>(null);
   const [retryCountdown, setRetryCountdown] = useState<number>(0);
 
@@ -122,14 +137,14 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
 
   const userPlan: UserPlan = useMemo(() => {
     const plan = (projectQuery.data as null | Record<string, unknown>)?.userPlan;
-    return plan === "free" || plan === "pro" || plan === "team" ? plan : "pro";
+    return plan === 'free' || plan === 'pro' || plan === 'team' ? plan : 'pro';
   }, [projectQuery.data]);
 
   // Auto-dismiss success message after 5 seconds
   useEffect(() => {
-    if (regenerateState.status === "success") {
+    if (regenerateState.status === 'success') {
       const timer = setTimeout(() => {
-        setRegenerateState({ status: "idle", message: "" });
+        setRegenerateState({ status: 'idle', message: '' });
       }, 5000);
       return () => clearTimeout(timer);
     }
@@ -142,26 +157,35 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         setRetryCountdown((prev) => prev - 1);
       }, 1000);
       return () => clearTimeout(timer);
-    } else if (retryCountdown === 0 && regenerateState.status === "error" && regenerateState.retryAfter) {
-      setRegenerateState({ status: "idle", message: "" });
+    } else if (
+      retryCountdown === 0 &&
+      regenerateState.status === 'error' &&
+      regenerateState.retryAfter
+    ) {
+      setRegenerateState({ status: 'idle', message: '' });
     }
   }, [retryCountdown, regenerateState.status, regenerateState.retryAfter]);
 
   // Clear optimistic status when real status updates to analyzing
   useEffect(() => {
-    const realStatus = String(project?.status ?? "");
-    if (realStatus === "analyzing" && optimisticStatus === "analyzing") {
+    const realStatus = String(project?.status ?? '');
+    if (realStatus === 'analyzing' && optimisticStatus === 'analyzing') {
       setOptimisticStatus(null);
     }
   }, [project?.status, optimisticStatus]);
 
   async function onRegenerate() {
-    setRegenerateState({ status: "loading", message: "" });
-    setOptimisticStatus("analyzing");
+    setRegenerateState({ status: 'loading', message: '' });
+    setOptimisticStatus('analyzing');
 
     try {
-      const response = await fetch(`/api/projects/${encodeURIComponent(projectId)}/regenerate`, { method: "POST" });
-      const body = (await response.json().catch(() => null)) as null | { success?: boolean; message?: string };
+      const response = await fetch(`/api/projects/${encodeURIComponent(projectId)}/regenerate`, {
+        method: 'POST',
+      });
+      const body = (await response.json().catch(() => null)) as null | {
+        success?: boolean;
+        message?: string;
+      };
 
       if (!response.ok || !body?.success) {
         setOptimisticStatus(null);
@@ -170,24 +194,27 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
           const retrySeconds = 300; // 5 minutes
           setRetryCountdown(retrySeconds);
           setRegenerateState({
-            status: "error",
+            status: 'error',
             message: `Rate limited. Try again in ${Math.ceil(retrySeconds / 60)} minutes.`,
             retryAfter: retrySeconds,
           });
         } else {
-          setRegenerateState({ status: "error", message: body?.message ?? "Unable to regenerate." });
+          setRegenerateState({
+            status: 'error',
+            message: body?.message ?? 'Unable to regenerate.',
+          });
         }
         return;
       }
 
       setRegenerateState({
-        status: "success",
-        message: "Analysis started — this page will update automatically.",
+        status: 'success',
+        message: 'Analysis started — this page will update automatically.',
       });
       await projectQuery.refetch();
     } catch {
       setOptimisticStatus(null);
-      setRegenerateState({ status: "error", message: "Unable to regenerate." });
+      setRegenerateState({ status: 'error', message: 'Unable to regenerate.' });
     }
   }
 
@@ -215,15 +242,16 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
     );
   }
 
-  const realStatus = String(project?.status ?? "");
+  const realStatus = String(project?.status ?? '');
   const displayStatus = optimisticStatus ?? realStatus;
-  const prUrl = typeof project?.prUrl === "string" ? (project.prUrl as string) : null;
-  const lastEventAt = typeof project?.lastEventAt === "string" ? (project.lastEventAt as string) : null;
+  const prUrl = typeof project?.prUrl === 'string' ? (project.prUrl as string) : null;
+  const lastEventAt =
+    typeof project?.lastEventAt === 'string' ? (project.lastEventAt as string) : null;
   const quotaLimit = Number((projectQuery.data as Record<string, unknown>)?.quotaLimit ?? 0);
   const quotaUsed = Number((projectQuery.data as Record<string, unknown>)?.quotaUsed ?? 0);
   const isOverQuota = Boolean((projectQuery.data as Record<string, unknown>)?.isOverQuota);
   const canRegenerate = getCanRegenerateAction(project);
-  const isWaitingForFirstEvent = displayStatus === "active" && lastEventAt === null;
+  const isWaitingForFirstEvent = displayStatus === 'active' && lastEventAt === null;
 
   const showRerunButton = canRegenerate && !optimisticStatus;
   const isRateLimited = retryCountdown > 0;
@@ -238,17 +266,6 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         </div>
       )}
 
-      {/* Status-specific empty state card */}
-      {!optimisticStatus && canRegenerate && <StatusCard status={realStatus} />}
-
-      {isWaitingForFirstEvent && (
-        <div className="rounded-lg border border-sky-200 bg-sky-50 p-4">
-          <p className="text-sm font-medium text-sky-900">
-            Waiting for first event. Tally is installed, but no production events have been received yet.
-          </p>
-        </div>
-      )}
-
       {/* Quick Actions */}
       <div className="flex flex-wrap items-center gap-3">
         {prUrl && (
@@ -256,7 +273,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
             href={prUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
           >
             View PR <ExternalLinkIcon />
           </a>
@@ -266,42 +283,62 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
           <button
             type="button"
             onClick={onRegenerate}
-            disabled={regenerateState.status === "loading" || isRateLimited}
-            className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-slate-800 disabled:opacity-50"
+            disabled={regenerateState.status === 'loading' || isRateLimited}
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-slate-800 disabled:opacity-50"
           >
-            {regenerateState.status === "loading" ? "Re-running…" : "Re-run Analysis"}
+            {regenerateState.status === 'loading' ? 'Re-running…' : 'Re-run Analysis'}
           </button>
         )}
       </div>
+
+      {/* Status-specific setup guidance */}
+      {!optimisticStatus && canRegenerate && <StatusCard status={realStatus} />}
+
+      {isWaitingForFirstEvent && (
+        <section className="rounded-lg border border-sky-200 bg-sky-50 p-4">
+          <h2 className="text-sm font-semibold text-sky-950">Waiting for first event</h2>
+          <p className="mt-1 text-sm text-sky-900">
+            Tally is installed, but no production events have been received yet. Deploy the app,
+            visit one or two production pages, then come back here to confirm events.
+          </p>
+        </section>
+      )}
 
       {/* Feedback messages */}
       {regenerateState.message && (
         <div
           className={[
-            "rounded-md border px-3 py-2 text-sm flex items-center justify-between",
-            regenerateState.status === "error"
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-700",
-          ].join(" ")}
+            'rounded-md border px-3 py-2 text-sm flex items-center justify-between',
+            regenerateState.status === 'error'
+              ? 'border-red-200 bg-red-50 text-red-700'
+              : 'border-emerald-200 bg-emerald-50 text-emerald-700',
+          ].join(' ')}
         >
           <span>{regenerateState.message}</span>
           {isRateLimited && (
             <span className="ml-2 font-mono text-xs">
-              {Math.floor(retryCountdown / 60)}:{String(retryCountdown % 60).padStart(2, "0")}
+              {Math.floor(retryCountdown / 60)}:{String(retryCountdown % 60).padStart(2, '0')}
             </span>
           )}
         </div>
       )}
 
-      <AskTallyPanel projectId={projectId} />
-
       {/* QuotaDisplay only for relevant states */}
       {shouldShowQuota(displayStatus) && (
-        <QuotaDisplay used={quotaUsed} limit={quotaLimit} isOverQuota={isOverQuota} userPlan={userPlan} />
+        <QuotaDisplay
+          used={quotaUsed}
+          limit={quotaLimit}
+          isOverQuota={isOverQuota}
+          userPlan={userPlan}
+        />
       )}
 
       {/* OnboardingChecklist only when PR exists and not active */}
-      {displayStatus !== "active" && prUrl && <OnboardingChecklist project={{ status: displayStatus, prUrl, lastEventAt }} />}
+      {displayStatus !== 'active' && prUrl && (
+        <OnboardingChecklist project={{ status: displayStatus, prUrl, lastEventAt }} />
+      )}
+
+      <AskTallyPanel projectId={projectId} />
     </div>
   );
 }

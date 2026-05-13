@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import type { UserPlan } from "../../lib/stripe/plans";
+import type { UserPlan } from '../../lib/stripe/plans';
 
 export default function QuotaDisplay({
   used,
@@ -26,13 +26,13 @@ export default function QuotaDisplay({
         <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <span>
-              <strong>Over quota.</strong> Events are still collected, but your dashboard may be limited until you
-              upgrade.
+              <strong>Over quota.</strong> Events are still collected, but your dashboard may be
+              limited until you upgrade.
             </span>
-            {userPlan === "free" && (
+            {userPlan === 'free' && (
               <a
                 href="/settings"
-                className="inline-flex w-fit shrink-0 items-center justify-center rounded-md bg-amber-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-800"
+                className="inline-flex min-h-11 w-fit shrink-0 items-center justify-center rounded-md bg-amber-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-800"
               >
                 Upgrade plan
               </a>
@@ -45,10 +45,10 @@ export default function QuotaDisplay({
             <span>
               You&apos;re at <strong>{percent}%</strong> of your monthly quota.
             </span>
-            {userPlan === "free" && (
+            {userPlan === 'free' && (
               <a
                 href="/settings"
-                className="inline-flex w-fit shrink-0 items-center justify-center rounded-md bg-slate-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
+                className="inline-flex min-h-11 w-fit shrink-0 items-center justify-center rounded-md bg-slate-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
               >
                 Upgrade plan
               </a>
@@ -70,10 +70,10 @@ export default function QuotaDisplay({
 
       <p className="mt-2 text-xs text-slate-600">{percent}%</p>
 
-      {userPlan === "free" && !isOverQuota && !showWarning ? (
+      {userPlan === 'free' && !isOverQuota && !showWarning ? (
         <a
           href="/settings"
-          className="mt-4 inline-flex w-fit items-center justify-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
+          className="mt-4 inline-flex min-h-11 w-fit items-center justify-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-800"
         >
           Upgrade plan
         </a>

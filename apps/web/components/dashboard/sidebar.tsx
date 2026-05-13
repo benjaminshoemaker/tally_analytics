@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { usePathname } from "next/navigation";
+import React from 'react';
+import { usePathname } from 'next/navigation';
 
 function FolderIcon({ className }: { className?: string }) {
   return (
@@ -52,22 +52,22 @@ type NavItem = {
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    title: "Main",
+    title: 'Main',
     items: [
       {
-        href: "/projects",
-        label: "Projects",
+        href: '/projects',
+        label: 'Projects',
         icon: FolderIcon,
         matchPattern: /^\/projects/,
       },
     ],
   },
   {
-    title: "Account",
+    title: 'Account',
     items: [
       {
-        href: "/settings",
-        label: "Settings",
+        href: '/settings',
+        label: 'Settings',
         icon: SettingsIcon,
         matchPattern: /^\/settings/,
       },
@@ -81,7 +81,7 @@ export default function DashboardSidebar() {
   return (
     <nav className="flex flex-col gap-0 px-4 py-6 sm:px-6">
       {/* Logo */}
-      <a href="/" className="mb-6 flex items-center gap-2">
+      <a href="/" className="mb-6 flex min-h-11 items-center gap-2">
         <div className="flex size-8 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500">
           <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
             <path
@@ -102,7 +102,9 @@ export default function DashboardSidebar() {
           )}
           <div className="flex flex-col gap-0.5">
             {section.items.map((item) => {
-              const isActive = item.matchPattern ? item.matchPattern.test(pathname) : pathname === item.href;
+              const isActive = item.matchPattern
+                ? item.matchPattern.test(pathname)
+                : pathname === item.href;
               const Icon = item.icon;
 
               return (
@@ -110,16 +112,22 @@ export default function DashboardSidebar() {
                   key={item.href}
                   href={item.href}
                   className={[
-                    "group relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
+                    'group relative flex min-h-11 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
                     isActive
-                      ? "bg-brand-500/10 text-brand-600"
-                      : "text-warm-600 hover:bg-warm-100 hover:text-warm-900",
-                  ].join(" ")}
+                      ? 'bg-brand-500/10 text-brand-600'
+                      : 'text-warm-600 hover:bg-warm-100 hover:text-warm-900',
+                  ].join(' ')}
                 >
                   {isActive && (
                     <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-brand-500" />
                   )}
-                  <Icon className={isActive ? "text-brand-500" : "text-warm-400 transition-colors group-hover:text-warm-600"} />
+                  <Icon
+                    className={
+                      isActive
+                        ? 'text-brand-500'
+                        : 'text-warm-400 transition-colors group-hover:text-warm-600'
+                    }
+                  />
                   {item.label}
                 </a>
               );

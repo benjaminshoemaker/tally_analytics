@@ -1,32 +1,44 @@
-"use client";
+'use client';
 
-import React from "react";
-import { usePathname } from "next/navigation";
+import React from 'react';
+import { usePathname } from 'next/navigation';
 
-import { useProject } from "../../../../lib/hooks/use-project";
-import StatusBadge from "../../../../components/dashboard/status-badge";
-import Skeleton from "../../../../components/dashboard/skeleton";
+import { useProject } from '../../../../lib/hooks/use-project';
+import StatusBadge from '../../../../components/dashboard/status-badge';
+import Skeleton from '../../../../components/dashboard/skeleton';
 
 type Tab = { label: string; href: string };
 
 function getTabs(projectId: string): Tab[] {
   return [
-    { label: "Overview", href: `/projects/${projectId}` },
-    { label: "Analytics", href: `/projects/${projectId}/overview` },
-    { label: "Live Feed", href: `/projects/${projectId}/live` },
-    { label: "Sessions", href: `/projects/${projectId}/sessions` },
+    { label: 'Setup', href: `/projects/${projectId}` },
+    { label: 'Analytics', href: `/projects/${projectId}/overview` },
+    { label: 'Live', href: `/projects/${projectId}/live` },
+    { label: 'Sessions', href: `/projects/${projectId}/sessions` },
   ];
 }
 
 function ChevronRightIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-slate-400">
-      <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M6 4L10 8L6 12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
-export default function ProjectLayout({ children, params }: { children: React.ReactNode; params: { id: string } }) {
+export default function ProjectLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { id: string };
+}) {
   const projectId = params.id;
   const pathname = usePathname();
   const projectQuery = useProject(projectId);
@@ -39,7 +51,7 @@ export default function ProjectLayout({ children, params }: { children: React.Re
   }, [projectQuery.data]);
 
   const displayName =
-    typeof project?.displayName === "string" && project.displayName.trim().length > 0
+    typeof project?.displayName === 'string' && project.displayName.trim().length > 0
       ? project.displayName
       : project?.githubRepoFullName
         ? String(project.githubRepoFullName)
@@ -50,7 +62,10 @@ export default function ProjectLayout({ children, params }: { children: React.Re
     <div className="flex w-full flex-col gap-6">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm">
-        <a href="/projects" className="text-slate-600 transition-colors hover:text-slate-900">
+        <a
+          href="/projects"
+          className="inline-flex min-h-11 items-center text-slate-600 transition-colors hover:text-slate-900"
+        >
           Projects
         </a>
         <ChevronRightIcon />
@@ -90,11 +105,11 @@ export default function ProjectLayout({ children, params }: { children: React.Re
                 key={tab.href}
                 href={tab.href}
                 className={[
-                  "relative whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  'relative inline-flex min-h-11 items-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors',
                   isActive
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
-                ].join(" ")}
+                    ? 'bg-slate-900 text-white'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                ].join(' ')}
               >
                 {tab.label}
               </a>

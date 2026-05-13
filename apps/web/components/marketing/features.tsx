@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 type Feature = {
   title: string;
@@ -8,8 +8,9 @@ type Feature = {
 
 const FEATURES: Feature[] = [
   {
-    title: "Zero Configuration",
-    description: "No script tags to copy-paste. No API keys to manage. Your AI coding agent applies the Tally SDK patch locally.",
+    title: 'Zero Configuration',
+    description:
+      'No script tags to copy-paste. No API keys to manage. Your AI coding agent applies the Tally SDK patch locally.',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-7">
         <path fill="currentColor" d="M11 2h2l1 7h7v2l-7 1-1 10h-2l-1-10-7-1V9h7l1-7z" />
@@ -17,7 +18,7 @@ const FEATURES: Feature[] = [
     ),
   },
   {
-    title: "GDPR Compliant",
+    title: 'GDPR Compliant',
     description:
       "No third-party cookies or personal data. First-party session tracking that's fully anonymous and compliant by default.",
     icon: (
@@ -30,8 +31,9 @@ const FEATURES: Feature[] = [
     ),
   },
   {
-    title: "Ultra Lightweight",
-    description: "The tracking script is less than 1kb. It won't impact your Core Web Vitals or lighthouse score.",
+    title: 'Ultra Lightweight',
+    description:
+      "The tracking script is less than 1kb. It won't impact your Core Web Vitals or lighthouse score.",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-7">
         <path fill="currentColor" d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
@@ -45,8 +47,10 @@ export default function MarketingFeatures() {
     <section className="bg-[#f3ede7]/60 py-20">
       <div className="mx-auto max-w-[1200px] px-6 md:px-10 lg:px-40">
         <div className="mx-auto mb-16 max-w-2xl md:text-center">
-          <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d]">Analytics without the headache</h2>
-          <p className="text-lg text-[#9a734c]">
+          <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d]">
+            Analytics without the headache
+          </h2>
+          <p className="text-lg text-[#57534e]">
             Most analytics tools are overkill. Tally is designed to be invisible until you need it.
           </p>
         </div>
@@ -57,11 +61,13 @@ export default function MarketingFeatures() {
               key={feature.title}
               className="group rounded-lg border border-[#e8e0d9] bg-white p-8 shadow-warm transition-all duration-300 hover:-translate-y-1 hover:shadow-warm-lg"
             >
-              <div className="mb-6 flex size-12 items-center justify-center rounded bg-[#ec7f13]/10 text-[#ec7f13] transition-transform group-hover:scale-110">
+              <div className="mb-6 flex size-12 items-center justify-center rounded bg-[#0f766e]/10 text-[#0f766e] transition-transform group-hover:scale-110">
                 {feature.icon}
               </div>
-              <h3 className="mb-3 font-display text-xl font-semibold text-[#1b140d]">{feature.title}</h3>
-              <p className="leading-relaxed text-[#9a734c]">{feature.description}</p>
+              <h3 className="mb-3 font-display text-xl font-semibold text-[#1b140d]">
+                {feature.title}
+              </h3>
+              <p className="leading-relaxed text-[#57534e]">{feature.description}</p>
             </div>
           ))}
         </div>

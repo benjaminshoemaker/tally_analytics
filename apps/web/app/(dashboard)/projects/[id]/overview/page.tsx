@@ -1,14 +1,18 @@
-"use client";
+'use client';
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState } from 'react';
 
-import PageViewsChart from "../../../../../components/dashboard/page-views-chart";
-import StatCard from "../../../../../components/dashboard/stat-card";
-import TopList from "../../../../../components/dashboard/top-list";
-import { SkeletonStatCard, SkeletonChart, SkeletonList } from "../../../../../components/dashboard/skeleton";
-import { useQuery } from "@tanstack/react-query";
+import PageViewsChart from '../../../../../components/dashboard/page-views-chart';
+import StatCard from '../../../../../components/dashboard/stat-card';
+import TopList from '../../../../../components/dashboard/top-list';
+import {
+  SkeletonStatCard,
+  SkeletonChart,
+  SkeletonList,
+} from '../../../../../components/dashboard/skeleton';
+import { useQuery } from '@tanstack/react-query';
 
-type Period = "24h" | "7d" | "30d";
+type Period = '24h' | '7d' | '30d';
 
 type OverviewResponse = {
   period: Period;
@@ -21,29 +25,33 @@ type OverviewResponse = {
 type ErrorResponse = { error?: string; message?: string };
 
 function extractErrorMessage(body: unknown): string | null {
-  if (!body || typeof body !== "object") return null;
+  if (!body || typeof body !== 'object') return null;
   const maybe = body as ErrorResponse;
-  if (typeof maybe.error === "string" && maybe.error.length > 0) return maybe.error;
-  if (typeof maybe.message === "string" && maybe.message.length > 0) return maybe.message;
+  if (typeof maybe.error === 'string' && maybe.error.length > 0) return maybe.error;
+  if (typeof maybe.message === 'string' && maybe.message.length > 0) return maybe.message;
   return null;
 }
 
 async function fetchOverview(projectId: string, period: Period): Promise<OverviewResponse> {
-  const response = await fetch(`/api/projects/${encodeURIComponent(projectId)}/analytics/overview?period=${period}`, {
-    method: "GET",
-    headers: { accept: "application/json" },
-  });
+  const response = await fetch(
+    `/api/projects/${encodeURIComponent(projectId)}/analytics/overview?period=${period}`,
+    {
+      method: 'GET',
+      headers: { accept: 'application/json' },
+    }
+  );
   const body = (await response.json().catch(() => null)) as unknown;
-  if (!response.ok) throw new Error(extractErrorMessage(body) ?? `Request failed (${response.status})`);
+  if (!response.ok)
+    throw new Error(extractErrorMessage(body) ?? `Request failed (${response.status})`);
   return body as OverviewResponse;
 }
 
 export default function OverviewPage({ params }: { params: { id: string } }) {
   const projectId = params.id;
-  const [period, setPeriod] = useState<Period>("7d");
+  const [period, setPeriod] = useState<Period>('7d');
 
   const overviewQuery = useQuery({
-    queryKey: ["overview", projectId, period],
+    queryKey: ['overview', projectId, period],
     queryFn: () => fetchOverview(projectId, period),
     enabled: projectId.length > 0,
   });
@@ -69,13 +77,24 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
   }, [overviewQuery.data]);
 
   const isRefetching = overviewQuery.isFetching && !overviewQuery.isPending;
+  const topPage = overviewQuery.data?.topPages[0] ?? null;
+  const topReferrer = overviewQuery.data?.topReferrers[0] ?? null;
+  const hasEvents = Boolean(
+    overviewQuery.data &&
+    (overviewQuery.data.pageViews.total > 0 ||
+      overviewQuery.data.sessions.total > 0 ||
+      overviewQuery.data.topPages.length > 0 ||
+      overviewQuery.data.topReferrers.length > 0)
+  );
 
   return (
     <div className="flex w-full flex-col gap-6">
       <header className="flex flex-col gap-3 opacity-0 animate-fade-in md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-1">
-          <h2 className="font-display text-xl text-warm-900">Analytics Overview</h2>
-          <p className="text-sm text-warm-500">Key metrics for this project.</p>
+          <h2 className="font-display text-xl text-warm-900">Analytics</h2>
+          <p className="text-sm text-warm-500">
+            Traffic, sessions, pages, and sources for this project.
+          </p>
         </div>
 
         <label className="flex items-center gap-2 text-sm text-warm-700">
@@ -85,7 +104,7 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
               value={period}
               onChange={(e) => setPeriod(e.target.value as Period)}
               disabled={isRefetching}
-              className="appearance-none rounded-lg border border-warm-200 bg-white py-1.5 pl-3 pr-8 text-sm shadow-sm transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:opacity-60"
+              className="min-h-11 appearance-none rounded-lg border border-warm-200 bg-white py-1.5 pl-3 pr-8 text-sm shadow-sm transition-all focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:opacity-60"
             >
               <option value="24h">Last 24 hours</option>
               <option value="7d">Last 7 days</option>
@@ -94,12 +113,29 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
             <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2">
               {isRefetching ? (
                 <svg className="size-4 animate-spin text-brand-500" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
                 </svg>
               ) : (
                 <svg className="size-4 text-warm-400" viewBox="0 0 16 16" fill="none">
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M4 6l4 4 4-4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               )}
             </div>
@@ -124,25 +160,69 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
           <p className="text-sm text-red-700">Unable to load analytics. Please try again.</p>
         </div>
       ) : (
-        <div className={`flex flex-col gap-6 transition-opacity duration-300 ${isRefetching ? "opacity-60" : "opacity-100"}`}>
-          <div className="grid gap-4 md:grid-cols-2">
+        <div
+          className={`flex flex-col gap-6 transition-opacity duration-300 ${isRefetching ? 'opacity-60' : 'opacity-100'}`}
+        >
+          {!hasEvents && (
+            <section className="rounded-lg border border-sky-200 bg-sky-50 p-4">
+              <h3 className="text-sm font-semibold text-sky-950">
+                No analytics events in this period
+              </h3>
+              <p className="mt-1 text-sm text-sky-900">
+                Choose a wider period, or deploy and visit production pages if this is a new
+                installation.
+              </p>
+            </section>
+          )}
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="opacity-0 animate-fade-in stagger-1">
-              <StatCard label="Page views" value={overviewQuery.data.pageViews.total.toLocaleString()} change={overviewQuery.data.pageViews.change} />
+              <StatCard
+                label="Page views"
+                value={overviewQuery.data.pageViews.total.toLocaleString()}
+                change={overviewQuery.data.pageViews.change}
+              />
             </div>
             <div className="opacity-0 animate-fade-in stagger-2">
-              <StatCard label="Sessions" value={overviewQuery.data.sessions.total.toLocaleString()} change={overviewQuery.data.sessions.change} />
+              <StatCard
+                label="Sessions"
+                value={overviewQuery.data.sessions.total.toLocaleString()}
+                change={overviewQuery.data.sessions.change}
+              />
+            </div>
+            <div className="opacity-0 animate-fade-in stagger-3">
+              <StatCard
+                label="Top page"
+                value={topPage?.path ?? 'None'}
+                detail={
+                  topPage
+                    ? `${topPage.views.toLocaleString()} views (${topPage.percentage}%)`
+                    : 'No page views yet'
+                }
+              />
+            </div>
+            <div className="opacity-0 animate-fade-in stagger-4">
+              <StatCard
+                label="Top referrer"
+                value={topReferrer?.referrer ?? 'None'}
+                detail={
+                  topReferrer
+                    ? `${topReferrer.count.toLocaleString()} sessions (${topReferrer.percentage}%)`
+                    : 'No referrers yet'
+                }
+              />
             </div>
           </div>
 
-          <div className="opacity-0 animate-fade-in stagger-3">
+          <div className="opacity-0 animate-fade-in stagger-5">
             <PageViewsChart data={overviewQuery.data.pageViews.timeSeries} />
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="opacity-0 animate-fade-in stagger-4">
+            <div className="opacity-0 animate-fade-in stagger-6">
               <TopList title="Top pages" items={topPagesItems} />
             </div>
-            <div className="opacity-0 animate-fade-in stagger-5">
+            <div className="opacity-0 animate-fade-in stagger-6">
               <TopList title="Top referrers" items={topReferrersItems} />
             </div>
           </div>
@@ -151,4 +231,3 @@ export default function OverviewPage({ params }: { params: { id: string } }) {
     </div>
   );
 }
-

@@ -14,7 +14,7 @@ export default function MarketingSetAndForget() {
           <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d]">
             Your analytics evolve with your app
           </h2>
-          <p className="text-lg text-[#9a734c]">
+          <p className="text-lg text-[#57534e]">
             Most analytics tools break when you ship changes. Tally doesn&apos;t.
           </p>
         </div>
@@ -25,7 +25,7 @@ export default function MarketingSetAndForget() {
               key={highlight}
               className="flex items-start gap-4 rounded-lg border border-[#e8e0d9] bg-white p-6 shadow-warm"
             >
-              <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded bg-[#ec7f13]/10 text-[#ec7f13]">
+              <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded bg-[#0f766e]/10 text-[#0f766e]">
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -39,9 +39,7 @@ export default function MarketingSetAndForget() {
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
               </div>
-              <p className="text-base leading-relaxed text-[#1b140d]">
-                {highlight}
-              </p>
+              <p className="text-base leading-relaxed text-[#1b140d]">{highlight}</p>
             </div>
           ))}
         </div>

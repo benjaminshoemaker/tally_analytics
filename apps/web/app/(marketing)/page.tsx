@@ -11,10 +11,7 @@ const DASHBOARD_IMAGE_SRC = '/marketing/dashboard.png';
 export default function LandingPage() {
   return (
     <main className="flex-grow">
-      <MarketingHero
-        docsUrl="/docs/setup"
-        dashboardImageSrc={DASHBOARD_IMAGE_SRC}
-      />
+      <MarketingHero docsUrl="/docs/setup" dashboardImageSrc={DASHBOARD_IMAGE_SRC} />
 
       <MarketingFeatures />
 
@@ -29,18 +26,19 @@ export default function LandingPage() {
           <h2 className="mb-6 font-display text-4xl font-semibold text-[#1b140d]">
             All the analytics, no hassle.
           </h2>
-          <p className="mb-10 text-lg text-[#9a734c]">
-            Start from Claude Code, Codex, Cursor, or your AI coding agent of choice. Tally handles the setup and gives you the dashboard.
+          <p className="mb-10 text-lg text-[#57534e]">
+            Start from Claude Code, Codex, Cursor, or your AI coding agent of choice. Tally handles
+            the setup and gives you the dashboard.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <a
-              className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#ec7f13] px-8 text-base font-bold text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-orange-600 hover:shadow-warm-md active:scale-[0.96]"
+              className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#0f766e] px-8 text-base font-bold text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-teal-800 hover:shadow-warm-md active:scale-[0.96]"
               href="/docs/setup"
             >
               Start with MCP
             </a>
             <a
-              className="flex h-12 items-center justify-center gap-2 rounded-lg bg-transparent px-8 text-base font-medium text-[#9a734c] transition-colors hover:text-[#1b140d]"
+              className="flex h-12 items-center justify-center gap-2 rounded-lg bg-transparent px-8 text-base font-medium text-[#57534e] transition-colors hover:text-[#1b140d]"
               href="/pricing"
             >
               View pricing →

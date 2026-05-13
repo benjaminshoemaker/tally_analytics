@@ -137,7 +137,7 @@ export default function MarketingWhatYouGet() {
           <h2 className="mb-4 font-display text-3xl font-semibold text-[#1b140d]">
             Everything you need, nothing you don&apos;t
           </h2>
-          <p className="text-lg text-[#9a734c]">
+          <p className="text-lg text-[#57534e]">
             A clean dashboard with the metrics that actually matter for early-stage apps.
           </p>
         </div>
@@ -148,15 +148,13 @@ export default function MarketingWhatYouGet() {
               key={feature.title}
               className="group rounded-lg border border-[#e8e0d9] bg-white p-8 shadow-warm transition-all duration-300 hover:-translate-y-1 hover:shadow-warm-lg"
             >
-              <div className="mb-6 flex size-12 items-center justify-center rounded bg-[#ec7f13]/10 text-[#ec7f13] transition-transform group-hover:scale-110">
+              <div className="mb-6 flex size-12 items-center justify-center rounded bg-[#0f766e]/10 text-[#0f766e] transition-transform group-hover:scale-110">
                 {feature.icon}
               </div>
               <h3 className="mb-3 font-display text-xl font-semibold text-[#1b140d]">
                 {feature.title}
               </h3>
-              <p className="leading-relaxed text-[#9a734c]">
-                {feature.description}
-              </p>
+              <p className="leading-relaxed text-[#57534e]">{feature.description}</p>
             </div>
           ))}
         </div>

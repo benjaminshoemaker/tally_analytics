@@ -26,11 +26,11 @@ test('@scenario seeded campaign events are queryable through analytics APIs', as
   await loginScenarioUser(page, scenario);
 
   const overviewResponse = await page.request.get(
-    `/api/projects/${project.id}/analytics/overview?period=7d`
+    `/api/projects/${project.id}/analytics/overview?period=30d`
   );
   expect(overviewResponse.ok()).toBe(true);
   await expect(overviewResponse.json()).resolves.toMatchObject({
-    period: '7d',
+    period: '30d',
     pageViews: {
       total: 2,
       change: 100,
@@ -51,11 +51,11 @@ test('@scenario seeded campaign events are queryable through analytics APIs', as
   });
 
   const sessionsResponse = await page.request.get(
-    `/api/projects/${project.id}/analytics/sessions?period=7d`
+    `/api/projects/${project.id}/analytics/sessions?period=30d`
   );
   expect(sessionsResponse.ok()).toBe(true);
   await expect(sessionsResponse.json()).resolves.toEqual({
-    period: '7d',
+    period: '30d',
     totalSessions: 2,
     newVisitors: 1,
     returningVisitors: 1,
@@ -81,14 +81,12 @@ test('@scenario seeded MCP active no-event project shows waiting state', async (
   await loginScenarioUser(page, scenario);
   await page.goto(`/projects/${project.id}`);
 
-  await expect(page.getByRole('heading', { name: project.displayName ?? project.id })).toBeVisible();
   await expect(
-    page.getByText('Waiting for first event. Tally is installed, but no production events have been received yet.')
+    page.getByRole('heading', { name: project.displayName ?? project.id })
   ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Waiting for first event' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Re-run Analysis' })).toHaveCount(0);
 
   await page.goto(`/projects/${project.id}/live`);
-  await expect(
-    page.getByText('Waiting for first event. Tally is installed, but no production events have been received yet.')
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Waiting for first event' })).toBeVisible();
 });

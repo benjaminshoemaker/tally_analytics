@@ -15,9 +15,10 @@ const STEPS: Step[] = [
   {
     number: '1',
     title: 'Choose your agent',
-    description: 'Connect Tally to Claude Code, Codex, Cursor, or another MCP-capable coding agent.',
+    description:
+      'Connect Tally to Claude Code, Codex, Cursor, or another MCP-capable coding agent.',
     icon: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#0f766e]">
         <path
           fill="currentColor"
           d="M12 2a5 5 0 0 1 5 5v2h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1V7a5 5 0 0 1 5-5zm-3 7h6V7a3 3 0 0 0-6 0v2zm3 4a2 2 0 0 0-1 3.732V18h2v-1.268A2 2 0 0 0 12 13z"
@@ -30,7 +31,7 @@ const STEPS: Step[] = [
     title: 'Ask for analytics',
     description: 'Your agent calls Tally, gets a safe SDK patch, and applies it locally.',
     icon: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#0f766e]">
         <path
           fill="currentColor"
           d="M7 3a3 3 0 0 1 2.83 4H12a5 5 0 0 1 5 5v1.17A3 3 0 1 1 15 16v-4a3 3 0 0 0-3-3H9.83A3 3 0 1 1 7 3zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm10 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
@@ -43,7 +44,7 @@ const STEPS: Step[] = [
     title: 'Review and deploy',
     description: 'You approve the local change, run verification, and deploy normally.',
     icon: (
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#ec7f13]">
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-10 text-[#0f766e]">
         <path
           fill="currentColor"
           d="M4 19h16v2H2V3h2v16zm4-2H6V9h2v8zm4 0h-2V5h2v12zm4 0h-2v-6h2v6zm4 0h-2v-9h2v9z"
@@ -60,7 +61,7 @@ const STEPS: Step[] = [
       <svg
         viewBox="0 0 24 24"
         aria-hidden="true"
-        className="size-10 text-[#ec7f13]"
+        className="size-10 text-[#0f766e]"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
@@ -85,12 +86,12 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
             <h2 className="mb-2 font-display text-3xl font-semibold text-[#1b140d]">
               How it works
             </h2>
-            <p className="text-[#9a734c]">
+            <p className="text-[#57534e]">
               From no analytics to real usage data without wiring the SDK by hand.
             </p>
           </div>
           <a
-            className="flex items-center gap-1 font-medium text-[#ec7f13] transition-colors hover:text-orange-600"
+            className="flex min-h-11 items-center gap-1 font-medium text-[#0f766e] transition-colors hover:text-teal-800"
             href="/docs"
           >
             View technical docs
@@ -109,8 +110,8 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
           <div className="relative z-10 grid grid-cols-1 gap-12 md:grid-cols-4">
             {STEPS.map((step) => (
               <div key={step.number} className="flex flex-col items-center text-center">
-                <div className="relative mb-6 flex size-24 items-center justify-center rounded-full border-4 border-[#f3ede7] bg-white text-[#9a734c] shadow-sm">
-                  <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-[#ec7f13] text-sm font-bold text-white shadow-sm">
+                <div className="relative mb-6 flex size-24 items-center justify-center rounded-full border-4 border-[#f3ede7] bg-white text-[#57534e] shadow-sm">
+                  <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-[#0f766e] text-sm font-bold text-white shadow-sm">
                     {step.number}
                   </span>
                   {step.icon}
@@ -118,9 +119,7 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
                 <h3 className="mb-2 font-display text-lg font-semibold text-[#1b140d]">
                   {step.title}
                 </h3>
-                <p className="max-w-[240px] text-sm text-[#9a734c]">
-                  {step.description}
-                </p>
+                <p className="max-w-[240px] text-sm text-[#57534e]">{step.description}</p>
               </div>
             ))}
           </div>
@@ -149,11 +148,7 @@ export default function MarketingHowItWorks({ dashboardImageSrc }: MarketingHowI
             </div>
             <div className="flex justify-center border-t border-[#e8e0d9] bg-white p-3">
               <p className="flex items-center gap-2 text-sm font-semibold text-[#1b140d]">
-                <svg
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                  className="size-[18px] text-[#9a734c]"
-                >
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[18px] text-[#57534e]">
                   <path
                     fill="currentColor"
                     d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"

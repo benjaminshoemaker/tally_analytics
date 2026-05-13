@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState } from 'react';
 
 import {
   useAnalyticsTasks,
   useConfirmAnalyticsTask,
   useDeletePendingAnalyticsTask,
   useMutateAnalyticsTask,
-} from "../../../lib/hooks/use-analytics-tasks";
-import { useAnalyticsQuestion } from "../../../lib/hooks/use-analytics-question";
-import type { AnalyticsQuestionResult } from "../../../lib/analytics/tasks/types";
-import AnalyticsQuestionResultCard from "./analytics-question-result";
-import PendingTaskList from "./pending-task-list";
-import TaskDraftCard from "./task-draft-card";
+} from '../../../lib/hooks/use-analytics-tasks';
+import { useAnalyticsQuestion } from '../../../lib/hooks/use-analytics-question';
+import type { AnalyticsQuestionResult } from '../../../lib/analytics/tasks/types';
+import AnalyticsQuestionResultCard from './analytics-question-result';
+import PendingTaskList from './pending-task-list';
+import TaskDraftCard from './task-draft-card';
 
 type Props = {
   projectId: string;
 };
 
 export default function AskTallyPanel({ projectId }: Props) {
-  const [question, setQuestion] = useState("");
+  const [question, setQuestion] = useState('');
   const [result, setResult] = useState<AnalyticsQuestionResult | null>(null);
 
   const questionMutation = useAnalyticsQuestion(projectId);
@@ -32,7 +32,7 @@ export default function AskTallyPanel({ projectId }: Props) {
 
   const canAsk = question.trim().length > 0 && !questionMutation.isPending;
   const draft =
-    result && (result.kind === "partial_answer" || result.kind === "cannot_answer_yet")
+    result && (result.kind === 'partial_answer' || result.kind === 'cannot_answer_yet')
       ? result.draft
       : null;
 
@@ -57,8 +57,13 @@ export default function AskTallyPanel({ projectId }: Props) {
   }
 
   return (
-    <section className="rounded-md border border-slate-200 bg-white p-4">
-      <h2 className="text-base font-semibold text-slate-900">Ask Tally</h2>
+    <section className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-base font-semibold text-slate-900">Ask Tally</h2>
+        <p className="text-sm text-slate-600">
+          Ask about current usage, then confirm before adding any tracking task to the queue.
+        </p>
+      </div>
 
       <div className="mt-3 grid gap-2">
         <label htmlFor={`ask-tally-${projectId}`} className="text-sm text-slate-700">
@@ -69,7 +74,7 @@ export default function AskTallyPanel({ projectId }: Props) {
           id={`ask-tally-${projectId}`}
           value={question}
           onChange={(event) => setQuestion(event.target.value)}
-          className="min-h-24 rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className="min-h-24 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
           placeholder="How many users visited pricing this week?"
         />
         <div className="flex items-center gap-2">
@@ -77,9 +82,9 @@ export default function AskTallyPanel({ projectId }: Props) {
             type="button"
             onClick={onAsk}
             disabled={!canAsk}
-            className="rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="min-h-11 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {questionMutation.isPending ? "Asking…" : "Ask"}
+            {questionMutation.isPending ? 'Asking…' : 'Ask'}
           </button>
           {questionMutation.isError && (
             <span className="text-sm text-red-700">
@@ -108,10 +113,10 @@ export default function AskTallyPanel({ projectId }: Props) {
             await deletePendingTask.mutateAsync(taskId);
           }}
           onArchive={async (taskId) => {
-            await mutateTask.mutateAsync({ taskId, action: { action: "archive" } });
+            await mutateTask.mutateAsync({ taskId, action: { action: 'archive' } });
           }}
           onReopen={async (taskId) => {
-            await mutateTask.mutateAsync({ taskId, action: { action: "reopen" } });
+            await mutateTask.mutateAsync({ taskId, action: { action: 'reopen' } });
           }}
         />
       </div>

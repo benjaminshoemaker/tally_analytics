@@ -1,13 +1,10 @@
-import React from "react";
+import React from 'react';
 
 function LogoMark() {
   return (
     <div className="flex size-12 items-center justify-center rounded-xl bg-brand-500/10 text-brand-500">
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-7">
-        <path
-          fill="currentColor"
-          d="M3 3h18v18H3V3zm4 14h2V9H7v8zm4 0h2V5h-2v12zm4 0h2v-6h-2v6z"
-        />
+        <path fill="currentColor" d="M3 3h18v18H3V3zm4 14h2V9H7v8zm4 0h2V5h-2v12zm4 0h2v-6h-2v6z" />
       </svg>
     </div>
   );
@@ -18,9 +15,9 @@ type LoginPageProps = {
 };
 
 function getLoginErrorMessage(error: string | undefined): string | null {
-  if (error === "oauth_cancelled") return "GitHub sign-in was cancelled. Please try again.";
-  if (error === "invalid_state") return "That sign-in attempt expired. Please try again.";
-  if (error === "github_error") return "GitHub sign-in failed. Please try again.";
+  if (error === 'oauth_cancelled') return 'GitHub sign-in was cancelled. Please try again.';
+  if (error === 'invalid_state') return 'That sign-in attempt expired. Please try again.';
+  if (error === 'github_error') return 'GitHub sign-in failed. Please try again.';
   return null;
 }
 
@@ -46,7 +43,10 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-8 px-6 py-16">
         <header className="flex flex-col items-center gap-4 text-center opacity-0 animate-fade-in">
-          <a href="/" className="transition-transform hover:scale-105">
+          <a
+            href="/"
+            className="inline-flex min-h-11 items-center transition-transform hover:scale-105"
+          >
             <LogoMark />
           </a>
           <div>
@@ -59,7 +59,7 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
 
         <div
           className="flex flex-col gap-5 rounded-xl border border-warm-200 bg-white p-6 shadow-warm-lg opacity-0 animate-fade-in-up"
-          style={{ animationDelay: "0.1s" }}
+          style={{ animationDelay: '0.1s' }}
         >
           {errorMessage && (
             <p
@@ -77,17 +77,28 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
           >
             <GitHubLogo />
             Sign in with GitHub
-            <svg className="size-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg
+              className="size-4 transition-transform group-hover:translate-x-0.5"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 8h10M9 4l4 4-4 4"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </a>
 
           <p className="text-center text-xs text-warm-500">
-            By continuing, you agree to our{" "}
+            By continuing, you agree to our{' '}
             <a href="/terms" className="font-medium text-warm-700 hover:text-warm-900">
               Terms
-            </a>{" "}
-            and{" "}
+            </a>{' '}
+            and{' '}
             <a href="/privacy" className="font-medium text-warm-700 hover:text-warm-900">
               Privacy Policy
             </a>

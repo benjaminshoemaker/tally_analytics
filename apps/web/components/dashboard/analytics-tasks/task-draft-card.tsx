@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState } from 'react';
 
-import type { AnalyticsTaskDraft } from "../../../lib/analytics/tasks/types";
+import type { AnalyticsTaskDraft } from '../../../lib/analytics/tasks/types';
 
 const EVENT_NAME_PATTERN = /^[a-z][a-z0-9_]{0,99}$/;
 
@@ -23,13 +23,22 @@ function requiredPropertiesFromDraft(draft: AnalyticsTaskDraft): string[] {
   const schema = draft.propertiesSchema as Record<string, unknown>;
   const required = schema.required;
   if (!Array.isArray(required)) return [];
-  return required.filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+  return required.filter(
+    (value): value is string => typeof value === 'string' && value.trim().length > 0
+  );
 }
 
-export default function TaskDraftCard({ draft, onConfirm, onDismiss, isSubmitting = false }: Props) {
+export default function TaskDraftCard({
+  draft,
+  onConfirm,
+  onDismiss,
+  isSubmitting = false,
+}: Props) {
   const [title, setTitle] = useState(draft.title);
   const [eventName, setEventName] = useState(draft.eventName);
-  const [implementationNotes, setImplementationNotes] = useState(draft.implementationGuidance ?? "");
+  const [implementationNotes, setImplementationNotes] = useState(
+    draft.implementationGuidance ?? ''
+  );
 
   const requiredProperties = useMemo(() => requiredPropertiesFromDraft(draft), [draft]);
   const titleValid = title.trim().length > 0;
@@ -47,7 +56,7 @@ export default function TaskDraftCard({ draft, onConfirm, onDismiss, isSubmittin
             type="text"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            className="rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+            className="min-h-11 rounded-md border border-slate-300 px-2 py-1.5 text-sm"
           />
         </label>
 
@@ -57,7 +66,7 @@ export default function TaskDraftCard({ draft, onConfirm, onDismiss, isSubmittin
             type="text"
             value={eventName}
             onChange={(event) => setEventName(event.target.value)}
-            className="rounded-md border border-slate-300 px-2 py-1.5 font-mono text-sm"
+            className="min-h-11 rounded-md border border-slate-300 px-2 py-1.5 font-mono text-sm"
           />
         </label>
 
@@ -73,7 +82,7 @@ export default function TaskDraftCard({ draft, onConfirm, onDismiss, isSubmittin
 
       {requiredProperties.length > 0 && (
         <p className="mt-2 text-xs text-slate-600">
-          Required properties: {requiredProperties.join(", ")}
+          Required properties: {requiredProperties.join(', ')}
         </p>
       )}
 
@@ -89,15 +98,15 @@ export default function TaskDraftCard({ draft, onConfirm, onDismiss, isSubmittin
             })
           }
           disabled={!isValid || isSubmitting}
-          className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-11 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isSubmitting ? "Adding…" : "Add task to queue"}
+          {isSubmitting ? 'Adding…' : 'Add task to queue'}
         </button>
         <button
           data-testid="dismiss-task-draft"
           type="button"
           onClick={onDismiss}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700"
+          className="min-h-11 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700"
         >
           Dismiss
         </button>
