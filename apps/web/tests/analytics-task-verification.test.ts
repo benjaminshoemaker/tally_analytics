@@ -339,7 +339,21 @@ describe("analytics task verification", () => {
       }),
     );
 
-    expect(query).toContain("timestamp > toDateTime64('2026-05-13 07:22:14.882', 3)");
-    expect(query).not.toContain("parseDateTimeBestEffort");
+    expect(query).toContain(
+      "parseDateTimeBestEffort(timestamp) > toDateTime64('2026-05-13 07:22:14.882', 3)",
+    );
+    expect(query).not.toContain("event_properties");
+    expect(query).not.toContain("environment");
+  });
+
+  it("selects event properties only for property-verification tasks", () => {
+    const query = buildProductionVerificationEventsQuery(
+      makeTask({
+        taskType: "add_event_property",
+        implementedAt: new Date("2026-05-13T07:22:14.882Z"),
+      }),
+    );
+
+    expect(query).toContain("event_properties AS eventProperties");
   });
 });

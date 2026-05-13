@@ -131,17 +131,19 @@ export function buildProductionVerificationEventsQuery(task: AnalyticsTaskRecord
   const projectIdSql = escapeAnalyticsSqlString(task.projectId);
   const eventNameSql = escapeAnalyticsSqlString(task.eventName);
   const implementedAtSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(task.implementedAt));
+  const propertyColumns = shouldUsePropertyVerification(task.taskType)
+    ? `,
+      event_properties AS eventProperties`
+    : "";
 
   return `
     SELECT
       event_type AS eventType,
-      toString(timestamp) AS timestamp,
-      coalesce(nullIf(environment, ''), 'production') AS environment,
-      event_properties AS eventProperties
+      toString(timestamp) AS timestamp${propertyColumns}
     FROM events
     WHERE project_id = '${projectIdSql}'
       AND event_type = '${eventNameSql}'
-      AND timestamp > toDateTime64('${implementedAtSql}', 3)
+      AND parseDateTimeBestEffort(timestamp) > toDateTime64('${implementedAtSql}', 3)
     ORDER BY timestamp DESC
     LIMIT 200
   `;
