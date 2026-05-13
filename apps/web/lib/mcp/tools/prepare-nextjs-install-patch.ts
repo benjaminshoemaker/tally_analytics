@@ -8,7 +8,7 @@ import { mcpRepoContextSchema } from "./schemas";
 
 function resultSummary(result: PrepareNextjsInstallPatchResult): string {
   if (result.status === "ready") {
-    return `Ready: apply the unified diff for project ${result.projectId}, then open ${result.dashboardUrl}.`;
+    return `Ready: apply the unified diff for project ${result.projectId}, run ${result.packageInstallCommand}, run the app build, then open ${result.dashboardUrl}.`;
   }
   if (result.status === "already_installed") {
     return `Already installed: open ${result.dashboardUrl}.`;

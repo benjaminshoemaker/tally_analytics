@@ -170,6 +170,7 @@ describe("/api/mcp route", () => {
       verification: expect.any(Array),
     });
     expect(result.content[0]?.text).toContain("Ready");
+    expect(result.content[0]?.text).toContain("run pnpm install");
   });
 
   it("requires mcp:install scope for prepare_nextjs_install_patch", async () => {
