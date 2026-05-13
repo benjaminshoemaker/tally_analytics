@@ -13,6 +13,22 @@ type Props = {
   isMutating?: boolean;
 };
 
+function statusDetail(task: AnalyticsTaskRecord): string | null {
+  if (task.status === "implemented_locally") {
+    return "Local implementation was reported. Waiting for production verification.";
+  }
+  if (task.status === "awaiting_deploy") {
+    return task.lastError ?? "Waiting for matching production telemetry.";
+  }
+  if (task.status === "verified") {
+    return "Verified from production telemetry.";
+  }
+  if (task.status === "failed") {
+    return task.lastError ?? "Implementation failed. Reopen after fixing the issue.";
+  }
+  return null;
+}
+
 export default function PendingTaskList({
   tasks,
   onDeletePending,
@@ -33,51 +49,55 @@ export default function PendingTaskList({
     <section className="rounded-md border border-slate-200 bg-white p-3">
       <h3 className="text-sm font-semibold text-slate-900">Task queue</h3>
       <ul className="mt-3 grid gap-2">
-        {tasks.map((task) => (
-          <li key={task.id} className="rounded-md border border-slate-200 p-2">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium text-slate-900">{task.title}</p>
-                <p className="text-xs text-slate-600">{task.eventName}</p>
+        {tasks.map((task) => {
+          const detail = statusDetail(task);
+          return (
+            <li key={task.id} className="rounded-md border border-slate-200 p-2">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium text-slate-900">{task.title}</p>
+                  <p className="text-xs text-slate-600">{task.eventName}</p>
+                  {detail && <p className="mt-1 text-xs text-slate-600">{detail}</p>}
+                </div>
+                <TaskStatusBadge status={task.status} />
               </div>
-              <TaskStatusBadge status={task.status} />
-            </div>
-            <div className="mt-2 flex items-center gap-2">
-              {task.status === "pending" && (
-                <button
-                  type="button"
-                  onClick={() => onDeletePending?.(task.id)}
-                  disabled={isMutating}
-                  className="rounded-md border border-red-200 px-2 py-1 text-xs font-medium text-red-700 disabled:opacity-50"
-                >
-                  Delete
-                </button>
-              )}
+              <div className="mt-2 flex items-center gap-2">
+                {task.status === "pending" && (
+                  <button
+                    type="button"
+                    onClick={() => onDeletePending?.(task.id)}
+                    disabled={isMutating}
+                    className="rounded-md border border-red-200 px-2 py-1 text-xs font-medium text-red-700 disabled:opacity-50"
+                  >
+                    Delete
+                  </button>
+                )}
 
-              {task.status === "failed" && (
-                <button
-                  type="button"
-                  onClick={() => onReopen?.(task.id)}
-                  disabled={isMutating}
-                  className="rounded-md border border-blue-200 px-2 py-1 text-xs font-medium text-blue-700 disabled:opacity-50"
-                >
-                  Reopen
-                </button>
-              )}
+                {task.status === "failed" && (
+                  <button
+                    type="button"
+                    onClick={() => onReopen?.(task.id)}
+                    disabled={isMutating}
+                    className="rounded-md border border-blue-200 px-2 py-1 text-xs font-medium text-blue-700 disabled:opacity-50"
+                  >
+                    Reopen
+                  </button>
+                )}
 
-              {task.status !== "pending" && task.status !== "archived" && (
-                <button
-                  type="button"
-                  onClick={() => onArchive?.(task.id)}
-                  disabled={isMutating}
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 disabled:opacity-50"
-                >
-                  Archive
-                </button>
-              )}
-            </div>
-          </li>
-        ))}
+                {task.status !== "pending" && task.status !== "archived" && (
+                  <button
+                    type="button"
+                    onClick={() => onArchive?.(task.id)}
+                    disabled={isMutating}
+                    className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 disabled:opacity-50"
+                  >
+                    Archive
+                  </button>
+                )}
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

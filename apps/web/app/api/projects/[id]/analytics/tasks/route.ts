@@ -14,6 +14,7 @@ const defaultVisibleStatuses = new Set([
   "in_progress",
   "implemented_locally",
   "awaiting_deploy",
+  "verified",
   "failed",
 ]);
 

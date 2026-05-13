@@ -198,7 +198,7 @@ describe("analytics tasks APIs", () => {
     await expect(response.json()).resolves.toMatchObject({ status: "duplicate", task: { id: "task_existing" } });
   });
 
-  it("lists tasks with verification refresh and hides history by default", async () => {
+  it("lists tasks with verification refresh and keeps verified tasks visible by default", async () => {
     vi.resetModules();
     getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "user_123", email: "u@example.com" });
     mockOwnershipFound();
@@ -222,8 +222,8 @@ describe("analytics tasks APIs", () => {
 
     expect(response.status).toBe(200);
     const body = (await response.json()) as { tasks: Array<{ id: string; status: string }> };
-    expect(body.tasks).toHaveLength(1);
-    expect(body.tasks[0]).toMatchObject({ id: "task_pending", status: "pending" });
+    expect(body.tasks).toHaveLength(2);
+    expect(body.tasks.map((task) => task.status)).toEqual(["pending", "verified"]);
     expect(refreshAnalyticsTaskListVerificationSpy).toHaveBeenCalledTimes(1);
   });
 

@@ -398,6 +398,25 @@ async function assertHiddenHeading(page, heading) {
   }
 }
 
+function scenarioFixturePath(scenarioId) {
+  return path.join(fixturesDir, scenarioId, 'events.json');
+}
+
+function appendScenarioFixtureEvent(scenarioId, event) {
+  const fixturePath = scenarioFixturePath(scenarioId);
+  if (!fs.existsSync(fixturePath)) {
+    throw new Error(`Missing scenario fixture: ${fixturePath}`);
+  }
+
+  const parsed = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
+  if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.events)) {
+    throw new Error(`Invalid fixture payload for ${scenarioId}`);
+  }
+
+  parsed.events.push(event);
+  fs.writeFileSync(fixturePath, `${JSON.stringify(parsed, null, 2)}\n`, 'utf8');
+}
+
 function scenarioProjectId(scenario) {
   const project = scenario.projects[0];
   if (!project) throw new Error(`Scenario ${scenario.id} is missing a project`);
@@ -674,6 +693,58 @@ async function main() {
           throw new Error(`Expected awaiting_deploy for test-only event: ${JSON.stringify(result)}`);
         }
       });
+    });
+
+    await stage('dashboard-awaiting-deploy-ui', async () => {
+      const scenario = context.scenarios.get('dashboard-task-agent-implemented-awaiting-deploy');
+      await withDashboardPage({
+        browser: context.browser,
+        userId: scenario.user.id,
+        projectId: scenarioProjectId(scenario),
+        run: async (page) => {
+          await assertVisibleText(page, 'Awaiting deploy');
+          await assertVisibleText(page, 'Waiting for matching production telemetry.');
+        },
+      });
+    });
+
+    await stage('dashboard-production-event-relay', async () => {
+      const scenarioId = 'dashboard-task-agent-implemented-awaiting-deploy';
+      const scenario = context.scenarios.get(scenarioId);
+      const projectId = scenarioProjectId(scenario);
+      const eventTimestamp = new Date(Date.now() + 60_000).toISOString();
+
+      appendScenarioFixtureEvent(scenarioId, {
+        project_id: projectId,
+        session_id: 'sess_dtask_await_relay_001',
+        event_type: 'upgrade_cta_clicked',
+        timestamp: eventTimestamp,
+        url: 'https://awaiting-demo.test/pricing',
+        path: '/pricing',
+        referrer: '',
+        visitor_id: 'visitor_dtask_await_relay_001',
+        is_returning: 1,
+        environment: 'production',
+        event_properties: {
+          surface: 'hero',
+          plan: 'pro',
+        },
+      });
+
+      await withDashboardPage({
+        browser: context.browser,
+        userId: scenario.user.id,
+        projectId,
+        run: async (page) => {
+          await assertVisibleText(page, 'Verified');
+          await assertVisibleText(page, 'Verified from production telemetry.');
+        },
+      });
+
+      return {
+        injectedScenario: scenarioId,
+        injectedTimestamp: eventTimestamp,
+      };
     });
 
     await stage('production-verification', async () => {

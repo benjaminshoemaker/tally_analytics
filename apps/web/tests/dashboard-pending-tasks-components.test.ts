@@ -168,6 +168,10 @@ describe("analytics task components", () => {
     expect(screen.getByText("Failed")).toBeTruthy();
     expect(screen.getByText("Cancelled")).toBeTruthy();
     expect(screen.getByText("Archived")).toBeTruthy();
+    expect(screen.getByText("Local implementation was reported. Waiting for production verification.")).toBeTruthy();
+    expect(screen.getByText("Waiting for matching production telemetry.")).toBeTruthy();
+    expect(screen.getByText("Verified from production telemetry.")).toBeTruthy();
+    expect(screen.getByText("Implementation failed. Reopen after fixing the issue.")).toBeTruthy();
   });
 
   it("uses aria-live polite for question result updates and explicit status copy", () => {

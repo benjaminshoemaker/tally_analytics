@@ -10,6 +10,14 @@ type AnalyticsTasksListResponse = {
   tasks: AnalyticsTaskRecord[];
 };
 
+const TASK_VERIFICATION_POLL_INTERVAL_MS = 2000;
+
+function shouldPollTaskVerification(tasks: AnalyticsTaskRecord[]): boolean {
+  return tasks.some(
+    (task) => task.status === "implemented_locally" || task.status === "awaiting_deploy",
+  );
+}
+
 type ConfirmAnalyticsTaskInput = {
   draft: AnalyticsTaskDraft;
   edits?: {
@@ -112,6 +120,10 @@ export function useAnalyticsTasks(projectId: string, includeHistory = false) {
     queryKey: ["analyticsTasks", projectId, includeHistory ? "history" : "active"],
     queryFn: () => fetchAnalyticsTasks(projectId, includeHistory),
     enabled: projectId.length > 0,
+    refetchInterval: (query) => {
+      const tasks = (query.state.data as AnalyticsTasksListResponse | undefined)?.tasks ?? [];
+      return shouldPollTaskVerification(tasks) ? TASK_VERIFICATION_POLL_INTERVAL_MS : false;
+    },
   });
 }
 
