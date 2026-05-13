@@ -26,12 +26,12 @@ describe("Task 3.1.A - Package init", () => {
     expect(pkg.peerDependencies).toBeTypeOf("object");
     const peerDependencies = pkg.peerDependencies as Record<string, unknown>;
 
-    expect(peerDependencies.react).toBeTypeOf("string");
-    expect(peerDependencies.next).toBeTypeOf("string");
+    expect(peerDependencies.next).toBe(">=13.0.0");
+    expect(peerDependencies.react).toBe("^18.0.0 || ^19.0.0");
+    expect(peerDependencies["react-dom"]).toBe("^18.0.0 || ^19.0.0");
   });
 
   it("has a tsup config file", () => {
     expect(fs.existsSync(path.join(packageRoot, "tsup.config.ts"))).toBe(true);
   });
 });
-
