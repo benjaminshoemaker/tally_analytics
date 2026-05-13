@@ -51,10 +51,10 @@ function packageInstallCommand(packageManager: NextInstallTarget["packageManager
   return "npm install";
 }
 
-function verificationChecklist(): string[] {
+function verificationChecklist(installCommand: string): string[] {
   return [
     "Apply the unified diff with git apply --check before git apply.",
-    "Run the package install command.",
+    `Run ${installCommand}. Do not substitute another package manager.`,
     "Run the app's typecheck/build command.",
     "Deploy the app.",
     "Visit one or two pages.",
@@ -165,6 +165,7 @@ export async function prepareNextjsInstallPatch(
   }
 
   const packageEdit = addTallySdkDependency(packageJsonContent);
+  const installCommand = packageInstallCommand(detection.target.packageManager);
   const renderedWrapper = renderTallyWrapper({ router: detection.target.router, projectId: project.projectId });
   const updatedEntrypoint = insertTallyIntoEntrypoint({
     target: detection.target,
@@ -187,7 +188,7 @@ export async function prepareNextjsInstallPatch(
     patchFormat: "unified_diff_v1",
     unifiedDiff: patch,
     filesChanged,
-    packageInstallCommand: packageInstallCommand(detection.target.packageManager),
-    verification: verificationChecklist(),
+    packageInstallCommand: installCommand,
+    verification: verificationChecklist(installCommand),
   };
 }

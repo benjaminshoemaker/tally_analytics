@@ -327,6 +327,7 @@ describe("MCP Next.js install service detection", () => {
     expect(result.unifiedDiff).toContain("new file mode 100644");
     expect(result.unifiedDiff).toContain("@@");
     expect(result.verification).toContain("Apply the unified diff with git apply --check before git apply.");
+    expect(result.verification).toContain("Run pnpm install. Do not substitute another package manager.");
 
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mcp-next-install-"));
     fs.mkdirSync(path.join(tempDir, "app"), { recursive: true });
