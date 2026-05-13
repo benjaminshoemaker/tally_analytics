@@ -1,3 +1,9 @@
+# TODO Source Snapshot - 2026-05
+
+Migrated from root `TODOS.md` on 2026-05-12.
+
+---
+
 # TODOs — Tally Analytics
 
 ## 🔴 Bugs
