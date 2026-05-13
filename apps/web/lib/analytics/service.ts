@@ -133,6 +133,14 @@ export type LiveEventsErrorResult = AnalyticsServiceResultBase & {
 
 export type LiveEventsResult = LiveEventsSuccessResult | LiveEventsErrorResult;
 
+export type ParsedLiveEventsQuery =
+  | { ok: true; limit: number; since: Date | null }
+  | {
+      ok: false;
+      status: 'invalid_limit' | 'invalid_since';
+      summary: string;
+    };
+
 export type TopPagesSuccessResult = AnalyticsServiceResultBase & {
   status: 'ok' | 'no_events';
   period: AnalyticsPeriod;
@@ -235,6 +243,48 @@ export function createAnalyticsProvenance(params: {
       semantics: params.semantics,
     },
   };
+}
+
+export function parseLiveEventsQuery(params: {
+  limit?: unknown;
+  since?: unknown;
+  defaultLimit?: number;
+  minLimit?: number;
+  maxLimit?: number;
+}): ParsedLiveEventsQuery {
+  const defaultLimit = params.defaultLimit ?? 20;
+  const minLimit = params.minLimit ?? 1;
+  const maxLimit = params.maxLimit ?? 100;
+  const limitValue = params.limit ?? defaultLimit;
+  const limit =
+    typeof limitValue === 'number'
+      ? limitValue
+      : typeof limitValue === 'string' && limitValue.trim() !== ''
+        ? Number(limitValue)
+        : defaultLimit;
+
+  if (!Number.isInteger(limit) || limit < minLimit || limit > maxLimit) {
+    return {
+      ok: false,
+      status: 'invalid_limit',
+      summary: `Limit must be an integer from ${minLimit} to ${maxLimit}.`,
+    };
+  }
+
+  if (params.since === undefined || params.since === null || params.since === '') {
+    return { ok: true, limit, since: null };
+  }
+
+  if (typeof params.since !== 'string' && !(params.since instanceof Date)) {
+    return { ok: false, status: 'invalid_since', summary: 'Since must be a valid timestamp.' };
+  }
+
+  const since = params.since instanceof Date ? params.since : new Date(params.since);
+  if (Number.isNaN(since.getTime())) {
+    return { ok: false, status: 'invalid_since', summary: 'Since must be a valid timestamp.' };
+  }
+
+  return { ok: true, limit, since };
 }
 
 function percentChange(current: number, previous: number): number {

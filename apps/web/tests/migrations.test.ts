@@ -3,6 +3,9 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 
+import { analyticsTaskActiveDuplicateStatuses } from "../lib/analytics/tasks/status-rules";
+import { analyticsTaskStatuses } from "../lib/analytics/tasks/types";
+
 describe("db migrations", () => {
   it("includes update_updated_at_column trigger function in initial migration", () => {
     const migrationPath = path.join(__dirname, "..", "drizzle", "migrations", "0000_initial.sql");
@@ -68,5 +71,19 @@ describe("db migrations", () => {
       .sort();
 
     expect(journalTags).toEqual(migrationTags);
+  });
+
+  it("keeps analytics task status migration checks aligned with runtime status rules", () => {
+    const migrationPath = path.join(__dirname, "..", "drizzle", "migrations", "0007_careful_penance.sql");
+    const sql = fs.readFileSync(migrationPath, "utf8");
+
+    for (const status of analyticsTaskStatuses) {
+      expect(sql).toContain(`'${status}'`);
+    }
+
+    const activeDuplicateIndex = sql.slice(sql.indexOf("analytics_tasks_active_duplicate_fingerprint_unique"));
+    for (const status of analyticsTaskActiveDuplicateStatuses) {
+      expect(activeDuplicateIndex).toContain(`'${status}'`);
+    }
   });
 });

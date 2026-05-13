@@ -8,8 +8,7 @@ import { users } from "../../../../lib/db/schema";
 import { getPriceIdForPlan } from "../../../../lib/stripe/constants";
 import { getStripe } from "../../../../lib/stripe/client";
 import { isPaidPlan, type PaidPlan } from "../../../../lib/stripe/plans";
-
-const ACTIVE_SUBSCRIPTION_STATUSES = new Set(["active", "trialing", "past_due", "unpaid"]);
+import { isActiveSubscriptionStatus } from "../../../../lib/stripe/subscriptions";
 
 function normalizeBaseUrl(url: string): string {
   return url.endsWith("/") ? url.slice(0, -1) : url;
@@ -75,7 +74,7 @@ export async function POST(request: Request): Promise<Response> {
   try {
     const subscriptions = await stripe.subscriptions.list({ customer: stripeCustomerId, status: "all", limit: 10 });
     const hasActiveSubscription = subscriptions.data.some((subscription) =>
-      ACTIVE_SUBSCRIPTION_STATUSES.has(subscription.status),
+      isActiveSubscriptionStatus(subscription.status),
     );
 
     if (hasActiveSubscription) {
@@ -115,4 +114,3 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ error: "Failed to start checkout" }, { status: 500 });
   }
 }
-

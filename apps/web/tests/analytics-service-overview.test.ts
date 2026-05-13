@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 let getOwnedAnalyticsProjectSpy: ReturnType<typeof vi.fn> | undefined;
 let createTinybirdClientFromEnvSpy: ReturnType<typeof vi.fn> | undefined;
 let tinybirdSqlSpy: ReturnType<typeof vi.fn> | undefined;
@@ -325,7 +329,16 @@ describe('analytics service overview primitives', () => {
   });
 
   it('validates live event limit and since inputs', async () => {
-    const { getLiveEvents } = await import('../lib/analytics/service');
+    const { getLiveEvents, parseLiveEventsQuery } = await import('../lib/analytics/service');
+
+    expect(parseLiveEventsQuery({ limit: '2', since: '2026-05-09T00:00:00.000Z' })).toMatchObject({
+      ok: true,
+      limit: 2,
+      since: new Date('2026-05-09T00:00:00.000Z'),
+    });
+    expect(parseLiveEventsQuery({ limit: '2.5' })).toMatchObject({ ok: false, status: 'invalid_limit' });
+    expect(parseLiveEventsQuery({ limit: 101 })).toMatchObject({ ok: false, status: 'invalid_limit' });
+    expect(parseLiveEventsQuery({ since: 'not-a-date' })).toMatchObject({ ok: false, status: 'invalid_since' });
 
     await expect(
       getLiveEvents({ userId: 'u1', projectId: 'proj_123', limit: 0 })
@@ -413,5 +426,117 @@ describe('analytics service overview primitives', () => {
       events: [],
       hasMore: false,
     });
+  });
+
+  it('keeps E2E fixture aggregation aligned with dashboard analytics semantics', async () => {
+    const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tally-analytics-fixtures-'));
+    const scenarioDir = path.join(fixtureDir, 'scenario');
+    fs.mkdirSync(scenarioDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(scenarioDir, 'events.json'),
+      JSON.stringify({
+        events: [
+          {
+            project_id: 'proj_123',
+            session_id: 's1',
+            event_type: 'page_view',
+            timestamp: '2026-05-08T12:00:00.000Z',
+            path: '/',
+            referrer: '',
+          },
+          {
+            project_id: 'proj_123',
+            session_id: 's2',
+            event_type: 'page_view',
+            timestamp: '2026-05-08T12:01:00.000Z',
+            path: '/pricing',
+            referrer: 'https://google.com/search?q=tally',
+          },
+          {
+            project_id: 'proj_123',
+            session_id: 's1',
+            event_type: 'session_start',
+            timestamp: '2026-05-08T12:02:00.000Z',
+            is_returning: 0,
+          },
+          {
+            project_id: 'proj_123',
+            session_id: 's2',
+            event_type: 'session_start',
+            timestamp: '2026-05-08T12:03:00.000Z',
+            is_returning: 1,
+          },
+          {
+            project_id: 'proj_123',
+            session_id: 'old',
+            event_type: 'page_view',
+            timestamp: '2026-05-01T12:00:00.000Z',
+            path: '/old',
+          },
+        ],
+      }),
+    );
+
+    const previousFixtureDir = process.env.E2E_ANALYTICS_FIXTURE_DIR;
+    process.env.E2E_TEST_MODE = '1';
+    process.env.E2E_ANALYTICS_FIXTURE_DIR = fixtureDir;
+
+    try {
+      vi.resetModules();
+      getOwnedAnalyticsProjectSpy = vi.fn().mockResolvedValue({
+        id: 'proj_123',
+        displayName: 'Example App',
+        source: 'mcp_codex',
+        status: 'active',
+        lastEventAt: null,
+        mcpRepoName: 'repo',
+        mcpAppRoot: 'apps/web',
+        mcpPackageManager: 'pnpm',
+        dashboardUrls: {
+          project: 'https://usetally.xyz/projects/proj_123',
+          overview: 'https://usetally.xyz/projects/proj_123/overview',
+          live: 'https://usetally.xyz/projects/proj_123/live',
+          sessions: 'https://usetally.xyz/projects/proj_123/sessions',
+        },
+      });
+
+      const { getProjectOverview, getSessionsSummary } = await import('../lib/analytics/service');
+      const now = new Date('2026-05-09T12:00:00.000Z');
+
+      await expect(
+        getProjectOverview({ userId: 'u1', projectId: 'proj_123', period: '7d', now }),
+      ).resolves.toMatchObject({
+        status: 'ok',
+        pageViews: {
+          total: 2,
+          change: 100,
+          timeSeries: [{ date: '2026-05-08', count: 2 }],
+        },
+        sessions: { total: 2 },
+        topPages: [
+          { path: '/', views: 1, percentage: 50 },
+          { path: '/pricing', views: 1, percentage: 50 },
+        ],
+        topReferrers: [
+          { referrer: 'Direct', count: 1, percentage: 50 },
+          { referrer: 'google.com', count: 1, percentage: 50 },
+        ],
+      });
+
+      await expect(
+        getSessionsSummary({ userId: 'u1', projectId: 'proj_123', period: '7d', now }),
+      ).resolves.toMatchObject({
+        status: 'ok',
+        totalSessions: 2,
+        newVisitors: 1,
+        returningVisitors: 1,
+        timeSeries: [{ date: '2026-05-08', newSessions: 1, returningSessions: 1 }],
+      });
+    } finally {
+      if (previousFixtureDir === undefined) delete process.env.E2E_ANALYTICS_FIXTURE_DIR;
+      else process.env.E2E_ANALYTICS_FIXTURE_DIR = previousFixtureDir;
+      delete process.env.E2E_TEST_MODE;
+      fs.rmSync(fixtureDir, { recursive: true, force: true });
+    }
   });
 });

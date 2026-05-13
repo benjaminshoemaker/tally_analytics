@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
+import { parseLiveEventsQuery } from "../../analytics/service";
 import { parseAnalyticsPeriod, type AnalyticsPeriod } from "../../analytics/periods";
 import { boundAnalyticsString } from "../../analytics/urls";
 import type { AnalyticsErrorStatus, AnalyticsServiceResultBase } from "../../analytics/types";
@@ -196,16 +197,14 @@ async function handleLiveEvents(input: unknown, extra: { authInfo?: unknown }): 
   const userId = auth.value;
 
   const parsedInput = inputRecord(input);
-  const limit = parseAnalyticsToolLimit(parsedInput.limit, { defaultValue: 20, min: 1, max: 100 });
-  if (!limit.ok) return analyticsToolErrorResult(limit.error);
-  const since = parseAnalyticsToolSince(parsedInput.since);
-  if (!since.ok) return analyticsToolErrorResult(since.error);
+  const query = parseLiveEventsQuery({ limit: parsedInput.limit, since: parsedInput.since });
+  if (!query.ok) return analyticsToolErrorResult({ status: query.status, summary: query.summary });
 
   const projectId = projectIdFromInput(parsedInput);
   if (!(await requireOwnedProject(userId, projectId))) return analyticsToolErrorResult(projectNotFoundResult());
 
   const { getLiveEvents } = await import("../../analytics/service");
-  const result = await getLiveEvents({ userId, projectId, limit: limit.value, since: since.value });
+  const result = await getLiveEvents({ userId, projectId, limit: query.limit, since: query.since });
   return toAnalyticsToolResult(result as AnalyticsServiceResultBase & Record<string, unknown>);
 }
 

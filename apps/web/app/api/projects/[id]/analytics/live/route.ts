@@ -2,12 +2,9 @@ import { getUserFromRequest } from '../../../../../../lib/auth/get-user';
 import {
   getLiveEvents,
   isLiveEventsSuccess,
+  parseLiveEventsQuery,
   toDashboardLiveEventsResponse,
 } from '../../../../../../lib/analytics/service';
-
-function clamp(n: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, n));
-}
 
 export async function GET(
   request: Request,
@@ -21,13 +18,13 @@ export async function GET(
   if (!projectId) return Response.json({ error: 'Missing project id' }, { status: 400 });
 
   const url = new URL(request.url);
-  const limitRaw = url.searchParams.get('limit');
-  const limit = clamp(Number.parseInt(limitRaw ?? '20', 10) || 20, 1, 100);
-  const sinceRaw = url.searchParams.get('since') ?? '';
-  const parsedSince = sinceRaw ? new Date(sinceRaw) : null;
-  const since = parsedSince && !Number.isNaN(parsedSince.getTime()) ? parsedSince : null;
+  const query = parseLiveEventsQuery({
+    limit: url.searchParams.get('limit') ?? undefined,
+    since: url.searchParams.get('since') ?? undefined,
+  });
+  if (!query.ok) return Response.json({ error: query.summary }, { status: 400 });
 
-  const result = await getLiveEvents({ userId: user.id, projectId, limit, since });
+  const result = await getLiveEvents({ userId: user.id, projectId, limit: query.limit, since: query.since });
   if (result.status === 'project_not_found') {
     return Response.json({ error: 'Project not found' }, { status: 404 });
   }

@@ -64,6 +64,23 @@ describe("GET /api/projects/[id]/analytics/live", () => {
     expect(response.status).toBe(404);
   });
 
+  it("returns 400 for invalid live feed query params", async () => {
+    vi.resetModules();
+    getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "u1", email: "u1@example.com" });
+    selectSpy = vi.fn();
+    createTinybirdClientFromEnvSpy = vi.fn();
+    tinybirdSqlSpy = vi.fn();
+
+    const { GET } = await import("../app/api/projects/[id]/analytics/live/route");
+    const response = await GET(new Request("http://localhost/api/projects/proj_123/analytics/live?limit=abc"), {
+      params: { id: "proj_123" },
+    });
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({ error: "Limit must be an integer from 1 to 100." });
+    expect(selectSpy).not.toHaveBeenCalled();
+  });
+
   it("proxies to Tinybird and returns normalized live feed data", async () => {
     vi.resetModules();
 

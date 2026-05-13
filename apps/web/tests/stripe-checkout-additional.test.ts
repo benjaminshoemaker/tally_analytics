@@ -87,6 +87,18 @@ describe("POST /api/stripe/checkout - additional coverage", () => {
     else process.env.STRIPE_PRICE_TEAM = previousPriceTeam;
   });
 
+  it("centralizes active subscription status classification", async () => {
+    const { ACTIVE_SUBSCRIPTION_STATUSES, isActiveSubscriptionStatus } = await import("../lib/stripe/subscriptions");
+
+    expect(ACTIVE_SUBSCRIPTION_STATUSES).toEqual(["active", "trialing", "past_due", "unpaid"]);
+    expect(isActiveSubscriptionStatus("active")).toBe(true);
+    expect(isActiveSubscriptionStatus("trialing")).toBe(true);
+    expect(isActiveSubscriptionStatus("past_due")).toBe(true);
+    expect(isActiveSubscriptionStatus("unpaid")).toBe(true);
+    expect(isActiveSubscriptionStatus("canceled")).toBe(false);
+    expect(isActiveSubscriptionStatus(null)).toBe(false);
+  });
+
   it("returns 400 when form data is invalid", async () => {
     vi.resetModules();
 
