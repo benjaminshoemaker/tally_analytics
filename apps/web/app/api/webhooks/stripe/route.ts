@@ -14,6 +14,17 @@ type UserForStripeWebhook = {
   stripeLastWebhookEventCreated: bigint | null;
 };
 
+type StripeWebhookContext = {
+  eventId: string;
+  eventType: string;
+  customerId: string;
+  subscriptionId: string | null;
+  priceId: unknown;
+  eventCreated: bigint | null;
+  object: any;
+  user: UserForStripeWebhook;
+};
+
 function toUnixSecondsBigint(value: unknown): bigint | null {
   if (typeof value === "number" && Number.isFinite(value)) return BigInt(Math.floor(value));
   if (typeof value === "string" && value.trim().length > 0) {
@@ -67,6 +78,135 @@ async function findUserByStripeCustomerId(customerId: string): Promise<UserForSt
   return rows[0] ?? null;
 }
 
+function stripeEventMetadata(event: any) {
+  const eventId = typeof event?.id === "string" ? event.id : "unknown";
+  const eventType = typeof event?.type === "string" ? event.type : "unknown";
+  const eventCreated = toUnixSecondsBigint(event?.created);
+  const object = event?.data?.object;
+
+  const customerId =
+    typeof object?.customer === "string"
+      ? object.customer
+      : typeof object?.customer?.id === "string"
+        ? object.customer.id
+        : null;
+
+  const subscriptionId =
+    typeof object?.subscription === "string"
+      ? object.subscription
+      : typeof object?.id === "string" && (object?.object === "subscription" || eventType.startsWith("customer.subscription."))
+        ? object.id
+        : null;
+
+  return {
+    eventId,
+    eventType,
+    eventCreated,
+    object,
+    customerId,
+    subscriptionId,
+    priceId: object?.items?.data?.[0]?.price?.id,
+  };
+}
+
+async function handleCheckoutSessionCompleted(context: StripeWebhookContext): Promise<void> {
+  const checkoutSubscriptionId = getExpandedId(context.object?.subscription);
+  if (!checkoutSubscriptionId) {
+    console.info("stripe.webhook.checkout_session_completed.no_subscription", {
+      eventId: context.eventId,
+      customerId: context.customerId,
+    });
+    return;
+  }
+
+  await db
+    .update(users)
+    .set({
+      stripeSubscriptionId: checkoutSubscriptionId,
+      stripeLastWebhookEventId: context.eventId,
+      stripeLastWebhookEventCreated: context.eventCreated,
+    })
+    .where(eq(users.id, context.user.id));
+}
+
+function subscriptionCancellationState(object: any): {
+  currentPeriodEndDate: Date | null;
+  cancelAtPeriodEnd: boolean;
+} {
+  const cancelAtDate = toUnixSecondsDate(object?.cancel_at);
+  const hasScheduledCancellation = !!cancelAtDate && (object?.canceled_at === null || object?.canceled_at === undefined);
+  return {
+    currentPeriodEndDate: toUnixSecondsDate(object?.current_period_end) ?? cancelAtDate,
+    cancelAtPeriodEnd:
+      typeof object?.cancel_at_period_end === "boolean"
+        ? object.cancel_at_period_end || hasScheduledCancellation
+        : hasScheduledCancellation,
+  };
+}
+
+async function handleSubscriptionUpdated(context: StripeWebhookContext): Promise<void> {
+  const { eventId, eventType, customerId, subscriptionId, priceId, object, user, eventCreated } = context;
+  const mappedPlan = typeof priceId === "string" ? getPlanForPriceId(priceId) : null;
+  if (!mappedPlan && typeof priceId === "string") {
+    console.error("stripe.webhook.unknown_price_id", {
+      eventId,
+      eventType,
+      customerId,
+      subscriptionId,
+      priceId,
+      userId: user.id,
+    });
+  }
+
+  const cancellation = subscriptionCancellationState(object);
+
+  const setValues: Record<string, unknown> = {
+    stripeSubscriptionId: subscriptionId,
+    stripeSubscriptionStatus: typeof object?.status === "string" ? object.status : null,
+    stripePriceId: typeof priceId === "string" ? priceId : null,
+    stripeCurrentPeriodEnd: cancellation.currentPeriodEndDate,
+    stripeCancelAtPeriodEnd: cancellation.cancelAtPeriodEnd,
+    stripeLastWebhookEventId: eventId,
+    stripeLastWebhookEventCreated: eventCreated,
+  };
+
+  if (mappedPlan) setValues.plan = mappedPlan;
+
+  await db.update(users).set(setValues).where(eq(users.id, user.id));
+}
+
+async function handleSubscriptionDeleted(context: StripeWebhookContext): Promise<void> {
+  const status = typeof context.object?.status === "string" ? context.object.status : null;
+  await db
+    .update(users)
+    .set({
+      plan: "free",
+      stripeSubscriptionStatus: status,
+      stripeLastWebhookEventId: context.eventId,
+      stripeLastWebhookEventCreated: context.eventCreated,
+    })
+    .where(eq(users.id, context.user.id));
+}
+
+async function handleInvoicePaymentFailed(context: StripeWebhookContext): Promise<void> {
+  await db
+    .update(users)
+    .set({
+      stripeSubscriptionId: context.subscriptionId,
+      stripeSubscriptionStatus: "past_due",
+      stripeLastWebhookEventId: context.eventId,
+      stripeLastWebhookEventCreated: context.eventCreated,
+    })
+    .where(eq(users.id, context.user.id));
+}
+
+const webhookHandlers: Partial<Record<string, (context: StripeWebhookContext) => Promise<void>>> = {
+  "checkout.session.completed": handleCheckoutSessionCompleted,
+  "customer.subscription.updated": handleSubscriptionUpdated,
+  "customer.subscription.deleted": handleSubscriptionDeleted,
+  "invoice.payment_failed": handleInvoicePaymentFailed,
+};
+
 export async function POST(request: Request): Promise<Response> {
   const signatureHeader = request.headers.get("stripe-signature");
   if (!signatureHeader) {
@@ -84,27 +224,8 @@ export async function POST(request: Request): Promise<Response> {
     return new Response("Invalid Stripe signature", { status: 400 });
   }
 
-  const eventId = typeof event?.id === "string" ? event.id : "unknown";
-  const eventType = typeof event?.type === "string" ? event.type : "unknown";
-  const eventCreated = toUnixSecondsBigint(event?.created);
-
-  const object = event?.data?.object;
-
-  const customerId =
-    typeof object?.customer === "string"
-      ? object.customer
-      : typeof object?.customer?.id === "string"
-        ? object.customer.id
-        : null;
-
-  const subscriptionId =
-    typeof object?.subscription === "string"
-      ? object.subscription
-      : typeof object?.id === "string" && (object?.object === "subscription" || eventType.startsWith("customer.subscription."))
-        ? object.id
-        : null;
-
-  const priceId = object?.items?.data?.[0]?.price?.id;
+  const { eventId, eventType, eventCreated, object, customerId, subscriptionId, priceId } =
+    stripeEventMetadata(event);
 
   if (!customerId) {
     console.error("stripe.webhook.missing_customer", { eventId, eventType, subscriptionId, priceId });
@@ -122,87 +243,11 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    switch (eventType) {
-      case "checkout.session.completed": {
-        const checkoutSubscriptionId = getExpandedId(object?.subscription);
-        if (!checkoutSubscriptionId) {
-          console.info("stripe.webhook.checkout_session_completed.no_subscription", { eventId, customerId });
-          break;
-        }
-
-        await db
-          .update(users)
-          .set({
-            stripeSubscriptionId: checkoutSubscriptionId,
-            stripeLastWebhookEventId: eventId,
-            stripeLastWebhookEventCreated: eventCreated,
-          })
-          .where(eq(users.id, user.id));
-
-        break;
-      }
-
-      case "customer.subscription.updated": {
-        const mappedPlan = typeof priceId === "string" ? getPlanForPriceId(priceId) : null;
-        if (!mappedPlan && typeof priceId === "string") {
-          console.error("stripe.webhook.unknown_price_id", { eventId, eventType, customerId, subscriptionId, priceId, userId: user.id });
-        }
-
-        const cancelAtDate = toUnixSecondsDate(object?.cancel_at);
-        const currentPeriodEndDate = toUnixSecondsDate(object?.current_period_end) ?? cancelAtDate;
-        const hasScheduledCancellation = !!cancelAtDate && (object?.canceled_at === null || object?.canceled_at === undefined);
-        const cancelAtPeriodEnd =
-          hasScheduledCancellation || typeof object?.cancel_at_period_end !== "boolean" ? hasScheduledCancellation : object.cancel_at_period_end;
-
-        const setValues: Record<string, unknown> = {
-          stripeSubscriptionId: subscriptionId,
-          stripeSubscriptionStatus: typeof object?.status === "string" ? object.status : null,
-          stripePriceId: typeof priceId === "string" ? priceId : null,
-          stripeCurrentPeriodEnd: currentPeriodEndDate,
-          stripeCancelAtPeriodEnd: cancelAtPeriodEnd,
-          stripeLastWebhookEventId: eventId,
-          stripeLastWebhookEventCreated: eventCreated,
-        };
-
-        if (mappedPlan) {
-          setValues.plan = mappedPlan;
-        }
-
-        await db.update(users).set(setValues).where(eq(users.id, user.id));
-        break;
-      }
-
-      case "customer.subscription.deleted": {
-        const status = typeof object?.status === "string" ? object.status : null;
-        await db
-          .update(users)
-          .set({
-            plan: "free",
-            stripeSubscriptionStatus: status,
-            stripeLastWebhookEventId: eventId,
-            stripeLastWebhookEventCreated: eventCreated,
-          })
-          .where(eq(users.id, user.id));
-        break;
-      }
-
-      case "invoice.payment_failed": {
-        await db
-          .update(users)
-          .set({
-            stripeSubscriptionId: subscriptionId,
-            stripeSubscriptionStatus: "past_due",
-            stripeLastWebhookEventId: eventId,
-            stripeLastWebhookEventCreated: eventCreated,
-          })
-          .where(eq(users.id, user.id));
-        break;
-      }
-
-      default: {
-        console.info("stripe.webhook.unhandled_event", { eventId, eventType, customerId, subscriptionId, priceId });
-        break;
-      }
+    const handler = webhookHandlers[eventType];
+    if (handler) {
+      await handler({ eventId, eventType, customerId, subscriptionId, priceId, eventCreated, object, user });
+    } else {
+      console.info("stripe.webhook.unhandled_event", { eventId, eventType, customerId, subscriptionId, priceId });
     }
   } catch (error) {
     console.error("stripe.webhook.processing_failed", { eventId, eventType, customerId, subscriptionId, priceId, error });
