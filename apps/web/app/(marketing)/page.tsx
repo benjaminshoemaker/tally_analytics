@@ -3,10 +3,12 @@ import React from 'react';
 import MarketingFeatures from '../../components/marketing/features';
 import MarketingHero from '../../components/marketing/hero';
 import MarketingHowItWorks from '../../components/marketing/how-it-works';
+import MarketingProductProof from '../../components/marketing/product-proof';
 import MarketingSetAndForget from '../../components/marketing/set-and-forget';
 import MarketingWhatYouGet from '../../components/marketing/what-you-get';
 
 const DASHBOARD_IMAGE_SRC = '/marketing/dashboard.png';
+const WORKFLOW_IMAGE_SRC = '/marketing/dashboard-workflow.png';
 
 export default function LandingPage() {
   return (
@@ -16,6 +18,8 @@ export default function LandingPage() {
       <MarketingFeatures />
 
       <MarketingWhatYouGet />
+
+      <MarketingProductProof workflowImageSrc={WORKFLOW_IMAGE_SRC} />
 
       <MarketingHowItWorks dashboardImageSrc={DASHBOARD_IMAGE_SRC} />
 
