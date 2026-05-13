@@ -165,8 +165,13 @@ export function validateRepoContext(input: unknown): RepoContextValidationResult
   if (!entrypoint) return fail("disallowed_file", "entrypoint must be a safe relative path", framework.entrypoint);
 
   const requestedPackageJsonPath = repo.packageJsonPath ?? repo.dependencyTarget;
-  let packageJsonPath = requestedPackageJsonPath ? normalizeRelativePath(requestedPackageJsonPath) : null;
-  if (!packageJsonPath || (packageJsonPath !== "package.json" && !packageJsonPath.endsWith("/package.json"))) {
+  const normalizedPackageJsonPath = requestedPackageJsonPath ? normalizeRelativePath(requestedPackageJsonPath) : null;
+  if (requestedPackageJsonPath && !normalizedPackageJsonPath) {
+    return fail("disallowed_file", "packageJsonPath must be a safe relative path", requestedPackageJsonPath);
+  }
+
+  let packageJsonPath = normalizedPackageJsonPath;
+  if (packageJsonPath && packageJsonPath !== "package.json" && !packageJsonPath.endsWith("/package.json")) {
     packageJsonPath = inferPackageJsonPath(parsed.data.files, appRoot);
   }
   if (!packageJsonPath) {
