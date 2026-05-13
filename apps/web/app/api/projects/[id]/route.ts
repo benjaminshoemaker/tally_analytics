@@ -2,41 +2,9 @@ import { and, eq } from "drizzle-orm";
 import { canRegenerateProject, eventLimitForPlan } from "@fast-pr-analytics/shared-rules";
 
 import { getUserFromRequest } from "../../../../lib/auth/get-user";
+import { fetchLastEventAtForProject, resolveLastEventAt } from "../../../../lib/analytics/project-events";
 import { db } from "../../../../lib/db/client";
 import { projects, users } from "../../../../lib/db/schema";
-import { createTinybirdClientFromEnv, tinybirdSql } from "../../../../lib/tinybird/client";
-
-function escapeSqlString(value: string): string {
-  return value.replaceAll("'", "''");
-}
-
-function normalizeTimestamp(value: unknown): string | null {
-  const raw = String(value ?? "");
-  if (!raw) return null;
-  if (raw.includes("T")) return raw.endsWith("Z") ? raw : `${raw}Z`;
-
-  const iso = raw.replace(" ", "T");
-  return iso.endsWith("Z") ? iso : `${iso}Z`;
-}
-
-async function fetchTinybirdLastEventAt(projectId: string): Promise<string | null> {
-  const client = createTinybirdClientFromEnv();
-  const projectIdSql = escapeSqlString(projectId);
-
-  const result = await tinybirdSql<{ last_event_at: string }>(
-    client,
-    `
-      SELECT
-        toString(max(timestamp)) AS last_event_at
-      FROM events
-      WHERE project_id = '${projectIdSql}'
-      GROUP BY project_id
-      LIMIT 1
-    `.trim(),
-  );
-
-  return normalizeTimestamp(result.data[0]?.last_event_at ?? null);
-}
 
 type ProjectDetailResponse = {
   project: {
@@ -106,7 +74,7 @@ export async function GET(
 
   let lastEventAt: string | null = null;
   try {
-    lastEventAt = await fetchTinybirdLastEventAt(project.id);
+    lastEventAt = await fetchLastEventAtForProject(project.id);
   } catch {
     lastEventAt = null;
   }
@@ -123,7 +91,7 @@ export async function GET(
       detectedFramework: project.detectedFramework ?? null,
       detectedAnalytics: project.detectedAnalytics ?? [],
       eventsThisMonth: quotaUsed,
-      lastEventAt: lastEventAt ?? (project.lastEventAt ? project.lastEventAt.toISOString() : null),
+      lastEventAt: resolveLastEventAt(lastEventAt, project.lastEventAt),
       createdAt: project.createdAt.toISOString(),
       updatedAt: project.updatedAt.toISOString(),
       actions: {

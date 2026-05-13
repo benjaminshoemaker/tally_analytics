@@ -1,46 +1,23 @@
-import { getUserFromRequest } from "../../../../../../lib/auth/get-user";
 import { analyticsTaskTypes } from "../../../../../../lib/analytics/tasks/types";
 import {
   createPendingAnalyticsTask,
   listOwnedAnalyticsTasksForProject,
 } from "../../../../../../lib/analytics/tasks/queries";
+import { isDashboardVisibleTaskStatus } from "../../../../../../lib/analytics/tasks/status-rules";
 import { refreshAnalyticsTaskListVerification } from "../../../../../../lib/analytics/tasks/verification";
-import { getOwnedAnalyticsProject } from "../../../../../../lib/db/queries/projects";
+import {
+  isRecord,
+  normalizeJsonObject,
+  normalizeTaskEventName,
+  normalizeTaskText,
+} from "../../../../../../lib/analytics/tasks/route-validation";
+import {
+  isRouteContextResponse,
+  parseJsonRequestBody,
+  requireOwnedProjectRouteContext,
+} from "../../../../../../lib/analytics/route-context";
 
-const EVENT_NAME_PATTERN = /^[a-z][a-z0-9_]{0,99}$/;
-
-const defaultVisibleStatuses = new Set([
-  "pending",
-  "in_progress",
-  "implemented_locally",
-  "awaiting_deploy",
-  "verified",
-  "failed",
-]);
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function normalizeText(value: unknown, maxLength: number): string | null {
-  if (typeof value !== "string") return null;
-  const compact = value.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim();
-  if (!compact) return null;
-  return compact.slice(0, maxLength);
-}
-
-function normalizeEventName(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  const normalized = value.trim().toLowerCase();
-  if (!EVENT_NAME_PATTERN.test(normalized)) return null;
-  return normalized;
-}
-
-function normalizeJsonObject(value: unknown): Record<string, unknown> {
-  return isRecord(value) ? value : {};
-}
-
-function normalizeDraft(input: unknown): {
+type NormalizedTaskDraft = {
   taskType: "track_completion" | "track_click" | "add_event_property";
   title: string;
   originalQuestion: string;
@@ -54,46 +31,54 @@ function normalizeDraft(input: unknown): {
   implementationGuidance: string | null;
   verificationCriteria: Record<string, unknown>;
   verificationSource: "production_event";
-} | null {
+};
+
+function normalizeDraftTaskType(value: unknown): NormalizedTaskDraft["taskType"] | null {
+  return typeof value === "string" && analyticsTaskTypes.includes(value as (typeof analyticsTaskTypes)[number])
+    ? (value as NormalizedTaskDraft["taskType"])
+    : null;
+}
+
+function normalizeDraftAnswerKind(value: unknown): NormalizedTaskDraft["answerKind"] | null {
+  return value === "partial_answer" || value === "cannot_answer_yet" ? value : null;
+}
+
+function normalizeDraftTextFields(input: Record<string, unknown>) {
+  return {
+    title: normalizeTaskText(input.title, 180),
+    originalQuestion: normalizeTaskText(input.originalQuestion, 500),
+    answerSummary: normalizeTaskText(input.answerSummary, 400) ?? "",
+    analyticsGap: normalizeTaskText(input.analyticsGap, 400) ?? "",
+    eventName: normalizeTaskEventName(input.eventName),
+    triggerDescription: normalizeTaskText(input.triggerDescription, 500),
+    targetSurface: normalizeTaskText(input.targetSurface, 200),
+    implementationGuidance: normalizeTaskText(input.implementationGuidance, 600),
+  };
+}
+
+function normalizeDraft(input: unknown): NormalizedTaskDraft | null {
   if (!isRecord(input)) return null;
 
-  const taskTypeRaw = input.taskType;
-  const taskType =
-    typeof taskTypeRaw === "string" && analyticsTaskTypes.includes(taskTypeRaw as (typeof analyticsTaskTypes)[number])
-      ? (taskTypeRaw as "track_completion" | "track_click" | "add_event_property")
-      : null;
+  const taskType = normalizeDraftTaskType(input.taskType);
+  const answerKind = normalizeDraftAnswerKind(input.answerKind);
+  const text = normalizeDraftTextFields(input);
 
-  const title = normalizeText(input.title, 180);
-  const originalQuestion = normalizeText(input.originalQuestion, 500);
-  const answerSummary = normalizeText(input.answerSummary, 400) ?? "";
-  const analyticsGap = normalizeText(input.analyticsGap, 400) ?? "";
-  const eventName = normalizeEventName(input.eventName);
-  const triggerDescription = normalizeText(input.triggerDescription, 500);
-  const targetSurface = normalizeText(input.targetSurface, 200);
-  const implementationGuidance = normalizeText(input.implementationGuidance, 600);
-
-  const answerKindRaw = input.answerKind;
-  const answerKind =
-    answerKindRaw === "partial_answer" || answerKindRaw === "cannot_answer_yet"
-      ? answerKindRaw
-      : null;
-
-  if (!taskType || !title || !originalQuestion || !answerKind || !eventName || !triggerDescription) {
+  if (!taskType || !text.title || !text.originalQuestion || !answerKind || !text.eventName || !text.triggerDescription) {
     return null;
   }
 
   return {
     taskType,
-    title,
-    originalQuestion,
+    title: text.title,
+    originalQuestion: text.originalQuestion,
     answerKind,
-    answerSummary,
-    analyticsGap,
-    eventName,
-    triggerDescription,
+    answerSummary: text.answerSummary,
+    analyticsGap: text.analyticsGap,
+    eventName: text.eventName,
+    triggerDescription: text.triggerDescription,
     propertiesSchema: normalizeJsonObject(input.propertiesSchema),
-    targetSurface: targetSurface ?? null,
-    implementationGuidance: implementationGuidance ?? null,
+    targetSurface: text.targetSurface ?? null,
+    implementationGuidance: text.implementationGuidance ?? null,
     verificationCriteria: normalizeJsonObject(input.verificationCriteria),
     verificationSource: "production_event",
   };
@@ -106,9 +91,9 @@ function normalizeEdits(input: unknown): {
 } {
   if (!isRecord(input)) return {};
 
-  const title = normalizeText(input.title, 180);
-  const eventName = normalizeEventName(input.eventName);
-  const implementationNotes = normalizeText(input.implementationNotes, 600);
+  const title = normalizeTaskText(input.title, 180);
+  const eventName = normalizeTaskEventName(input.eventName);
+  const implementationNotes = normalizeTaskText(input.implementationNotes, 600);
 
   return {
     ...(title ? { title } : {}),
@@ -121,24 +106,14 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> | { id: string } },
 ): Promise<Response> {
-  const user = await getUserFromRequest(request);
-  if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
-
-  const params = "then" in context.params ? await context.params : context.params;
-  const projectId = params.id;
-  if (!projectId) return Response.json({ error: "Missing project id" }, { status: 400 });
-
-  const project = await getOwnedAnalyticsProject({
-    userId: user.id,
-    projectId,
-  });
-  if (!project) return Response.json({ error: "Project not found" }, { status: 404 });
+  const routeContext = await requireOwnedProjectRouteContext(request, context.params);
+  if (isRouteContextResponse(routeContext)) return routeContext;
 
   const includeHistory = new URL(request.url).searchParams.get("includeHistory") === "1";
 
   const tasks = await listOwnedAnalyticsTasksForProject({
-    userId: user.id,
-    projectId,
+    userId: routeContext.user.id,
+    projectId: routeContext.projectId,
   });
   const refreshed = await refreshAnalyticsTaskListVerification({
     tasks,
@@ -148,7 +123,7 @@ export async function GET(
     {
       tasks: includeHistory
         ? refreshed
-        : refreshed.filter((task) => defaultVisibleStatuses.has(task.status)),
+        : refreshed.filter((task) => isDashboardVisibleTaskStatus(task.status)),
     },
     { status: 200 },
   );
@@ -158,25 +133,11 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> | { id: string } },
 ): Promise<Response> {
-  const user = await getUserFromRequest(request);
-  if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const routeContext = await requireOwnedProjectRouteContext(request, context.params);
+  if (isRouteContextResponse(routeContext)) return routeContext;
 
-  const params = "then" in context.params ? await context.params : context.params;
-  const projectId = params.id;
-  if (!projectId) return Response.json({ error: "Missing project id" }, { status: 400 });
-
-  const project = await getOwnedAnalyticsProject({
-    userId: user.id,
-    projectId,
-  });
-  if (!project) return Response.json({ error: "Project not found" }, { status: 404 });
-
-  let parsed: unknown;
-  try {
-    parsed = await request.json();
-  } catch {
-    return Response.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
+  const parsed = await parseJsonRequestBody(request);
+  if (isRouteContextResponse(parsed)) return parsed;
 
   if (!isRecord(parsed)) return Response.json({ error: "Invalid request body" }, { status: 400 });
 
@@ -186,8 +147,8 @@ export async function POST(
   const edits = normalizeEdits(parsed.edits);
 
   const createResult = await createPendingAnalyticsTask({
-    projectId,
-    userId: user.id,
+    projectId: routeContext.projectId,
+    userId: routeContext.user.id,
     taskType: draft.taskType,
     title: edits.title ?? draft.title,
     originalQuestion: draft.originalQuestion,

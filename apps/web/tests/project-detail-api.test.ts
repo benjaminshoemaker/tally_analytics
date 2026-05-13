@@ -124,7 +124,9 @@ describe("GET /api/projects/[id]", () => {
     vi.resetModules();
 
     getUserFromRequestSpy = vi.fn().mockResolvedValue({ id: "u1", email: "u1@example.com" });
-    tinybirdSqlSpy = vi.fn().mockResolvedValue({ data: [{ last_event_at: "2025-02-01 12:34:56.789" }] });
+    tinybirdSqlSpy = vi.fn().mockResolvedValue({
+      data: [{ project_id: "proj_123", last_event_at: "2025-02-01 12:34:56.789" }],
+    });
 
     const projectWhereSpy = vi.fn().mockResolvedValue([
       {

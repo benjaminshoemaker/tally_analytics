@@ -4,23 +4,13 @@ import { db } from "../../db/client";
 import { analyticsTaskStatusEvents, analyticsTasks } from "../../db/schema";
 import { buildAnalyticsTaskDuplicateFingerprint } from "./fingerprint";
 import { createAnalyticsTaskId, createAnalyticsTaskStatusEventId } from "./ids";
+import { analyticsTaskActiveDuplicateStatuses } from "./status-rules";
 import type {
   AnalyticsTaskRecord,
-  AnalyticsTaskStatus,
   AnalyticsTaskStatusEventRecord,
   CreateAnalyticsTaskStatusEventInput,
   CreatePendingAnalyticsTaskInput,
 } from "./types";
-
-const activeDuplicateStatuses: AnalyticsTaskStatus[] = [
-  "pending",
-  "in_progress",
-  "implemented_locally",
-  "awaiting_deploy",
-  "verified",
-  "failed",
-  "duplicate",
-];
 
 const analyticsTaskSelect = {
   id: analyticsTasks.id,
@@ -96,7 +86,7 @@ export async function findActiveTaskByDuplicateFingerprint(params: {
         eq(analyticsTasks.userId, params.userId),
         eq(analyticsTasks.projectId, params.projectId),
         eq(analyticsTasks.duplicateFingerprint, params.duplicateFingerprint),
-        inArray(analyticsTasks.status, activeDuplicateStatuses),
+        inArray(analyticsTasks.status, [...analyticsTaskActiveDuplicateStatuses]),
       ),
     )
     .limit(1);

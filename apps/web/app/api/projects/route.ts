@@ -4,50 +4,7 @@ import { canRegenerateProject } from "@fast-pr-analytics/shared-rules";
 import { getUserFromRequest } from "../../../lib/auth/get-user";
 import { db } from "../../../lib/db/client";
 import { projects } from "../../../lib/db/schema";
-import { createTinybirdClientFromEnv, tinybirdSql } from "../../../lib/tinybird/client";
-
-function escapeSqlString(value: string): string {
-  return value.replaceAll("'", "''");
-}
-
-function normalizeTimestamp(value: unknown): string | null {
-  const raw = String(value ?? "");
-  if (!raw) return null;
-  if (raw.includes("T")) return raw.endsWith("Z") ? raw : `${raw}Z`;
-
-  const iso = raw.replace(" ", "T");
-  return iso.endsWith("Z") ? iso : `${iso}Z`;
-}
-
-async function fetchLastEventAtByProjectId(projectIds: string[]): Promise<Map<string, string>> {
-  if (projectIds.length === 0) return new Map();
-
-  const inList = projectIds.map((id) => `'${escapeSqlString(id)}'`).join(", ");
-  const client = createTinybirdClientFromEnv();
-
-  const result = await tinybirdSql<{ project_id: string; last_event_at: string }>(
-    client,
-    `
-      SELECT
-        project_id,
-        toString(max(timestamp)) AS last_event_at
-      FROM events
-      WHERE project_id IN (${inList})
-      GROUP BY project_id
-    `.trim(),
-  );
-
-  const map = new Map<string, string>();
-  for (const row of result.data) {
-    const projectId = String((row as { project_id?: unknown }).project_id ?? "");
-    if (!projectId) continue;
-    const normalized = normalizeTimestamp((row as { last_event_at?: unknown }).last_event_at);
-    if (!normalized) continue;
-    map.set(projectId, normalized);
-  }
-
-  return map;
-}
+import { fetchLastEventAtByProjectId, resolveLastEventAt } from "../../../lib/analytics/project-events";
 
 type ProjectsResponse = {
   projects: Array<{
@@ -107,7 +64,7 @@ export async function GET(request: Request): Promise<Response> {
       prUrl: row.prUrl,
       detectedFramework: row.detectedFramework ?? null,
       eventsThisMonth: Number(row.eventsThisMonth),
-      lastEventAt: lastEventAtByProjectId.get(row.id) ?? (row.lastEventAt ? row.lastEventAt.toISOString() : null),
+      lastEventAt: resolveLastEventAt(lastEventAtByProjectId.get(row.id), row.lastEventAt),
       createdAt: row.createdAt.toISOString(),
       actions: {
         canRegenerate: canRegenerateProject(row),

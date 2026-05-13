@@ -3,17 +3,24 @@ import {
   findOwnedAnalyticsTaskById,
   updateOwnedAnalyticsTask,
 } from "./queries";
+import {
+  isActiveDuplicateTaskStatus,
+  isUserCancellableTaskStatus,
+} from "./status-rules";
+import {
+  ANALYTICS_TASK_EVENT_NAME_PATTERN,
+  isRecord,
+  normalizeTaskText,
+} from "./route-validation";
 import type {
   AnalyticsTaskLocalEventEvidence,
   AnalyticsTaskRecord,
   AnalyticsTaskStatus,
-  AnalyticsTaskStatusEventRecord,
   AnalyticsTaskVerificationCommand,
   TransitionAnalyticsTaskInput,
   TransitionAnalyticsTaskResult,
 } from "./types";
 
-const EVENT_NAME_PATTERN = /^[a-z][a-z0-9_]{0,99}$/;
 const FINGERPRINT_PATTERN = /^[a-f0-9]{64}$/;
 
 const MAX_CHANGED_FILES = 50;
@@ -27,31 +34,32 @@ const MAX_PROPERTY_KEY_LENGTH = 80;
 const MAX_PROPERTY_STRING_LENGTH = 200;
 const MAX_ERROR_LENGTH = 320;
 
-const activeStatuses: AnalyticsTaskStatus[] = [
-  "pending",
-  "in_progress",
-  "implemented_locally",
-  "awaiting_deploy",
-  "failed",
-  "verified",
-  "duplicate",
+const allowedExactTransitions: Array<{
+  from: AnalyticsTaskStatus;
+  to: AnalyticsTaskStatus;
+  actorType: TransitionAnalyticsTaskInput["actorType"];
+}> = [
+  { from: "pending", to: "in_progress", actorType: "agent" },
+  { from: "pending", to: "cancelled", actorType: "user" },
+  { from: "in_progress", to: "implemented_locally", actorType: "agent" },
+  { from: "in_progress", to: "failed", actorType: "agent" },
+  { from: "implemented_locally", to: "awaiting_deploy", actorType: "system" },
+  { from: "implemented_locally", to: "verified", actorType: "system" },
+  { from: "awaiting_deploy", to: "verified", actorType: "system" },
+  { from: "failed", to: "pending", actorType: "user" },
 ];
-
-const activeNonVerifiedStatuses: AnalyticsTaskStatus[] = [
-  "pending",
-  "in_progress",
-  "implemented_locally",
-  "awaiting_deploy",
-  "failed",
-  "duplicate",
-];
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
 
 function sanitizeCompactText(value: string, maxLength: number): string {
-  return value.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, maxLength);
+  return normalizeTaskText(value, maxLength) ?? "";
+}
+
+function normalizeRelativeEvidencePath(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const normalized = value.replace(/\\/g, "/").replace(/^\.\/+/, "");
+  if (!normalized || normalized.length > MAX_FILE_LENGTH) return null;
+  if (normalized.startsWith("/") || normalized.startsWith("~")) return null;
+  if (normalized.split("/").some((segment) => segment === "..")) return null;
+  return /^[A-Za-z0-9._/-]+$/.test(normalized) ? normalized : null;
 }
 
 function sanitizeChangedFiles(changedFiles: string[] | undefined): string[] {
@@ -59,14 +67,8 @@ function sanitizeChangedFiles(changedFiles: string[] | undefined): string[] {
 
   const output: string[] = [];
   for (const entry of changedFiles) {
-    if (typeof entry !== "string") continue;
-    const normalized = entry.replace(/\\/g, "/").replace(/^\.\/+/, "");
-    if (!normalized || normalized.length > MAX_FILE_LENGTH) continue;
-    if (normalized.startsWith("/") || normalized.startsWith("~")) continue;
-
-    const segments = normalized.split("/");
-    if (segments.some((segment) => segment === "..")) continue;
-    if (!/^[A-Za-z0-9._/-]+$/.test(normalized)) continue;
+    const normalized = normalizeRelativeEvidencePath(entry);
+    if (!normalized) continue;
 
     if (!output.includes(normalized)) output.push(normalized);
     if (output.length >= MAX_CHANGED_FILES) break;
@@ -103,6 +105,13 @@ function sanitizeVerificationCommands(
   return output;
 }
 
+function sanitizeEventPropertyValue(value: unknown): unknown {
+  if (typeof value === "string") return value.slice(0, MAX_PROPERTY_STRING_LENGTH);
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "boolean" || value === null) return value;
+  return undefined;
+}
+
 function sanitizeEventProperties(properties: unknown): Record<string, unknown> | undefined {
   if (!isRecord(properties)) return undefined;
 
@@ -113,17 +122,8 @@ function sanitizeEventProperties(properties: unknown): Record<string, unknown> |
     const normalizedKey = sanitizeCompactText(key, MAX_PROPERTY_KEY_LENGTH);
     if (!normalizedKey || !/^[A-Za-z0-9_.-]+$/.test(normalizedKey)) continue;
 
-    if (typeof value === "string") {
-      sanitized[normalizedKey] = value.slice(0, MAX_PROPERTY_STRING_LENGTH);
-      continue;
-    }
-    if (typeof value === "number" && Number.isFinite(value)) {
-      sanitized[normalizedKey] = value;
-      continue;
-    }
-    if (typeof value === "boolean" || value === null) {
-      sanitized[normalizedKey] = value;
-    }
+    const sanitizedValue = sanitizeEventPropertyValue(value);
+    if (sanitizedValue !== undefined) sanitized[normalizedKey] = sanitizedValue;
   }
 
   return Object.keys(sanitized).length ? sanitized : undefined;
@@ -138,7 +138,7 @@ function sanitizeLocalEventEvidence(
   for (const row of evidence) {
     if (!row || typeof row.eventName !== "string") continue;
     const eventName = sanitizeCompactText(row.eventName.toLowerCase(), 100);
-    if (!EVENT_NAME_PATTERN.test(eventName)) continue;
+    if (!ANALYTICS_TASK_EVENT_NAME_PATTERN.test(eventName)) continue;
 
     const sanitizedProperties = sanitizeEventProperties(row.properties);
     output.push({
@@ -207,23 +207,39 @@ function hasEvidenceChanged(task: AnalyticsTaskRecord, nextLocalVerification: Re
   return shallowStableJson(task.localVerification ?? null) !== shallowStableJson(nextLocalVerification ?? null);
 }
 
-function isAllowedTransition(fromStatus: AnalyticsTaskStatus, toStatus: AnalyticsTaskStatus, actorType: TransitionAnalyticsTaskInput["actorType"]): boolean {
-  if (fromStatus === "pending" && toStatus === "in_progress" && actorType === "agent") return true;
-  if (fromStatus === "pending" && toStatus === "cancelled" && actorType === "user") return true;
-  if (fromStatus === "in_progress" && toStatus === "implemented_locally" && actorType === "agent") return true;
-  if (fromStatus === "in_progress" && toStatus === "failed" && actorType === "agent") return true;
-  if (fromStatus === "implemented_locally" && toStatus === "awaiting_deploy" && actorType === "system") return true;
-  if (fromStatus === "implemented_locally" && toStatus === "verified" && actorType === "system") return true;
-  if (fromStatus === "awaiting_deploy" && toStatus === "verified" && actorType === "system") return true;
-  if (fromStatus === "failed" && toStatus === "pending" && actorType === "user") return true;
-  if (toStatus === "archived" && actorType === "user" && activeStatuses.includes(fromStatus)) return true;
-  if (toStatus === "cancelled" && actorType === "user" && activeNonVerifiedStatuses.includes(fromStatus)) return true;
+function isAllowedTransition(
+  fromStatus: AnalyticsTaskStatus,
+  toStatus: AnalyticsTaskStatus,
+  actorType: TransitionAnalyticsTaskInput["actorType"],
+): boolean {
+  if (actorType === "user" && toStatus === "archived") {
+    return isActiveDuplicateTaskStatus(fromStatus);
+  }
+  if (actorType === "user" && toStatus === "cancelled") {
+    return isUserCancellableTaskStatus(fromStatus);
+  }
 
-  return false;
+  return allowedExactTransitions.some(
+    (transition) =>
+      transition.from === fromStatus &&
+      transition.to === toStatus &&
+      transition.actorType === actorType,
+  );
 }
 
 function transitionError(message: string): never {
   throw new Error(message);
+}
+
+function isAgentReclaimingImplementedTask(
+  task: AnalyticsTaskRecord,
+  input: TransitionAnalyticsTaskInput,
+): boolean {
+  return (
+    input.actorType === "agent" &&
+    task.status === "implemented_locally" &&
+    input.toStatus === "in_progress"
+  );
 }
 
 function statusEventDetails(evidence: SanitizedEvidence): Record<string, unknown> {
@@ -272,6 +288,36 @@ function evaluateSameStatusIdempotency(
 
 type TaskPatch = Parameters<typeof updateOwnedAnalyticsTask>[0]["patch"];
 
+type PatchBuilderParams = {
+  task: AnalyticsTaskRecord;
+  evidence: SanitizedEvidence;
+  now: Date;
+};
+
+const transitionPatchBuilders: Partial<
+  Record<AnalyticsTaskStatus, (params: PatchBuilderParams) => Partial<TaskPatch>>
+> = {
+  in_progress: ({ task, now }) => (task.claimedAt ? {} : { claimedAt: now }),
+  implemented_locally: ({ task, evidence, now }) => ({
+    ...(task.implementedAt ? {} : { implementedAt: now }),
+    ...(evidence.implementationFingerprint
+      ? { implementationFingerprint: evidence.implementationFingerprint }
+      : {}),
+    lastError: null,
+  }),
+  failed: ({ task, evidence }) => ({
+    lastError: evidence.errorSummary ?? task.lastError,
+  }),
+  awaiting_deploy: () => ({ lastError: null }),
+  verified: ({ task, now }) => ({
+    ...(task.verifiedAt ? {} : { verifiedAt: now }),
+    lastError: null,
+  }),
+  cancelled: ({ now }) => ({ cancelledAt: now }),
+  archived: ({ now }) => ({ archivedAt: now }),
+  pending: ({ task }) => (task.status === "failed" ? { lastError: null } : {}),
+};
+
 function buildTransitionPatch(params: {
   task: AnalyticsTaskRecord;
   input: TransitionAnalyticsTaskInput;
@@ -280,34 +326,11 @@ function buildTransitionPatch(params: {
   now: Date;
 }): TaskPatch {
   const { task, input, evidence, localVerification, now } = params;
-  const patch: TaskPatch = { status: input.toStatus, updatedAt: now };
+  const statusPatch = transitionPatchBuilders[input.toStatus]?.({ task, evidence, now }) ?? {};
+  const patch: TaskPatch = { status: input.toStatus, updatedAt: now, ...statusPatch };
 
   if (localVerification && hasEvidenceChanged(task, localVerification)) {
     patch.localVerification = localVerification;
-  }
-
-  if (input.toStatus === "in_progress" && !task.claimedAt) patch.claimedAt = now;
-  if (input.toStatus === "implemented_locally") {
-    if (!task.implementedAt) patch.implementedAt = now;
-    if (evidence.implementationFingerprint) patch.implementationFingerprint = evidence.implementationFingerprint;
-    patch.lastError = null;
-  }
-  if (input.toStatus === "failed") {
-    patch.lastError = evidence.errorSummary ?? task.lastError;
-  }
-  if (input.toStatus === "awaiting_deploy") patch.lastError = null;
-  if (input.toStatus === "verified") {
-    if (!task.verifiedAt) patch.verifiedAt = now;
-    patch.lastError = null;
-  }
-  if (input.toStatus === "cancelled") {
-    patch.cancelledAt = now;
-  }
-  if (input.toStatus === "archived") {
-    patch.archivedAt = now;
-  }
-  if (task.status === "failed" && input.toStatus === "pending") {
-    patch.lastError = null;
   }
 
   return patch;
@@ -336,6 +359,69 @@ function sameStatusPatch(params: {
   return patch;
 }
 
+async function createTransitionStatusEvent(params: {
+  task: AnalyticsTaskRecord;
+  input: TransitionAnalyticsTaskInput;
+  fromStatus: AnalyticsTaskStatus;
+  evidence: SanitizedEvidence;
+}) {
+  return createAnalyticsTaskStatusEvent({
+    taskId: params.task.id,
+    projectId: params.task.projectId,
+    userId: params.task.userId,
+    fromStatus: params.fromStatus,
+    toStatus: params.input.toStatus,
+    actorType: params.input.actorType,
+    actorId: params.input.actorId ?? null,
+    reason: params.input.reason ?? null,
+    details: statusEventDetails(params.evidence),
+  });
+}
+
+async function transitionSameStatus(params: {
+  task: AnalyticsTaskRecord;
+  input: TransitionAnalyticsTaskInput;
+  evidence: SanitizedEvidence;
+  localVerification: Record<string, unknown> | null;
+  sameStatus: SameStatusResult;
+  now: Date;
+}): Promise<TransitionAnalyticsTaskResult> {
+  const updatedTask = await updateOwnedAnalyticsTask({
+    userId: params.input.userId,
+    taskId: params.input.taskId,
+    projectId: params.input.projectId,
+    patch: sameStatusPatch({
+      task: params.task,
+      input: params.input,
+      evidence: params.evidence,
+      localVerification: params.localVerification,
+      now: params.now,
+    }),
+  });
+  if (!updatedTask) transitionError("Task update failed.");
+
+  if (!params.sameStatus.createEvent) {
+    return {
+      status: "idempotent",
+      task: updatedTask,
+      statusEvent: null,
+    };
+  }
+
+  const statusEvent = await createTransitionStatusEvent({
+    task: updatedTask,
+    input: params.input,
+    fromStatus: params.task.status,
+    evidence: params.evidence,
+  });
+
+  return {
+    status: "transitioned",
+    task: updatedTask,
+    statusEvent,
+  };
+}
+
 export async function transitionAnalyticsTask(
   input: TransitionAnalyticsTaskInput,
 ): Promise<TransitionAnalyticsTaskResult> {
@@ -347,11 +433,7 @@ export async function transitionAnalyticsTask(
   });
   if (!existingTask) transitionError("Task not found or not owned by user.");
 
-  if (
-    input.actorType === "agent" &&
-    existingTask.status === "implemented_locally" &&
-    input.toStatus === "in_progress"
-  ) {
+  if (isAgentReclaimingImplementedTask(existingTask, input)) {
     return {
       status: "idempotent",
       task: existingTask,
@@ -365,45 +447,14 @@ export async function transitionAnalyticsTask(
   const sameStatus = evaluateSameStatusIdempotency(existingTask, input, evidence, evidenceChanged);
 
   if (sameStatus.idempotent) {
-    const updatedTask = await updateOwnedAnalyticsTask({
-      userId: input.userId,
-      taskId: input.taskId,
-      projectId: input.projectId,
-      patch: sameStatusPatch({
-        task: existingTask,
-        input,
-        evidence,
-        localVerification,
-        now,
-      }),
+    return transitionSameStatus({
+      task: existingTask,
+      input,
+      evidence,
+      localVerification,
+      sameStatus,
+      now,
     });
-    if (!updatedTask) transitionError("Task update failed.");
-
-    if (!sameStatus.createEvent) {
-      return {
-        status: "idempotent",
-        task: updatedTask,
-        statusEvent: null,
-      };
-    }
-
-    const statusEvent = await createAnalyticsTaskStatusEvent({
-      taskId: updatedTask.id,
-      projectId: updatedTask.projectId,
-      userId: updatedTask.userId,
-      fromStatus: existingTask.status,
-      toStatus: input.toStatus,
-      actorType: input.actorType,
-      actorId: input.actorId ?? null,
-      reason: input.reason ?? null,
-      details: statusEventDetails(evidence),
-    });
-
-    return {
-      status: "transitioned",
-      task: updatedTask,
-      statusEvent,
-    };
   }
 
   if (!isAllowedTransition(existingTask.status, input.toStatus, input.actorType)) {
@@ -426,16 +477,11 @@ export async function transitionAnalyticsTask(
   });
   if (!updatedTask) transitionError("Task update failed.");
 
-  const statusEvent = await createAnalyticsTaskStatusEvent({
-    taskId: updatedTask.id,
-    projectId: updatedTask.projectId,
-    userId: updatedTask.userId,
+  const statusEvent = await createTransitionStatusEvent({
+    task: updatedTask,
+    input,
     fromStatus: existingTask.status,
-    toStatus: input.toStatus,
-    actorType: input.actorType,
-    actorId: input.actorId ?? null,
-    reason: input.reason ?? null,
-    details: statusEventDetails(evidence),
+    evidence,
   });
 
   return {

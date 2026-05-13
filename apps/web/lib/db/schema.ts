@@ -14,6 +14,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { activeDuplicateStatusSqlList } from "../analytics/tasks/status-rules";
 
 export const users = pgTable(
   "users",
@@ -334,13 +335,7 @@ export const analyticsTasks = pgTable(
       .on(table.projectId, table.duplicateFingerprint)
       .where(
         sql`${table.duplicateFingerprint} is not null and ${table.status} in (
-          'pending',
-          'in_progress',
-          'implemented_locally',
-          'awaiting_deploy',
-          'verified',
-          'failed',
-          'duplicate'
+          ${sql.raw(activeDuplicateStatusSqlList())}
         )`,
       ),
     index("idx_analytics_tasks_project_id").on(table.projectId),

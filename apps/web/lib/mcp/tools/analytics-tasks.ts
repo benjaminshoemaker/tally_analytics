@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
+import type { AnalyticsTaskStatus } from "../../analytics/tasks/types";
 import {
   resolveAnalyticsTaskProject,
   summarizeProjectCandidate,
@@ -8,6 +9,7 @@ import {
   toMcpAnalyticsTaskListRow,
 } from "../../analytics/tasks/mcp";
 import { findOwnedAnalyticsTaskById, listOwnedAnalyticsTasksForProject } from "../../analytics/tasks/queries";
+import { mcpInProgressTaskStatuses, mcpPendingTaskStatuses } from "../../analytics/tasks/status-rules";
 import { transitionAnalyticsTask } from "../../analytics/tasks/transitions";
 import { refreshAnalyticsTaskListVerification, refreshAnalyticsTaskVerification } from "../../analytics/tasks/verification";
 import { getOwnedAnalyticsProject } from "../../db/queries/projects";
@@ -126,7 +128,7 @@ async function handleListPendingAnalyticsTasks(
     projectId: resolved.project.id,
   });
   const refreshedTasks = await refreshAnalyticsTaskListVerification({ tasks });
-  const statuses = includeInProgress ? new Set(["pending", "in_progress"]) : new Set(["pending"]);
+  const statuses = new Set<AnalyticsTaskStatus>(includeInProgress ? mcpInProgressTaskStatuses : mcpPendingTaskStatuses);
   const visible = refreshedTasks.filter((task) => statuses.has(task.status));
 
   if (visible.length === 0) {
