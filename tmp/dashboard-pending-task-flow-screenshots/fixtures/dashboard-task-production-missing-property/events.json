@@ -1,0 +1,22 @@
+{
+  "scenarioId": "dashboard-task-production-missing-property",
+  "description": "Task verification scenario where production events exist but required properties are missing.",
+  "generatedAt": "2026-05-12T22:08:35.348Z",
+  "events": [
+    {
+      "project_id": "proj_dtask_prop",
+      "session_id": "sess_dtask_prop_001",
+      "event_type": "signup_completed",
+      "timestamp": "2099-01-03T00:00:00.000Z",
+      "url": "https://missing-prop-demo.test/signup",
+      "path": "/signup",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_prop_001",
+      "is_returning": 0,
+      "environment": "production",
+      "event_properties": {
+        "source_page": "/pricing"
+      }
+    }
+  ]
+}

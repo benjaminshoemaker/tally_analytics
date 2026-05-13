@@ -1,0 +1,23 @@
+{
+  "scenarioId": "dashboard-task-production-verified",
+  "description": "Task verification scenario where a production event confirms agent implementation.",
+  "generatedAt": "2026-05-12T22:08:35.325Z",
+  "events": [
+    {
+      "project_id": "proj_dtask_ver",
+      "session_id": "sess_dtask_ver_001",
+      "event_type": "upgrade_cta_clicked",
+      "timestamp": "2099-01-02T00:00:00.000Z",
+      "url": "https://verified-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_ver_001",
+      "is_returning": 1,
+      "environment": "production",
+      "event_properties": {
+        "surface": "hero",
+        "plan": "pro"
+      }
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "question": "How many upgrade CTA clicks have we had in this dogfood run?",
+  "projectUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk",
+  "apiEvidence": [
+    {
+      "url": "https://usetally.xyz/api/projects/proj_dgoEuC3C0lo-3Nk/analytics/tasks",
+      "status": 200,
+      "body": {
+        "tasks": []
+      }
+    },
+    {
+      "url": "https://usetally.xyz/api/projects/proj_dgoEuC3C0lo-3Nk/analytics/questions",
+      "status": 200,
+      "body": {
+        "kind": "cannot_answer_yet",
+        "answer": {
+          "summary": "Upgrade CTA click tracking has not been observed for this project yet.",
+          "limitation": "Without a dedicated click event, Tally cannot answer this question from production data."
+        },
+        "draft": {
+          "originalQuestion": "How many upgrade CTA clicks have we had in this dogfood run?",
+          "answerKind": "cannot_answer_yet",
+          "answerSummary": "Upgrade CTA click tracking has not been observed for this project yet.",
+          "analyticsGap": "No upgrade CTA click telemetry is currently available.",
+          "taskType": "track_click",
+          "title": "Track upgrade CTA clicks",
+          "eventName": "upgrade_cta_clicked",
+          "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+          "propertiesSchema": {
+            "required": [
+              "surface",
+              "plan"
+            ]
+          },
+          "targetSurface": "/pricing",
+          "implementationGuidance": "Emit `upgrade_cta_clicked` on each CTA click and capture the UI surface and targeted plan.",
+          "verificationCriteria": {
+            "productionEvent": "upgrade_cta_clicked",
+            "requiredProperties": [
+              "surface",
+              "plan"
+            ],
+            "environment": "production"
+          },
+          "verificationSource": "production_event"
+        },
+        "existingTask": null
+      }
+    },
+    {
+      "url": "https://usetally.xyz/api/projects/proj_dgoEuC3C0lo-3Nk/analytics/tasks",
+      "status": 200,
+      "body": {
+        "status": "created",
+        "task": {
+          "id": "task_AzfX-NH9T5V8wT8c",
+          "projectId": "proj_dgoEuC3C0lo-3Nk",
+          "userId": "ef382954-7f87-441d-9051-74b4d579f597",
+          "status": "pending",
+          "taskType": "track_click",
+          "title": "Track upgrade CTA clicks",
+          "originalQuestion": "How many upgrade CTA clicks have we had in this dogfood run?",
+          "answerKind": "cannot_answer_yet",
+          "answerSummary": "Upgrade CTA click tracking has not been observed for this project yet.",
+          "analyticsGap": "No upgrade CTA click telemetry is currently available.",
+          "eventName": "upgrade_cta_clicked",
+          "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+          "propertiesSchema": {
+            "required": [
+              "surface",
+              "plan"
+            ]
+          },
+          "targetSurface": "/pricing",
+          "implementationGuidance": "Emit `upgrade_cta_clicked` on each CTA click and capture the UI surface and targeted plan.",
+          "verificationCriteria": {
+            "environment": "production",
+            "productionEvent": "upgrade_cta_clicked",
+            "requiredProperties": [
+              "surface",
+              "plan"
+            ]
+          },
+          "verificationSource": "production_event",
+          "duplicateFingerprint": "d986f44b2e20a18532972562a55b384afd32d70f538bc18373171b68dadb894d",
+          "duplicateOfTaskId": null,
+          "localVerification": null,
+          "implementationFingerprint": null,
+          "lastError": null,
+          "confirmedAt": "2026-05-13T07:13:37.616Z",
+          "claimedAt": null,
+          "implementedAt": null,
+          "verifiedAt": null,
+          "cancelledAt": null,
+          "archivedAt": null,
+          "createdAt": "2026-05-13T07:13:37.619Z",
+          "updatedAt": "2026-05-13T07:13:37.619Z"
+        }
+      }
+    },
+    {
+      "url": "https://usetally.xyz/api/projects/proj_dgoEuC3C0lo-3Nk/analytics/tasks",
+      "status": 200,
+      "body": {
+        "tasks": [
+          {
+            "id": "task_AzfX-NH9T5V8wT8c",
+            "projectId": "proj_dgoEuC3C0lo-3Nk",
+            "userId": "ef382954-7f87-441d-9051-74b4d579f597",
+            "status": "pending",
+            "taskType": "track_click",
+            "title": "Track upgrade CTA clicks",
+            "originalQuestion": "How many upgrade CTA clicks have we had in this dogfood run?",
+            "answerKind": "cannot_answer_yet",
+            "answerSummary": "Upgrade CTA click tracking has not been observed for this project yet.",
+            "analyticsGap": "No upgrade CTA click telemetry is currently available.",
+            "eventName": "upgrade_cta_clicked",
+            "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+            "propertiesSchema": {
+              "required": [
+                "surface",
+                "plan"
+              ]
+            },
+            "targetSurface": "/pricing",
+            "implementationGuidance": "Emit `upgrade_cta_clicked` on each CTA click and capture the UI surface and targeted plan.",
+            "verificationCriteria": {
+              "environment": "production",
+              "productionEvent": "upgrade_cta_clicked",
+              "requiredProperties": [
+                "surface",
+                "plan"
+              ]
+            },
+            "verificationSource": "production_event",
+            "duplicateFingerprint": "d986f44b2e20a18532972562a55b384afd32d70f538bc18373171b68dadb894d",
+            "duplicateOfTaskId": null,
+            "localVerification": null,
+            "implementationFingerprint": null,
+            "lastError": null,
+            "confirmedAt": "2026-05-13T07:13:37.616Z",
+            "claimedAt": null,
+            "implementedAt": null,
+            "verifiedAt": null,
+            "cancelledAt": null,
+            "archivedAt": null,
+            "createdAt": "2026-05-13T07:13:37.619Z",
+            "updatedAt": "2026-05-13T07:13:37.619Z"
+          }
+        ]
+      }
+    }
+  ],
+  "tasks": {
+    "status": 200,
+    "body": {
+      "tasks": [
+        {
+          "id": "task_AzfX-NH9T5V8wT8c",
+          "projectId": "proj_dgoEuC3C0lo-3Nk",
+          "userId": "ef382954-7f87-441d-9051-74b4d579f597",
+          "status": "pending",
+          "taskType": "track_click",
+          "title": "Track upgrade CTA clicks",
+          "originalQuestion": "How many upgrade CTA clicks have we had in this dogfood run?",
+          "answerKind": "cannot_answer_yet",
+          "answerSummary": "Upgrade CTA click tracking has not been observed for this project yet.",
+          "analyticsGap": "No upgrade CTA click telemetry is currently available.",
+          "eventName": "upgrade_cta_clicked",
+          "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+          "propertiesSchema": {
+            "required": [
+              "surface",
+              "plan"
+            ]
+          },
+          "targetSurface": "/pricing",
+          "implementationGuidance": "Emit `upgrade_cta_clicked` on each CTA click and capture the UI surface and targeted plan.",
+          "verificationCriteria": {
+            "environment": "production",
+            "productionEvent": "upgrade_cta_clicked",
+            "requiredProperties": [
+              "surface",
+              "plan"
+            ]
+          },
+          "verificationSource": "production_event",
+          "duplicateFingerprint": "d986f44b2e20a18532972562a55b384afd32d70f538bc18373171b68dadb894d",
+          "duplicateOfTaskId": null,
+          "localVerification": null,
+          "implementationFingerprint": null,
+          "lastError": null,
+          "confirmedAt": "2026-05-13T07:13:37.616Z",
+          "claimedAt": null,
+          "implementedAt": null,
+          "verifiedAt": null,
+          "cancelledAt": null,
+          "archivedAt": null,
+          "createdAt": "2026-05-13T07:13:37.619Z",
+          "updatedAt": "2026-05-13T07:13:37.619Z"
+        }
+      ]
+    }
+  }
+}

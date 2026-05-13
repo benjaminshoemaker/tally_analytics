@@ -1,0 +1,317 @@
+{
+  "live": {
+    "status": 200,
+    "body": {
+      "events": [
+        {
+          "id": "2026-05-13T07:18:43.489Z-0",
+          "eventType": "upgrade_cta_clicked",
+          "path": "",
+          "referrer": null,
+          "timestamp": "2026-05-13T07:18:43.489Z",
+          "relativeTime": "59 seconds"
+        },
+        {
+          "id": "2026-05-13T07:18:43.436Z-1",
+          "eventType": "page_view",
+          "path": "/pricing",
+          "referrer": "http://localhost:3105/",
+          "timestamp": "2026-05-13T07:18:43.436Z",
+          "relativeTime": "59 seconds"
+        },
+        {
+          "id": "2026-05-13T07:18:43.436Z-2",
+          "eventType": "session_start",
+          "path": "",
+          "referrer": "http://localhost:3105/",
+          "timestamp": "2026-05-13T07:18:43.436Z",
+          "relativeTime": "59 seconds"
+        },
+        {
+          "id": "2026-05-13T07:18:43.375Z-3",
+          "eventType": "page_view",
+          "path": "/",
+          "referrer": null,
+          "timestamp": "2026-05-13T07:18:43.375Z",
+          "relativeTime": "59 seconds"
+        },
+        {
+          "id": "2026-05-13T07:18:43.238Z-4",
+          "eventType": "page_view",
+          "path": "/",
+          "referrer": null,
+          "timestamp": "2026-05-13T07:18:43.238Z",
+          "relativeTime": "59 seconds"
+        },
+        {
+          "id": "2026-05-13T07:18:41.635Z-5",
+          "eventType": "page_view",
+          "path": "/",
+          "referrer": null,
+          "timestamp": "2026-05-13T07:18:41.635Z",
+          "relativeTime": "1 minute and 1 second"
+        },
+        {
+          "id": "2026-05-13T07:18:41.634Z-6",
+          "eventType": "session_start",
+          "path": "",
+          "referrer": null,
+          "timestamp": "2026-05-13T07:18:41.634Z",
+          "relativeTime": "1 minute and 1 second"
+        },
+        {
+          "id": "2026-05-13T06:31:10.027Z-7",
+          "eventType": "page_view",
+          "path": "/contact?dogfood=codex-success",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:31:10.027Z",
+          "relativeTime": "48 minutes and 32 seconds"
+        },
+        {
+          "id": "2026-05-13T06:31:09.949Z-8",
+          "eventType": "page_view",
+          "path": "/contact?dogfood=codex-success",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:31:09.949Z",
+          "relativeTime": "48 minutes and 33 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:38.464Z-9",
+          "eventType": "page_view",
+          "path": "/contact?dogfood=codex-success",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:25:38.464Z",
+          "relativeTime": "54 minutes and 4 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:38.460Z-10",
+          "eventType": "page_view",
+          "path": "/contact?dogfood=codex-success",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:25:38.460Z",
+          "relativeTime": "54 minutes and 4 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:38.460Z-11",
+          "eventType": "session_start",
+          "path": "",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:25:38.460Z",
+          "relativeTime": "54 minutes and 4 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:38.407Z-12",
+          "eventType": "page_view",
+          "path": "/about",
+          "referrer": "http://localhost:3000/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "timestamp": "2026-05-13T06:25:38.407Z",
+          "relativeTime": "54 minutes and 4 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:38.395Z-13",
+          "eventType": "page_view",
+          "path": "/about",
+          "referrer": "http://localhost:3000/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "timestamp": "2026-05-13T06:25:38.395Z",
+          "relativeTime": "54 minutes and 4 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:37.410Z-14",
+          "eventType": "page_view",
+          "path": "/about",
+          "referrer": "http://localhost:3000/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "timestamp": "2026-05-13T06:25:37.410Z",
+          "relativeTime": "54 minutes and 5 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:37.410Z-15",
+          "eventType": "session_start",
+          "path": "",
+          "referrer": "http://localhost:3000/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "timestamp": "2026-05-13T06:25:37.410Z",
+          "relativeTime": "54 minutes and 5 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:37.352Z-16",
+          "eventType": "page_view",
+          "path": "/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:25:37.352Z",
+          "relativeTime": "54 minutes and 5 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:37.292Z-17",
+          "eventType": "page_view",
+          "path": "/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:25:37.292Z",
+          "relativeTime": "54 minutes and 5 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:35.316Z-18",
+          "eventType": "page_view",
+          "path": "/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:25:35.316Z",
+          "relativeTime": "54 minutes and 7 seconds"
+        },
+        {
+          "id": "2026-05-13T06:25:35.312Z-19",
+          "eventType": "page_view",
+          "path": "/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "referrer": null,
+          "timestamp": "2026-05-13T06:25:35.312Z",
+          "relativeTime": "54 minutes and 7 seconds"
+        }
+      ],
+      "hasMore": true
+    }
+  },
+  "overview": {
+    "status": 200,
+    "body": {
+      "period": "7d",
+      "pageViews": {
+        "total": 19,
+        "change": 100,
+        "timeSeries": [
+          {
+            "date": "2026-05-13",
+            "count": 19
+          }
+        ]
+      },
+      "sessions": {
+        "total": 5,
+        "change": 100
+      },
+      "topPages": [
+        {
+          "path": "/contact?dogfood=codex-success",
+          "views": 4,
+          "percentage": 21.05
+        },
+        {
+          "path": "/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "views": 4,
+          "percentage": 21.05
+        },
+        {
+          "path": "/about",
+          "views": 3,
+          "percentage": 15.79
+        },
+        {
+          "path": "/",
+          "views": 3,
+          "percentage": 15.79
+        },
+        {
+          "path": "/?utm_source=codex_dogfood_retry&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+          "views": 2,
+          "percentage": 10.53
+        },
+        {
+          "path": "/curl-redeploy",
+          "views": 1,
+          "percentage": 5.26
+        },
+        {
+          "path": "/direct-token-check",
+          "views": 1,
+          "percentage": 5.26
+        },
+        {
+          "path": "/pricing",
+          "views": 1,
+          "percentage": 5.26
+        }
+      ],
+      "topReferrers": [
+        {
+          "referrer": "Direct",
+          "count": 15,
+          "percentage": 78.95
+        },
+        {
+          "referrer": "",
+          "count": 4,
+          "percentage": 21.05
+        }
+      ]
+    }
+  },
+  "question": {
+    "status": 200,
+    "body": {
+      "kind": "answered",
+      "answer": {
+        "summary": "Upgrade CTA click tracking is already present.",
+        "metrics": [
+          {
+            "label": "Upgrade CTA clicks",
+            "value": 1
+          }
+        ],
+        "window": {
+          "period": "7d",
+          "start": "2026-05-06T07:19:43.780Z",
+          "end": "2026-05-13T07:19:43.780Z"
+        }
+      },
+      "draft": null,
+      "existingTask": null
+    }
+  },
+  "tasks": {
+    "status": 200,
+    "body": {
+      "tasks": [
+        {
+          "id": "task_AzfX-NH9T5V8wT8c",
+          "projectId": "proj_dgoEuC3C0lo-3Nk",
+          "userId": "ef382954-7f87-441d-9051-74b4d579f597",
+          "status": "pending",
+          "taskType": "track_click",
+          "title": "Track upgrade CTA clicks",
+          "originalQuestion": "How many upgrade CTA clicks have we had in this dogfood run?",
+          "answerKind": "cannot_answer_yet",
+          "answerSummary": "Upgrade CTA click tracking has not been observed for this project yet.",
+          "analyticsGap": "No upgrade CTA click telemetry is currently available.",
+          "eventName": "upgrade_cta_clicked",
+          "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+          "propertiesSchema": {
+            "required": [
+              "surface",
+              "plan"
+            ]
+          },
+          "targetSurface": "/pricing",
+          "implementationGuidance": "Emit `upgrade_cta_clicked` on each CTA click and capture the UI surface and targeted plan.",
+          "verificationCriteria": {
+            "environment": "production",
+            "productionEvent": "upgrade_cta_clicked",
+            "requiredProperties": [
+              "surface",
+              "plan"
+            ]
+          },
+          "verificationSource": "production_event",
+          "duplicateFingerprint": "d986f44b2e20a18532972562a55b384afd32d70f538bc18373171b68dadb894d",
+          "duplicateOfTaskId": null,
+          "localVerification": null,
+          "implementationFingerprint": null,
+          "lastError": null,
+          "confirmedAt": "2026-05-13T07:13:37.616Z",
+          "claimedAt": null,
+          "implementedAt": null,
+          "verifiedAt": null,
+          "cancelledAt": null,
+          "archivedAt": null,
+          "createdAt": "2026-05-13T07:13:37.619Z",
+          "updatedAt": "2026-05-13T07:13:37.619Z"
+        }
+      ]
+    }
+  }
+}

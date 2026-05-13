@@ -1,0 +1,67 @@
+{
+  "scenarioId": "dashboard-task-question-answered",
+  "description": "Dashboard Ask Tally question that can be answered immediately from pricing page analytics.",
+  "generatedAt": "2026-05-12T22:08:35.184Z",
+  "events": [
+    {
+      "project_id": "proj_dtask_ans",
+      "session_id": "sess_dtask_ans_001",
+      "event_type": "session_start",
+      "timestamp": "2026-05-08T12:00:00.000Z",
+      "url": "https://answered-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "https://google.com/search?q=pricing+analytics",
+      "visitor_id": "visitor_dtask_ans_001",
+      "is_returning": 0,
+      "environment": "production",
+      "event_properties": {
+        "entry": "search"
+      }
+    },
+    {
+      "project_id": "proj_dtask_ans",
+      "session_id": "sess_dtask_ans_001",
+      "event_type": "page_view",
+      "timestamp": "2026-05-08T12:05:00.000Z",
+      "url": "https://answered-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "https://google.com/search?q=pricing+analytics",
+      "visitor_id": "visitor_dtask_ans_001",
+      "is_returning": 0,
+      "environment": "production",
+      "event_properties": {
+        "surface": "hero"
+      }
+    },
+    {
+      "project_id": "proj_dtask_ans",
+      "session_id": "sess_dtask_ans_002",
+      "event_type": "session_start",
+      "timestamp": "2026-05-08T12:08:00.000Z",
+      "url": "https://answered-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_ans_002",
+      "is_returning": 1,
+      "environment": "production",
+      "event_properties": {
+        "entry": "direct"
+      }
+    },
+    {
+      "project_id": "proj_dtask_ans",
+      "session_id": "sess_dtask_ans_002",
+      "event_type": "page_view",
+      "timestamp": "2026-05-08T12:10:00.000Z",
+      "url": "https://answered-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_ans_002",
+      "is_returning": 1,
+      "environment": "production",
+      "event_properties": {
+        "surface": "secondary"
+      }
+    }
+  ]
+}

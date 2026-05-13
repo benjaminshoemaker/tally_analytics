@@ -1,0 +1,22 @@
+{
+  "scenarioId": "dashboard-task-agent-implemented-awaiting-deploy",
+  "description": "Task verification scenario where only a test-environment event exists after agent implementation.",
+  "generatedAt": "2026-05-12T22:08:35.297Z",
+  "events": [
+    {
+      "project_id": "proj_dtask_await",
+      "session_id": "sess_dtask_await_001",
+      "event_type": "upgrade_cta_clicked",
+      "timestamp": "2099-01-01T00:00:00.000Z",
+      "url": "https://awaiting-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_await_001",
+      "is_returning": 1,
+      "environment": "test",
+      "event_properties": {
+        "surface": "hero"
+      }
+    }
+  ]
+}

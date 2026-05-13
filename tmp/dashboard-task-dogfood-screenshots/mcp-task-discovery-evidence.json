@@ -1,0 +1,92 @@
+{
+  "mcpUrl": "https://usetally.xyz/api/mcp",
+  "tools": [
+    "tally_mcp_smoke",
+    "prepare_nextjs_install_patch",
+    "list_projects",
+    "resolve_project",
+    "get_project_overview",
+    "get_live_events",
+    "get_sessions_summary",
+    "get_top_pages",
+    "get_top_referrers",
+    "list_events",
+    "get_event_schema",
+    "get_paths_to_event",
+    "suggest_next_events",
+    "list_pending_analytics_tasks",
+    "get_analytics_task_context",
+    "report_analytics_task_status"
+  ],
+  "list": {
+    "status": "ready",
+    "summary": "1 pending analytics task found for tally-pages-router-test-project.",
+    "project": {
+      "id": "proj_dgoEuC3C0lo-3Nk",
+      "name": "tally-pages-router-test-project",
+      "status": "active",
+      "source": "mcp_codex",
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    },
+    "tasks": [
+      {
+        "id": "task_AzfX-NH9T5V8wT8c",
+        "title": "Track upgrade CTA clicks",
+        "taskType": "track_click",
+        "status": "pending",
+        "eventName": "upgrade_cta_clicked",
+        "createdAt": "2026-05-13T07:13:37.619Z",
+        "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+      }
+    ]
+  },
+  "context": {
+    "status": "ready",
+    "summary": "Loaded task context for Track upgrade CTA clicks.",
+    "project": {
+      "id": "proj_dgoEuC3C0lo-3Nk",
+      "name": "tally-pages-router-test-project",
+      "status": "active",
+      "source": "mcp_codex",
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    },
+    "context": {
+      "taskId": "task_AzfX-NH9T5V8wT8c",
+      "status": "pending",
+      "originalQuestion": "How many upgrade CTA clicks have we had in this dogfood run?",
+      "currentAnswer": {
+        "kind": "cannot_answer_yet",
+        "summary": "Upgrade CTA click tracking has not been observed for this project yet.",
+        "analyticsGap": "No upgrade CTA click telemetry is currently available."
+      },
+      "eventContract": {
+        "taskType": "track_click",
+        "eventName": "upgrade_cta_clicked",
+        "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+        "propertiesSchema": {
+          "required": [
+            "surface",
+            "plan"
+          ]
+        },
+        "targetSurface": "/pricing"
+      },
+      "implementationGuidance": "Emit `upgrade_cta_clicked` on each CTA click and capture the UI surface and targeted plan.",
+      "localVerification": null,
+      "productionVerification": {
+        "source": "production_event",
+        "criteria": {
+          "environment": "production",
+          "productionEvent": "upgrade_cta_clicked",
+          "requiredProperties": [
+            "surface",
+            "plan"
+          ]
+        },
+        "verifiedAt": null,
+        "lastError": null
+      },
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    }
+  }
+}

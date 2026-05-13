@@ -1,0 +1,91 @@
+{
+  "inProgress": {
+    "status": "ready",
+    "summary": "Task task_AzfX-NH9T5V8wT8c is now in_progress.",
+    "transition": "transitioned",
+    "verification": "unchanged",
+    "task": {
+      "id": "task_AzfX-NH9T5V8wT8c",
+      "title": "Track upgrade CTA clicks",
+      "taskType": "track_click",
+      "status": "in_progress",
+      "eventName": "upgrade_cta_clicked",
+      "createdAt": "2026-05-13T07:13:37.619Z",
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    }
+  },
+  "implemented": {
+    "status": "service_error",
+    "summary": "Analytics service query failed."
+  },
+  "context": {
+    "status": "ready",
+    "summary": "Loaded task context for Track upgrade CTA clicks.",
+    "project": {
+      "id": "proj_dgoEuC3C0lo-3Nk",
+      "name": "tally-pages-router-test-project",
+      "status": "active",
+      "source": "mcp_codex",
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    },
+    "context": {
+      "taskId": "task_AzfX-NH9T5V8wT8c",
+      "status": "implemented_locally",
+      "originalQuestion": "How many upgrade CTA clicks have we had in this dogfood run?",
+      "currentAnswer": {
+        "kind": "cannot_answer_yet",
+        "summary": "Upgrade CTA click tracking has not been observed for this project yet.",
+        "analyticsGap": "No upgrade CTA click telemetry is currently available."
+      },
+      "eventContract": {
+        "taskType": "track_click",
+        "eventName": "upgrade_cta_clicked",
+        "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+        "propertiesSchema": {
+          "required": [
+            "surface",
+            "plan"
+          ]
+        },
+        "targetSurface": "/pricing"
+      },
+      "implementationGuidance": "Emit `upgrade_cta_clicked` on each CTA click and capture the UI surface and targeted plan.",
+      "localVerification": {
+        "changedFiles": [
+          "src/pages/index.tsx",
+          "src/pages/pricing.tsx"
+        ],
+        "localEventEvidence": [
+          {
+            "eventName": "upgrade_cta_clicked",
+            "properties": {
+              "plan": "pro",
+              "surface": "pricing"
+            }
+          }
+        ],
+        "verificationCommands": [
+          {
+            "command": "pnpm build",
+            "summary": "Next.js production build passed.",
+            "exitCode": 0
+          }
+        ]
+      },
+      "productionVerification": {
+        "source": "production_event",
+        "criteria": {
+          "environment": "production",
+          "productionEvent": "upgrade_cta_clicked",
+          "requiredProperties": [
+            "surface",
+            "plan"
+          ]
+        },
+        "verifiedAt": null,
+        "lastError": null
+      },
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    }
+  }
+}

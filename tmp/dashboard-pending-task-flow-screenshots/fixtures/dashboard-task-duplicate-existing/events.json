@@ -1,0 +1,31 @@
+{
+  "scenarioId": "dashboard-task-duplicate-existing",
+  "description": "Dashboard Ask Tally duplicate-task scenario where an existing pending task suppresses a new draft.",
+  "generatedAt": "2026-05-12T22:08:35.274Z",
+  "events": [
+    {
+      "project_id": "proj_dtask_dup",
+      "session_id": "sess_dtask_dup_001",
+      "event_type": "session_start",
+      "timestamp": "2026-05-08T16:00:00.000Z",
+      "url": "https://duplicate-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_dup_001",
+      "is_returning": 0,
+      "environment": "production"
+    },
+    {
+      "project_id": "proj_dtask_dup",
+      "session_id": "sess_dtask_dup_001",
+      "event_type": "page_view",
+      "timestamp": "2026-05-08T16:05:00.000Z",
+      "url": "https://duplicate-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_dup_001",
+      "is_returning": 0,
+      "environment": "production"
+    }
+  ]
+}

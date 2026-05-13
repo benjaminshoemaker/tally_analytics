@@ -1,0 +1,53 @@
+{
+  "eventResponseStatus": 200,
+  "network": [
+    {
+      "type": "request",
+      "url": "https://events.usetally.xyz/v1/track",
+      "method": "POST",
+      "postData": "{\"events\":[{\"project_id\":\"proj_dgoEuC3C0lo-3Nk\",\"session_id\":\"3b66f056-4d32-4a48-a452-3e427821e36f\",\"event_type\":\"session_start\",\"timestamp\":\"2026-05-13T07:18:41.634Z\",\"url\":\"http://localhost:3105/\",\"visitor_id\":\"48948cb0-7c7c-43f2-bb1f-7ab8b16331dd\",\"is_returning\":0},{\"project_id\":\"proj_dgoEuC3C0lo-3Nk\",\"session_id\":\"3b66f056-4d32-4a48-a452-3e427821e36f\",\"event_type\":\"page_view\",\"timestamp\":\"2026-05-13T07:18:41.635Z\",\"url\":\"http://localhost:3105/\",\"path\":\"/\",\"engagement_time_ms\":54,\"scroll_depth\":100,\"cta_clicks\":\"[]\"}]}"
+    },
+    {
+      "type": "response",
+      "url": "https://events.usetally.xyz/v1/track",
+      "status": 200,
+      "body": "{\"success\":true,\"received\":2}"
+    },
+    {
+      "type": "request",
+      "url": "https://events.usetally.xyz/v1/track",
+      "method": "POST",
+      "postData": "{\"events\":[{\"project_id\":\"proj_dgoEuC3C0lo-3Nk\",\"session_id\":\"3b66f056-4d32-4a48-a452-3e427821e36f\",\"event_type\":\"page_view\",\"timestamp\":\"2026-05-13T07:18:43.238Z\",\"url\":\"http://localhost:3105/\",\"path\":\"/\",\"engagement_time_ms\":629,\"scroll_depth\":0,\"cta_clicks\":\"[{\\\"elementType\\\":\\\"link\\\",\\\"text\\\":\\\"Pricing\\\"}]\"}]}"
+    },
+    {
+      "type": "request",
+      "url": "https://events.usetally.xyz/v1/track",
+      "method": "POST",
+      "postData": "{\"events\":[{\"project_id\":\"proj_dgoEuC3C0lo-3Nk\",\"session_id\":\"3b66f056-4d32-4a48-a452-3e427821e36f\",\"event_type\":\"page_view\",\"timestamp\":\"2026-05-13T07:18:43.375Z\",\"url\":\"http://localhost:3105/\",\"path\":\"/\",\"engagement_time_ms\":672,\"scroll_depth\":0,\"cta_clicks\":\"[]\"}]}"
+    },
+    {
+      "type": "request",
+      "url": "https://events.usetally.xyz/v1/track",
+      "method": "POST",
+      "postData": "{\"events\":[{\"project_id\":\"proj_dgoEuC3C0lo-3Nk\",\"session_id\":\"3b66f056-4d32-4a48-a452-3e427821e36f\",\"event_type\":\"session_start\",\"timestamp\":\"2026-05-13T07:18:43.436Z\",\"url\":\"http://localhost:3105/pricing\",\"referrer\":\"http://localhost:3105/\",\"visitor_id\":\"48948cb0-7c7c-43f2-bb1f-7ab8b16331dd\",\"is_returning\":1},{\"project_id\":\"proj_dgoEuC3C0lo-3Nk\",\"session_id\":\"3b66f056-4d32-4a48-a452-3e427821e36f\",\"event_type\":\"page_view\",\"timestamp\":\"2026-05-13T07:18:43.436Z\",\"url\":\"http://localhost:3105/pricing\",\"path\":\"/pricing\",\"referrer\":\"http://localhost:3105/\",\"engagement_time_ms\":14,\"scroll_depth\":100,\"cta_clicks\":\"[]\"}]}"
+    },
+    {
+      "type": "request",
+      "url": "https://events.usetally.xyz/v1/track",
+      "method": "POST",
+      "postData": "{\"events\":[{\"project_id\":\"proj_dgoEuC3C0lo-3Nk\",\"session_id\":\"3b66f056-4d32-4a48-a452-3e427821e36f\",\"event_type\":\"upgrade_cta_clicked\",\"timestamp\":\"2026-05-13T07:18:43.489Z\",\"properties\":{\"surface\":\"pricing\",\"plan\":\"pro\"}}]}"
+    },
+    {
+      "type": "response",
+      "url": "https://events.usetally.xyz/v1/track",
+      "status": 200,
+      "body": "{\"success\":true,\"received\":1}"
+    },
+    {
+      "type": "response",
+      "url": "https://events.usetally.xyz/v1/track",
+      "status": 200,
+      "body": "{\"success\":true,\"received\":2}"
+    }
+  ]
+}

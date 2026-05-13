@@ -1,0 +1,19 @@
+{
+  "scenarioId": "dashboard-task-question-unsupported",
+  "description": "Dashboard Ask Tally question that is intentionally too broad and returns unsupported guidance.",
+  "generatedAt": "2026-05-12T22:08:35.251Z",
+  "events": [
+    {
+      "project_id": "proj_dtask_uns",
+      "session_id": "sess_dtask_uns_001",
+      "event_type": "session_start",
+      "timestamp": "2026-05-08T15:00:00.000Z",
+      "url": "https://unsupported-demo.test/",
+      "path": "/",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_uns_001",
+      "is_returning": 0,
+      "environment": "production"
+    }
+  ]
+}

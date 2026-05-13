@@ -1,0 +1,34 @@
+{
+  "scenarioId": "dashboard-task-question-cannot-answer",
+  "description": "Dashboard Ask Tally question that returns cannot_answer_yet with a track_click draft.",
+  "generatedAt": "2026-05-12T22:08:35.227Z",
+  "events": [
+    {
+      "project_id": "proj_dtask_cna",
+      "session_id": "sess_dtask_cna_001",
+      "event_type": "session_start",
+      "timestamp": "2026-05-08T14:00:00.000Z",
+      "url": "https://cannot-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_cna_001",
+      "is_returning": 0,
+      "environment": "production"
+    },
+    {
+      "project_id": "proj_dtask_cna",
+      "session_id": "sess_dtask_cna_001",
+      "event_type": "page_view",
+      "timestamp": "2026-05-08T14:05:00.000Z",
+      "url": "https://cannot-demo.test/pricing",
+      "path": "/pricing",
+      "referrer": "",
+      "visitor_id": "visitor_dtask_cna_001",
+      "is_returning": 0,
+      "environment": "production",
+      "event_properties": {
+        "surface": "pricing"
+      }
+    }
+  ]
+}

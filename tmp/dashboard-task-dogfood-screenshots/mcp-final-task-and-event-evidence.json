@@ -1,0 +1,314 @@
+{
+  "context": {
+    "status": "ready",
+    "summary": "Loaded task context for Track upgrade CTA clicks.",
+    "project": {
+      "id": "proj_dgoEuC3C0lo-3Nk",
+      "name": "tally-pages-router-test-project",
+      "status": "active",
+      "source": "mcp_codex",
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    },
+    "context": {
+      "taskId": "task_AzfX-NH9T5V8wT8c",
+      "status": "verified",
+      "originalQuestion": "How many upgrade CTA clicks have we had in this dogfood run?",
+      "currentAnswer": {
+        "kind": "cannot_answer_yet",
+        "summary": "Upgrade CTA click tracking has not been observed for this project yet.",
+        "analyticsGap": "No upgrade CTA click telemetry is currently available."
+      },
+      "eventContract": {
+        "taskType": "track_click",
+        "eventName": "upgrade_cta_clicked",
+        "triggerDescription": "When a user clicks an upgrade call-to-action button.",
+        "propertiesSchema": {
+          "required": [
+            "surface",
+            "plan"
+          ]
+        },
+        "targetSurface": "/pricing"
+      },
+      "implementationGuidance": "Emit `upgrade_cta_clicked` on each CTA click and capture the UI surface and targeted plan.",
+      "localVerification": {
+        "changedFiles": [
+          "src/pages/index.tsx",
+          "src/pages/pricing.tsx"
+        ],
+        "localEventEvidence": [
+          {
+            "eventName": "upgrade_cta_clicked",
+            "properties": {
+              "plan": "pro",
+              "surface": "pricing"
+            }
+          }
+        ],
+        "verificationCommands": [
+          {
+            "command": "pnpm build",
+            "summary": "Next.js production build passed.",
+            "exitCode": 0
+          }
+        ]
+      },
+      "productionVerification": {
+        "source": "production_event",
+        "criteria": {
+          "environment": "production",
+          "productionEvent": "upgrade_cta_clicked",
+          "requiredProperties": [
+            "surface",
+            "plan"
+          ]
+        },
+        "verifiedAt": "2026-05-13T07:55:59.079Z",
+        "lastError": null
+      },
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    }
+  },
+  "pending": {
+    "status": "no_tasks",
+    "summary": "No pending analytics tasks were found for tally-pages-router-test-project.",
+    "project": {
+      "id": "proj_dgoEuC3C0lo-3Nk",
+      "name": "tally-pages-router-test-project",
+      "status": "active",
+      "source": "mcp_codex",
+      "dashboardUrl": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk"
+    },
+    "tasks": []
+  },
+  "live": {
+    "status": "ok",
+    "summary": "20 recent analytics events returned.",
+    "provenance": {
+      "projectName": "tally-pages-router-test-project",
+      "generatedAt": "2026-05-13T08:00:12.529Z",
+      "queryBasis": {
+        "tool": "get_live_events",
+        "semantics": "dashboard_live"
+      }
+    },
+    "dashboardUrls": {
+      "project": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk",
+      "overview": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk/overview",
+      "live": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk/live",
+      "sessions": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk/sessions"
+    },
+    "events": [
+      {
+        "id": "2026-05-13T07:23:12.564Z-0",
+        "eventType": "upgrade_cta_clicked",
+        "path": "",
+        "referrer": null,
+        "timestamp": "2026-05-13T07:23:12.564Z",
+        "relativeTime": "37 minutes"
+      },
+      {
+        "id": "2026-05-13T07:23:11.261Z-1",
+        "eventType": "page_view",
+        "path": "/pricing",
+        "referrer": null,
+        "timestamp": "2026-05-13T07:23:11.261Z",
+        "relativeTime": "37 minutes and 1 second"
+      },
+      {
+        "id": "2026-05-13T07:23:11.260Z-2",
+        "eventType": "session_start",
+        "path": "",
+        "referrer": null,
+        "timestamp": "2026-05-13T07:23:11.260Z",
+        "relativeTime": "37 minutes and 1 second"
+      },
+      {
+        "id": "2026-05-13T07:18:43.489Z-3",
+        "eventType": "upgrade_cta_clicked",
+        "path": "",
+        "referrer": null,
+        "timestamp": "2026-05-13T07:18:43.489Z",
+        "relativeTime": "41 minutes and 29 seconds"
+      },
+      {
+        "id": "2026-05-13T07:18:43.436Z-4",
+        "eventType": "page_view",
+        "path": "/pricing",
+        "referrer": "http://localhost:3105/",
+        "timestamp": "2026-05-13T07:18:43.436Z",
+        "relativeTime": "41 minutes and 29 seconds"
+      },
+      {
+        "id": "2026-05-13T07:18:43.436Z-5",
+        "eventType": "session_start",
+        "path": "",
+        "referrer": "http://localhost:3105/",
+        "timestamp": "2026-05-13T07:18:43.436Z",
+        "relativeTime": "41 minutes and 29 seconds"
+      },
+      {
+        "id": "2026-05-13T07:18:43.375Z-6",
+        "eventType": "page_view",
+        "path": "/",
+        "referrer": null,
+        "timestamp": "2026-05-13T07:18:43.375Z",
+        "relativeTime": "41 minutes and 29 seconds"
+      },
+      {
+        "id": "2026-05-13T07:18:43.238Z-7",
+        "eventType": "page_view",
+        "path": "/",
+        "referrer": null,
+        "timestamp": "2026-05-13T07:18:43.238Z",
+        "relativeTime": "41 minutes and 29 seconds"
+      },
+      {
+        "id": "2026-05-13T07:18:41.635Z-8",
+        "eventType": "page_view",
+        "path": "/",
+        "referrer": null,
+        "timestamp": "2026-05-13T07:18:41.635Z",
+        "relativeTime": "41 minutes and 31 seconds"
+      },
+      {
+        "id": "2026-05-13T07:18:41.634Z-9",
+        "eventType": "session_start",
+        "path": "",
+        "referrer": null,
+        "timestamp": "2026-05-13T07:18:41.634Z",
+        "relativeTime": "41 minutes and 31 seconds"
+      },
+      {
+        "id": "2026-05-13T06:31:10.027Z-10",
+        "eventType": "page_view",
+        "path": "/contact?dogfood=codex-success",
+        "referrer": null,
+        "timestamp": "2026-05-13T06:31:10.027Z",
+        "relativeTime": "1 hour, 29 minutes and 2 seconds"
+      },
+      {
+        "id": "2026-05-13T06:31:09.949Z-11",
+        "eventType": "page_view",
+        "path": "/contact?dogfood=codex-success",
+        "referrer": null,
+        "timestamp": "2026-05-13T06:31:09.949Z",
+        "relativeTime": "1 hour, 29 minutes and 3 seconds"
+      },
+      {
+        "id": "2026-05-13T06:25:38.464Z-12",
+        "eventType": "page_view",
+        "path": "/contact?dogfood=codex-success",
+        "referrer": null,
+        "timestamp": "2026-05-13T06:25:38.464Z",
+        "relativeTime": "1 hour, 34 minutes and 34 seconds"
+      },
+      {
+        "id": "2026-05-13T06:25:38.460Z-13",
+        "eventType": "page_view",
+        "path": "/contact?dogfood=codex-success",
+        "referrer": null,
+        "timestamp": "2026-05-13T06:25:38.460Z",
+        "relativeTime": "1 hour, 34 minutes and 34 seconds"
+      },
+      {
+        "id": "2026-05-13T06:25:38.460Z-14",
+        "eventType": "session_start",
+        "path": "",
+        "referrer": null,
+        "timestamp": "2026-05-13T06:25:38.460Z",
+        "relativeTime": "1 hour, 34 minutes and 34 seconds"
+      },
+      {
+        "id": "2026-05-13T06:25:38.407Z-15",
+        "eventType": "page_view",
+        "path": "/about",
+        "referrer": "http://localhost:3000/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+        "timestamp": "2026-05-13T06:25:38.407Z",
+        "relativeTime": "1 hour, 34 minutes and 34 seconds"
+      },
+      {
+        "id": "2026-05-13T06:25:38.395Z-16",
+        "eventType": "page_view",
+        "path": "/about",
+        "referrer": "http://localhost:3000/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+        "timestamp": "2026-05-13T06:25:38.395Z",
+        "relativeTime": "1 hour, 34 minutes and 34 seconds"
+      },
+      {
+        "id": "2026-05-13T06:25:37.410Z-17",
+        "eventType": "page_view",
+        "path": "/about",
+        "referrer": "http://localhost:3000/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+        "timestamp": "2026-05-13T06:25:37.410Z",
+        "relativeTime": "1 hour, 34 minutes and 35 seconds"
+      },
+      {
+        "id": "2026-05-13T06:25:37.410Z-18",
+        "eventType": "session_start",
+        "path": "",
+        "referrer": "http://localhost:3000/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+        "timestamp": "2026-05-13T06:25:37.410Z",
+        "relativeTime": "1 hour, 34 minutes and 35 seconds"
+      },
+      {
+        "id": "2026-05-13T06:25:37.352Z-19",
+        "eventType": "page_view",
+        "path": "/?utm_source=codex_dogfood_success&utm_medium=e2e&utm_campaign=tally_sdk_0_1_0",
+        "referrer": null,
+        "timestamp": "2026-05-13T06:25:37.352Z",
+        "relativeTime": "1 hour, 34 minutes and 35 seconds"
+      }
+    ],
+    "hasMore": true
+  },
+  "events": {
+    "status": "ok",
+    "summary": "3 event types found.",
+    "period": "7d",
+    "events": [
+      {
+        "eventName": "page_view",
+        "count": 20,
+        "firstSeenAt": "2026-05-13T06:19:16.364Z",
+        "lastSeenAt": "2026-05-13T07:23:11.261Z",
+        "commonProperties": []
+      },
+      {
+        "eventName": "session_start",
+        "count": 6,
+        "firstSeenAt": "2026-05-13T06:25:35.312Z",
+        "lastSeenAt": "2026-05-13T07:23:11.260Z",
+        "commonProperties": []
+      },
+      {
+        "eventName": "upgrade_cta_clicked",
+        "count": 2,
+        "firstSeenAt": "2026-05-13T07:18:43.489Z",
+        "lastSeenAt": "2026-05-13T07:23:12.564Z",
+        "commonProperties": []
+      }
+    ],
+    "provenance": {
+      "projectName": "tally-pages-router-test-project",
+      "generatedAt": "2026-05-13T08:00:12.744Z",
+      "dataWindow": {
+        "period": "7d",
+        "start": "2026-05-06T08:00:12.670Z",
+        "end": "2026-05-13T08:00:12.670Z",
+        "timezone": "UTC",
+        "dataThrough": "2026-05-13T08:00:12.670Z"
+      },
+      "queryBasis": {
+        "tool": "list_events",
+        "semantics": "event_discovery"
+      }
+    },
+    "dashboardUrls": {
+      "project": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk",
+      "overview": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk/overview",
+      "live": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk/live",
+      "sessions": "https://usetally.xyz/projects/proj_dgoEuC3C0lo-3Nk/sessions"
+    }
+  }
+}
