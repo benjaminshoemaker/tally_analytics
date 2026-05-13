@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 let insertSpy: ReturnType<typeof vi.fn> | undefined;
+let querySpy: ReturnType<typeof vi.fn> | undefined;
 
 vi.mock("../lib/db/client", () => ({
   db: {
@@ -11,12 +12,20 @@ vi.mock("../lib/db/client", () => ({
   },
 }));
 
+vi.mock("pg", () => ({
+  Pool: vi.fn(() => ({
+    query: (...args: unknown[]) => {
+      if (!querySpy) throw new Error("querySpy not initialized");
+      return querySpy(...args);
+    },
+  })),
+}));
+
 describe("MCP OAuth client registration helpers", () => {
   it("accepts HTTPS and localhost loopback redirect URIs", async () => {
     vi.resetModules();
 
-    const valuesSpy = vi.fn().mockResolvedValue(undefined);
-    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+    querySpy = vi.fn().mockResolvedValue(undefined);
 
     const { registerOAuthClient } = await import("../lib/oauth/clients");
     const registered = await registerOAuthClient({
@@ -30,17 +39,16 @@ describe("MCP OAuth client registration helpers", () => {
     expect(registered.grantTypes).toEqual(["authorization_code", "refresh_token"]);
     expect(registered.responseTypes).toEqual(["code"]);
     expect(registered.scope).toBe("mcp:install");
-    expect(valuesSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        clientId: registered.clientId,
-        clientName: "Codex",
-        redirectUris: [
-          "https://client.example/callback",
-          "http://localhost:4321/callback",
-          "http://127.0.0.1:4321/callback",
-        ],
-        scope: "mcp:install",
-      }),
+    expect(querySpy).toHaveBeenCalledWith(
+      expect.stringContaining("INSERT INTO oauth_clients"),
+      expect.arrayContaining([
+        registered.clientId,
+        "Codex",
+        ["https://client.example/callback", "http://localhost:4321/callback", "http://127.0.0.1:4321/callback"],
+        ["authorization_code", "refresh_token"],
+        ["code"],
+        "mcp:install",
+      ]),
     );
   });
 
@@ -50,6 +58,9 @@ describe("MCP OAuth client registration helpers", () => {
     insertSpy = vi.fn(() => {
       throw new Error("db.insert called unexpectedly");
     });
+    querySpy = vi.fn(() => {
+      throw new Error("pg query called unexpectedly");
+    });
 
     const { registerOAuthClient } = await import("../lib/oauth/clients");
 
@@ -58,6 +69,7 @@ describe("MCP OAuth client registration helpers", () => {
     );
     await expect(registerOAuthClient({ redirectUris: ["javascript:alert(1)"] })).rejects.toThrow(/Invalid redirect URI/);
     expect(insertSpy).not.toHaveBeenCalled();
+    expect(querySpy).not.toHaveBeenCalled();
   });
 
   it("rejects unsupported scopes", async () => {
@@ -66,6 +78,9 @@ describe("MCP OAuth client registration helpers", () => {
     insertSpy = vi.fn(() => {
       throw new Error("db.insert called unexpectedly");
     });
+    querySpy = vi.fn(() => {
+      throw new Error("pg query called unexpectedly");
+    });
 
     const { registerOAuthClient } = await import("../lib/oauth/clients");
 
@@ -73,6 +88,7 @@ describe("MCP OAuth client registration helpers", () => {
       registerOAuthClient({ redirectUris: ["https://client.example/callback"], scope: "mcp:install analytics:read" }),
     ).rejects.toThrow(/Unsupported OAuth scope/);
     expect(insertSpy).not.toHaveBeenCalled();
+    expect(querySpy).not.toHaveBeenCalled();
   });
 });
 
@@ -80,8 +96,7 @@ describe("POST /api/oauth/register", () => {
   it("returns dynamic client registration metadata as 201 JSON", async () => {
     vi.resetModules();
 
-    const valuesSpy = vi.fn().mockResolvedValue(undefined);
-    insertSpy = vi.fn(() => ({ values: valuesSpy }));
+    querySpy = vi.fn().mockResolvedValue(undefined);
 
     const { POST } = await import("../app/api/oauth/register/route");
     const response = await POST(
@@ -104,12 +119,9 @@ describe("POST /api/oauth/register", () => {
       response_types: ["code"],
       scope: "mcp:install",
     });
-    expect(valuesSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        clientName: "Codex",
-        redirectUris: ["http://localhost:4321/callback"],
-        scope: "mcp:install",
-      }),
+    expect(querySpy).toHaveBeenCalledWith(
+      expect.stringContaining("INSERT INTO oauth_clients"),
+      expect.arrayContaining(["Codex", ["http://localhost:4321/callback"], "mcp:install"]),
     );
   });
 
@@ -118,6 +130,9 @@ describe("POST /api/oauth/register", () => {
 
     insertSpy = vi.fn(() => {
       throw new Error("db.insert called unexpectedly");
+    });
+    querySpy = vi.fn(() => {
+      throw new Error("pg query called unexpectedly");
     });
 
     const { POST } = await import("../app/api/oauth/register/route");
@@ -131,5 +146,6 @@ describe("POST /api/oauth/register", () => {
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toMatchObject({ error: "invalid_client_metadata" });
     expect(insertSpy).not.toHaveBeenCalled();
+    expect(querySpy).not.toHaveBeenCalled();
   });
 });

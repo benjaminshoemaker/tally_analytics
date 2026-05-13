@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { Pool } from "pg";
 
 import { db } from "../db/client";
 import { oauthClients } from "../db/schema";
@@ -25,6 +26,13 @@ export type RegisteredOAuthClient = {
   scope: string;
 };
 
+let registrationPool: Pool | null = null;
+
+function oauthRegistrationPool(): Pool {
+  registrationPool ??= new Pool({ connectionString: process.env.DATABASE_URL });
+  return registrationPool;
+}
+
 export async function registerOAuthClient(params: RegisterOAuthClientParams): Promise<RegisteredOAuthClient> {
   assertValidRedirectUris(params.redirectUris);
 
@@ -34,16 +42,22 @@ export async function registerOAuthClient(params: RegisterOAuthClientParams): Pr
   const grantTypes = params.grantTypes?.length ? params.grantTypes : ["authorization_code", "refresh_token"];
   const responseTypes = params.responseTypes?.length ? params.responseTypes : ["code"];
 
-  await db.insert(oauthClients).values({
-    clientId,
-    clientName: params.clientName ?? null,
-    redirectUris: params.redirectUris,
-    grantTypes,
-    responseTypes,
-    scope,
-    createdAt: now,
-    updatedAt: now,
-  });
+  await oauthRegistrationPool().query(
+    `
+      INSERT INTO oauth_clients (
+        client_id,
+        client_name,
+        redirect_uris,
+        grant_types,
+        response_types,
+        scope,
+        created_at,
+        updated_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `,
+    [clientId, params.clientName ?? null, params.redirectUris, grantTypes, responseTypes, scope, now, now],
+  );
 
   return {
     clientId,
