@@ -8,14 +8,13 @@ test('@scenario seeded analysis-failed scenario can log in and open project deta
   const scenario = seedScenario('analysis-failed-can-regenerate');
   const project = scenario.projects[0];
   if (!project) throw new Error('Scenario must include a project');
-  if (!project.prUrl) throw new Error('Scenario project must include a PR URL');
 
   await loginScenarioUser(page, scenario);
   await page.goto(`/projects/${project.id}`);
 
   await expect(page.getByText('Analysis Failed')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Re-run Analysis' })).toBeVisible();
-  await expect(page.getByRole('link', { name: /View PR/ })).toHaveAttribute('href', project.prUrl);
+  await expect(page.getByRole('link', { name: /View PR/ })).toHaveCount(0);
 });
 
 test('@scenario seeded campaign events are queryable through analytics APIs', async ({ page }) => {

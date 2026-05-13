@@ -3,22 +3,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import OnboardingChecklist from '../../../../components/dashboard/onboarding-checklist';
-import QuotaDisplay from '../../../../components/dashboard/quota-display';
 import Skeleton, { SkeletonList } from '../../../../components/dashboard/skeleton';
 import StatusBadge from '../../../../components/dashboard/status-badge';
 import AskTallyPanel from '../../../../components/dashboard/analytics-tasks/ask-tally-panel';
+import ProjectDashboardSummary from '../../../../components/dashboard/project-dashboard-summary';
 import { useProject } from '../../../../lib/hooks/use-project';
-import type { UserPlan } from '../../../../lib/stripe/plans';
 
 type RegenerateState = {
   status: 'idle' | 'loading' | 'success' | 'error';
   message: string;
   retryAfter?: number;
 };
-
-function shouldShowQuota(status: string): boolean {
-  return status === 'pr_pending' || status === 'active';
-}
 
 type StatusCardConfig = {
   title: string;
@@ -82,34 +77,6 @@ function StatusCard({ status }: { status: string }) {
   );
 }
 
-function ExternalLinkIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="inline-block">
-      <path
-        d="M12 8.667V12.667C12 13.0203 11.8595 13.3594 11.6095 13.6095C11.3594 13.8595 11.0203 14 10.667 14H3.333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.667V5.333C2 4.97971 2.14048 4.64057 2.39052 4.39052C2.64057 4.14048 2.97971 4 3.333 4H7.333"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10 2H14V6"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M6.667 9.333L14 2"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function getCanRegenerateAction(project: Record<string, unknown> | null): boolean {
   const actions = project?.actions;
   if (actions && typeof actions === 'object' && 'canRegenerate' in actions) {
@@ -133,11 +100,6 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const project = useMemo(() => {
     const data = projectQuery.data as null | { project?: unknown };
     return (data?.project as null | Record<string, unknown>) ?? null;
-  }, [projectQuery.data]);
-
-  const userPlan: UserPlan = useMemo(() => {
-    const plan = (projectQuery.data as null | Record<string, unknown>)?.userPlan;
-    return plan === 'free' || plan === 'pro' || plan === 'team' ? plan : 'pro';
   }, [projectQuery.data]);
 
   // Auto-dismiss success message after 5 seconds
@@ -247,11 +209,9 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const prUrl = typeof project?.prUrl === 'string' ? (project.prUrl as string) : null;
   const lastEventAt =
     typeof project?.lastEventAt === 'string' ? (project.lastEventAt as string) : null;
-  const quotaLimit = Number((projectQuery.data as Record<string, unknown>)?.quotaLimit ?? 0);
-  const quotaUsed = Number((projectQuery.data as Record<string, unknown>)?.quotaUsed ?? 0);
-  const isOverQuota = Boolean((projectQuery.data as Record<string, unknown>)?.isOverQuota);
   const canRegenerate = getCanRegenerateAction(project);
   const isWaitingForFirstEvent = displayStatus === 'active' && lastEventAt === null;
+  const hasReceivedEvents = displayStatus === 'active' && lastEventAt !== null;
 
   const showRerunButton = canRegenerate && !optimisticStatus;
   const isRateLimited = retryCountdown > 0;
@@ -266,20 +226,13 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         </div>
       )}
 
-      {/* Quick Actions */}
-      <div className="flex flex-wrap items-center gap-3">
-        {prUrl && (
-          <a
-            href={prUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
-          >
-            View PR <ExternalLinkIcon />
-          </a>
-        )}
+      {hasReceivedEvents && (
+        <ProjectDashboardSummary projectId={projectId} lastEventAt={lastEventAt} />
+      )}
 
-        {showRerunButton && (
+      {/* Recovery action for legacy GitHub App setup failures */}
+      {showRerunButton && (
+        <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={onRegenerate}
@@ -288,8 +241,8 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
           >
             {regenerateState.status === 'loading' ? 'Re-running…' : 'Re-run Analysis'}
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Status-specific setup guidance */}
       {!optimisticStatus && canRegenerate && <StatusCard status={realStatus} />}
@@ -321,16 +274,6 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
             </span>
           )}
         </div>
-      )}
-
-      {/* QuotaDisplay only for relevant states */}
-      {shouldShowQuota(displayStatus) && (
-        <QuotaDisplay
-          used={quotaUsed}
-          limit={quotaLimit}
-          isOverQuota={isOverQuota}
-          userPlan={userPlan}
-        />
       )}
 
       {/* OnboardingChecklist only when PR exists and not active */}

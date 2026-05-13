@@ -48,7 +48,7 @@ async function fetchOverview(projectId: string, period: Period): Promise<Overvie
 
 export default function OverviewPage({ params }: { params: { id: string } }) {
   const projectId = params.id;
-  const [period, setPeriod] = useState<Period>('7d');
+  const [period, setPeriod] = useState<Period>('30d');
 
   const overviewQuery = useQuery({
     queryKey: ['overview', projectId, period],

@@ -38,16 +38,19 @@ export default function PendingTaskList({
 }: Props) {
   if (tasks.length === 0) {
     return (
-      <section className="rounded-md border border-slate-200 bg-white p-3">
-        <h3 className="text-sm font-semibold text-slate-900">Task queue</h3>
-        <p className="mt-1 text-sm text-slate-600">No tasks yet.</p>
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <h3 className="text-sm font-semibold text-slate-900">Agent task queue</h3>
+        <p className="mt-1 text-sm text-slate-600">
+          No tasks yet. Ask Tally for a metric that is not tracked, then confirm the draft before
+          agents act on it.
+        </p>
       </section>
     );
   }
 
   return (
-    <section className="rounded-md border border-slate-200 bg-white p-3">
-      <h3 className="text-sm font-semibold text-slate-900">Task queue</h3>
+    <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <h3 className="text-sm font-semibold text-slate-900">Agent task queue</h3>
       <ul className="mt-3 grid gap-2">
         {tasks.map((task) => {
           const detail = statusDetail(task);

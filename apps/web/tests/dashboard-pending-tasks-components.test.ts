@@ -249,7 +249,7 @@ describe("analytics task components", () => {
     );
 
     await user.type(screen.getByLabelText("Question"), "How many people clicked the upgrade CTA?");
-    await user.click(screen.getByRole("button", { name: "Ask" }));
+    await user.click(screen.getByRole("button", { name: "Ask Tally" }));
 
     await waitFor(() => expect(screen.getByText("Proposed task")).toBeTruthy());
     await user.click(screen.getByRole("button", { name: /add task to queue/i }));
@@ -312,7 +312,7 @@ describe("analytics task components", () => {
     );
 
     await user.type(screen.getByLabelText("Question"), "How many users visited pricing this week?");
-    await user.click(screen.getByRole("button", { name: "Ask" }));
+    await user.click(screen.getByRole("button", { name: "Ask Tally" }));
 
     await waitFor(() => expect(screen.getByText("Pricing page visits are available.")).toBeTruthy());
     expect(screen.queryByText("Proposed task")).toBeNull();
@@ -369,7 +369,7 @@ describe("analytics task components", () => {
     );
 
     await user.type(screen.getByLabelText("Question"), "How many people clicked the upgrade CTA?");
-    await user.click(screen.getByRole("button", { name: "Ask" }));
+    await user.click(screen.getByRole("button", { name: "Ask Tally" }));
 
     await waitFor(() => expect(screen.getByText("Proposed task")).toBeTruthy());
     await user.click(screen.getByTestId("dismiss-task-draft"));
@@ -422,11 +422,18 @@ describe("analytics task components", () => {
     );
 
     await user.type(screen.getByLabelText("Question"), "How many people clicked the upgrade CTA?");
-    await user.click(screen.getByRole("button", { name: "Ask" }));
+    await user.click(screen.getByRole("button", { name: "Ask Tally" }));
     await waitFor(() => expect(screen.getByText("Proposed task")).toBeTruthy());
 
     const askInput = screen.getByTestId("ask-tally-input");
-    const askButton = screen.getByRole("button", { name: "Ask" });
+    const firstSuggestion = screen.getByRole("button", {
+      name: "Which pages are bringing users to signup?",
+    });
+    const secondSuggestion = screen.getByRole("button", { name: "What should we track next?" });
+    const thirdSuggestion = screen.getByRole("button", {
+      name: "How many users visited pricing this month?",
+    });
+    const askButton = screen.getByRole("button", { name: "Ask Tally" });
     const titleInput = screen.getByLabelText("Title");
     const eventNameInput = screen.getByLabelText("Event name");
     const notesInput = screen.getByLabelText("Implementation notes");
@@ -439,6 +446,12 @@ describe("analytics task components", () => {
     askInput.focus();
     expect(document.activeElement).toBe(askInput);
 
+    await user.tab();
+    expect(document.activeElement).toBe(firstSuggestion);
+    await user.tab();
+    expect(document.activeElement).toBe(secondSuggestion);
+    await user.tab();
+    expect(document.activeElement).toBe(thirdSuggestion);
     await user.tab();
     expect(document.activeElement).toBe(askButton);
     await user.tab();
