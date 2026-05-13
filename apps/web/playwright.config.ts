@@ -28,6 +28,7 @@ export default defineConfig({
       RESEND_API_KEY: process.env.RESEND_API_KEY ?? "e2e",
       FROM_EMAIL: process.env.FROM_EMAIL ?? "e2e@example.com",
       E2E_TEST_MODE: "1",
+      E2E_ANALYTICS_NOW: "2026-05-01T12:36:00.001Z",
       WATCHPACK_POLLING: "true",
     },
   },

@@ -100,6 +100,17 @@ export type SessionsSummaryErrorResult = AnalyticsServiceResultBase & {
 
 export type SessionsSummaryResult = SessionsSummarySuccessResult | SessionsSummaryErrorResult;
 
+function analyticsNow(explicitNow?: Date): Date | undefined {
+  if (explicitNow) return explicitNow;
+  if (!isE2EAnalyticsFixtureMode()) return undefined;
+
+  const raw = process.env.E2E_ANALYTICS_NOW;
+  if (!raw) return undefined;
+
+  const parsed = new Date(raw);
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+}
+
 export type LiveEventsSuccessResult = AnalyticsServiceResultBase &
   DashboardLiveEventsResponse & {
     status: 'ok' | 'no_events';
@@ -1335,7 +1346,7 @@ export async function getProjectOverview(params: {
     };
   }
 
-  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+  const dataWindow = resolveAnalyticsDataWindow(params.period, analyticsNow(params.now));
 
   try {
     const response = isE2EAnalyticsFixtureMode()
@@ -1351,7 +1362,7 @@ export async function getProjectOverview(params: {
       projectName: project.displayName,
       dashboardUrls: project.dashboardUrls,
       dataWindow,
-      generatedAt: params.now,
+      generatedAt: analyticsNow(params.now),
     });
   } catch (error) {
     const serviceError = toAnalyticsServiceError(error);
@@ -1364,7 +1375,7 @@ export async function getProjectOverview(params: {
         tool: 'get_project_overview',
         semantics: 'dashboard_overview',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
     };
   }
@@ -1388,7 +1399,7 @@ export async function getSessionsSummary(params: {
     };
   }
 
-  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+  const dataWindow = resolveAnalyticsDataWindow(params.period, analyticsNow(params.now));
 
   try {
     const response = isE2EAnalyticsFixtureMode()
@@ -1404,7 +1415,7 @@ export async function getSessionsSummary(params: {
       projectName: project.displayName,
       dashboardUrls: project.dashboardUrls,
       dataWindow,
-      generatedAt: params.now,
+      generatedAt: analyticsNow(params.now),
     });
   } catch (error) {
     const serviceError = toAnalyticsServiceError(error);
@@ -1417,7 +1428,7 @@ export async function getSessionsSummary(params: {
         tool: 'get_sessions_summary',
         semantics: 'dashboard_sessions',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
     };
   }
@@ -1473,7 +1484,7 @@ export async function getLiveEvents(params: {
       response,
       projectName: project.displayName,
       dashboardUrls: project.dashboardUrls,
-      generatedAt: params.now,
+      generatedAt: analyticsNow(params.now),
     });
   } catch (error) {
     const serviceError = toAnalyticsServiceError(error);
@@ -1485,7 +1496,7 @@ export async function getLiveEvents(params: {
         projectName: project.displayName,
         tool: 'get_live_events',
         semantics: 'dashboard_live',
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
     };
   }
@@ -1514,8 +1525,8 @@ export async function getTopPages(params: {
       projectName: overview.provenance.projectName,
       tool: 'get_top_pages',
       semantics: 'dashboard_overview',
-      dataWindow: resolveAnalyticsDataWindow(params.period, params.now),
-      generatedAt: params.now,
+      dataWindow: resolveAnalyticsDataWindow(params.period, analyticsNow(params.now)),
+      generatedAt: analyticsNow(params.now),
     }),
     dashboardUrls: overview.dashboardUrls,
   };
@@ -1544,8 +1555,8 @@ export async function getTopReferrers(params: {
       projectName: overview.provenance.projectName,
       tool: 'get_top_referrers',
       semantics: 'dashboard_overview',
-      dataWindow: resolveAnalyticsDataWindow(params.period, params.now),
-      generatedAt: params.now,
+      dataWindow: resolveAnalyticsDataWindow(params.period, analyticsNow(params.now)),
+      generatedAt: analyticsNow(params.now),
     }),
     dashboardUrls: overview.dashboardUrls,
   };
@@ -1569,7 +1580,7 @@ export async function listEvents(params: {
     };
   }
 
-  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+  const dataWindow = resolveAnalyticsDataWindow(params.period, analyticsNow(params.now));
 
   try {
     const events = isE2EAnalyticsFixtureMode()
@@ -1586,7 +1597,7 @@ export async function listEvents(params: {
         tool: 'list_events',
         semantics: 'event_discovery',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
       dashboardUrls: project.dashboardUrls,
     };
@@ -1601,7 +1612,7 @@ export async function listEvents(params: {
         tool: 'list_events',
         semantics: 'event_discovery',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
     };
   }
@@ -1634,7 +1645,7 @@ export async function getEventSchema(params: {
     };
   }
 
-  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+  const dataWindow = resolveAnalyticsDataWindow(params.period, analyticsNow(params.now));
 
   try {
     const eventSchema = isE2EAnalyticsFixtureMode()
@@ -1663,7 +1674,7 @@ export async function getEventSchema(params: {
           tool: 'get_event_schema',
           semantics: 'event_schema',
           dataWindow,
-          generatedAt: params.now,
+          generatedAt: analyticsNow(params.now),
         }),
       };
     }
@@ -1677,7 +1688,7 @@ export async function getEventSchema(params: {
         tool: 'get_event_schema',
         semantics: 'event_schema',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
       dashboardUrls: project.dashboardUrls,
     };
@@ -1692,7 +1703,7 @@ export async function getEventSchema(params: {
         tool: 'get_event_schema',
         semantics: 'event_schema',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
     };
   }
@@ -1743,7 +1754,7 @@ export async function getPathsToEvent(params: {
     };
   }
 
-  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+  const dataWindow = resolveAnalyticsDataWindow(params.period, analyticsNow(params.now));
 
   try {
     const events = isE2EAnalyticsFixtureMode()
@@ -1765,7 +1776,7 @@ export async function getPathsToEvent(params: {
         tool: 'get_paths_to_event',
         semantics: 'paths_to_event',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
       dashboardUrls: project.dashboardUrls,
     };
@@ -1780,7 +1791,7 @@ export async function getPathsToEvent(params: {
         tool: 'get_paths_to_event',
         semantics: 'paths_to_event',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
     };
   }
@@ -1815,7 +1826,7 @@ export async function suggestNextEvents(params: {
     };
   }
 
-  const dataWindow = resolveAnalyticsDataWindow(params.period, params.now);
+  const dataWindow = resolveAnalyticsDataWindow(params.period, analyticsNow(params.now));
 
   try {
     const overview = isE2EAnalyticsFixtureMode()
@@ -1840,7 +1851,7 @@ export async function suggestNextEvents(params: {
         tool: 'suggest_next_events',
         semantics: 'next_event_recommendations',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
       dashboardUrls: project.dashboardUrls,
     };
@@ -1856,7 +1867,7 @@ export async function suggestNextEvents(params: {
         tool: 'suggest_next_events',
         semantics: 'next_event_recommendations',
         dataWindow,
-        generatedAt: params.now,
+        generatedAt: analyticsNow(params.now),
       }),
     };
   }
