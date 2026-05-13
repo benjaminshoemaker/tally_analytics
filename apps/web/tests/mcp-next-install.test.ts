@@ -108,6 +108,60 @@ describe("MCP Next.js install service detection", () => {
     ).resolves.toMatchObject({ status: "ready", target: { router: "pages", usesSrcDir: true } });
   });
 
+  it("infers package.json when an agent mistakes dependencyTarget for dependencies", async () => {
+    await expect(
+      readyResult(
+        contextInput({
+          repo: {
+            name: "tally-pages-router-test-project",
+            gitRemote: "https://github.com/benjaminshoemaker/tally-pages-router-test-project.git",
+            workspaceRoot: ".",
+            appRoot: ".",
+            packageManager: "pnpm",
+            dependencyTarget: "dependencies",
+          },
+          framework: {
+            kind: "nextjs-pages-router",
+            entrypoint: "src/pages/_app.tsx",
+            usesSrcDir: true,
+            hasAtAlias: true,
+          },
+          files: {
+            "package.json": JSON.stringify({
+              name: "tally-pages-router-test-project",
+              dependencies: { next: "16.1.1", react: "19.2.3", "react-dom": "19.2.3" },
+            }),
+            "src/pages/_app.tsx": "export default function App({ Component, pageProps }) { return <Component {...pageProps} />; }\n",
+          },
+        }),
+      ),
+    ).resolves.toMatchObject({
+      status: "ready",
+      target: {
+        router: "pages",
+        packageJsonPath: "package.json",
+        entrypointPath: "src/pages/_app.tsx",
+      },
+    });
+  });
+
+  it("accepts explicit packageJsonPath without the deprecated dependencyTarget field", async () => {
+    await expect(
+      readyResult(
+        contextInput({
+          repo: {
+            name: "my-app",
+            gitRemote: "git@github.com:user/my-app.git",
+            workspaceRoot: ".",
+            appRoot: ".",
+            packageManager: "pnpm",
+            packageJsonPath: "package.json",
+          },
+        }),
+      ),
+    ).resolves.toMatchObject({ status: "ready", target: { packageJsonPath: "package.json" } });
+  });
+
   it("detects explicit monorepo app roots", async () => {
     await expect(
       readyResult(

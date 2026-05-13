@@ -4,20 +4,33 @@ export const packageManagerSchema = z.enum(["pnpm", "npm", "yarn", "bun"]);
 
 export const mcpRepoContextSchema = z.object({
   repo: z.object({
-    name: z.string().trim().min(1).max(255),
-    gitRemote: z.string().trim().max(500).nullable().optional(),
-    workspaceRoot: z.string().trim().min(1).default("."),
-    appRoot: z.string().trim().min(1).default("."),
-    packageManager: packageManagerSchema,
-    dependencyTarget: z.string().trim().min(1),
+    name: z.string().trim().min(1).max(255).describe("Local repository or package name."),
+    gitRemote: z.string().trim().max(500).nullable().optional().describe("Git remote URL when available."),
+    workspaceRoot: z.string().trim().min(1).default(".").describe("Relative workspace root. Usually '.'."),
+    appRoot: z.string().trim().min(1).default(".").describe("Relative app root. Use '.' for a single-app repo."),
+    packageManager: packageManagerSchema.describe("Package manager used by this app."),
+    packageJsonPath: z
+      .string()
+      .trim()
+      .min(1)
+      .optional()
+      .describe("Relative path to the app package.json. Use 'package.json' for a root app."),
+    dependencyTarget: z
+      .string()
+      .trim()
+      .min(1)
+      .optional()
+      .describe("Deprecated alias for packageJsonPath. This must be a package.json path, not a dependency list."),
   }),
   framework: z.object({
-    kind: z.enum(["nextjs-app-router", "nextjs-pages-router"]),
-    entrypoint: z.string().trim().min(1),
-    usesSrcDir: z.boolean().optional(),
-    hasAtAlias: z.boolean().optional(),
+    kind: z.enum(["nextjs-app-router", "nextjs-pages-router"]).describe("Detected Next.js router type."),
+    entrypoint: z.string().trim().min(1).describe("Relative path to app/layout.tsx or pages/_app.tsx."),
+    usesSrcDir: z.boolean().optional().describe("Whether the app uses a src directory."),
+    hasAtAlias: z.boolean().optional().describe("Whether tsconfig/jsconfig defines an @/* alias."),
   }),
-  files: z.record(z.string().min(1), z.string()),
+  files: z
+    .record(z.string().min(1), z.string())
+    .describe("Map of safe relative file paths to content. Include package.json and the selected Next.js entrypoint."),
 });
 
 export type McpRepoContextInput = z.infer<typeof mcpRepoContextSchema>;

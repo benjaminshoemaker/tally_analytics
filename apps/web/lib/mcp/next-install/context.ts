@@ -25,6 +25,7 @@ export type ValidatedRepoContext = {
   repo: McpRepoContextInput["repo"] & {
     workspaceRoot: string;
     appRoot: string;
+    packageJsonPath: string;
     dependencyTarget: string;
   };
   framework: McpRepoContextInput["framework"] & {
@@ -88,6 +89,20 @@ function joinAppPath(appRoot: string, path: string): string {
   return appRoot === "." ? path : `${appRoot}/${path}`;
 }
 
+function inferPackageJsonPath(files: Record<string, string>, appRoot: string): string | null {
+  const preferred = joinAppPath(appRoot, "package.json");
+  if (Object.prototype.hasOwnProperty.call(files, preferred)) return preferred;
+
+  const packageJsonPaths = Object.keys(files)
+    .map((path) => normalizeRelativePath(path))
+    .filter((path): path is string => {
+      if (!path) return false;
+      return path === "package.json" || path.endsWith("/package.json");
+    });
+
+  return packageJsonPaths.length === 1 ? packageJsonPaths[0] : null;
+}
+
 function isEntrypointForFramework(kind: McpRepoContextInput["framework"]["kind"], path: string): boolean {
   if (!/\.(tsx|jsx)$/.test(path)) return false;
   if (kind === "nextjs-app-router") return /(^|\/)(src\/)?app\/layout\.(tsx|jsx)$/.test(path);
@@ -116,8 +131,8 @@ function containsBinaryContent(content: string): boolean {
   return /[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(content);
 }
 
-function isAllowedContextPath(path: string, context: { appRoot: string; dependencyTarget: string; entrypoint: string }): boolean {
-  if (path === context.dependencyTarget) return true;
+function isAllowedContextPath(path: string, context: { appRoot: string; packageJsonPath: string; entrypoint: string }): boolean {
+  if (path === context.packageJsonPath) return true;
   if (path === context.entrypoint) return true;
   if (pathBasename(path) === "package.json") return true;
   if (isNextEntrypointPath(path)) return true;
@@ -143,15 +158,19 @@ export function validateRepoContext(input: unknown): RepoContextValidationResult
   const framework = parsed.data.framework;
   const workspaceRoot = normalizeRelativePath(repo.workspaceRoot, { allowDot: true });
   const appRoot = normalizeRelativePath(repo.appRoot, { allowDot: true });
-  const dependencyTarget = normalizeRelativePath(repo.dependencyTarget);
   const entrypoint = normalizeRelativePath(framework.entrypoint);
 
   if (!workspaceRoot) return fail("disallowed_file", "workspaceRoot must be a safe relative path", repo.workspaceRoot);
   if (!appRoot) return fail("disallowed_file", "appRoot must be a safe relative path", repo.appRoot);
-  if (!dependencyTarget) return fail("disallowed_file", "dependencyTarget must be a safe relative path", repo.dependencyTarget);
   if (!entrypoint) return fail("disallowed_file", "entrypoint must be a safe relative path", framework.entrypoint);
-  if (!dependencyTarget.endsWith("/package.json") && dependencyTarget !== "package.json") {
-    return fail("missing_package_json", "dependencyTarget must point to package.json", dependencyTarget);
+
+  const requestedPackageJsonPath = repo.packageJsonPath ?? repo.dependencyTarget;
+  let packageJsonPath = requestedPackageJsonPath ? normalizeRelativePath(requestedPackageJsonPath) : null;
+  if (!packageJsonPath || (packageJsonPath !== "package.json" && !packageJsonPath.endsWith("/package.json"))) {
+    packageJsonPath = inferPackageJsonPath(parsed.data.files, appRoot);
+  }
+  if (!packageJsonPath) {
+    return fail("missing_package_json", "repo context is missing package.json", "package.json");
   }
   if (!isEntrypointForFramework(framework.kind, entrypoint)) {
     return fail("unsupported_framework", "framework.entrypoint is not a supported Next.js TSX/JSX entrypoint", entrypoint);
@@ -164,7 +183,7 @@ export function validateRepoContext(input: unknown): RepoContextValidationResult
     const path = normalizeRelativePath(rawPath);
     if (!path) return fail("disallowed_file", "files must use safe relative paths", rawPath);
     if (isSensitiveOrUnsupportedFile(path)) return fail("disallowed_file", "file is not allowed in MCP repo context", path);
-    if (!isAllowedContextPath(path, { appRoot, dependencyTarget, entrypoint })) {
+    if (!isAllowedContextPath(path, { appRoot, packageJsonPath, entrypoint })) {
       return fail("disallowed_file", "file is outside the MCP repo context allowlist", path);
     }
 
@@ -179,8 +198,8 @@ export function validateRepoContext(input: unknown): RepoContextValidationResult
     normalizedFiles[path] = content;
   }
 
-  if (!Object.prototype.hasOwnProperty.call(normalizedFiles, dependencyTarget)) {
-    return fail("missing_package_json", "repo context is missing dependencyTarget package.json", dependencyTarget);
+  if (!Object.prototype.hasOwnProperty.call(normalizedFiles, packageJsonPath)) {
+    return fail("missing_package_json", "repo context is missing package.json", packageJsonPath);
   }
   if (!Object.prototype.hasOwnProperty.call(normalizedFiles, entrypoint)) {
     return fail("missing_entrypoint", "repo context is missing framework.entrypoint", entrypoint);
@@ -193,14 +212,15 @@ export function validateRepoContext(input: unknown): RepoContextValidationResult
         ...repo,
         workspaceRoot,
         appRoot,
-        dependencyTarget,
+        packageJsonPath,
+        dependencyTarget: packageJsonPath,
       },
       framework: {
         ...framework,
         entrypoint,
       },
       files: normalizedFiles,
-      packageJsonPath: dependencyTarget,
+      packageJsonPath,
       entrypointPath: entrypoint,
       totalBytes,
     },
