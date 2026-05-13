@@ -4,6 +4,7 @@ import {
   escapeAnalyticsSqlString,
   runAnalyticsTinybirdQuery,
 } from "../tinybird";
+import { toTinybirdDateTime64String } from "../periods";
 import { transitionAnalyticsTask } from "./transitions";
 import { updateOwnedAnalyticsTask } from "./queries";
 import type { AnalyticsTaskRecord, AnalyticsTaskType } from "./types";
@@ -113,19 +114,7 @@ async function loadProductionVerificationEventsFromTinybird(
   if (!task.implementedAt) return [];
 
   const client = createAnalyticsTinybirdClient();
-  const query = `
-    SELECT
-      event_type AS eventType,
-      toString(timestamp) AS timestamp,
-      coalesce(nullIf(environment, ''), 'production') AS environment,
-      event_properties AS eventProperties
-    FROM events
-    WHERE project_id = '${escapeAnalyticsSqlString(task.projectId)}'
-      AND event_type = '${escapeAnalyticsSqlString(task.eventName)}'
-      AND timestamp > parseDateTimeBestEffort('${escapeAnalyticsSqlString(task.implementedAt.toISOString())}')
-    ORDER BY timestamp DESC
-    LIMIT 200
-  `;
+  const query = buildProductionVerificationEventsQuery(task);
 
   const result = await runAnalyticsTinybirdQuery<AnalyticsVerificationEvent>(
     client,
@@ -134,6 +123,28 @@ async function loadProductionVerificationEventsFromTinybird(
   );
 
   return result.data;
+}
+
+export function buildProductionVerificationEventsQuery(task: AnalyticsTaskRecord): string {
+  if (!task.implementedAt) return "";
+
+  const projectIdSql = escapeAnalyticsSqlString(task.projectId);
+  const eventNameSql = escapeAnalyticsSqlString(task.eventName);
+  const implementedAtSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(task.implementedAt));
+
+  return `
+    SELECT
+      event_type AS eventType,
+      toString(timestamp) AS timestamp,
+      coalesce(nullIf(environment, ''), 'production') AS environment,
+      event_properties AS eventProperties
+    FROM events
+    WHERE project_id = '${projectIdSql}'
+      AND event_type = '${eventNameSql}'
+      AND timestamp > toDateTime64('${implementedAtSql}', 3)
+    ORDER BY timestamp DESC
+    LIMIT 200
+  `;
 }
 
 async function defaultProductionEventsFetcher(params: { task: AnalyticsTaskRecord }): Promise<AnalyticsVerificationEvent[]> {

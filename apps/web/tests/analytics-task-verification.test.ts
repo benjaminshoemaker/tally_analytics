@@ -31,6 +31,7 @@ vi.mock("../lib/analytics/tinybird", () => ({
 }));
 
 import {
+  buildProductionVerificationEventsQuery,
   isProductionVerificationEvent,
   matchesPostImplementationEvent,
   missingRequiredEventProperties,
@@ -327,5 +328,18 @@ describe("analytics task verification", () => {
     ).toBe(false);
 
     expect(missingRequiredEventProperties(["plan", "source"], "{\"plan\":\"pro\"}")).toEqual(["source"]);
+  });
+
+  it("builds Tinybird verification queries with DateTime64 timestamp literals", () => {
+    const query = buildProductionVerificationEventsQuery(
+      makeTask({
+        projectId: "proj_123",
+        eventName: "upgrade_cta_clicked",
+        implementedAt: new Date("2026-05-13T07:22:14.882Z"),
+      }),
+    );
+
+    expect(query).toContain("timestamp > toDateTime64('2026-05-13 07:22:14.882', 3)");
+    expect(query).not.toContain("parseDateTimeBestEffort");
   });
 });
