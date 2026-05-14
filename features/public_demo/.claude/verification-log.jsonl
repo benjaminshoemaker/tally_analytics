@@ -10,3 +10,5 @@
 {"timestamp":"2026-05-14T03:26:15Z","scope":"phase-checkpoint","phase":2,"check":"typecheck","status":"PASS","evidence":"pnpm --filter web typecheck"}
 {"timestamp":"2026-05-14T03:26:15Z","scope":"phase-checkpoint","phase":2,"check":"build","status":"PASS","evidence":"pnpm --filter web build; existing Next img warnings"}
 {"timestamp":"2026-05-14T03:26:15Z","scope":"phase-checkpoint","phase":2,"check":"dashboard-marketing-regression","status":"PASS","evidence":"pnpm --filter web test -- overview-page sessions-page live-feed-page dashboard-pending-tasks-components marketing-landing-page"}
+{"timestamp":"2026-05-14T03:29:10Z","scope":"task","phase":3,"task":"3.1.A","check":"public-demo-browser-flow","status":"PASS","evidence":"pnpm --filter web e2e --grep @public-demo"}
+{"timestamp":"2026-05-14T03:29:10Z","scope":"task","phase":3,"task":"3.1.B","check":"desktop-mobile-visual-assertions","status":"PASS","evidence":"pnpm --filter web e2e --grep @public-demo; screenshots retained in Playwright test output"}

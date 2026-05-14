@@ -20,11 +20,11 @@
       },
       {
         "phase": 3,
-        "status": "PENDING",
-        "completed_tasks": [],
+        "status": "IN_PROGRESS",
+        "completed_tasks": ["3.1.A", "3.1.B"],
         "in_progress_task": null,
         "blocked_tasks": [],
-        "last_activity": null
+        "last_activity": "2026-05-14T03:29:10Z"
       }
     ]
   }

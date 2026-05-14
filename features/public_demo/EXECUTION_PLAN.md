@@ -342,9 +342,9 @@ Add "View demo dashboard" to the public marketing surface near the product proof
 
 ### Pre-Phase Setup
 
-- [ ] Confirm Playwright harness can start.
+- [x] Confirm Playwright harness can start.
   - Verify: `pnpm --filter web e2e --help >/dev/null`
-- [ ] Confirm public demo route tests pass before browser automation.
+- [x] Confirm public demo route tests pass before browser automation.
   - Verify: `pnpm --filter web test -- public-demo-page`
 
 ### Step 3.1: Flow Harness
@@ -361,19 +361,19 @@ Implement the browser verification plan for the public demo. The Playwright spec
 **Requirement:** Agent-runnable flow verification for the public no-login demo.
 
 **Acceptance Criteria:**
-- [ ] (CODE) `apps/web/e2e/public-demo.spec.ts` exists and includes `@public-demo`.
+- [x] (CODE) `apps/web/e2e/public-demo.spec.ts` exists and includes `@public-demo`.
   - Verify: `test -f apps/web/e2e/public-demo.spec.ts && rg "@public-demo" apps/web/e2e/public-demo.spec.ts`
-- [ ] (BROWSER:DOM) Browser flow opens the homepage, clicks "View demo dashboard", reaches `/demo`, and sees the demo-data banner and Acme Forms.
+- [x] (BROWSER:DOM) Browser flow opens the homepage, clicks "View demo dashboard", reaches `/demo`, and sees the demo-data banner and Acme Forms.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (BROWSER:DOM) Browser flow reaches Overview, Live, Sessions, and Ask Tally views and sees expected fixture text in each.
+- [x] (BROWSER:DOM) Browser flow reaches Overview, Live, Sessions, and Ask Tally views and sees expected fixture text in each.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (BROWSER:DOM) Browser flow submits "What should we track next?" and sees `form_published` plus simulated MCP/agent output.
+- [x] (BROWSER:DOM) Browser flow submits "What should we track next?" and sees `form_published` plus simulated MCP/agent output.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (BROWSER:DOM) Browser flow confirms no account controls, billing/settings controls, or user dropdown controls are visible in the demo.
+- [x] (BROWSER:DOM) Browser flow confirms no account controls, billing/settings controls, or user dropdown controls are visible in the demo.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (BROWSER:NETWORK) Browser flow records requests with `page.on("request", ...)` and asserts no request path starts with `/api/projects`, `/api/mcp`, `/api/oauth`, `/api/auth`, `/api/stripe`, or a Tinybird-backed analytics endpoint during demo interactions.
+- [x] (BROWSER:NETWORK) Browser flow records requests with `page.on("request", ...)` and asserts no request path starts with `/api/projects`, `/api/mcp`, `/api/oauth`, `/api/auth`, `/api/stripe`, or a Tinybird-backed analytics endpoint during demo interactions.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (BROWSER:CONSOLE) Browser flow fails on console errors during the core demo flow.
+- [x] (BROWSER:CONSOLE) Browser flow fails on console errors during the core demo flow.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
 
 **Files to Create:**
@@ -406,13 +406,13 @@ Extend the public demo browser flow with viewport-specific checks for the initia
 **Requirement:** Browser verification at desktop and mobile widths with no overlapping or clipped primary UI text.
 
 **Acceptance Criteria:**
-- [ ] (BROWSER:DOM) At a desktop viewport, the initial `/demo` viewport shows the demo-data banner, product value summary, Overview metrics, and Ask Tally entry or suggested question before scrolling.
+- [x] (BROWSER:DOM) At a desktop viewport, the initial `/demo` viewport shows the demo-data banner, product value summary, Overview metrics, and Ask Tally entry or suggested question before scrolling.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (BROWSER:DOM) At a mobile viewport, primary demo banner, navigation, metric, and Ask Tally/task text is visible after normal page interactions.
+- [x] (BROWSER:DOM) At a mobile viewport, primary demo banner, navigation, metric, and Ask Tally/task text is visible after normal page interactions.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (BROWSER:VISUAL) Browser test asserts primary text bounding boxes do not overlap or clip outside the viewport for the checked desktop and mobile states.
+- [x] (BROWSER:VISUAL) Browser test asserts primary text bounding boxes do not overlap or clip outside the viewport for the checked desktop and mobile states.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (BROWSER:VISUAL) Screenshots are captured for initial `/demo` overview, Ask Tally response, and mobile `/demo` viewport.
+- [x] (BROWSER:VISUAL) Screenshots are captured for initial `/demo` overview, Ask Tally response, and mobile `/demo` viewport.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
 
 **Files to Create:**
