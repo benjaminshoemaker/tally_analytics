@@ -1,0 +1,14 @@
+- generic [active] [ref=e1] [box=0,0,1185,1232]:
+  - generic [ref=e3] [box=17,0,1152,1236]:
+    - complementary [ref=e4] [box=17,0,256,1236]:
+      - navigation [ref=e5] [box=17,0,255,284]:
+        - link "Tally" [ref=e6] [cursor=pointer] [box=41,24,207,44]:
+          - /url: /
+        - generic [ref=e11] [box=41,92,207,68]
+        - generic [ref=e18] [box=41,176,207,68]
+    - generic [ref=e25] [box=273,0,896,1236]:
+      - banner [ref=e26] [box=273,0,896,71]:
+        - button "fpa-campaign-agent avatar fpa-campaign-agent" [ref=e28] [cursor=pointer] [box=924,12,221,46]
+      - main [ref=e33] [box=273,71,896,1165]:
+        - generic [ref=e34] [box=297,103,848,1101]
+  - alert [ref=e75] [box=-1,1235,1,1]

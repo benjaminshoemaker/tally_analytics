@@ -1,17 +1,20 @@
 # Plan Status
 
-Primary active workstream: none
-Current type: none
-Current stage: none
-Current status: no-active-workstream
-Last updated: 2026-05-12
-Updated by: Codex dashboard pending tasks completion
+Primary active workstream: features/public_demo/
+Current type: feature
+Current stage: execution-plan
+Current status: active
+Last updated: 2026-05-13
+Updated by: Codex public demo execution plan
+Next command: cd features/public_demo && /fresh-start
 
 Rule: This manifest orients agents to active and planned work; it is not a single-plan execution lock. Agents may implement any non-archived workstream that is explicitly requested by the human. Archived, rejected, abandoned, superseded, completed, and research-only plans remain context only unless the human explicitly revives them.
 
 ## Primary Active Scope
 
-- No primary active workstream is currently selected.
+- `features/public_demo/`
+- Public `/demo` route for prospective users to experience fake dashboard data,
+  mocked Ask Tally responses, and simulated MCP/agent task output.
 - Explicit human direction may still authorize any non-archived planned workstream.
 
 ## History
@@ -27,3 +30,4 @@ Rule: This manifest orients agents to active and planned work; it is not a singl
 | `features/mcp_primary_onboarding/` | feature | implemented |  | 2026-05-09 | Public-surface rewrite implemented by explicit human request |
 | `features/stripe_billing_verification/` | feature | implemented |  | 2026-05-11 | Agent-runnable Stripe billing harness implemented; deterministic local and real-provider smoke runs passed with retained summaries under `tmp/stripe-billing-verification/` |
 | `features/dashboard_pending_tasks/` | feature | completed |  | 2026-05-12 | Dashboard pending-task flow completed with feature-local phase-state recovery, harness coverage, full web tests, SDK guard, and regression slice pass |
+| `features/public_demo/` | feature | active-execution-plan |  | 2026-05-13 | Public demo execution plan created; previous feature-local notes archived at `features/archive/20260513-200235-features-public_demo/` |

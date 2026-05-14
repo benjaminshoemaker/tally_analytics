@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tally landing page product-shot mockups</title>
+    <style>
+      :root {
+        --ink: #17120c;
+        --muted: #5f5850;
+        --line: #e8e0d9;
+        --paper: #fffdfa;
+        --wash: #f7f2ed;
+        --brand: #0f766e;
+        --brand-soft: #dff5f1;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #efe9e2;
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      .page {
+        display: grid;
+        gap: 28px;
+        padding: 32px;
+      }
+
+      .mockup {
+        overflow: hidden;
+        border: 1px solid #ddd2c8;
+        border-radius: 18px;
+        background: var(--paper);
+        box-shadow: 0 24px 70px rgb(35 24 14 / 0.13);
+      }
+
+      .label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+        padding: 14px 18px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .shot {
+        display: block;
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 18px 48px rgb(35 24 14 / 0.12);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: fit-content;
+        border: 1px solid rgb(15 118 110 / 0.18);
+        border-radius: 999px;
+        background: rgb(15 118 110 / 0.09);
+        padding: 6px 10px;
+        color: var(--brand);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--brand);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        font-size: clamp(42px, 6vw, 76px);
+        line-height: 0.98;
+        letter-spacing: -0.04em;
+      }
+
+      h2 {
+        font-size: clamp(32px, 4vw, 54px);
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+      }
+
+      p {
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 0 22px;
+        font-weight: 750;
+        text-decoration: none;
+      }
+
+      .button.primary {
+        background: var(--brand);
+        color: #fff;
+      }
+
+      .button.secondary {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+      }
+
+      .hero-split {
+        display: grid;
+        min-height: 760px;
+        grid-template-columns: minmax(0, 0.95fr) minmax(560px, 1.05fr);
+        gap: 48px;
+        padding: 72px 72px 52px;
+      }
+
+      .hero-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 28px;
+      }
+
+      .hero-shot {
+        align-self: center;
+        transform: rotate(1.2deg);
+      }
+
+      .hero-proof {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        padding-top: 8px;
+      }
+
+      .proof-item {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        padding: 14px;
+      }
+
+      .proof-item strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .proof-item span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .band {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(560px, 1.2fr);
+        gap: 42px;
+        align-items: center;
+        padding: 64px 72px;
+        background:
+          linear-gradient(90deg, #fffdfa 0%, rgb(223 245 241 / 0.45) 100%),
+          var(--paper);
+      }
+
+      .band-copy {
+        display: grid;
+        gap: 22px;
+      }
+
+      .step-list {
+        display: grid;
+        gap: 12px;
+        padding-top: 4px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+      }
+
+      .step-number {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--brand);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .step strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .step span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .story {
+        padding: 72px;
+      }
+
+      .story-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 36px;
+        margin-bottom: 42px;
+      }
+
+      .story-header p {
+        max-width: 430px;
+      }
+
+      .story-grid {
+        display: grid;
+        grid-template-columns: minmax(230px, 0.7fr) minmax(0, 1.6fr) minmax(230px, 0.7fr);
+        gap: 20px;
+        align-items: center;
+      }
+
+      .side-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        padding: 18px;
+        box-shadow: 0 10px 30px rgb(35 24 14 / 0.08);
+      }
+
+      .side-card + .side-card {
+        margin-top: 16px;
+      }
+
+      .side-card strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .side-card span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .center-shot {
+        border-radius: 16px;
+        padding: 12px;
+        background: linear-gradient(135deg, rgb(15 118 110 / 0.12), #fff);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="mockup" id="mockup-hero-split">
+        <div class="label">
+          <span>Mockup 1</span>
+          <span>Hero proof shot</span>
+        </div>
+        <div class="hero-split">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="dot"></span> MCP-first analytics</div>
+            <h1>Analytics your agent can install, answer from, and improve.</h1>
+            <p>
+              Start from Claude Code, Codex, Cursor, or any MCP-capable coding agent. Tally turns
+              production events into answers, then creates agent-ready tracking tasks when the data
+              is missing.
+            </p>
+            <div class="button-row">
+              <a class="button primary" href="#">Start with MCP</a>
+              <a class="button secondary" href="#">See how it works</a>
+            </div>
+            <div class="hero-proof">
+              <div class="proof-item">
+                <strong>Usage appears first</strong>
+                <span>No empty dashboard when events exist.</span>
+              </div>
+              <div class="proof-item">
+                <strong>Ask Tally</strong>
+                <span>Generate answers from live analytics.</span>
+              </div>
+              <div class="proof-item">
+                <strong>Agent task queue</strong>
+                <span>Confirm tasks before agents act.</span>
+              </div>
+            </div>
+          </div>
+          <img class="shot hero-shot" src="dashboard-three-panels-crop.png" alt="" />
+        </div>
+      </section>
+
+      <section class="mockup" id="mockup-proof-band">
+        <div class="label">
+          <span>Mockup 2</span>
+          <span>Mid-page product band</span>
+        </div>
+        <div class="band">
+          <div class="band-copy">
+            <div class="eyebrow"><span class="dot"></span> From data to next task</div>
+            <h2>Ask a question. If Tally cannot answer it, your agent gets the task.</h2>
+            <p>
+              This placement works best after the feature/value-prop section, where the visitor
+              already understands MCP setup and now needs to see the loop.
+            </p>
+            <div class="step-list">
+              <div class="step">
+                <span class="step-number">1</span>
+                <span><strong>Events arrive</strong><span>Recent usage is visible immediately.</span></span>
+              </div>
+              <div class="step">
+                <span class="step-number">2</span>
+                <span><strong>Tally answers</strong><span>Ask natural-language usage questions.</span></span>
+              </div>
+              <div class="step">
+                <span class="step-number">3</span>
+                <span><strong>Agents improve tracking</strong><span>Confirmed tasks become implementation context.</span></span>
+              </div>
+            </div>
+          </div>
+          <img class="shot" src="dashboard-three-panels-crop.png" alt="" />
+        </div>
+      </section>
+
+      <section class="mockup" id="mockup-story-stack">
+        <div class="label">
+          <span>Mockup 3</span>
+          <span>Explainer section</span>
+        </div>
+        <div class="story">
+          <div class="story-header">
+            <div>
+              <div class="eyebrow"><span class="dot"></span> The dashboard loop</div>
+              <h2 style="margin-top: 18px">The dashboard is not just reporting. It is a work queue.</h2>
+            </div>
+            <p>
+              This option is the clearest educational treatment. It makes the novel Ask Tally and
+              agent-task behavior explicit without making the hero too busy.
+            </p>
+          </div>
+          <div class="story-grid">
+            <div>
+              <div class="side-card">
+                <strong>Recent usage</strong>
+                <span>Show live signal as soon as events exist.</span>
+              </div>
+              <div class="side-card">
+                <strong>Ask Tally</strong>
+                <span>Answer from real production events.</span>
+              </div>
+            </div>
+            <div class="center-shot">
+              <img class="shot" src="dashboard-three-panels-crop.png" alt="" />
+            </div>
+            <div>
+              <div class="side-card">
+                <strong>Missing data?</strong>
+                <span>Tally drafts the tracking task instead of pretending it can answer.</span>
+              </div>
+              <div class="side-card">
+                <strong>Human approval</strong>
+                <span>Tasks only enter the agent queue after confirmation.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

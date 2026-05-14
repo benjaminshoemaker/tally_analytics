@@ -1,0 +1,7 @@
+{
+  "phase": 1,
+  "status": "BLOCKED",
+  "auto_advanced": false,
+  "reason": "Working tree has unrelated untracked tmp directories; phase-start should not begin task execution until scope is confirmed.",
+  "timestamp": "2026-05-14T03:14:23Z"
+}
