@@ -26,6 +26,11 @@ type ScenarioFile = {
 
 const SCENARIO_GROUPS = [
   {
+    title: "First-time setup",
+    description: "Start from a signed-in account with no projects and walk the onboarding surface.",
+    ids: ["empty-new-user"],
+  },
+  {
     title: "Dashboard states",
     description: "Project states you can inspect directly from the normal dashboard screens.",
     ids: [
