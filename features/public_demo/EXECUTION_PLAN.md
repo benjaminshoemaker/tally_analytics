@@ -61,15 +61,15 @@ Create the static Acme Forms data module that powers the public demo. This task 
 **Requirement:** Public `/demo` uses fixture-backed fake data, deterministic Ask Tally responses, no API/storage changes.
 
 **Acceptance Criteria:**
-- [ ] (CODE) `apps/web/lib/demo/public-demo-data.ts` exists and exports `publicDemoProject`, `publicDemoOverview`, `publicDemoLiveEvents`, `publicDemoSessions`, `publicDemoQuestions`, and `matchDemoQuestion`.
+- [x] (CODE) `apps/web/lib/demo/public-demo-data.ts` exists and exports `publicDemoProject`, `publicDemoOverview`, `publicDemoLiveEvents`, `publicDemoSessions`, `publicDemoQuestions`, and `matchDemoQuestion`.
   - Verify: `test -f apps/web/lib/demo/public-demo-data.ts && rg "export const publicDemoProject|export const publicDemoOverview|export const publicDemoLiveEvents|export const publicDemoSessions|export const publicDemoQuestions|export function matchDemoQuestion" apps/web/lib/demo/public-demo-data.ts`
-- [ ] (CODE) Fixture data uses the Acme Forms identity and includes `/`, `/pricing`, `/templates`, `/signup`, `/docs`, Google, GitHub, Product Hunt, Hacker News, and direct referrer examples.
+- [x] (CODE) Fixture data uses the Acme Forms identity and includes `/`, `/pricing`, `/templates`, `/signup`, `/docs`, Google, GitHub, Product Hunt, Hacker News, and direct referrer examples.
   - Verify: `rg "Acme Forms|/pricing|/templates|/signup|/docs|Google|GitHub|Product Hunt|Hacker News|direct" apps/web/lib/demo/public-demo-data.ts`
-- [ ] (TEST) Question normalization handles case, whitespace, and terminal punctuation for suggested questions.
+- [x] (TEST) Question normalization handles case, whitespace, and terminal punctuation for suggested questions.
   - Verify: `pnpm --filter web test -- public-demo-data`
-- [ ] (TEST) `matchDemoQuestion("What should we track next?")` returns a missing-tracking result containing `form_published` and simulated agent output.
+- [x] (TEST) `matchDemoQuestion("What should we track next?")` returns a missing-tracking result containing `form_published` and simulated agent output.
   - Verify: `pnpm --filter web test -- public-demo-data`
-- [ ] (TEST) Unrecognized questions return the generic deterministic response with sample question suggestions.
+- [x] (TEST) Unrecognized questions return the generic deterministic response with sample question suggestions.
   - Verify: `pnpm --filter web test -- public-demo-data`
 
 **Files to Create:**

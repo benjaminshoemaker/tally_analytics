@@ -1,0 +1,31 @@
+{
+  "main": {
+    "current_phase": 1,
+    "phases": [
+      {
+        "phase": 1,
+        "status": "IN_PROGRESS",
+        "completed_tasks": ["1.1.A"],
+        "in_progress_task": null,
+        "blocked_tasks": [],
+        "last_activity": "2026-05-14T03:19:08Z"
+      },
+      {
+        "phase": 2,
+        "status": "PENDING",
+        "completed_tasks": [],
+        "in_progress_task": null,
+        "blocked_tasks": [],
+        "last_activity": null
+      },
+      {
+        "phase": 3,
+        "status": "PENDING",
+        "completed_tasks": [],
+        "in_progress_task": null,
+        "blocked_tasks": [],
+        "last_activity": null
+      }
+    ]
+  }
+}
