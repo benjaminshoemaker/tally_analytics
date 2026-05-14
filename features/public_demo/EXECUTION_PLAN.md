@@ -108,15 +108,15 @@ Create the public demo shell and tabbed dashboard experience using local React s
 **Requirement:** Light public frame, dashboard-like navigation, no authenticated layouts/hooks/API clients, initial viewport summary.
 
 **Acceptance Criteria:**
-- [ ] (CODE) `apps/web/components/demo/public-demo-dashboard.tsx` exists and does not import `useProject`, `useLiveFeed`, `useAnalyticsQuestion`, `useAnalyticsTasks`, `Providers`, `DashboardLayout`, `ProjectLayout`, or `getUserFromSession`.
+- [x] (CODE) `apps/web/components/demo/public-demo-dashboard.tsx` exists and does not import `useProject`, `useLiveFeed`, `useAnalyticsQuestion`, `useAnalyticsTasks`, `Providers`, `DashboardLayout`, `ProjectLayout`, or `getUserFromSession`.
   - Verify: `test -f apps/web/components/demo/public-demo-dashboard.tsx && test -z "$(rg "useProject|useLiveFeed|useAnalyticsQuestion|useAnalyticsTasks|Providers|DashboardLayout|ProjectLayout|getUserFromSession" apps/web/components/demo/public-demo-dashboard.tsx || true)"`
-- [ ] (CODE) Demo tabs expose `role="tablist"`, `role="tab"`, and `aria-selected`.
+- [x] (CODE) Demo tabs expose `role="tablist"`, `role="tab"`, and `aria-selected`.
   - Verify: `rg "role=\"tablist\"|role=\"tab\"|aria-selected" apps/web/components/demo/public-demo-dashboard.tsx`
-- [ ] (TEST) Default render shows the exact demo-data banner copy, "This is demo data. Connect your repo for real analytics.", product value summary, Acme Forms overview metrics, and an Ask Tally entry point.
+- [x] (TEST) Default render shows the exact demo-data banner copy, "This is demo data. Connect your repo for real analytics.", product value summary, Acme Forms overview metrics, and an Ask Tally entry point.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TEST) Switching to Live and Sessions shows fixture events and total/new/returning session metrics.
+- [x] (TEST) Switching to Live and Sessions shows fixture events and total/new/returning session metrics.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TEST) Interactive demo tab switching does not call `fetch`.
+- [x] (TEST) Interactive demo tab switching does not call `fetch`.
   - Verify: `pnpm --filter web test -- public-demo-page`
 
 **Files to Create:**
@@ -152,21 +152,21 @@ Create demo-specific Ask Tally UI that uses the static matcher and renders answe
 **Requirement:** Deterministic local Ask Tally behavior, product-level tasks only, simulated MCP/agent preview, no real queue mutation.
 
 **Acceptance Criteria:**
-- [ ] (CODE) Demo Ask Tally components exist and do not import `AnalyticsQuestionResult`, `AskTallyPanel`, `TaskDraftCard`, `PendingTaskList`, `useAnalyticsQuestion`, or `useAnalyticsTasks`.
+- [x] (CODE) Demo Ask Tally components exist and do not import `AnalyticsQuestionResult`, `AskTallyPanel`, `TaskDraftCard`, `PendingTaskList`, `useAnalyticsQuestion`, or `useAnalyticsTasks`.
   - Verify: `test -f apps/web/components/demo/demo-ask-tally-panel.tsx && test -f apps/web/components/demo/demo-agent-task-preview.tsx && test -z "$(rg "AnalyticsQuestionResult|AskTallyPanel|TaskDraftCard|PendingTaskList|useAnalyticsQuestion|useAnalyticsTasks" apps/web/components/demo || true)"`
-- [ ] (CODE) The simulated agent preview contains visible copy labeling the output as simulated.
+- [x] (CODE) The simulated agent preview contains visible copy labeling the output as simulated.
   - Verify: `rg "simulated|Simulated" apps/web/components/demo/demo-agent-task-preview.tsx`
-- [ ] (CODE) Ask Tally result output uses `aria-live="polite"` for screen-reader announcements.
+- [x] (CODE) Ask Tally result output uses `aria-live="polite"` for screen-reader announcements.
   - Verify: `rg "aria-live=\"polite\"" apps/web/components/demo/demo-ask-tally-panel.tsx`
-- [ ] (TEST) Empty Ask Tally input cannot submit or shows validation.
+- [x] (TEST) Empty Ask Tally input cannot submit or shows validation.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TEST) Empty Ask Tally validation is screen-reader reachable through visible text, an accessible description, or an alert/status region.
+- [x] (TEST) Empty Ask Tally validation is screen-reader reachable through visible text, an accessible description, or an alert/status region.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TEST) Each suggested question returns its expected deterministic response kind.
+- [x] (TEST) Each suggested question returns its expected deterministic response kind.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TEST) "What should we track next?" renders `form_published`, draft task copy, and simulated MCP/agent output.
+- [x] (TEST) "What should we track next?" renders `form_published`, draft task copy, and simulated MCP/agent output.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TEST) An unrecognized question renders the generic deterministic response and suggested questions.
+- [x] (TEST) An unrecognized question renders the generic deterministic response and suggested questions.
   - Verify: `pnpm --filter web test -- public-demo-page`
 
 **Files to Create:**
@@ -195,13 +195,13 @@ Create demo-specific Ask Tally UI that uses the static matcher and renders answe
 ### Phase 1 Checkpoint
 
 **Automated Checks:**
-- [ ] Public demo data/component tests pass.
+- [x] Public demo data/component tests pass.
   - Verify: `pnpm --filter web test -- public-demo`
-- [ ] Type checking passes.
+- [x] Type checking passes.
   - Verify: `pnpm --filter web typecheck`
 
 **Regression Verification:**
-- [ ] Existing dashboard component regression tests pass for reused components.
+- [x] Existing dashboard component regression tests pass for reused components.
   - Verify: `pnpm --filter web test -- overview-page sessions-page live-feed-page dashboard-pending-tasks-components live-event`
 
 **Browser Verification:**
