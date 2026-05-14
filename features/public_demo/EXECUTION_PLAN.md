@@ -42,9 +42,9 @@ Phase 1: Demo Data + Presentational Shell
 
 ### Pre-Phase Setup
 
-- [ ] Confirm feature context files are present.
+- [x] Confirm feature context files are present.
   - Verify: `test -f features/public_demo/FEATURE_SPEC.md && test -f features/public_demo/FEATURE_TECHNICAL_SPEC.md && test -f features/public_demo/FLOW_VERIFICATION_PLAN.md`
-- [ ] Confirm web test tooling is available.
+- [x] Confirm web test tooling is available.
   - Verify: `pnpm --filter web test -- --help >/dev/null`
 
 ### Step 1.1: Static Data Contract
@@ -450,17 +450,17 @@ Run the focused and broad verification commands for the completed public demo fe
 **Requirement:** Verified implementation with route tests, regression tests, browser flow, typecheck, and build.
 
 **Acceptance Criteria:**
-- [ ] (TEST) Focused public demo and landing tests pass.
+- [x] (TEST) Focused public demo and landing tests pass.
   - Verify: `pnpm --filter web test -- public-demo marketing-landing-page`
-- [ ] (TEST) Reused dashboard component regression tests pass.
+- [x] (TEST) Reused dashboard component regression tests pass.
   - Verify: `pnpm --filter web test -- overview-page sessions-page live-feed-page dashboard-pending-tasks-components live-event`
-- [ ] (BROWSER:DOM) Public demo browser flow passes.
+- [x] (BROWSER:DOM) Public demo browser flow passes.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] (TYPE) Web typecheck passes.
+- [x] (TYPE) Web typecheck passes.
   - Verify: `pnpm --filter web typecheck`
-- [ ] (BUILD) Web build passes.
+- [x] (BUILD) Web build passes.
   - Verify: `pnpm --filter web build`
-- [ ] (CODE) `features/public_demo/EXECUTION_PLAN.md` has completed checkboxes for implemented and verified tasks.
+- [x] (CODE) `features/public_demo/EXECUTION_PLAN.md` has completed checkboxes for implemented and verified tasks.
   - Verify: `test -z "$(rg "\\[ \\]" features/public_demo/EXECUTION_PLAN.md || true)"`
 
 **Files to Create:**
@@ -486,21 +486,21 @@ Run the focused and broad verification commands for the completed public demo fe
 ### Phase 3 Checkpoint
 
 **Automated Checks:**
-- [ ] Focused web tests pass.
+- [x] Focused web tests pass.
   - Verify: `pnpm --filter web test -- public-demo marketing-landing-page`
-- [ ] Dashboard regression tests pass.
+- [x] Dashboard regression tests pass.
   - Verify: `pnpm --filter web test -- overview-page sessions-page live-feed-page dashboard-pending-tasks-components live-event`
-- [ ] Type checking passes.
+- [x] Type checking passes.
   - Verify: `pnpm --filter web typecheck`
-- [ ] Build passes.
+- [x] Build passes.
   - Verify: `pnpm --filter web build`
 
 **Regression Verification:**
-- [ ] Public demo browser flow passes with network and console assertions.
+- [x] Public demo browser flow passes with network and console assertions.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
-- [ ] No database, Tinybird, MCP, auth, Stripe, or SDK files were modified for this feature.
+- [x] No database, Tinybird, MCP, auth, Stripe, or SDK files were modified for this feature.
   - Verify: `test -z "$(git diff --name-only | rg "drizzle|tinybird|api/(mcp|oauth|auth|stripe)|packages/sdk" || true)"`
 
 **Browser Verification:**
-- [ ] Public demo flow checks desktop and mobile UI states.
+- [x] Public demo flow checks desktop and mobile UI states.
   - Verify: `pnpm --filter web e2e --grep @public-demo`
