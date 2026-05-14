@@ -4,6 +4,7 @@ import AgentInstallTabs from './agent-install-tabs';
 
 export type MarketingHeroProps = {
   docsUrl: string;
+  demoUrl?: string;
   dashboardImageSrc: string;
 };
 
@@ -11,7 +12,7 @@ function isExternalUrl(url: string): boolean {
   return url.startsWith('http://') || url.startsWith('https://');
 }
 
-export default function MarketingHero({ docsUrl, dashboardImageSrc }: MarketingHeroProps) {
+export default function MarketingHero({ docsUrl, demoUrl = "/demo", dashboardImageSrc }: MarketingHeroProps) {
   const docsIsExternal = isExternalUrl(docsUrl);
   return (
     <section className="relative overflow-hidden px-6 pb-16 pt-16 md:px-10 md:pb-20 md:pt-24 lg:px-40">
@@ -52,6 +53,12 @@ export default function MarketingHero({ docsUrl, dashboardImageSrc }: MarketingH
                 href="#how-it-works"
               >
                 See how it works
+              </a>
+              <a
+                className="flex h-12 items-center justify-center gap-2 rounded-lg border border-[#e8e0d9] bg-white px-8 text-base font-medium text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none"
+                href={demoUrl}
+              >
+                View demo dashboard
               </a>
             </div>
 

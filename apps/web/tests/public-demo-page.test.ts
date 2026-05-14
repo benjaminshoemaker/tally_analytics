@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -107,5 +108,21 @@ describe("public demo dashboard", () => {
 
     expect(screen.getByText("Try one of the demo questions")).toBeTruthy();
     expect(screen.getByText("This public demo uses deterministic example answers instead of an LLM.")).toBeTruthy();
+  });
+
+  it("renders the public demo route from static fixture data", async () => {
+    const { default: DemoPage } = await import("../app/(marketing)/demo/page");
+
+    const html = renderToStaticMarkup(React.createElement(DemoPage));
+
+    expect(html).toContain("This is demo data. Connect your repo for real analytics.");
+    expect(html).toContain("Acme Forms");
+    expect(html).toContain("Start with MCP");
+    expect(html).toContain('href="/docs/setup"');
+    expect(html).toContain("Page views");
+    expect(html).toContain("Ask Tally");
+    expect(html).not.toContain("Account");
+    expect(html).not.toContain("Billing");
+    expect(html).not.toContain("User menu");
   });
 });

@@ -13,7 +13,7 @@ const WORKFLOW_IMAGE_SRC = '/marketing/dashboard-workflow.png';
 export default function LandingPage() {
   return (
     <main className="flex-grow">
-      <MarketingHero docsUrl="/docs/setup" dashboardImageSrc={DASHBOARD_IMAGE_SRC} />
+      <MarketingHero docsUrl="/docs/setup" demoUrl="/demo" dashboardImageSrc={DASHBOARD_IMAGE_SRC} />
 
       <MarketingFeatures />
 

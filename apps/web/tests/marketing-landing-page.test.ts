@@ -84,6 +84,8 @@ describe("marketing landing page", () => {
     expect(html).toContain("Start with MCP");
     expect(html).toContain('href="/docs/setup"');
     expect(html).toContain("See how it works");
+    expect(html).toContain("View demo dashboard");
+    expect(html).toContain('href="/demo"');
   });
 
   it("renders features, what-you-get, how-it-works, set-and-forget, and CTA sections", async () => {

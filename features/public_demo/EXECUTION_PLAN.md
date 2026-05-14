@@ -216,9 +216,9 @@ Create demo-specific Ask Tally UI that uses the static matcher and renders answe
 
 ### Pre-Phase Setup
 
-- [ ] Confirm Phase 1 test surface is green.
+- [x] Confirm Phase 1 test surface is green.
   - Verify: `pnpm --filter web test -- public-demo`
-- [ ] Confirm marketing tests are runnable before route integration.
+- [x] Confirm marketing tests are runnable before route integration.
   - Verify: `pnpm --filter web test -- marketing-landing-page`
 
 ### Step 2.1: Public Route
@@ -235,17 +235,17 @@ Add the marketing route that renders the demo shell from static fixture data. Th
 **Requirement:** Public `/demo`, no login, static bundled data sources, setup CTA to `/docs/setup`.
 
 **Acceptance Criteria:**
-- [ ] (CODE) `apps/web/app/(marketing)/demo/page.tsx` exists and imports fixture data plus `PublicDemoDashboard`.
+- [x] (CODE) `apps/web/app/(marketing)/demo/page.tsx` exists and imports fixture data plus `PublicDemoDashboard`.
   - Verify: `test -f 'apps/web/app/(marketing)/demo/page.tsx' && rg "publicDemo|PublicDemoDashboard" 'apps/web/app/(marketing)/demo/page.tsx'`
-- [ ] (CODE) The `/demo` route file does not import dashboard providers, auth/session helpers, API clients, MCP modules, Tinybird modules, or Stripe modules.
+- [x] (CODE) The `/demo` route file does not import dashboard providers, auth/session helpers, API clients, MCP modules, Tinybird modules, or Stripe modules.
   - Verify: `test -z "$(rg "Providers|getUserFromSession|getUserFromRequest|useProject|useLiveFeed|useAnalytics|api/mcp|tinybird|stripe|db/" 'apps/web/app/(marketing)/demo/page.tsx' || true)"`
-- [ ] (TEST) Static route render includes the exact demo-data banner copy, "This is demo data. Connect your repo for real analytics.", Acme Forms, "Start with MCP", `href="/docs/setup"`, Overview metrics, and Ask Tally entry copy.
+- [x] (TEST) Static route render includes the exact demo-data banner copy, "This is demo data. Connect your repo for real analytics.", Acme Forms, "Start with MCP", `href="/docs/setup"`, Overview metrics, and Ask Tally entry copy.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TEST) Static route render does not show account controls, billing/settings controls, or user dropdown controls.
+- [x] (TEST) Static route render does not show account controls, billing/settings controls, or user dropdown controls.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TEST) Route/component interactions do not call `fetch`.
+- [x] (TEST) Route/component interactions do not call `fetch`.
   - Verify: `pnpm --filter web test -- public-demo-page`
-- [ ] (TYPE) Type checking passes after route creation.
+- [x] (TYPE) Type checking passes after route creation.
   - Verify: `pnpm --filter web typecheck`
 
 **Files to Create:**
@@ -283,13 +283,13 @@ Add "View demo dashboard" to the public marketing surface near the product proof
 **Requirement:** Landing-page CTA with `href="/demo"` and existing CTAs preserved.
 
 **Acceptance Criteria:**
-- [ ] (CODE) Marketing page or marketing component renders "View demo dashboard" with `href="/demo"`.
+- [x] (CODE) Marketing page or marketing component renders "View demo dashboard" with `href="/demo"`.
   - Verify: `rg "View demo dashboard|href=\"/demo\"" apps/web/app/'(marketing)' apps/web/components/marketing`
-- [ ] (TEST) `marketing-landing-page.test.ts` asserts "View demo dashboard" and `href="/demo"`.
+- [x] (TEST) `marketing-landing-page.test.ts` asserts "View demo dashboard" and `href="/demo"`.
   - Verify: `rg "View demo dashboard|href=\\\"/demo\\\"" apps/web/tests/marketing-landing-page.test.ts`
-- [ ] (TEST) Existing landing-page tests still assert "Start with MCP", pricing/docs copy, logged-out login behavior, and logged-in Dashboard behavior.
+- [x] (TEST) Existing landing-page tests still assert "Start with MCP", pricing/docs copy, logged-out login behavior, and logged-in Dashboard behavior.
   - Verify: `pnpm --filter web test -- marketing-landing-page`
-- [ ] (TEST) Public demo route tests still pass after CTA integration.
+- [x] (TEST) Public demo route tests still pass after CTA integration.
   - Verify: `pnpm --filter web test -- public-demo-page`
 
 **Files to Create:**
@@ -319,15 +319,15 @@ Add "View demo dashboard" to the public marketing surface near the product proof
 ### Phase 2 Checkpoint
 
 **Automated Checks:**
-- [ ] Public demo and marketing tests pass.
+- [x] Public demo and marketing tests pass.
   - Verify: `pnpm --filter web test -- public-demo marketing-landing-page`
-- [ ] Type checking passes.
+- [x] Type checking passes.
   - Verify: `pnpm --filter web typecheck`
-- [ ] Build passes.
+- [x] Build passes.
   - Verify: `pnpm --filter web build`
 
 **Regression Verification:**
-- [ ] Existing dashboard and marketing regression tests pass for touched surfaces.
+- [x] Existing dashboard and marketing regression tests pass for touched surfaces.
   - Verify: `pnpm --filter web test -- overview-page sessions-page live-feed-page dashboard-pending-tasks-components marketing-landing-page`
 
 **Browser Verification:**
