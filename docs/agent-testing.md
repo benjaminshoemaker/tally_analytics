@@ -144,6 +144,11 @@ These commands map the intentionally simple product promise to executable checks
 | Full local release gate | `pnpm --filter web e2e:release-local` | None | Runs tests, typecheck, lint, build, local MCP, seeded scenario, pending task, and deterministic billing gates. |
 | Full external release gate | `pnpm --filter web e2e:release-external` | Hosted Tally, Stripe test mode, GitHub sandbox | Runs hosted smoke, real Stripe billing, and GitHub sandbox dry-run. |
 
+External release runs write a durable evidence packet under `tmp/release-external/<run-id>/`.
+The packet includes `report.md`, `summary.json`, per-command logs, hosted home/privacy
+screenshots, hosted smoke details, and links to retained Stripe real-provider artifacts
+when that tier runs with `--keep --screenshots`.
+
 ## Agent Workflow
 
 1. Pick a scenario from `pnpm --filter web e2e:scenarios`.
