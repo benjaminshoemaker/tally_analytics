@@ -21,8 +21,8 @@ export default function MarketingHero({
   return (
     <section className="relative overflow-hidden px-6 pb-16 pt-16 md:px-10 md:pb-20 md:pt-24 lg:px-40">
       <div className="mx-auto max-w-[1200px]">
-        <div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-          <div>
+        <div className="grid min-w-0 gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+          <div className="min-w-0">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#0f766e]/20 bg-[#0f766e]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#0f766e]">
               <span className="size-2 animate-pulse rounded-full bg-[#0f766e]" />
               Easiest analytics setup
@@ -52,9 +52,9 @@ export default function MarketingHero({
               </p>
             </div>
 
-            <div className="mt-8 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
+            <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
-                className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#0f766e] px-8 text-base font-medium text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-teal-800 hover:shadow-warm-md active:scale-[0.96] active:shadow-none"
+                className="flex min-h-12 w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-[#0f766e] px-6 py-3 text-base font-medium text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-teal-800 hover:shadow-warm-md active:scale-[0.96] active:shadow-none sm:w-auto"
                 href={docsUrl}
                 rel={docsIsExternal ? 'noreferrer' : undefined}
                 target={docsIsExternal ? '_blank' : undefined}
@@ -68,13 +68,13 @@ export default function MarketingHero({
                 </svg>
               </a>
               <a
-                className="flex h-12 items-center justify-center gap-2 rounded-lg border border-[#e8e0d9] bg-white px-8 text-base font-medium text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none"
+                className="flex min-h-12 w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-[#e8e0d9] bg-white px-6 py-3 text-base font-medium text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none sm:w-auto"
                 href="#how-it-works"
               >
                 See how it works
               </a>
               <a
-                className="flex h-12 items-center justify-center gap-2 rounded-lg border border-[#e8e0d9] bg-white px-8 text-base font-medium text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none"
+                className="flex min-h-12 w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-[#e8e0d9] bg-white px-6 py-3 text-base font-medium text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none sm:w-auto"
                 href={demoUrl}
               >
                 View demo dashboard
@@ -98,7 +98,7 @@ export default function MarketingHero({
             </div>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <AgentInstallTabs />
             <div className="mt-4 rounded-lg border border-[#e8e0d9] bg-[#f3ede7]/40 p-4">
               <h2 className="text-sm font-semibold text-[#1b140d]">What happens next</h2>

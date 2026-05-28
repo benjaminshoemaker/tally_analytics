@@ -47,7 +47,7 @@ export default function AgentInstallTabs({ compact = false }: { compact?: boolea
   const active = AGENT_TABS.find((tab) => tab.id === activeId) ?? AGENT_TABS[0];
 
   return (
-    <div className="rounded-xl border border-warm-200 bg-white p-3 shadow-warm">
+    <div className="min-w-0 overflow-hidden rounded-xl border border-warm-200 bg-white p-3 shadow-warm">
       <div
         role="tablist"
         aria-label="Choose coding agent"
@@ -79,7 +79,7 @@ export default function AgentInstallTabs({ compact = false }: { compact?: boolea
         className={compact ? "mt-3" : "mt-4"}
       >
         <p className="text-xs font-medium text-warm-600">{active.description}</p>
-        <pre className="mt-3 overflow-x-auto rounded-lg bg-warm-900 px-4 py-3 text-left text-xs font-medium leading-relaxed text-warm-50 shadow-inner">
+        <pre className="mt-3 max-w-full overflow-x-auto rounded-lg bg-warm-900 px-4 py-3 text-left text-xs font-medium leading-relaxed text-warm-50 shadow-inner">
           <code>{active.command}</code>
         </pre>
         {!compact && <p className="mt-3 text-xs leading-relaxed text-warm-500">{active.note}</p>}
