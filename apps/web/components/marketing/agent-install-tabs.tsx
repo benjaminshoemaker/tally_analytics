@@ -79,7 +79,7 @@ export default function AgentInstallTabs({ compact = false }: { compact?: boolea
         className={compact ? "mt-3" : "mt-4"}
       >
         <p className="text-xs font-medium text-warm-600">{active.description}</p>
-        <pre className="mt-3 max-w-full overflow-x-auto rounded-lg bg-warm-900 px-4 py-3 text-left text-xs font-medium leading-relaxed text-warm-50 shadow-inner">
+        <pre className="mt-3 max-w-full overflow-hidden whitespace-pre-wrap break-words rounded-lg bg-warm-900 px-4 py-3 text-left text-xs font-medium leading-relaxed text-warm-50 shadow-inner">
           <code>{active.command}</code>
         </pre>
         {!compact && <p className="mt-3 text-xs leading-relaxed text-warm-500">{active.note}</p>}

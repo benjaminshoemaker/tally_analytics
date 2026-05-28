@@ -21,14 +21,14 @@ export default function MarketingHero({
   return (
     <section className="relative overflow-hidden px-6 pb-16 pt-16 md:px-10 md:pb-20 md:pt-24 lg:px-40">
       <div className="mx-auto max-w-[1200px]">
-        <div className="grid min-w-0 gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.95fr)] lg:items-start xl:gap-12">
           <div className="min-w-0">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#0f766e]/20 bg-[#0f766e]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#0f766e]">
               <span className="size-2 animate-pulse rounded-full bg-[#0f766e]" />
               Easiest analytics setup
             </div>
 
-            <h1 className="max-w-3xl font-display text-4xl font-semibold leading-[1.1] tracking-tight text-[#1b140d] md:text-6xl">
+            <h1 className="max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight text-[#1b140d] md:text-5xl 2xl:text-6xl">
               The fastest path from no analytics to real usage data.
             </h1>
 
@@ -52,9 +52,9 @@ export default function MarketingHero({
               </p>
             </div>
 
-            <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
               <a
-                className="flex min-h-12 w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-[#0f766e] px-6 py-3 text-base font-medium text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-teal-800 hover:shadow-warm-md active:scale-[0.96] active:shadow-none sm:w-auto"
+                className="flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-[#0f766e] px-4 py-3 text-sm font-semibold text-white shadow-warm transition-all hover:scale-[0.98] hover:bg-teal-800 hover:shadow-warm-md active:scale-[0.96] active:shadow-none"
                 href={docsUrl}
                 rel={docsIsExternal ? 'noreferrer' : undefined}
                 target={docsIsExternal ? '_blank' : undefined}
@@ -68,13 +68,13 @@ export default function MarketingHero({
                 </svg>
               </a>
               <a
-                className="flex min-h-12 w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-[#e8e0d9] bg-white px-6 py-3 text-base font-medium text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none sm:w-auto"
+                className="flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-[#e8e0d9] bg-white px-4 py-3 text-sm font-semibold text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none"
                 href="#how-it-works"
               >
                 See how it works
               </a>
               <a
-                className="flex min-h-12 w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-[#e8e0d9] bg-white px-6 py-3 text-base font-medium text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none sm:w-auto"
+                className="flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-[#e8e0d9] bg-white px-4 py-3 text-sm font-semibold text-[#1b140d] shadow-sm transition-all hover:scale-[0.98] hover:bg-[#f3ede7] active:scale-[0.96] active:shadow-none"
                 href={demoUrl}
               >
                 View demo dashboard
@@ -98,7 +98,7 @@ export default function MarketingHero({
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="min-w-0 lg:pt-14 2xl:pt-16">
             <AgentInstallTabs />
             <div className="mt-4 rounded-lg border border-[#e8e0d9] bg-[#f3ede7]/40 p-4">
               <h2 className="text-sm font-semibold text-[#1b140d]">What happens next</h2>
