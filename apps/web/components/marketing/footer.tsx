@@ -8,19 +8,24 @@ export default function MarketingFooter({ githubUrl }: MarketingFooterProps) {
   return (
     <footer className="border-t border-[#e8e0d9] bg-white py-12 dark:border-[#3e342b] dark:bg-[#1b140d]">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-8 px-6 md:flex-row md:px-10 lg:px-40">
-        <div className="flex items-center gap-2">
-          <div className="flex size-6 items-center justify-center rounded bg-[#0f766e]/20 text-[#0f766e]">
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
-              <path
-                fill="currentColor"
-                d="M3 3h18v18H3V3zm4 14h2V9H7v8zm4 0h2V5h-2v12zm4 0h2v-6h-2v6z"
-              />
-            </svg>
+        <div>
+          <div className="flex items-center gap-2">
+            <div className="flex size-6 items-center justify-center rounded bg-[#0f766e]/20 text-[#0f766e]">
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
+                <path
+                  fill="currentColor"
+                  d="M3 3h18v18H3V3zm4 14h2V9H7v8zm4 0h2V5h-2v12zm4 0h2v-6h-2v6z"
+                />
+              </svg>
+            </div>
+            <span className="font-bold text-[#1b140d] dark:text-white">Tally</span>
+            <span className="ml-2 text-sm text-[#57534e] dark:text-[#d0c0b0]">
+              © {new Date().getFullYear()}
+            </span>
           </div>
-          <span className="font-bold text-[#1b140d] dark:text-white">Tally</span>
-          <span className="ml-2 text-sm text-[#57534e] dark:text-[#d0c0b0]">
-            © {new Date().getFullYear()}
-          </span>
+          <p className="mt-2 text-sm text-[#57534e] dark:text-[#d0c0b0]">
+            We never use your data to train AI models.
+          </p>
         </div>
 
         <div className="flex flex-wrap justify-center gap-8">

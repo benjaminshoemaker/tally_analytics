@@ -4,6 +4,7 @@ import MarketingFeatures from '../../components/marketing/features';
 import MarketingHero from '../../components/marketing/hero';
 import MarketingHowItWorks from '../../components/marketing/how-it-works';
 import MarketingProductProof from '../../components/marketing/product-proof';
+import MarketingPrivacyCommitment from '../../components/marketing/privacy-commitment';
 import MarketingSetAndForget from '../../components/marketing/set-and-forget';
 import MarketingWhatYouGet from '../../components/marketing/what-you-get';
 
@@ -13,9 +14,15 @@ const WORKFLOW_IMAGE_SRC = '/marketing/dashboard-workflow.png';
 export default function LandingPage() {
   return (
     <main className="flex-grow">
-      <MarketingHero docsUrl="/docs/setup" demoUrl="/demo" dashboardImageSrc={DASHBOARD_IMAGE_SRC} />
+      <MarketingHero
+        docsUrl="/docs/setup"
+        demoUrl="/demo"
+        dashboardImageSrc={DASHBOARD_IMAGE_SRC}
+      />
 
       <MarketingFeatures />
+
+      <MarketingPrivacyCommitment />
 
       <MarketingWhatYouGet />
 

@@ -12,7 +12,11 @@ function isExternalUrl(url: string): boolean {
   return url.startsWith('http://') || url.startsWith('https://');
 }
 
-export default function MarketingHero({ docsUrl, demoUrl = "/demo", dashboardImageSrc }: MarketingHeroProps) {
+export default function MarketingHero({
+  docsUrl,
+  demoUrl = '/demo',
+  dashboardImageSrc,
+}: MarketingHeroProps) {
   const docsIsExternal = isExternalUrl(docsUrl);
   return (
     <section className="relative overflow-hidden px-6 pb-16 pt-16 md:px-10 md:pb-20 md:pt-24 lg:px-40">
@@ -32,6 +36,21 @@ export default function MarketingHero({ docsUrl, demoUrl = "/demo", dashboardIma
               Tally does the analytics setup for you. Connect Claude Code, Codex, Cursor, or your AI
               coding agent of choice, then ask it to add analytics.
             </p>
+
+            <div className="mt-6 flex max-w-2xl items-start gap-3 rounded-lg border border-[#e8e0d9] bg-white p-4 shadow-warm">
+              <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded bg-[#0f766e]/10 text-[#0f766e]">
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
+                  <path
+                    fill="currentColor"
+                    d="M12 2l8 4v6c0 5-3.2 9.4-8 10-4.8-.6-8-5-8-10V6l8-4zm0 4.2L6 8.3V12c0 3.8 2.2 7.2 6 7.9 3.8-.7 6-4.1 6-7.9V8.3l-6-2.1z"
+                  />
+                </svg>
+              </span>
+              <p className="text-sm font-medium leading-relaxed text-[#292524]">
+                We will never use your data to train AI models. Not by default. Not with an opt-out.
+                Never.
+              </p>
+            </div>
 
             <div className="mt-8 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
               <a
