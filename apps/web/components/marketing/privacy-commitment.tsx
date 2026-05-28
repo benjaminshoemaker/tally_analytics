@@ -41,9 +41,9 @@ export default function MarketingPrivacyCommitment() {
               </a>
               <a
                 className="inline-flex min-h-11 items-center justify-center rounded-lg border border-warm-200 bg-white px-5 text-sm font-semibold text-warm-900 shadow-sm transition-all hover:bg-warm-100 active:scale-[0.98]"
-                href="/compare/posthog-mcp"
+                href="/privacy"
               >
-                Compare with PostHog MCP
+                How we handle AI data
               </a>
             </div>
           </div>

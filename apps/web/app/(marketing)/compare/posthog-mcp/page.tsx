@@ -48,14 +48,15 @@ export default function PostHogMcpComparisonPage() {
       <section className="border-b border-warm-200 bg-warm-50 px-6 py-16 md:px-10 md:py-20 lg:px-40">
         <div className="mx-auto max-w-[1100px]">
           <span className="inline-flex rounded-full border border-brand-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
-            Tally vs PostHog MCP
+            MCP analytics comparison
           </span>
           <h1 className="mt-5 max-w-4xl font-display text-4xl font-semibold leading-tight tracking-tight text-warm-900 md:text-6xl">
-            PostHog MCP convenience. A stricter data promise.
+            Agent-native analytics with a stricter data promise.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-warm-500 md:text-xl">
             Tally is MCP-first analytics for builders using Codex, Claude Code, Cursor, and other AI
-            coding agents. The difference: we will never use your data to train AI models.
+            coding agents. Your agent gets useful analytics access, and your data is never used to
+            train AI models.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -81,9 +82,8 @@ export default function PostHogMcpComparisonPage() {
               Built for the agent workflow you already use.
             </h2>
             <p className="mt-4 text-base leading-relaxed text-warm-500">
-              PostHog is a broad product analytics platform. Tally is narrower by design: it helps
-              coding agents install analytics, answer usage questions, and implement the next
-              tracking change.
+              Tally is narrower by design: it helps coding agents install analytics, answer usage
+              questions, and implement the next tracking change.
             </p>
             <div className="mt-6 grid gap-3">
               {TALLY_POINTS.map((point) => (
@@ -108,7 +108,7 @@ export default function PostHogMcpComparisonPage() {
           <div className="overflow-hidden rounded-lg border border-warm-200 bg-white shadow-warm">
             <div className="border-b border-warm-200 bg-warm-50 px-5 py-4">
               <h2 className="font-display text-xl font-semibold text-warm-900">
-                MCP analytics comparison
+                How Tally compares to PostHog MCP
               </h2>
               <p className="mt-1 text-sm text-warm-500">
                 High-level positioning for teams choosing an agent-facing analytics workflow.
