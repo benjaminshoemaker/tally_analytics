@@ -19,6 +19,13 @@ function releaseRunId() {
 function externalCommands(context) {
   return [
     {
+      id: 'provision-external',
+      label: 'External Gate Provisioning',
+      command: 'pnpm',
+      args: ['--filter', 'web', 'e2e:provision-external'],
+      summaryPath: path.join(repoRoot, 'tmp', 'external-gate-provision', 'summary.json'),
+    },
+    {
       id: 'hosted-smoke',
       label: 'Hosted Production Smoke',
       command: 'pnpm',
@@ -115,6 +122,7 @@ function readJsonIfExists(filePath) {
 
 function redact(value) {
   return String(value)
+    .replace(/postgres(?:ql)?:\/\/[^\s'"`]+/gi, 'postgres://[redacted]')
     .replace(/\b(?:sk|pk|rk|whsec|cs|cus|sub|evt|in|pi|seti|pm|price|prod|bps|bpc)_[A-Za-z0-9_]+/g, (match) => {
       const prefix = match.slice(0, match.indexOf('_') + 1);
       return `${prefix}redacted_${match.slice(-4)}`;
@@ -216,6 +224,20 @@ function formatCommandNotes(command) {
         : null,
       cleanup?.customerDeleteStatuses ? `- Customer cleanup statuses: \`${cleanup.customerDeleteStatuses.join(', ')}\`` : null,
       command.summary?.artifactDir ? `- Stripe artifact directory: \`${command.summary.artifactDir}\`` : null,
+    ].filter(Boolean);
+  }
+
+  if (command.id === 'provision-external') {
+    return [
+      command.summary?.hosted?.projectId ? `- Hosted smoke project: \`${command.summary.hosted.projectId}\`` : null,
+      command.summary?.hosted?.accessTokenExpiresAt
+        ? `- MCP token expires: \`${command.summary.hosted.accessTokenExpiresAt}\``
+        : null,
+      command.summary?.stripe?.proPriceId ? `- Stripe Pro price: \`${command.summary.stripe.proPriceId}\`` : null,
+      command.summary?.stripe?.teamPriceId ? `- Stripe Team price: \`${command.summary.stripe.teamPriceId}\`` : null,
+      command.summary?.stripe?.billingPortalConfigId
+        ? `- Stripe portal config: \`${command.summary.stripe.billingPortalConfigId}\``
+        : null,
     ].filter(Boolean);
   }
 

@@ -139,10 +139,11 @@ These commands map the intentionally simple product promise to executable checks
 | Codex client automation | `pnpm --filter web e2e:mcp-client-matrix -- --run-automated` | Local Codex CLI | Runs the automated Codex MCP self-test. Claude Code, Cursor, and generic HTTP MCP clients remain documented-only until they have executable harnesses. |
 | Hosted production event smoke | `pnpm --filter web e2e:hosted-smoke` | Hosted Tally + hosted events + MCP token | Emits a production smoke event to `events.usetally.xyz` and verifies it through hosted MCP live events. Requires `TALLY_HOSTED_PROJECT_ID` and `TALLY_HOSTED_MCP_ACCESS_TOKEN`. |
 | Hosted public preflight | `pnpm --filter web e2e:hosted-smoke -- --preflight-only` | Hosted Tally + hosted events | Checks public app, privacy, MCP metadata, and events CORS without writing data. |
+| External gate provisioning | `pnpm --filter web e2e:provision-external` | Hosted Tally DB + Stripe test mode | Creates/reuses the hosted smoke project, mints a short-lived MCP token, creates/reuses Stripe test prices and billing portal config, and writes generated env values to ignored `.env.local`. |
 | Stripe deterministic billing | `pnpm --filter web e2e:stripe-billing` | None | Default billing regression tier with fake Stripe provider and signed local webhooks. |
 | Stripe real-provider billing | `pnpm --filter web e2e:stripe-billing:real` | Stripe test mode + Stripe CLI | Hosted Checkout and real provider webhook smoke. Refuses live-mode Stripe credentials. |
 | Full local release gate | `pnpm --filter web e2e:release-local` | None | Runs tests, typecheck, lint, build, local MCP, seeded scenario, pending task, and deterministic billing gates. |
-| Full external release gate | `pnpm --filter web e2e:release-external` | Hosted Tally, Stripe test mode, GitHub sandbox | Runs hosted smoke, real Stripe billing, and GitHub sandbox dry-run. |
+| Full external release gate | `pnpm --filter web e2e:release-external` | Hosted Tally, Stripe test mode, GitHub sandbox | Provisions disposable external resources, then runs hosted smoke, real Stripe billing, and GitHub sandbox dry-run. |
 
 External release runs write a durable evidence packet under `tmp/release-external/<run-id>/`.
 The packet includes `report.md`, `summary.json`, per-command logs, hosted home/privacy
