@@ -64,6 +64,18 @@ Run an E2E scenario test:
 pnpm --filter web e2e --grep @scenario
 ```
 
+Run the local release gate:
+
+```bash
+DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/postgres pnpm --filter web e2e:release-local
+```
+
+Run the opt-in external release gate:
+
+```bash
+pnpm --filter web e2e:release-external
+```
+
 The seeder defaults to the local Playwright database URL:
 
 ```text
@@ -113,6 +125,24 @@ The harness applies local migrations with `pnpm --filter web db:push`, seeds det
 Passing output is compact JSON with `ok: true`, `flow: "dashboard_pending_tasks"`, and named stages such as `dashboard-answered`, `dashboard-confirm-task`, `mcp-task-context`, `agent-status-idempotency`, `production-verification`, and `insufficient-scope`.
 
 This flow is explicitly account-free: it requires no human GitHub account and no GitHub App installation for verification.
+
+## Launch Readiness Gates
+
+These commands map the intentionally simple product promise to executable checks.
+
+| Journey | Command | External services | Notes |
+| --- | --- | --- | --- |
+| Marketing/privacy/demo proof | `pnpm --filter web test -- privacy-positioning public-demo` | None | Fails if the no-AI-training commitment disappears from launch-critical surfaces or public marketing mentions PostHog. |
+| MCP install compatibility | `pnpm --filter web e2e:mcp-install-compatibility` | None | Covers App Router, Pages Router, monorepo roots, already-installed projects, malformed apps, and unsupported frameworks through the install service tests. |
+| MCP install sandbox fixture | `pnpm --filter web e2e:mcp-install-compatibility -- --sandbox` | GitHub sandbox | Adds the full Codex MCP install loop against the sandbox App Router fixture. |
+| MCP client support matrix | `pnpm --filter web e2e:mcp-client-matrix` | None | Verifies install copy for supported MCP clients and records which clients are automated versus documented-only. |
+| Codex client automation | `pnpm --filter web e2e:mcp-client-matrix -- --run-automated` | Local Codex CLI | Runs the automated Codex MCP self-test. Claude Code, Cursor, and generic HTTP MCP clients remain documented-only until they have executable harnesses. |
+| Hosted production event smoke | `pnpm --filter web e2e:hosted-smoke` | Hosted Tally + hosted events + MCP token | Emits a production smoke event to `events.usetally.xyz` and verifies it through hosted MCP live events. Requires `TALLY_HOSTED_PROJECT_ID` and `TALLY_HOSTED_MCP_ACCESS_TOKEN`. |
+| Hosted public preflight | `pnpm --filter web e2e:hosted-smoke -- --preflight-only` | Hosted Tally + hosted events | Checks public app, privacy, MCP metadata, and events CORS without writing data. |
+| Stripe deterministic billing | `pnpm --filter web e2e:stripe-billing` | None | Default billing regression tier with fake Stripe provider and signed local webhooks. |
+| Stripe real-provider billing | `pnpm --filter web e2e:stripe-billing:real` | Stripe test mode + Stripe CLI | Hosted Checkout and real provider webhook smoke. Refuses live-mode Stripe credentials. |
+| Full local release gate | `pnpm --filter web e2e:release-local` | None | Runs tests, typecheck, lint, build, local MCP, seeded scenario, pending task, and deterministic billing gates. |
+| Full external release gate | `pnpm --filter web e2e:release-external` | Hosted Tally, Stripe test mode, GitHub sandbox | Runs hosted smoke, real Stripe billing, and GitHub sandbox dry-run. |
 
 ## Agent Workflow
 

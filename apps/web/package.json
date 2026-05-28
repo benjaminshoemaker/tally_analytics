@@ -19,7 +19,13 @@
     "e2e:mcp-self-test": "node ./scripts/mcp-self-test.mjs",
     "e2e:mcp-analytics-querying": "node ./scripts/mcp-analytics-querying-self-test.mjs",
     "e2e:mcp-pending-tasks": "node ./scripts/mcp-pending-tasks-self-test.mjs",
+    "e2e:mcp-install-compatibility": "node ./scripts/mcp-install-compatibility-harness.mjs",
+    "e2e:mcp-client-matrix": "node ./scripts/mcp-client-matrix-harness.mjs",
     "e2e:stripe-billing": "node ./scripts/stripe-billing-harness.mjs",
+    "e2e:stripe-billing:real": "node ./scripts/stripe-billing-harness.mjs --provider=real",
+    "e2e:hosted-smoke": "node ./scripts/hosted-production-smoke.mjs",
+    "e2e:release-local": "node ./scripts/release-gates.mjs",
+    "e2e:release-external": "node ./scripts/release-gates.mjs --external",
     "github:sandbox:sync": "node ./scripts/sync-github-sandbox.mjs",
     "e2e": "node ./scripts/playwright-test.mjs"
   },
