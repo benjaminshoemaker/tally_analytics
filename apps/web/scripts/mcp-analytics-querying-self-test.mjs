@@ -21,7 +21,7 @@ const tmpRoot = path.join(repoRoot, 'tmp', 'mcp-analytics-querying-self-test');
 const fixturesDir = path.join(tmpRoot, 'fixtures');
 const defaultDatabaseUrl = 'postgres://postgres:postgres@127.0.0.1:5432/postgres';
 const mcpResourceUrl = 'http://localhost:3000/api/mcp';
-const mcpScope = 'mcp:install';
+const mcpScope = 'mcp:tasks';
 
 const scenarioIds = [
   'mcp-active-with-signup-events',

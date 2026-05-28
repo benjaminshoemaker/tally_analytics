@@ -12,20 +12,20 @@ describe("design system tailwind extension", () => {
 
     const colors = config.theme.extend.colors;
     expect(colors).toMatchObject({
-      primary: "#ec7f13",
-      "primary-hover": "#ea580c",
-      "primary-light": "#fff7ed",
+      primary: "#0f766e",
+      "primary-hover": "#115e59",
+      "primary-light": "#ccfbf1",
       "background-light": "#fcfaf8",
       "surface-light": "#ffffff",
       "surface-dark": "#292524",
       "text-main": "#1b140d",
-      "text-muted": "#9a734c",
+      "text-muted": "#57534e",
       "border-color": "#e8e0d9",
     });
 
     expect(config.theme.extend.fontFamily).toMatchObject({
-      display: ["var(--font-lora)", "Georgia", "serif"],
-      sans: ["var(--font-lora)", "Georgia", "serif"],
+      display: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+      sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
     });
 
     expect(config.theme.extend.borderRadius).toMatchObject({
@@ -43,14 +43,14 @@ describe("design system tailwind extension", () => {
     });
   });
 
-  it("loads the Lora font in the Next.js app layout", () => {
+  it("loads the Inter font in the Next.js app layout", () => {
     const layoutPath = path.join(__dirname, "..", "app", "layout.tsx");
     const contents = fs.readFileSync(layoutPath, "utf8");
 
-    expect(contents).toContain('from "next/font/google"');
-    expect(contents).toContain("Lora(");
-    expect(contents).toContain('variable: "--font-lora"');
-    expect(contents).not.toContain("Inter(");
-    expect(contents).not.toContain("--font-inter");
+    expect(contents).toContain("from 'next/font/google'");
+    expect(contents).toContain("Inter(");
+    expect(contents).toContain("variable: '--font-inter'");
+    expect(contents).not.toContain("Lora(");
+    expect(contents).not.toContain("--font-lora");
   });
 });

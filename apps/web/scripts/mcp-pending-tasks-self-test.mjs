@@ -382,7 +382,7 @@ async function askDashboardQuestion(page, question) {
     has: page.getByRole('heading', { name: 'Ask Tally' }),
   }).first();
   await panel.getByTestId('ask-tally-input').fill(question);
-  await panel.getByRole('button', { name: 'Ask', exact: true }).click();
+  await panel.getByRole('button', { name: 'Ask Tally', exact: true }).click();
 }
 
 async function assertVisibleText(page, text) {

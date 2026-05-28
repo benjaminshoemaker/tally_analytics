@@ -7,8 +7,9 @@ describe("marketing legal pages", () => {
     const { default: PrivacyPage, dynamic } = await import("../app/(marketing)/privacy/page");
     const html = renderToStaticMarkup(React.createElement(PrivacyPage));
 
-    expect(html).toContain("Privacy Policy");
-    expect(html).toContain("Privacy policy coming soon.");
+    expect(html).toContain("Tally AI Data Commitment");
+    expect(html).toContain("We will never use your data to train AI models.");
+    expect(html).toContain("Can my agent still query analytics through MCP?");
     expect(html).toContain("support@usetally.xyz");
     expect(dynamic).toBe("force-static");
   });
@@ -23,4 +24,3 @@ describe("marketing legal pages", () => {
     expect(dynamic).toBe("force-static");
   });
 });
-

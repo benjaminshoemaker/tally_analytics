@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+process.env.DATABASE_URL ??= "postgres://postgres:postgres@127.0.0.1:5432/postgres";
+
 let createMcpHandlerSpy: ReturnType<typeof vi.fn> | undefined;
 let withMcpAuthSpy: ReturnType<typeof vi.fn> | undefined;
 let prepareNextjsInstallPatchSpy: ReturnType<typeof vi.fn> | undefined;
