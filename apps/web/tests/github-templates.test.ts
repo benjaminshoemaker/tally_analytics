@@ -18,7 +18,8 @@ describe("github templates", () => {
     expect(code).toContain("visitor_id");
     expect(code).toContain("is_returning");
     expect(code).toContain("utm_source");
-    expect(code).toContain("beforeunload");
+    expect(code).toContain("environment: getAnalyticsEnvironment()");
+    expect(code).not.toContain("beforeunload");
     expect(code).toContain("visibilitychange");
     expect(code).toContain("tally_vid");
     expect(code).not.toContain("@tally-analytics/sdk");
@@ -42,7 +43,8 @@ describe("github templates", () => {
     expect(code).toContain("visitor_id");
     expect(code).toContain("is_returning");
     expect(code).toContain("utm_source");
-    expect(code).toContain("beforeunload");
+    expect(code).toContain("environment: getAnalyticsEnvironment()");
+    expect(code).not.toContain("beforeunload");
     expect(code).toContain("visibilitychange");
     expect(code).toContain("tally_vid");
     expect(code).not.toContain("@tally-analytics/sdk");

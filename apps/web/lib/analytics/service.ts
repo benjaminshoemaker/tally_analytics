@@ -25,6 +25,7 @@ import {
   type AnalyticsPeriod,
   type ResolvedAnalyticsDataWindow,
 } from './periods';
+import { productionAnalyticsTrafficFilter } from './query-filters';
 import {
   createAnalyticsTinybirdClient,
   escapeAnalyticsSqlString,
@@ -412,6 +413,7 @@ async function queryProjectOverviewFromTinybird(params: {
   const previousEndSql = escapeAnalyticsSqlString(
     toTinybirdDateTime64String(params.dataWindow.previousEnd)
   );
+  const productionFilter = productionAnalyticsTrafficFilter();
 
   const [
     currentPageViews,
@@ -428,11 +430,19 @@ async function queryProjectOverviewFromTinybird(params: {
         SELECT
           toDate(timestamp) AS date,
           count() AS count
-        FROM events
-        WHERE project_id = '${projectIdSql}'
-        AND event_type = 'page_view'
-        AND timestamp >= toDateTime64('${startSql}', 3)
-        AND timestamp < toDateTime64('${endSql}', 3)
+        FROM (
+          SELECT
+            session_id,
+            ifNull(path, '') AS path,
+            min(timestamp) AS timestamp
+          FROM events
+          WHERE project_id = '${projectIdSql}'
+          AND event_type = 'page_view'
+          ${productionFilter}
+          AND timestamp >= toDateTime64('${startSql}', 3)
+          AND timestamp < toDateTime64('${endSql}', 3)
+          GROUP BY session_id, path
+        )
         GROUP BY date
         ORDER BY date
       `.trim()
@@ -444,11 +454,19 @@ async function queryProjectOverviewFromTinybird(params: {
         SELECT
           toDate(timestamp) AS date,
           count() AS count
-        FROM events
-        WHERE project_id = '${projectIdSql}'
-        AND event_type = 'page_view'
-        AND timestamp >= toDateTime64('${previousStartSql}', 3)
-        AND timestamp < toDateTime64('${previousEndSql}', 3)
+        FROM (
+          SELECT
+            session_id,
+            ifNull(path, '') AS path,
+            min(timestamp) AS timestamp
+          FROM events
+          WHERE project_id = '${projectIdSql}'
+          AND event_type = 'page_view'
+          ${productionFilter}
+          AND timestamp >= toDateTime64('${previousStartSql}', 3)
+          AND timestamp < toDateTime64('${previousEndSql}', 3)
+          GROUP BY session_id, path
+        )
         GROUP BY date
         ORDER BY date
       `.trim()
@@ -457,9 +475,10 @@ async function queryProjectOverviewFromTinybird(params: {
       client,
       'current_sessions_total',
       `
-        SELECT countIf(event_type = 'session_start') AS total
+        SELECT uniqExactIf(session_id, event_type = 'session_start') AS total
         FROM events
         WHERE project_id = '${projectIdSql}'
+        ${productionFilter}
         AND timestamp >= toDateTime64('${startSql}', 3)
         AND timestamp < toDateTime64('${endSql}', 3)
       `.trim()
@@ -468,9 +487,10 @@ async function queryProjectOverviewFromTinybird(params: {
       client,
       'previous_sessions_total',
       `
-        SELECT countIf(event_type = 'session_start') AS total
+        SELECT uniqExactIf(session_id, event_type = 'session_start') AS total
         FROM events
         WHERE project_id = '${projectIdSql}'
+        ${productionFilter}
         AND timestamp >= toDateTime64('${previousStartSql}', 3)
         AND timestamp < toDateTime64('${previousEndSql}', 3)
       `.trim()
@@ -479,24 +499,28 @@ async function queryProjectOverviewFromTinybird(params: {
       client,
       'top_pages',
       `
-        WITH total AS (
-          SELECT count() AS total
+        WITH deduped AS (
+          SELECT
+            session_id,
+            ifNull(path, '') AS path
           FROM events
           WHERE project_id = '${projectIdSql}'
           AND event_type = 'page_view'
+          ${productionFilter}
           AND timestamp >= toDateTime64('${startSql}', 3)
           AND timestamp < toDateTime64('${endSql}', 3)
+          GROUP BY session_id, path
+        ),
+        total AS (
+          SELECT count() AS total
+          FROM deduped
         )
         SELECT
-          ifNull(e.path, '') AS path,
+          path,
           count() AS views,
           if(total.total = 0, 0, round(count() * 100.0 / total.total, 2)) AS percentage
-        FROM events AS e
+        FROM deduped AS e
         CROSS JOIN total
-        WHERE e.project_id = '${projectIdSql}'
-        AND e.event_type = 'page_view'
-        AND e.timestamp >= toDateTime64('${startSql}', 3)
-        AND e.timestamp < toDateTime64('${endSql}', 3)
         GROUP BY path, total.total
         ORDER BY views DESC
         LIMIT 10
@@ -506,24 +530,29 @@ async function queryProjectOverviewFromTinybird(params: {
       client,
       'top_referrers',
       `
-        WITH total AS (
-          SELECT count() AS total
+        WITH deduped AS (
+          SELECT
+            session_id,
+            ifNull(path, '') AS path,
+            argMin(ifNull(referrer, ''), timestamp) AS referrer
           FROM events
           WHERE project_id = '${projectIdSql}'
           AND event_type = 'page_view'
+          ${productionFilter}
           AND timestamp >= toDateTime64('${startSql}', 3)
           AND timestamp < toDateTime64('${endSql}', 3)
+          GROUP BY session_id, path
+        ),
+        total AS (
+          SELECT count() AS total
+          FROM deduped
         )
         SELECT
-          if(ifNull(e.referrer, '') = '', 'Direct', domain(ifNull(e.referrer, ''))) AS referrer_host,
+          if(e.referrer = '', 'Direct', domain(e.referrer)) AS referrer_host,
           count() AS count,
           if(total.total = 0, 0, round(count() * 100.0 / total.total, 2)) AS percentage
-        FROM events AS e
+        FROM deduped AS e
         CROSS JOIN total
-        WHERE e.project_id = '${projectIdSql}'
-        AND e.event_type = 'page_view'
-        AND e.timestamp >= toDateTime64('${startSql}', 3)
-        AND e.timestamp < toDateTime64('${endSql}', 3)
         GROUP BY referrer_host, total.total
         ORDER BY count DESC
         LIMIT 10
@@ -579,6 +608,7 @@ async function querySessionsSummaryFromTinybird(params: {
   const projectIdSql = escapeAnalyticsSqlString(params.projectId);
   const startSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.start));
   const endSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.end));
+  const productionFilter = productionAnalyticsTrafficFilter();
 
   const result = await runAnalyticsTinybirdQuery<{
     date: string;
@@ -589,13 +619,22 @@ async function querySessionsSummaryFromTinybird(params: {
     'sessions_timeseries',
     `
       SELECT
-        toDate(timestamp) AS date,
-        countIf(event_type = 'session_start' AND ifNull(is_returning, 0) != 1) AS new_sessions,
-        countIf(event_type = 'session_start' AND ifNull(is_returning, 0) = 1) AS returning_sessions
-      FROM events
-      WHERE project_id = '${projectIdSql}'
-      AND timestamp >= toDateTime64('${startSql}', 3)
-      AND timestamp < toDateTime64('${endSql}', 3)
+        toDate(first_seen_at) AS date,
+        countIf(is_returning_session != 1) AS new_sessions,
+        countIf(is_returning_session = 1) AS returning_sessions
+      FROM (
+        SELECT
+          session_id,
+          min(timestamp) AS first_seen_at,
+          max(ifNull(is_returning, 0)) AS is_returning_session
+        FROM events
+        WHERE project_id = '${projectIdSql}'
+        AND event_type = 'session_start'
+        ${productionFilter}
+        AND timestamp >= toDateTime64('${startSql}', 3)
+        AND timestamp < toDateTime64('${endSql}', 3)
+        GROUP BY session_id
+      )
       GROUP BY date
       ORDER BY date
     `.trim()
@@ -633,6 +672,7 @@ async function queryLiveEventsFromTinybird(params: {
   const client = createAnalyticsTinybirdClient();
   const projectIdSql = escapeAnalyticsSqlString(params.projectId);
   const sinceSql = escapeAnalyticsSqlString(sinceFilter);
+  const productionFilterForEventAlias = productionAnalyticsTrafficFilter('e');
 
   const result = await runAnalyticsTinybirdQuery<{
     event_type: string;
@@ -652,6 +692,7 @@ async function queryLiveEventsFromTinybird(params: {
         formatReadableTimeDelta(now() - toDateTime(e.timestamp)) AS relative_time
       FROM events AS e
       WHERE e.project_id = '${projectIdSql}'
+      ${productionFilterForEventAlias}
       AND e.timestamp > toDateTime64('${sinceSql}', 3)
       ORDER BY e.timestamp DESC
       LIMIT ${params.limit}

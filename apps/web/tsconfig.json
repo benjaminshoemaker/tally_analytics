@@ -10,6 +10,9 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@tally-analytics/sdk": [
+        "../../packages/sdk/src/index.ts"
       ]
     },
     "allowJs": true

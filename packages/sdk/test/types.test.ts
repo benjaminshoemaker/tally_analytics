@@ -15,6 +15,7 @@ describe("Task 3.1.B - Type definitions", () => {
     expect(src).toContain("export type CustomEventType");
     expect(src).toContain("export type EventType");
     expect(src).toContain("export type EventProperties");
+    expect(src).toContain("export type AnalyticsEnvironment");
     expect(src).toContain("export interface AnalyticsEvent");
   });
 

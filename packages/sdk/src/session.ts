@@ -1,4 +1,5 @@
 const SESSION_COOKIE_NAME = "fpa_sid";
+const SESSION_START_COOKIE_NAME = "fpa_ss";
 const SESSION_DURATION_MS = 30 * 60 * 1000; // 30 minutes
 const COOKIE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60; // 1 year
 
@@ -71,3 +72,10 @@ export function getOrCreateSessionId(): string {
   return sessionId;
 }
 
+export function hasTrackedSessionStart(sessionId: string): boolean {
+  return getCookie(SESSION_START_COOKIE_NAME) === sessionId;
+}
+
+export function markSessionStartTracked(sessionId: string): void {
+  setCookie(SESSION_START_COOKIE_NAME, sessionId);
+}

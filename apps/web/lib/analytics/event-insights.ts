@@ -8,6 +8,7 @@ import {
   escapeAnalyticsSqlString,
   runAnalyticsTinybirdQuery,
 } from './tinybird';
+import { productionAnalyticsTrafficFilter } from './query-filters';
 import type {
   AnalyticsEventSchema,
   AnalyticsEventSummary,
@@ -83,6 +84,21 @@ export function fixtureEventRows(projectId: string): AnalyticsFixtureEventRow[] 
   });
 }
 
+function isProductionDashboardFixtureEvent(event: AnalyticsFixtureEventRow): boolean {
+  const environment = String(event.environment ?? 'production').toLowerCase();
+  const url = typeof event.url === 'string' ? event.url : '';
+  return (
+    environment === 'production' &&
+    !url.startsWith('http://localhost') &&
+    !url.startsWith('https://localhost') &&
+    !url.startsWith('http://127.0.0.1') &&
+    !url.startsWith('https://127.0.0.1') &&
+    !url.startsWith('http://[::1]') &&
+    !url.startsWith('https://[::1]') &&
+    !url.includes('.vercel.app')
+  );
+}
+
 function camelCasePropertyName(name: string): string {
   return name.replace(/_([a-z0-9])/g, (_, char: string) => char.toUpperCase());
 }
@@ -122,6 +138,7 @@ export function eventsInDataWindow(
 ): AnalyticsFixtureEventRow[] {
   return events.filter(
     (event) =>
+      isProductionDashboardFixtureEvent(event) &&
       event.timestampMs >= dataWindow.start.getTime() && event.timestampMs < dataWindow.end.getTime()
   );
 }
@@ -563,6 +580,7 @@ export async function listEventsFromTinybird(params: {
   const projectIdSql = escapeAnalyticsSqlString(params.projectId);
   const startSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.start));
   const endSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.end));
+  const productionFilter = productionAnalyticsTrafficFilter();
 
   const result = await runAnalyticsTinybirdQuery<{
     event_type: string;
@@ -580,6 +598,7 @@ export async function listEventsFromTinybird(params: {
         toString(max(timestamp)) AS last_seen_at
       FROM events
       WHERE project_id = '${projectIdSql}'
+      ${productionFilter}
       AND timestamp >= toDateTime64('${startSql}', 3)
       AND timestamp < toDateTime64('${endSql}', 3)
       GROUP BY event_type
@@ -607,6 +626,7 @@ export async function eventSchemaFromTinybird(params: {
   const eventNameSql = escapeAnalyticsSqlString(params.eventName);
   const startSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.start));
   const endSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.end));
+  const productionFilter = productionAnalyticsTrafficFilter();
 
   const result = await runAnalyticsTinybirdQuery<Record<string, unknown>>(
     client,
@@ -616,6 +636,7 @@ export async function eventSchemaFromTinybird(params: {
       FROM events
       WHERE project_id = '${projectIdSql}'
       AND event_type = '${eventNameSql}'
+      ${productionFilter}
       AND timestamp >= toDateTime64('${startSql}', 3)
       AND timestamp < toDateTime64('${endSql}', 3)
       ORDER BY timestamp DESC
@@ -643,6 +664,7 @@ export async function pathsToEventRowsFromTinybird(params: {
   const startSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.start));
   const endSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(params.dataWindow.end));
   const limit = PATH_TARGET_EVENT_QUERY_CAP + PATH_PAGE_VIEW_QUERY_CAP + 2;
+  const productionFilter = productionAnalyticsTrafficFilter();
 
   const result = await runAnalyticsTinybirdQuery<{
     session_id: string;
@@ -661,6 +683,7 @@ export async function pathsToEventRowsFromTinybird(params: {
       FROM events
       WHERE project_id = '${projectIdSql}'
       AND (event_type = 'page_view' OR event_type = '${targetEventSql}')
+      ${productionFilter}
       AND timestamp >= toDateTime64('${startSql}', 3)
       AND timestamp < toDateTime64('${endSql}', 3)
       ORDER BY timestamp ASC

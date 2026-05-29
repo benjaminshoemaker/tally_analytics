@@ -14,6 +14,22 @@ function getPostedEvents(): unknown[] {
   }).flat();
 }
 
+function createCookieJar() {
+  const jar = new Map<string, string>();
+  return {
+    get cookie() {
+      return Array.from(jar.entries())
+        .map(([name, value]) => `${name}=${value}`)
+        .join("; ");
+    },
+    set cookie(value: string) {
+      const [pair] = value.split(";");
+      const [name, cookieValue] = pair.split("=");
+      jar.set(name.trim(), (cookieValue ?? "").trim());
+    },
+  };
+}
+
 describe("Task 2.2.B - Tracker V2 integration", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -39,11 +55,17 @@ describe("Task 2.2.B - Tracker V2 integration", () => {
       writable: true,
     });
 
+    const cookieJar = createCookieJar();
     Object.defineProperty(globalThis, "document", {
       value: {
         referrer: "https://google.com/",
         visibilityState: "visible",
-        cookie: "",
+        get cookie() {
+          return cookieJar.cookie;
+        },
+        set cookie(value: string) {
+          cookieJar.cookie = value;
+        },
         documentElement: { scrollHeight: 2000 },
         body: { scrollHeight: 2000 },
         addEventListener: vi.fn(),
@@ -54,7 +76,7 @@ describe("Task 2.2.B - Tracker V2 integration", () => {
     });
 
     Object.defineProperty(globalThis, "navigator", {
-      value: { doNotTrack: "0" },
+      value: { doNotTrack: "0", userAgent: "Vitest Browser" },
       configurable: true,
       writable: true,
     });
@@ -147,9 +169,21 @@ describe("Task 2.2.B - Tracker V2 integration", () => {
     expect(events.length).toBe(2); // session_start + page_view
     expect(events[1]).toHaveProperty("path", "/test-page");
   });
+
+  it("does not emit duplicate session_start events for repeated route views", async () => {
+    const { init, trackPageView } = await import("../src/core");
+
+    init({ projectId: "proj_test" });
+    await trackPageView("/first");
+    await trackPageView("/second");
+
+    const events = getPostedEvents();
+    expect(events.filter((event: any) => event.event_type === "session_start")).toHaveLength(1);
+    expect(events.filter((event: any) => event.event_type === "page_view")).toHaveLength(2);
+  });
 });
 
-describe("Task 2.2.B - beforeunload and visibilitychange", () => {
+describe("Task 2.2.B - route-view tracking lifecycle", () => {
   let windowAddEventListener: ReturnType<typeof vi.fn>;
   let documentAddEventListener: ReturnType<typeof vi.fn>;
 
@@ -179,11 +213,17 @@ describe("Task 2.2.B - beforeunload and visibilitychange", () => {
       writable: true,
     });
 
+    const cookieJar = createCookieJar();
     Object.defineProperty(globalThis, "document", {
       value: {
         referrer: "",
         visibilityState: "visible",
-        cookie: "",
+        get cookie() {
+          return cookieJar.cookie;
+        },
+        set cookie(value: string) {
+          cookieJar.cookie = value;
+        },
         documentElement: { scrollHeight: 2000 },
         body: { scrollHeight: 2000 },
         addEventListener: documentAddEventListener,
@@ -194,30 +234,28 @@ describe("Task 2.2.B - beforeunload and visibilitychange", () => {
     });
 
     Object.defineProperty(globalThis, "navigator", {
-      value: { doNotTrack: "0" },
+      value: { doNotTrack: "0", userAgent: "Vitest Browser" },
       configurable: true,
       writable: true,
     });
   });
 
-  it("registers beforeunload listener on init", async () => {
+  it("does not register beforeunload page_view senders", async () => {
     const { init } = await import("../src/core");
 
     init({ projectId: "proj_test" });
 
-    // Check that beforeunload was registered
     const beforeunloadCalls = windowAddEventListener.mock.calls.filter(
       (call: unknown[]) => call[0] === "beforeunload"
     );
-    expect(beforeunloadCalls.length).toBeGreaterThan(0);
+    expect(beforeunloadCalls).toHaveLength(0);
   });
 
-  it("registers visibilitychange listener on init", async () => {
+  it("keeps visibilitychange only for engagement tracking", async () => {
     const { init } = await import("../src/core");
 
     init({ projectId: "proj_test" });
 
-    // Check that visibilitychange was registered
     const visibilityChangeCalls = documentAddEventListener.mock.calls.filter(
       (call: unknown[]) => call[0] === "visibilitychange"
     );

@@ -49,7 +49,7 @@
     "recharts": "^2.12.0",
     "resend": "^6.1.0",
     "stripe": "^20.1.0",
-    "@tally-analytics/sdk": "^0.1.0",
+    "@tally-analytics/sdk": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {

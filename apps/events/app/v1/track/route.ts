@@ -69,6 +69,26 @@ function currentEnvironment(): AnalyticsEnvironment {
   return "development";
 }
 
+function environmentFromEventUrl(url: string | undefined): AnalyticsEnvironment | null {
+  if (!url) return null;
+
+  try {
+    const hostname = new URL(url).hostname;
+    if (
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "[::1]" ||
+      hostname.endsWith(".vercel.app")
+    ) {
+      return "development";
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
 function normalizeEvent(
   event: ParsedAnalyticsEvent,
   fallbackEnvironment: AnalyticsEnvironment,
@@ -83,7 +103,7 @@ function normalizeEvent(
   const { environment, event_properties, properties, ...baseEvent } = event;
   return {
     ...baseEvent,
-    environment: environment ?? fallbackEnvironment,
+    environment: environment ?? environmentFromEventUrl(baseEvent.url) ?? fallbackEnvironment,
     ...(eventProperties === undefined ? {} : { event_properties: eventProperties }),
   };
 }

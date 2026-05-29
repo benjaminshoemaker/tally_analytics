@@ -1,10 +1,12 @@
 export interface InitOptions {
   projectId: string;
   eventsUrl?: string;
+  environment?: AnalyticsEnvironment;
   respectDNT?: boolean;
   debug?: boolean;
 }
 
+export type AnalyticsEnvironment = "production" | "development" | "test";
 export type BuiltInEventType = "page_view" | "session_start";
 export type CustomEventType = string;
 export type EventType = BuiltInEventType | CustomEventType;
@@ -17,6 +19,7 @@ export interface AnalyticsEvent {
   session_id: string;
   event_type: EventType;
   timestamp: string;
+  environment?: AnalyticsEnvironment;
   url?: string;
   path?: string;
   referrer?: string;

@@ -149,6 +149,38 @@ describe("events track route - V2 schema (Task 2.1.A)", () => {
     ]);
   });
 
+  it("infers development for localhost and Vercel preview URLs when environment is omitted", async () => {
+    vi.resetModules();
+    appendEvents.mockClear();
+    isProjectActive.mockClear();
+
+    const localEvent = {
+      ...v1Event,
+      url: "http://localhost:3000/pricing",
+      path: "/pricing",
+    };
+    const previewEvent = {
+      ...v1Event,
+      session_id: "sess_preview",
+      url: "https://tally-git-demo-team.vercel.app/pricing",
+      path: "/pricing",
+    };
+
+    const { POST } = await import("../../events/app/v1/track/route");
+    const request = new Request("http://localhost/v1/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ events: [localEvent, previewEvent] }),
+    });
+
+    const response = await POST(request);
+    expect(response.status).toBe(200);
+    expect(appendEvents).toHaveBeenCalledWith([
+      { ...localEvent, environment: "development" },
+      { ...previewEvent, environment: "development" },
+    ]);
+  });
+
   it("rejects invalid custom event names", async () => {
     vi.resetModules();
     appendEvents.mockClear();

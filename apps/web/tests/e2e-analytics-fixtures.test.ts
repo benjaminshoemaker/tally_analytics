@@ -187,13 +187,13 @@ describe('E2E analytics fixtures', () => {
     expect(buildE2EOverview('proj_mcp_events', '7d')).toMatchObject({
       period: '7d',
       pageViews: {
-        total: 1,
-        change: 100,
-        timeSeries: [{ date: '2026-05-01', count: 1 }],
+        total: 0,
+        change: 0,
+        timeSeries: [],
       },
       sessions: { total: 1, change: 100 },
-      topPages: [{ path: '/docs', views: 1, percentage: 100 }],
-      topReferrers: [{ referrer: 'Direct', count: 1, percentage: 100 }],
+      topPages: [],
+      topReferrers: [],
     });
 
     expect(buildE2ESessions('proj_mcp_events', '7d')).toEqual({
@@ -222,7 +222,6 @@ describe('E2E analytics fixtures', () => {
     expect(buildE2ELiveFeed({ projectId: 'proj_mcp_events', limit: 5 })).toMatchObject({
       events: [
         { eventType: 'signup_completed', path: '/signup', timestamp: '2026-05-01T12:17:00.000Z' },
-        { eventType: 'page_view', path: '/docs', timestamp: '2026-05-01T12:16:00.000Z' },
         { eventType: 'session_start', path: '/', timestamp: '2026-05-01T12:15:00.000Z' },
       ],
       hasMore: false,

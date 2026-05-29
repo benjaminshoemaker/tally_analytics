@@ -82,8 +82,8 @@ importers:
         specifier: ^0.5.4
         version: 0.5.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tally-analytics/sdk':
-        specifier: ^0.1.0
-        version: 0.1.0(next@14.2.35(@playwright/test@1.57.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@tanstack/react-query':
         specifier: ^5.28.0
         version: 5.90.12(react@18.3.1)
@@ -1319,13 +1319,6 @@ packages:
 
   '@swc/helpers@0.5.5':
     resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
-
-  '@tally-analytics/sdk@0.1.0':
-    resolution: {integrity: sha512-Bsxz2sMQzOkcGt0Uu7Rrfji8Yu0H89Dt24N4rzpZ16ER/s4o/qKAGg3dyDh+V+CxTu1B+BnwIqS2YXbP2w8fZw==}
-    peerDependencies:
-      next: '>=13.0.0'
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
 
   '@tanstack/query-core@5.90.12':
     resolution: {integrity: sha512-T1/8t5DhV/SisWjDnaiU2drl6ySvsHj1bHBCWNXd+/T+Hh1cf6JodyEYMd5sgwm+b/mETT4EV3H+zCVczCU5hg==}
@@ -4958,12 +4951,6 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
       tslib: 2.8.1
-
-  '@tally-analytics/sdk@0.1.0(next@14.2.35(@playwright/test@1.57.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      next: 14.2.35(@playwright/test@1.57.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@tanstack/query-core@5.90.12': {}
 

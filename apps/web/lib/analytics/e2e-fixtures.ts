@@ -205,6 +205,51 @@ function eventsInWindow(
   return events.filter((event) => event.timestampMs >= startMs && event.timestampMs < endMs);
 }
 
+function isProductionDashboardTraffic(event: ParsedFixtureEvent): boolean {
+  const url = event.url ?? '';
+  return (
+    event.environment === 'production' &&
+    !url.startsWith('http://localhost') &&
+    !url.startsWith('https://localhost') &&
+    !url.startsWith('http://127.0.0.1') &&
+    !url.startsWith('https://127.0.0.1') &&
+    !url.startsWith('http://[::1]') &&
+    !url.startsWith('https://[::1]') &&
+    !url.includes('.vercel.app')
+  );
+}
+
+function dedupePageViews(events: ParsedFixtureEvent[]): ParsedFixtureEvent[] {
+  const bySessionAndPath = new Map<string, ParsedFixtureEvent>();
+  for (const event of events) {
+    const key = `${event.session_id}\u0000${event.path ?? ''}`;
+    const existing = bySessionAndPath.get(key);
+    if (!existing || event.timestampMs < existing.timestampMs) {
+      bySessionAndPath.set(key, event);
+    }
+  }
+  return Array.from(bySessionAndPath.values()).sort((a, b) => a.timestampMs - b.timestampMs);
+}
+
+function dedupeSessions(events: ParsedFixtureEvent[]): ParsedFixtureEvent[] {
+  const bySession = new Map<string, ParsedFixtureEvent>();
+  for (const event of events) {
+    const existing = bySession.get(event.session_id);
+    if (!existing) {
+      bySession.set(event.session_id, event);
+      continue;
+    }
+
+    bySession.set(event.session_id, {
+      ...existing,
+      timestamp: event.timestampMs < existing.timestampMs ? event.timestamp : existing.timestamp,
+      timestampMs: Math.min(existing.timestampMs, event.timestampMs),
+      is_returning: existing.is_returning === 1 || event.is_returning === 1 ? 1 : 0,
+    });
+  }
+  return Array.from(bySession.values()).sort((a, b) => a.timestampMs - b.timestampMs);
+}
+
 function dateKey(timestampMs: number): string {
   return new Date(timestampMs).toISOString().slice(0, 10);
 }
@@ -271,13 +316,23 @@ export function buildE2EOverview(
   const previousStart = dataWindow?.previousStart.getTime() ?? start - duration;
   const previousEnd = dataWindow?.previousEnd.getTime() ?? start;
 
-  const currentEvents = eventsInWindow(events, start, now);
-  const previousEvents = eventsInWindow(events, previousStart, previousEnd);
+  const currentEvents = eventsInWindow(events, start, now).filter(isProductionDashboardTraffic);
+  const previousEvents = eventsInWindow(events, previousStart, previousEnd).filter(
+    isProductionDashboardTraffic
+  );
 
-  const currentPageViews = currentEvents.filter((event) => event.event_type === 'page_view');
-  const previousPageViews = previousEvents.filter((event) => event.event_type === 'page_view');
-  const currentSessions = currentEvents.filter((event) => event.event_type === 'session_start');
-  const previousSessions = previousEvents.filter((event) => event.event_type === 'session_start');
+  const currentPageViews = dedupePageViews(
+    currentEvents.filter((event) => event.event_type === 'page_view')
+  );
+  const previousPageViews = dedupePageViews(
+    previousEvents.filter((event) => event.event_type === 'page_view')
+  );
+  const currentSessions = dedupeSessions(
+    currentEvents.filter((event) => event.event_type === 'session_start')
+  );
+  const previousSessions = dedupeSessions(
+    previousEvents.filter((event) => event.event_type === 'session_start')
+  );
 
   const topPages = topCounts(currentPageViews, (event) => event.path ?? '').map((item) => ({
     path: item.label,
@@ -317,8 +372,10 @@ export function buildE2ESessions(
   const events = loadE2EAnalyticsEvents(projectId);
   const end = dataWindow?.end.getTime() ?? fixtureNow(events);
   const start = dataWindow?.start.getTime() ?? end - periodMs(period);
-  const sessions = eventsInWindow(events, start, end).filter(
-    (event) => event.event_type === 'session_start'
+  const sessions = dedupeSessions(
+    eventsInWindow(events, start, end)
+      .filter(isProductionDashboardTraffic)
+      .filter((event) => event.event_type === 'session_start')
   );
 
   const byDate = new Map<string, { newSessions: number; returningSessions: number }>();
@@ -375,6 +432,7 @@ export function buildE2ELiveFeed(params: {
       : Date.parse('2024-01-01T00:00:00.000Z');
 
   const limited = events
+    .filter(isProductionDashboardTraffic)
     .filter((event) => event.timestampMs > sinceMs)
     .sort((a, b) => b.timestampMs - a.timestampMs)
     .slice(0, params.limit);

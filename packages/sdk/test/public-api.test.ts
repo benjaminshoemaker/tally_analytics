@@ -34,7 +34,9 @@ function installWindow(overrides?: Record<string, unknown>) {
   Object.defineProperty(globalThis, "window", {
     value: {
       location: { href: "https://example.com/", pathname: "/", search: "", protocol: "https:" },
+      innerWidth: 1280,
       innerHeight: 800,
+      screen: { width: 1440 },
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
       ...overrides,
@@ -54,7 +56,7 @@ describe("Task 3.2.C - Public API", () => {
     installCookieDocument();
     installWindow({ location: { href: "https://example.com/a?b=c", pathname: "/a", search: "?b=c", protocol: "https:" } });
     Object.defineProperty(globalThis, "navigator", {
-      value: { doNotTrack: "0" },
+      value: { doNotTrack: "0", userAgent: "Vitest Browser" },
       configurable: true,
     });
 
@@ -66,14 +68,19 @@ describe("Task 3.2.C - Public API", () => {
       "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
     );
 
-    init({ projectId: "proj_123" });
+    init({ projectId: "proj_123", environment: "production" });
     await trackPageView("/a?b=c");
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const [url, initArg] = fetchSpy.mock.calls[0];
     expect(url).toBe("https://events.usetally.xyz/v1/track");
     const body = JSON.parse(initArg.body);
-    expect(body.events.some((e: any) => e.event_type === "page_view")).toBe(true);
+    const pageView = body.events.find((e: any) => e.event_type === "page_view");
+    expect(pageView).toMatchObject({
+      event_type: "page_view",
+      environment: "production",
+      user_agent: "Vitest Browser",
+    });
   });
 
   it("init(options) can override the events URL", async () => {
@@ -123,6 +130,32 @@ describe("Task 3.2.C - Public API", () => {
     const body = JSON.parse(initArg.body);
     const pageView = body.events.find((e: any) => e.event_type === "page_view");
     expect(pageView.user_id).toBe("user_123");
+  });
+
+  it("persists session_start emission across re-initialization for the same session", async () => {
+    installCookieDocument();
+    installWindow();
+    Object.defineProperty(globalThis, "navigator", {
+      value: { doNotTrack: "0" },
+      configurable: true,
+    });
+
+    const fetchSpy = vi.fn(async () => new Response(null, { status: 204 }));
+    // @ts-expect-error test stub
+    globalThis.fetch = fetchSpy;
+
+    vi.spyOn(globalThis.crypto, "randomUUID").mockReturnValue(
+      "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+    );
+
+    init({ projectId: "proj_123" });
+    await trackPageView("/");
+    init({ projectId: "proj_123" });
+    await trackPageView("/pricing");
+
+    const events = fetchSpy.mock.calls.flatMap(([, initArg]) => JSON.parse(initArg.body).events);
+    expect(events.filter((event: any) => event.event_type === "session_start")).toHaveLength(1);
+    expect(events.filter((event: any) => event.event_type === "page_view")).toHaveLength(2);
   });
 
   it("isEnabled() respects Do Not Track by default", () => {

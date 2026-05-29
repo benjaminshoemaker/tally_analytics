@@ -80,21 +80,11 @@ function getSessionId(): string {
 }
 
 function getStoredSessionStartId(): string | null {
-  if (typeof sessionStorage === 'undefined') return null;
-  try {
-    return sessionStorage.getItem(SESSION_START_KEY);
-  } catch {
-    return null;
-  }
+  return getCookie(SESSION_START_KEY);
 }
 
 function setStoredSessionStartId(value: string): void {
-  if (typeof sessionStorage === 'undefined') return;
-  try {
-    sessionStorage.setItem(SESSION_START_KEY, value);
-  } catch {
-    // ignore storage errors
-  }
+  setCookie(SESSION_START_KEY, value);
 }
 
 function shouldTrackSessionStart(): boolean {
@@ -103,6 +93,20 @@ function shouldTrackSessionStart(): boolean {
   if (storedSessionId === currentSessionId) return false;
   setStoredSessionStartId(currentSessionId);
   return true;
+}
+
+function getAnalyticsEnvironment(): 'production' | 'development' {
+  if (typeof window === 'undefined') return 'production';
+  const hostname = window.location.hostname;
+  if (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname === '::1' ||
+    hostname.endsWith('.vercel.app')
+  ) {
+    return 'development';
+  }
+  return 'production';
 }
 
 function getOrCreateVisitorId(): { visitorId: string; isReturning: boolean } | null {
@@ -361,26 +365,6 @@ function initializeV2Tracking() {
   ctaTracker = setupCTATracking();
   visitorData = getOrCreateVisitorId();
   utmParams = captureUTMParams();
-
-  if (typeof window !== 'undefined') {
-    window.addEventListener('beforeunload', sendFinalPageMetrics);
-  }
-
-  if (typeof document !== 'undefined') {
-    document.addEventListener('visibilitychange', onVisibilityChange);
-  }
-}
-
-function onVisibilityChange() {
-  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
-    sendFinalPageMetrics();
-  }
-}
-
-function getCurrentPath(): string {
-  if (typeof window === 'undefined') return '';
-  const { pathname, search } = window.location;
-  return pathname + (search ?? '');
 }
 
 function createSessionStartEvent() {
@@ -389,6 +373,7 @@ function createSessionStartEvent() {
     session_id: getSessionId(),
     event_type: 'session_start',
     timestamp: new Date().toISOString(),
+    environment: getAnalyticsEnvironment(),
     url: typeof window === 'undefined' ? undefined : window.location.href,
     referrer: typeof document === 'undefined' ? null : document.referrer || null,
     user_agent: typeof navigator === 'undefined' ? undefined : navigator.userAgent,
@@ -408,6 +393,7 @@ function createPageViewEvent(path: string) {
     session_id: getSessionId(),
     event_type: 'page_view',
     timestamp: new Date().toISOString(),
+    environment: getAnalyticsEnvironment(),
     url: typeof window === 'undefined' ? undefined : window.location.href,
     path,
     referrer: typeof document === 'undefined' ? null : document.referrer || null,
@@ -447,15 +433,6 @@ function trackPageView(path: string) {
 
   engagementTracker?.reset();
   scrollTracker?.reset();
-}
-
-function sendFinalPageMetrics() {
-  if (!isInitialized) return;
-  if (typeof window === 'undefined') return;
-  if (isDntEnabled()) return;
-
-  const event = createPageViewEvent(getCurrentPath());
-  sendEvents([event], true);
 }
 
 function AnalyticsTracker() {

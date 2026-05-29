@@ -4,11 +4,11 @@
   "private": true,
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "dev": "pnpm -C apps/web dev",
-    "build": "pnpm -C apps/web build",
+    "dev": "pnpm --filter @tally-analytics/sdk build && pnpm -C apps/web dev",
+    "build": "pnpm --filter @tally-analytics/sdk build && pnpm -C apps/web build",
     "start": "pnpm -C apps/web start",
     "lint": "pnpm -C apps/web lint",
-    "typecheck": "pnpm -C apps/web typecheck",
+    "typecheck": "pnpm --filter @tally-analytics/sdk build && pnpm -C apps/web typecheck",
     "env:check": "node scripts/check-local-env.mjs",
     "format": "prettier --write ."
   },

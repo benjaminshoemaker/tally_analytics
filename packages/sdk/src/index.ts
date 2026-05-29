@@ -1,4 +1,12 @@
-export type { AnalyticsEvent, BuiltInEventType, CustomEventType, EventProperties, EventType, InitOptions } from "./types";
+export type {
+  AnalyticsEnvironment,
+  AnalyticsEvent,
+  BuiltInEventType,
+  CustomEventType,
+  EventProperties,
+  EventType,
+  InitOptions,
+} from "./types";
 
 export { identify, init, isEnabled, track, trackPageView } from "./core";
 

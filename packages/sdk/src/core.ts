@@ -1,6 +1,11 @@
 import type { AnalyticsEvent, EventProperties, InitOptions } from "./types";
-import { getOrCreateSessionId } from "./session";
 import {
+  getOrCreateSessionId,
+  hasTrackedSessionStart,
+  markSessionStartTracked,
+} from "./session";
+import {
+  createCustomEvent,
   createPageViewEvent,
   createSessionStartEvent,
   postEvents,
@@ -16,13 +21,13 @@ const DEFAULT_EVENTS_URL = "https://events.usetally.xyz/v1/track";
 type SDKConfig = {
   projectId: string;
   eventsUrl: string;
+  environment?: InitOptions["environment"];
   respectDNT: boolean;
-  debug: boolean;
 };
 
 let config: SDKConfig | null = null;
 let identifiedUserId: string | null = null;
-let sessionStartTracked = false;
+let sessionStartTrackedForId: string | null = null;
 
 // V2 tracking modules
 let engagementTracker: EngagementTracker | null = null;
@@ -62,40 +67,6 @@ function initV2Modules() {
   // Capture visitor ID and UTM params (one-time on init)
   visitorData = getOrCreateVisitorId();
   utmParams = captureUTMParams();
-
-  // Register unload handlers to send final page data
-  if (typeof window !== "undefined") {
-    window.addEventListener("beforeunload", sendFinalPageData);
-  }
-  if (typeof document !== "undefined") {
-    document.addEventListener("visibilitychange", onVisibilityChange);
-  }
-}
-
-function onVisibilityChange() {
-  if (typeof document !== "undefined" && document.visibilityState === "hidden") {
-    sendFinalPageData();
-  }
-}
-
-function sendFinalPageData() {
-  if (!config || !isEnabled()) return;
-
-  const sessionId = getOrCreateSessionId();
-  if (!sessionId) return;
-
-  const event = createPageViewEventWithV2Data({
-    projectId: config.projectId,
-    sessionId,
-    path: getCurrentPath(),
-    userId: identifiedUserId ?? undefined,
-  });
-
-  // Use sendBeacon for reliability during unload
-  if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-    const data = JSON.stringify({ events: [event] });
-    navigator.sendBeacon(config.eventsUrl, data);
-  }
 }
 
 export function init(options: InitOptions) {
@@ -105,11 +76,11 @@ export function init(options: InitOptions) {
   config = {
     projectId: options.projectId,
     eventsUrl: options.eventsUrl || DEFAULT_EVENTS_URL,
+    environment: options.environment,
     respectDNT: options.respectDNT ?? true,
-    debug: options.debug ?? false,
   };
   identifiedUserId = null;
-  sessionStartTracked = false;
+  sessionStartTrackedForId = null;
 
   // Initialize V2 tracking modules
   initV2Modules();
@@ -146,6 +117,7 @@ function createPageViewEventWithV2Data(options: {
   sessionId: string;
   path: string;
   userId?: string;
+  environment?: InitOptions["environment"];
 }): AnalyticsEvent {
   const baseEvent = createPageViewEvent(options);
 
@@ -162,6 +134,7 @@ function createSessionStartEventWithV2Data(options: {
   projectId: string;
   sessionId: string;
   userId?: string;
+  environment?: InitOptions["environment"];
 }): AnalyticsEvent {
   const baseEvent = createSessionStartEvent(options);
 
@@ -187,15 +160,19 @@ export async function trackPageView(path?: string): Promise<void> {
 
   const events: AnalyticsEvent[] = [];
 
-  if (!sessionStartTracked) {
-    sessionStartTracked = true;
+  if (sessionStartTrackedForId !== sessionId && !hasTrackedSessionStart(sessionId)) {
+    sessionStartTrackedForId = sessionId;
+    markSessionStartTracked(sessionId);
     events.push(
       createSessionStartEventWithV2Data({
         projectId: config.projectId,
         sessionId,
         userId: identifiedUserId ?? undefined,
+        environment: config.environment,
       }),
     );
+  } else {
+    sessionStartTrackedForId = sessionId;
   }
 
   events.push(
@@ -204,6 +181,7 @@ export async function trackPageView(path?: string): Promise<void> {
       sessionId,
       path: path ?? getCurrentPath(),
       userId: identifiedUserId ?? undefined,
+      environment: config.environment,
     }),
   );
 
@@ -223,14 +201,14 @@ export async function track(eventName: string, properties?: EventProperties): Pr
   await postEvents(
     config.eventsUrl,
     [
-      {
-        project_id: config.projectId,
-        session_id: sessionId,
-        event_type: eventName,
-        timestamp: new Date().toISOString(),
-        user_id: identifiedUserId ?? undefined,
+      createCustomEvent(
+        config.projectId,
+        sessionId,
+        eventName,
+        identifiedUserId ?? undefined,
         properties,
-      },
+        config.environment,
+      ),
     ],
     { respectDNT: config.respectDNT },
   );

@@ -4,6 +4,7 @@ import {
   escapeAnalyticsSqlString,
   runAnalyticsTinybirdQuery,
 } from "../tinybird";
+import { productionAnalyticsTrafficFilter } from "../query-filters";
 import { toTinybirdDateTime64String } from "../periods";
 import { transitionAnalyticsTask } from "./transitions";
 import { updateOwnedAnalyticsTask } from "./queries";
@@ -131,6 +132,7 @@ export function buildProductionVerificationEventsQuery(task: AnalyticsTaskRecord
   const projectIdSql = escapeAnalyticsSqlString(task.projectId);
   const eventNameSql = escapeAnalyticsSqlString(task.eventName);
   const implementedAtSql = escapeAnalyticsSqlString(toTinybirdDateTime64String(task.implementedAt));
+  const productionFilter = productionAnalyticsTrafficFilter();
   const propertyColumns = shouldUsePropertyVerification(task.taskType)
     ? `,
       event_properties AS eventProperties`
@@ -139,10 +141,12 @@ export function buildProductionVerificationEventsQuery(task: AnalyticsTaskRecord
   return `
     SELECT
       event_type AS eventType,
-      toString(timestamp) AS timestamp${propertyColumns}
+      toString(timestamp) AS timestamp,
+      environment${propertyColumns}
     FROM events
     WHERE project_id = '${projectIdSql}'
       AND event_type = '${eventNameSql}'
+      ${productionFilter}
       AND parseDateTimeBestEffort(timestamp) > toDateTime64('${implementedAtSql}', 3)
     ORDER BY timestamp DESC
     LIMIT 200
