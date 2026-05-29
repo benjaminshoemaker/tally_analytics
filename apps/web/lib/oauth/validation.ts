@@ -50,7 +50,14 @@ export function hasOAuthScope(scope: string | null | undefined, requiredScope: M
 }
 
 export function isRedirectUriRegistered(params: { redirectUri: string; registeredRedirectUris: string[] }): boolean {
-  return params.registeredRedirectUris.includes(params.redirectUri);
+  if (params.registeredRedirectUris.includes(params.redirectUri)) return true;
+
+  const requested = normalizeLoopbackRedirectUri(params.redirectUri);
+  if (!requested) return false;
+
+  return params.registeredRedirectUris.some((registeredRedirectUri) => {
+    return normalizeLoopbackRedirectUri(registeredRedirectUri) === requested;
+  });
 }
 
 export function assertValidPkce(params: { codeChallenge: string; codeChallengeMethod: string }): void {
@@ -71,5 +78,20 @@ export function validateResourceUrl(resource: string): string {
     return url.toString();
   } catch {
     throw new Error(`Invalid OAuth resource: ${resource}`);
+  }
+}
+
+function normalizeLoopbackRedirectUri(value: string): string | null {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "http:") return null;
+
+    const host = url.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+    if (host !== "localhost" && host !== "::1" && !host.startsWith("127.")) return null;
+
+    url.hostname = "localhost";
+    return url.toString();
+  } catch {
+    return null;
   }
 }

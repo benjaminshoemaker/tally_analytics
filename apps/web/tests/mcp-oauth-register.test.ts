@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { isRedirectUriRegistered } from "../lib/oauth/validation";
 
 let insertSpy: ReturnType<typeof vi.fn> | undefined;
 let valuesSpy: ReturnType<typeof vi.fn> | undefined;
@@ -19,6 +20,27 @@ vi.mock("../lib/db/client", () => ({
 }));
 
 describe("MCP OAuth client registration helpers", () => {
+  it("matches equivalent loopback redirect URIs for local OAuth clients", () => {
+    expect(
+      isRedirectUriRegistered({
+        redirectUri: "http://localhost:4321/callback",
+        registeredRedirectUris: ["http://127.0.0.1:4321/callback"],
+      }),
+    ).toBe(true);
+    expect(
+      isRedirectUriRegistered({
+        redirectUri: "http://127.0.0.1:4321/callback",
+        registeredRedirectUris: ["http://localhost:4321/callback"],
+      }),
+    ).toBe(true);
+    expect(
+      isRedirectUriRegistered({
+        redirectUri: "http://127.0.0.1:4322/callback",
+        registeredRedirectUris: ["http://localhost:4321/callback"],
+      }),
+    ).toBe(false);
+  });
+
   it("accepts HTTPS and localhost loopback redirect URIs", async () => {
     vi.resetModules();
 
