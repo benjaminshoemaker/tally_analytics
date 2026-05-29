@@ -42,6 +42,10 @@ describe("/projects page", () => {
           displayName: "octo/repo",
           source: "github_app",
           githubRepoFullName: "octo/repo",
+          mcpNormalizedGitRemote: null,
+          mcpRepoName: null,
+          mcpAppRoot: null,
+          mcpPackageManager: null,
           status: "active",
           prUrl: null,
           detectedFramework: "nextjs-app",
@@ -54,9 +58,13 @@ describe("/projects page", () => {
         },
         {
           id: "proj_mcp",
-          displayName: "Tally Demo",
+          displayName: "tally_analytics / apps/web",
           source: "mcp_codex",
           githubRepoFullName: null,
+          mcpNormalizedGitRemote: "github.com/benjaminshoemaker/tally_analytics",
+          mcpRepoName: "web",
+          mcpAppRoot: "apps/web",
+          mcpPackageManager: "pnpm",
           status: "active",
           prUrl: null,
           detectedFramework: "nextjs-app",
@@ -78,7 +86,8 @@ describe("/projects page", () => {
     );
 
     expect(html).toContain("octo/repo");
-    expect(html).toContain("Tally Demo");
+    expect(html).toContain("tally_analytics / apps/web");
+    expect(html).toContain("MCP · github.com/benjaminshoemaker/tally_analytics · apps/web · pnpm");
     expect(html).toContain('href="/projects/proj_123"');
     expect(html).toContain('href="/projects/proj_mcp"');
     expect(html).toContain("Active");

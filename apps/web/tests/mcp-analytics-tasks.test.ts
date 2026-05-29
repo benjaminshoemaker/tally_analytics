@@ -87,6 +87,7 @@ function makeOwnedProject(overrides: Partial<OwnedAnalyticsProject> = {}): Owned
     source: "mcp_codex",
     status: "active",
     lastEventAt: null,
+    mcpNormalizedGitRemote: "github.com/example/repo",
     mcpRepoName: "example/repo",
     mcpAppRoot: ".",
     mcpPackageManager: "pnpm",

@@ -12,6 +12,10 @@ type ProjectDetailResponse = {
     displayName: string;
     source: string;
     githubRepoFullName: string | null;
+    mcpNormalizedGitRemote: string | null;
+    mcpRepoName: string | null;
+    mcpAppRoot: string | null;
+    mcpPackageManager: string | null;
     status: string;
     prNumber: number | null;
     prUrl: string | null;
@@ -50,6 +54,10 @@ export async function GET(
       githubRepoId: projects.githubRepoId,
       githubRepoFullName: projects.githubRepoFullName,
       githubInstallationId: projects.githubInstallationId,
+      mcpNormalizedGitRemote: projects.mcpNormalizedGitRemote,
+      mcpRepoName: projects.mcpRepoName,
+      mcpAppRoot: projects.mcpAppRoot,
+      mcpPackageManager: projects.mcpPackageManager,
       status: projects.status,
       prNumber: projects.prNumber,
       prUrl: projects.prUrl,
@@ -85,6 +93,10 @@ export async function GET(
       displayName: project.displayName,
       source: project.source,
       githubRepoFullName: project.githubRepoFullName ?? null,
+      mcpNormalizedGitRemote: project.mcpNormalizedGitRemote ?? null,
+      mcpRepoName: project.mcpRepoName ?? null,
+      mcpAppRoot: project.mcpAppRoot ?? null,
+      mcpPackageManager: project.mcpPackageManager ?? null,
       status: project.status,
       prNumber: project.prNumber ?? null,
       prUrl: project.prUrl ?? null,

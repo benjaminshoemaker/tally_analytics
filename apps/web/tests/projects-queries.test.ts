@@ -58,6 +58,30 @@ describe("project queries", () => {
     expect(normalizeGitRemote(null)).toBeNull();
   });
 
+  it("derives readable MCP display names from remote repo names and app roots", async () => {
+    vi.resetModules();
+
+    const { mcpProjectDisplayName } = await import("../lib/db/queries/projects");
+
+    expect(
+      mcpProjectDisplayName({
+        repoName: "web",
+        normalizedGitRemote: "github.com/benjaminshoemaker/tally_analytics",
+        appRoot: "apps/web",
+      }),
+    ).toBe("tally_analytics / apps/web");
+    expect(mcpProjectDisplayName({ repoName: "web", normalizedGitRemote: null, appRoot: "apps/web" })).toBe(
+      "web / apps/web",
+    );
+    expect(
+      mcpProjectDisplayName({
+        repoName: "single-app",
+        normalizedGitRemote: "github.com/acme/single-app",
+        appRoot: ".",
+      }),
+    ).toBe("single-app");
+  });
+
   it("builds MCP fingerprints from the matching fields only", async () => {
     vi.resetModules();
 
@@ -128,7 +152,7 @@ describe("project queries", () => {
       expect.objectContaining({
         userId: "u1",
         source: "mcp_codex",
-        displayName: "repo",
+        displayName: "repo / apps/web",
         status: "active",
         mcpNormalizedGitRemote: "github.com/owner/repo",
         mcpRepoName: "repo",

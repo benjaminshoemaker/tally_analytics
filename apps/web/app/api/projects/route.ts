@@ -12,6 +12,10 @@ type ProjectsResponse = {
     displayName: string;
     source: string;
     githubRepoFullName: string | null;
+    mcpNormalizedGitRemote: string | null;
+    mcpRepoName: string | null;
+    mcpAppRoot: string | null;
+    mcpPackageManager: string | null;
     status: string;
     prUrl: string | null;
     detectedFramework: string | null;
@@ -36,6 +40,10 @@ export async function GET(request: Request): Promise<Response> {
       githubRepoId: projects.githubRepoId,
       githubRepoFullName: projects.githubRepoFullName,
       githubInstallationId: projects.githubInstallationId,
+      mcpNormalizedGitRemote: projects.mcpNormalizedGitRemote,
+      mcpRepoName: projects.mcpRepoName,
+      mcpAppRoot: projects.mcpAppRoot,
+      mcpPackageManager: projects.mcpPackageManager,
       status: projects.status,
       prUrl: projects.prUrl,
       detectedFramework: projects.detectedFramework,
@@ -60,6 +68,10 @@ export async function GET(request: Request): Promise<Response> {
       displayName: row.displayName,
       source: row.source,
       githubRepoFullName: row.githubRepoFullName ?? null,
+      mcpNormalizedGitRemote: row.mcpNormalizedGitRemote ?? null,
+      mcpRepoName: row.mcpRepoName ?? null,
+      mcpAppRoot: row.mcpAppRoot ?? null,
+      mcpPackageManager: row.mcpPackageManager ?? null,
       status: row.status,
       prUrl: row.prUrl,
       detectedFramework: row.detectedFramework ?? null,

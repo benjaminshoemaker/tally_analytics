@@ -23,6 +23,7 @@ function analyticsProjectRow(overrides: Record<string, unknown> = {}): Record<st
     source: "mcp_codex",
     status: "active",
     lastEventAt: new Date("2026-05-01T12:00:00.000Z"),
+    mcpNormalizedGitRemote: "github.com/owner/repo",
     mcpRepoName: "repo",
     mcpAppRoot: "apps/web",
     mcpPackageManager: "pnpm",
@@ -41,6 +42,30 @@ describe("MCP project queries", () => {
     expect(normalizeGitRemote("ssh://git@gitlab.example.com/Team/Repo.git")).toBe("gitlab.example.com/Team/Repo");
     expect(normalizeGitRemote("not a url")).toBeNull();
     expect(normalizeGitRemote(null)).toBeNull();
+  });
+
+  it("derives readable MCP display names from remote repo names and app roots", async () => {
+    vi.resetModules();
+
+    const { mcpProjectDisplayName } = await import("../lib/db/queries/projects");
+
+    expect(
+      mcpProjectDisplayName({
+        repoName: "web",
+        normalizedGitRemote: "github.com/benjaminshoemaker/tally_analytics",
+        appRoot: "apps/web",
+      }),
+    ).toBe("tally_analytics / apps/web");
+    expect(mcpProjectDisplayName({ repoName: "web", normalizedGitRemote: null, appRoot: "apps/web" })).toBe(
+      "web / apps/web",
+    );
+    expect(
+      mcpProjectDisplayName({
+        repoName: "single-app",
+        normalizedGitRemote: "github.com/acme/single-app",
+        appRoot: ".",
+      }),
+    ).toBe("single-app");
   });
 
   it("builds MCP fingerprints from the matching fields only", async () => {
@@ -113,7 +138,7 @@ describe("MCP project queries", () => {
       expect.objectContaining({
         userId: "u1",
         source: "mcp_codex",
-        displayName: "repo",
+        displayName: "repo / apps/web",
         status: "active",
         mcpNormalizedGitRemote: "github.com/owner/repo",
         mcpRepoName: "repo",
@@ -229,6 +254,7 @@ describe("MCP project queries", () => {
         source: "mcp_codex",
         status: "active",
         lastEventAt: new Date("2026-05-01T12:00:00.000Z"),
+        mcpNormalizedGitRemote: "github.com/owner/repo",
         mcpRepoName: "repo",
         mcpAppRoot: "apps/web",
         mcpPackageManager: "pnpm",

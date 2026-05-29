@@ -1,6 +1,7 @@
 import React from "react";
 
 import type { ProjectsListItem } from "../../lib/hooks/use-projects";
+import { formatProjectContext } from "./project-context";
 import StatusBadge from "./status-badge";
 
 function formatRelativeTime(dateString: string): string {
@@ -20,10 +21,7 @@ function formatRelativeTime(dateString: string): string {
 
 export default function ProjectCard({ project }: { project: ProjectsListItem }) {
   const lastEventLabel = project.lastEventAt ? formatRelativeTime(project.lastEventAt) : "No events yet";
-  const githubContext =
-    project.source === "github_app" && project.githubRepoFullName && project.githubRepoFullName !== project.displayName
-      ? project.githubRepoFullName
-      : null;
+  const projectContext = formatProjectContext(project);
 
   return (
     <a
@@ -36,7 +34,7 @@ export default function ProjectCard({ project }: { project: ProjectsListItem }) 
           <h2 className="truncate font-display text-sm font-semibold text-warm-900 transition-colors group-hover:text-brand-600">
             {project.displayName}
           </h2>
-          {githubContext && <p className="mt-1 truncate text-xs text-warm-500">{githubContext}</p>}
+          {projectContext && <p className="mt-1 truncate text-xs text-warm-500">{projectContext}</p>}
           <p className="mt-1 flex items-center gap-1.5 text-xs text-warm-500">
             <svg className="size-3" viewBox="0 0 12 12" fill="none">
               <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.5"/>

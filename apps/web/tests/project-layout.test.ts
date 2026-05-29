@@ -165,6 +165,10 @@ describe('project layout', () => {
         displayName: 'Tally Demo',
         source: 'mcp_codex',
         githubRepoFullName: null,
+        mcpNormalizedGitRemote: 'github.com/benjaminshoemaker/tally_analytics',
+        mcpRepoName: 'web',
+        mcpAppRoot: 'apps/web',
+        mcpPackageManager: 'pnpm',
         status: 'active',
       },
     });
@@ -180,6 +184,7 @@ describe('project layout', () => {
     );
 
     expect(html).toContain('Tally Demo');
+    expect(html).toContain('MCP · github.com/benjaminshoemaker/tally_analytics · apps/web · pnpm');
     expect(html).toContain('Active');
   });
 

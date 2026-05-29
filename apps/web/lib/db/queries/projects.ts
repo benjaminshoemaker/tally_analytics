@@ -22,6 +22,7 @@ export type OwnedAnalyticsProject = {
   source: ProjectSource;
   status: ProjectStatus;
   lastEventAt: Date | null;
+  mcpNormalizedGitRemote: string | null;
   mcpRepoName: string | null;
   mcpAppRoot: string | null;
   mcpPackageManager: string | null;
@@ -92,6 +93,7 @@ type AnalyticsProjectRow = {
   source: string;
   status: string;
   lastEventAt: Date | null;
+  mcpNormalizedGitRemote: string | null;
   mcpRepoName: string | null;
   mcpAppRoot: string | null;
   mcpPackageManager: string | null;
@@ -103,6 +105,7 @@ const analyticsProjectSelect = {
   source: projects.source,
   status: projects.status,
   lastEventAt: projects.lastEventAt,
+  mcpNormalizedGitRemote: projects.mcpNormalizedGitRemote,
   mcpRepoName: projects.mcpRepoName,
   mcpAppRoot: projects.mcpAppRoot,
   mcpPackageManager: projects.mcpPackageManager,
@@ -127,6 +130,7 @@ function toOwnedAnalyticsProject(row: AnalyticsProjectRow): OwnedAnalyticsProjec
     source: toProjectSource(row.source),
     status: toProjectStatus(row.status),
     lastEventAt: row.lastEventAt,
+    mcpNormalizedGitRemote: row.mcpNormalizedGitRemote,
     mcpRepoName: row.mcpRepoName,
     mcpAppRoot: row.mcpAppRoot,
     mcpPackageManager: row.mcpPackageManager,
@@ -174,6 +178,24 @@ export function normalizeGitRemote(remote: string | null | undefined): string | 
   } catch {
     return null;
   }
+}
+
+function repoNameFromNormalizedRemote(normalizedGitRemote: string): string | null {
+  const repoName = normalizedGitRemote.split("/").at(-1)?.trim();
+  return repoName || null;
+}
+
+export function mcpProjectDisplayName(params: {
+  repoName: string;
+  normalizedGitRemote?: string | null;
+  appRoot: string;
+}): string {
+  const baseName = params.normalizedGitRemote
+    ? repoNameFromNormalizedRemote(params.normalizedGitRemote) ?? params.repoName
+    : params.repoName;
+
+  if (params.appRoot === ".") return baseName;
+  return `${baseName} / ${params.appRoot}`;
 }
 
 export function mcpFingerprint(input: McpProjectFingerprintInput): string {
@@ -404,6 +426,11 @@ export async function createOrReuseMcpProject(
   const projectId = createProjectId();
   const normalizedGitRemote = fingerprintInput.identity === "remote" ? fingerprintInput.normalizedGitRemote : null;
   const repoName = params.repoName;
+  const displayName = mcpProjectDisplayName({
+    repoName,
+    normalizedGitRemote,
+    appRoot: params.appRoot,
+  });
 
   const insertedRows = await db
     .insert(projects)
@@ -411,7 +438,7 @@ export async function createOrReuseMcpProject(
       id: projectId,
       userId: params.userId,
       source: "mcp_codex",
-      displayName: repoName,
+      displayName,
       status: "active",
       detectedFramework: params.framework,
       mcpNormalizedGitRemote: normalizedGitRemote,

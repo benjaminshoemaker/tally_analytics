@@ -15,6 +15,10 @@ export type ProjectDetail = {
   displayName: string;
   source: ProjectSource;
   githubRepoFullName: string | null;
+  mcpNormalizedGitRemote: string | null;
+  mcpRepoName: string | null;
+  mcpAppRoot: string | null;
+  mcpPackageManager: string | null;
   status: string;
   prNumber: number | null;
   prUrl: string | null;

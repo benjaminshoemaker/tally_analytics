@@ -15,6 +15,10 @@ export type ProjectsListItem = {
   displayName: string;
   source: ProjectSource;
   githubRepoFullName: string | null;
+  mcpNormalizedGitRemote: string | null;
+  mcpRepoName: string | null;
+  mcpAppRoot: string | null;
+  mcpPackageManager: string | null;
   status: string;
   prUrl: string | null;
   detectedFramework: string | null;

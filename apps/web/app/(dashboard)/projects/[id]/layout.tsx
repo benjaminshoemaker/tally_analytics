@@ -4,6 +4,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 
 import { useProject } from '../../../../lib/hooks/use-project';
+import { formatProjectContext } from '../../../../components/dashboard/project-context';
 import StatusBadge from '../../../../components/dashboard/status-badge';
 import Skeleton from '../../../../components/dashboard/skeleton';
 
@@ -57,6 +58,17 @@ export default function ProjectLayout({
         ? String(project.githubRepoFullName)
         : projectId;
   const status = project?.status ? String(project.status) : null;
+  const projectContext = project
+    ? formatProjectContext({
+        source: typeof project.source === 'string' ? project.source : null,
+        displayName,
+        githubRepoFullName: typeof project.githubRepoFullName === 'string' ? project.githubRepoFullName : null,
+        mcpNormalizedGitRemote:
+          typeof project.mcpNormalizedGitRemote === 'string' ? project.mcpNormalizedGitRemote : null,
+        mcpAppRoot: typeof project.mcpAppRoot === 'string' ? project.mcpAppRoot : null,
+        mcpPackageManager: typeof project.mcpPackageManager === 'string' ? project.mcpPackageManager : null,
+      })
+    : null;
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -90,6 +102,7 @@ export default function ProjectLayout({
                 <h1 className="break-words font-display text-2xl font-semibold tracking-tight text-slate-900">
                   {displayName}
                 </h1>
+                {projectContext && <p className="text-sm text-slate-500">{projectContext}</p>}
                 {status && <StatusBadge status={status} />}
               </>
             )}
