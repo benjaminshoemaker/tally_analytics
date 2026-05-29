@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { drizzle as drizzleNodePg } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-import { env } from "../env";
+import { readRequiredEnv } from "../env/read-required-env";
 import * as schema from "./schema";
 
 function isLocalPostgresUrl(url: string): boolean {
@@ -16,12 +16,44 @@ function isLocalPostgresUrl(url: string): boolean {
   }
 }
 
-export const db = (() => {
-  if (isLocalPostgresUrl(env.DATABASE_URL)) {
-    const pool = new Pool({ connectionString: env.DATABASE_URL });
+function createDb() {
+  const DATABASE_URL = readRequiredEnv("DATABASE_URL");
+
+  if (isLocalPostgresUrl(DATABASE_URL)) {
+    const pool = new Pool({ connectionString: DATABASE_URL });
     return drizzleNodePg(pool, { schema });
   }
 
-  const sql = neon(env.DATABASE_URL);
+  const sql = neon(DATABASE_URL);
   return drizzle(sql, { schema });
-})();
+}
+
+type DbClient = ReturnType<typeof createDb>;
+
+let dbInstance: DbClient | undefined;
+
+export function getDb(): DbClient {
+  dbInstance ??= createDb();
+  return dbInstance;
+}
+
+export const db = new Proxy({} as DbClient, {
+  get(_target, property) {
+    const currentDb = getDb();
+    const value = Reflect.get(currentDb, property);
+    return typeof value === "function" ? value.bind(currentDb) : value;
+  },
+  getOwnPropertyDescriptor(_target, property) {
+    const currentDb = getDb();
+    if (!(property in currentDb)) return undefined;
+
+    return {
+      configurable: true,
+      enumerable: true,
+      value: Reflect.get(currentDb, property),
+    };
+  },
+  has(_target, property) {
+    return property in getDb();
+  },
+});

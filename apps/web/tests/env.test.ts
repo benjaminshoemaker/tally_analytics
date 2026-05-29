@@ -11,6 +11,17 @@ describe("server env", () => {
     if (previousDatabaseUrl !== undefined) process.env.DATABASE_URL = previousDatabaseUrl;
   });
 
+  it("does not require DATABASE_URL while importing the db client", async () => {
+    const previousDatabaseUrl = process.env.DATABASE_URL;
+    delete process.env.DATABASE_URL;
+
+    vi.resetModules();
+    await expect(import("../lib/db/client")).resolves.toHaveProperty("db");
+
+    if (previousDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previousDatabaseUrl;
+  });
+
   it("exports a drizzle db instance when DATABASE_URL is present", async () => {
     const previousDatabaseUrl = process.env.DATABASE_URL;
     process.env.DATABASE_URL = "postgres://user:pass@localhost:5432/db";
@@ -24,4 +35,3 @@ describe("server env", () => {
     else process.env.DATABASE_URL = previousDatabaseUrl;
   });
 });
-

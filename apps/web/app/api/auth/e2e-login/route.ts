@@ -3,7 +3,6 @@ import { z } from "zod";
 import { NextResponse } from "next/server";
 
 import { buildSessionCookie } from "../../../../lib/auth/cookies";
-import { createSession } from "../../../../lib/auth/session";
 
 const bodySchema = z.object({
   userId: z.string().uuid(),
@@ -30,10 +29,10 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ success: false, message: "Invalid request" }, { status: 400 });
   }
 
+  const { createSession } = await import("../../../../lib/auth/session");
   const session = await createSession(parsed.data.userId);
 
   const response = NextResponse.json({ success: true });
   response.cookies.set(buildSessionCookie(session.id));
   return response;
 }
-

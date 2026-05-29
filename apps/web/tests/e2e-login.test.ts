@@ -1,13 +1,6 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 let createSessionSpy: ReturnType<typeof vi.fn> | undefined;
-
-vi.mock("../lib/auth/session", () => ({
-  createSession: (...args: unknown[]) => {
-    if (!createSessionSpy) throw new Error("createSessionSpy not initialized");
-    return createSessionSpy(...args);
-  },
-}));
 
 function getSetCookies(response: Response): string[] {
   const headers = response.headers as unknown as { getSetCookie?: () => string[] };
@@ -17,16 +10,23 @@ function getSetCookies(response: Response): string[] {
   return single ? [single] : [];
 }
 
+afterEach(() => {
+  vi.resetModules();
+  vi.doUnmock("../lib/auth/session");
+  createSessionSpy = undefined;
+});
+
 describe("POST /api/auth/e2e-login", () => {
   it("returns 404 when E2E_TEST_MODE is not enabled", async () => {
     const previousMode = process.env.E2E_TEST_MODE;
     const previousEnv = process.env.NODE_ENV;
+    const previousDatabaseUrl = process.env.DATABASE_URL;
 
     process.env.E2E_TEST_MODE = "0";
     (process.env as any).NODE_ENV = "test";
+    delete process.env.DATABASE_URL;
 
     vi.resetModules();
-    createSessionSpy = vi.fn();
     const { POST } = await import("../app/api/auth/e2e-login/route");
 
     const response = await POST(
@@ -38,23 +38,25 @@ describe("POST /api/auth/e2e-login", () => {
     );
 
     expect(response.status).toBe(404);
-    expect(createSessionSpy).not.toHaveBeenCalled();
 
     if (previousMode === undefined) delete process.env.E2E_TEST_MODE;
     else process.env.E2E_TEST_MODE = previousMode;
     if (previousEnv === undefined) delete (process.env as any).NODE_ENV;
     else (process.env as any).NODE_ENV = previousEnv;
+    if (previousDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previousDatabaseUrl;
   });
 
   it("returns 404 in production even when E2E_TEST_MODE is enabled", async () => {
     const previousMode = process.env.E2E_TEST_MODE;
     const previousEnv = process.env.NODE_ENV;
+    const previousDatabaseUrl = process.env.DATABASE_URL;
 
     process.env.E2E_TEST_MODE = "1";
     (process.env as any).NODE_ENV = "production";
+    delete process.env.DATABASE_URL;
 
     vi.resetModules();
-    createSessionSpy = vi.fn();
     const { POST } = await import("../app/api/auth/e2e-login/route");
 
     const response = await POST(
@@ -66,12 +68,13 @@ describe("POST /api/auth/e2e-login", () => {
     );
 
     expect(response.status).toBe(404);
-    expect(createSessionSpy).not.toHaveBeenCalled();
 
     if (previousMode === undefined) delete process.env.E2E_TEST_MODE;
     else process.env.E2E_TEST_MODE = previousMode;
     if (previousEnv === undefined) delete (process.env as any).NODE_ENV;
     else (process.env as any).NODE_ENV = previousEnv;
+    if (previousDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previousDatabaseUrl;
   });
 
   it("creates a session and sets a session cookie when enabled", async () => {
@@ -85,6 +88,12 @@ describe("POST /api/auth/e2e-login", () => {
     createSessionSpy = vi
       .fn()
       .mockResolvedValue({ id: "22222222-2222-2222-2222-222222222222", userId: "11111111-1111-1111-1111-111111111111", expiresAt: new Date("2030-01-01T00:00:00.000Z") });
+    vi.doMock("../lib/auth/session", () => ({
+      createSession: (...args: unknown[]) => {
+        if (!createSessionSpy) throw new Error("createSessionSpy not initialized");
+        return createSessionSpy(...args);
+      },
+    }));
 
     const { POST } = await import("../app/api/auth/e2e-login/route");
 
