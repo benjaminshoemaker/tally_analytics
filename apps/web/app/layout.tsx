@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
+import { TallyAnalytics } from '@/components/tally-analytics';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} font-sans`}>
         {children}
         <Analytics />
+        <TallyAnalytics />
       </body>
     </html>
   );
