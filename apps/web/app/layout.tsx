@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
+import { PostHogAnalytics } from '@/components/posthog-analytics';
 import { TallyAnalytics } from '@/components/tally-analytics';
 
 const inter = Inter({
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} font-sans`}>
         {children}
         <Analytics />
+        <PostHogAnalytics />
         <TallyAnalytics />
       </body>
     </html>

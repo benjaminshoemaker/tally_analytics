@@ -77,7 +77,24 @@ export default async function PricingPage() {
               }
 
               if (cta.kind === 'link') {
-                return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={cta.href} />;
+                return (
+                  <PricingCard
+                    {...tier}
+                    ctaLabel={cta.label}
+                    ctaHref={cta.href}
+                    analyticsEvents={[
+                      {
+                        name: 'pricing_cta_clicked',
+                        properties: {
+                          surface: 'pricing',
+                          plan: tier.plan,
+                          cta_kind: cta.kind,
+                          cta_label: cta.label,
+                        },
+                      },
+                    ]}
+                  />
+                );
               }
 
               if (cta.kind === 'checkout') {
@@ -90,6 +107,21 @@ export default async function PricingPage() {
                       method: 'post',
                       hiddenFields: { plan: cta.plan },
                     }}
+                    analyticsEvents={[
+                      {
+                        name: 'pricing_cta_clicked',
+                        properties: {
+                          surface: 'pricing',
+                          plan: tier.plan,
+                          cta_kind: cta.kind,
+                          cta_label: cta.label,
+                        },
+                      },
+                      {
+                        name: 'checkout_started',
+                        properties: { surface: 'pricing', plan: cta.plan },
+                      },
+                    ]}
                   />
                 );
               }
@@ -100,11 +132,33 @@ export default async function PricingPage() {
                     {...tier}
                     ctaLabel={cta.label}
                     ctaForm={{ action: '/api/stripe/portal', method: 'post' }}
+                    analyticsEvents={[
+                      {
+                        name: 'pricing_cta_clicked',
+                        properties: {
+                          surface: 'pricing',
+                          plan: tier.plan,
+                          cta_kind: cta.kind,
+                          cta_label: cta.label,
+                        },
+                      },
+                      {
+                        name: 'billing_portal_opened',
+                        properties: { surface: 'pricing', plan: userPlan },
+                      },
+                    ]}
                   />
                 );
               }
 
-              return <PricingCard {...tier} ctaLabel={cta.label} ctaHref={SETUP_URL} ctaDisabled />;
+              return (
+                <PricingCard
+                  {...tier}
+                  ctaLabel={cta.label}
+                  ctaHref={SETUP_URL}
+                  ctaDisabled
+                />
+              );
             })()}
           </div>
         ))}

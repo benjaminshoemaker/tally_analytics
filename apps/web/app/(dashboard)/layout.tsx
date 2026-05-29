@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import DashboardHeader from "../../components/dashboard/header";
 import DashboardSidebar from "../../components/dashboard/sidebar";
 import MobileTabBar from "../../components/dashboard/mobile-tab-bar";
+import { PostHogUserIdentity } from "../../components/posthog-user-identity";
 import { getUserFromSession } from "../../lib/auth/get-user";
 import { getUserById } from "../../lib/db/queries/users";
 import Providers from "../../lib/providers";
@@ -25,6 +26,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-warm-50">
+      <PostHogUserIdentity
+        user={{ id: user.id, email: user.email, githubUsername: user.githubUsername }}
+      />
       <div className="mx-auto flex w-full max-w-6xl flex-col md:flex-row">
         {/* Desktop sidebar - hidden on mobile */}
         <aside className="hidden border-r border-warm-200 bg-white md:block md:w-64 md:flex-shrink-0">

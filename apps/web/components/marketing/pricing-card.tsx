@@ -1,4 +1,8 @@
+'use client';
+
 import React from 'react';
+
+import { trackPostHogEvent, type PostHogEventProperties } from '../../lib/posthog/client';
 
 function CheckIcon({ className }: { className?: string }) {
   return (
@@ -31,6 +35,7 @@ export type PricingCardProps = {
   };
   ctaDisabled?: boolean;
   highlighted?: boolean;
+  analyticsEvents?: Array<{ name: string; properties?: PostHogEventProperties }>;
 };
 
 export default function PricingCard(props: PricingCardProps) {
@@ -62,6 +67,11 @@ export default function PricingCard(props: PricingCardProps) {
   // Determine which features are "enhanced" for this tier
   const isUnlimited = (value: string) => value.toLowerCase().includes('unlimited');
   const isPriority = (value: string) => value.toLowerCase().includes('priority');
+  const trackAnalyticsEvents = () => {
+    for (const event of props.analyticsEvents ?? []) {
+      trackPostHogEvent(event.name, event.properties);
+    }
+  };
 
   return (
     <div
@@ -145,7 +155,7 @@ export default function PricingCard(props: PricingCardProps) {
       </dl>
 
       {props.ctaForm ? (
-        <form action={props.ctaForm.action} method={props.ctaForm.method}>
+        <form action={props.ctaForm.action} method={props.ctaForm.method} onSubmit={trackAnalyticsEvents}>
           {props.ctaForm.hiddenFields
             ? Object.entries(props.ctaForm.hiddenFields).map(([name, value]) => (
                 <input key={name} type="hidden" name={name} value={value} />
@@ -156,7 +166,12 @@ export default function PricingCard(props: PricingCardProps) {
           </button>
         </form>
       ) : (
-        <a href={props.ctaHref} className={ctaClassName} aria-disabled={props.ctaDisabled}>
+        <a
+          href={props.ctaHref}
+          className={ctaClassName}
+          aria-disabled={props.ctaDisabled}
+          onClick={props.ctaDisabled ? undefined : trackAnalyticsEvents}
+        >
           {ctaInner}
         </a>
       )}
