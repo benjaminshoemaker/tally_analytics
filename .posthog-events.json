@@ -1,0 +1,62 @@
+[
+  {
+    "event": "user_signed_up",
+    "description": "A new user account was created via GitHub OAuth",
+    "file": "apps/web/app/api/auth/github/callback/route.ts"
+  },
+  {
+    "event": "user_logged_in",
+    "description": "An existing user completed GitHub OAuth login",
+    "file": "apps/web/app/api/auth/github/callback/route.ts"
+  },
+  {
+    "event": "user_logged_out",
+    "description": "User logged out and their session was destroyed",
+    "file": "apps/web/app/api/auth/logout/route.ts"
+  },
+  {
+    "event": "github_app_installed",
+    "description": "User installed the GitHub App on their repositories",
+    "file": "apps/web/lib/github/handlers/installation.ts"
+  },
+  {
+    "event": "github_app_uninstalled",
+    "description": "User uninstalled the GitHub App",
+    "file": "apps/web/lib/github/handlers/installation.ts"
+  },
+  {
+    "event": "analytics_pr_opened",
+    "description": "A pull request with analytics instrumentation files was successfully opened on a user's repository",
+    "file": "apps/web/lib/github/generate.ts"
+  },
+  {
+    "event": "project_regeneration_requested",
+    "description": "User triggered a re-run of analytics PR generation for a project",
+    "file": "apps/web/app/api/projects/[id]/regenerate/route.ts"
+  },
+  {
+    "event": "checkout_started",
+    "description": "User was redirected to a Stripe checkout session to subscribe to a paid plan",
+    "file": "apps/web/app/api/stripe/checkout/route.ts"
+  },
+  {
+    "event": "subscription_activated",
+    "description": "Stripe checkout completed and a subscription was activated for a user",
+    "file": "apps/web/app/api/webhooks/stripe/route.ts"
+  },
+  {
+    "event": "subscription_cancelled",
+    "description": "User's Stripe subscription was deleted/cancelled",
+    "file": "apps/web/app/api/webhooks/stripe/route.ts"
+  },
+  {
+    "event": "payment_failed",
+    "description": "A subscription invoice payment failed for a user",
+    "file": "apps/web/app/api/webhooks/stripe/route.ts"
+  },
+  {
+    "event": "oauth_token_issued",
+    "description": "An OAuth access token was issued to an MCP client (authorization_code or refresh_token grant)",
+    "file": "apps/web/app/api/oauth/token/route.ts"
+  }
+]

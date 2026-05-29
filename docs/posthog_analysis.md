@@ -125,3 +125,7 @@ integrations, or broad product analytics workflows. Those are PostHog's game.
 
 Tally wins only if it becomes the best agent-native instrumentation system, not
 another analytics dashboard with an AI chat interface.
+
+## Field Research
+
+- [PostHog wizard field notes - 2026-05-28](./competitive-research/posthog-wizard-2026-05-28.md)
