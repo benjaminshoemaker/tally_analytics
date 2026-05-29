@@ -23,6 +23,11 @@ User note from the PostHog wizard trial:
 - [Generated event plan](./assets/posthog-wizard-event-plan.png)
 - [Tips while running](./assets/posthog-wizard-tips.png)
 
+## Archived Artifacts
+
+- [Generated event plan](./posthog-wizard-events-2026-05-28.json)
+- [Generated skill export](./posthog-wizard-skill-export-2026-05-28/SKILL.md)
+
 ## Observations
 
 - The authorization flow requested broad access before first value: read users,
