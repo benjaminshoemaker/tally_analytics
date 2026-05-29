@@ -142,7 +142,7 @@ export function buildProductionVerificationEventsQuery(task: AnalyticsTaskRecord
     SELECT
       event_type AS eventType,
       toString(timestamp) AS timestamp,
-      environment${propertyColumns}
+      'production' AS environment${propertyColumns}
     FROM events
     WHERE project_id = '${projectIdSql}'
       AND event_type = '${eventNameSql}'

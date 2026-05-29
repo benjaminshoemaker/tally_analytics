@@ -428,13 +428,13 @@ async function queryProjectOverviewFromTinybird(params: {
       'current_page_views_timeseries',
       `
         SELECT
-          toDate(timestamp) AS date,
+          toDate(first_seen_at) AS date,
           count() AS count
         FROM (
           SELECT
             session_id,
             ifNull(path, '') AS path,
-            min(timestamp) AS timestamp
+            min(timestamp) AS first_seen_at
           FROM events
           WHERE project_id = '${projectIdSql}'
           AND event_type = 'page_view'
@@ -452,13 +452,13 @@ async function queryProjectOverviewFromTinybird(params: {
       'previous_page_views_timeseries',
       `
         SELECT
-          toDate(timestamp) AS date,
+          toDate(first_seen_at) AS date,
           count() AS count
         FROM (
           SELECT
             session_id,
             ifNull(path, '') AS path,
-            min(timestamp) AS timestamp
+            min(timestamp) AS first_seen_at
           FROM events
           WHERE project_id = '${projectIdSql}'
           AND event_type = 'page_view'

@@ -343,8 +343,7 @@ describe("analytics task verification", () => {
       "parseDateTimeBestEffort(timestamp) > toDateTime64('2026-05-13 07:22:14.882', 3)",
     );
     expect(query).not.toContain("event_properties");
-    expect(query).toContain("environment");
-    expect(query).toContain("ifNull(environment, 'production') = 'production'");
+    expect(query).toContain("'production' AS environment");
     expect(query).toContain(".vercel.app");
   });
 

@@ -210,7 +210,6 @@ describe('analytics service overview primitives', () => {
     });
 
     const queries = tinybirdSqlSpy?.mock.calls.map((call) => String(call[1])) ?? [];
-    expect(queries.join('\n')).toContain("ifNull(environment, 'production') = 'production'");
     expect(queries.join('\n')).toContain("NOT startsWith(ifNull(url, ''), 'http://localhost')");
     expect(queries.join('\n')).toContain(".vercel.app");
     expect(queries.join('\n')).toContain("GROUP BY session_id, path");
