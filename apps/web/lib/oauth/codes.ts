@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../db/client";
 import { oauthAuthorizationCodes } from "../db/schema";
 import { generateOpaqueToken, hashOAuthSecret, verifyPkceS256 } from "./crypto";
+import { isRedirectUriRegistered } from "./validation";
 
 export const AUTHORIZATION_CODE_TTL_MS = 10 * 60 * 1000;
 
@@ -64,7 +65,7 @@ export async function consumeAuthorizationCode(params: {
   const row = rows[0];
   if (!row) return null;
   if (row.clientId !== params.clientId) return null;
-  if (row.redirectUri !== params.redirectUri) return null;
+  if (!isRedirectUriRegistered({ redirectUri: params.redirectUri, registeredRedirectUris: [row.redirectUri] })) return null;
   if (row.usedAt) return null;
   if (row.expiresAt.getTime() <= now.getTime()) return null;
   if (!verifyPkceS256({ verifier: params.codeVerifier, challenge: row.codeChallenge })) return null;

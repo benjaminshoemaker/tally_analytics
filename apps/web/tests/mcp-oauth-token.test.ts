@@ -90,6 +90,52 @@ describe("MCP OAuth token helpers", () => {
     expect(setSpy).toHaveBeenCalledWith({ usedAt });
   });
 
+  it("consumes authorization codes when loopback redirect hosts vary", async () => {
+    vi.resetModules();
+
+    const { createS256CodeChallenge, hashOAuthSecret } = await import("../lib/oauth/crypto");
+    const { consumeAuthorizationCode } = await import("../lib/oauth/codes");
+
+    const code = "raw-code";
+    const verifier = "verifier-value";
+    const usedAt = new Date("2026-05-07T00:05:00.000Z");
+
+    selectSpy = vi.fn(() => ({
+      from: () => ({
+        where: vi.fn().mockResolvedValue([
+          {
+            codeHash: hashOAuthSecret(code),
+            clientId: "client_1",
+            userId: "user_1",
+            redirectUri: "http://localhost:4321/callback/codex",
+            codeChallenge: createS256CodeChallenge(verifier),
+            codeChallengeMethod: "S256",
+            scope: "mcp:install",
+            resource: "https://usetally.xyz/api/mcp",
+            expiresAt: new Date("2026-05-07T00:10:00.000Z"),
+            usedAt: null,
+            createdAt: new Date("2026-05-07T00:00:00.000Z"),
+          },
+        ]),
+      }),
+    }));
+
+    const whereUpdateSpy = vi.fn().mockResolvedValue(undefined);
+    const setSpy = vi.fn(() => ({ where: whereUpdateSpy }));
+    updateSpy = vi.fn(() => ({ set: setSpy }));
+
+    const consumed = await consumeAuthorizationCode({
+      code,
+      clientId: "client_1",
+      redirectUri: "http://127.0.0.1:4321/callback/codex",
+      codeVerifier: verifier,
+      now: usedAt,
+    });
+
+    expect(consumed).toMatchObject({ userId: "user_1", usedAt });
+    expect(setSpy).toHaveBeenCalledWith({ usedAt });
+  });
+
   it("rejects reused, expired, or PKCE-invalid authorization codes", async () => {
     vi.resetModules();
 
