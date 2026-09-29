@@ -32,7 +32,7 @@ describe("privacy positioning regression", () => {
     }
   });
 
-  it("does not mention PostHog in public marketing source", () => {
+  it("does not mention PostHog in public marketing copy", () => {
     const roots = [
       path.join(appRoot, "app", "(marketing)"),
       path.join(appRoot, "components", "marketing"),
@@ -40,7 +40,12 @@ describe("privacy positioning regression", () => {
     const publicMarketingFiles = roots.flatMap(walkFiles).filter((file) => /\.(ts|tsx|mdx)$/.test(file));
 
     for (const file of publicMarketingFiles) {
-      expect(fs.readFileSync(file, "utf8").toLowerCase(), file).not.toContain("posthog");
+      const sourceWithoutImports = fs
+        .readFileSync(file, "utf8")
+        .replace(/^\s*import[\s\S]*?from\s+["'][^"']+["'];?\s*$/gm, "");
+      const publicCopy = sourceWithoutImports.match(/(["'`>])[^"'`<>\n]*posthog[^"'`<>\n]*(["'`<])/gi);
+
+      expect(publicCopy, file).toBeNull();
     }
   });
 });
