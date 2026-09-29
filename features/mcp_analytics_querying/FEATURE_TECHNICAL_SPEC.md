@@ -1,6 +1,6 @@
 # Feature Technical Spec: MCP Analytics Querying
 
-Status: Planned technical direction. This does not supersede the active workstream in `plans/PLAN_STATUS.md`.
+Status: Completed 2026-05-11. Retained as technical context.
 
 ## Existing Code Analysis
 

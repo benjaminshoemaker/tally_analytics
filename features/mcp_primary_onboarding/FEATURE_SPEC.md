@@ -2,7 +2,8 @@
 
 ## Status
 
-Implemented by explicit human request on 2026-05-09. `plans/PLAN_STATUS.md` remains the orientation manifest for the primary active workstream; this public-surface rewrite was implemented as approved non-current planned work without superseding `features/mcp_onboarding/`.
+Implemented by explicit human request on 2026-05-09. This specification is
+retained as product context for the completed public-surface rewrite.
 
 This feature formalizes the public-product rewrite for Tally's MCP-first direction. It depends on the existing MCP onboarding work in `features/mcp_onboarding/` and should not be used to implement new MCP backend behavior unless a later technical spec explicitly expands scope.
 

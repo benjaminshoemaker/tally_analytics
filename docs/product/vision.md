@@ -79,7 +79,8 @@ The near-term product should focus on:
 
 ## Canonical References
 
-- Current execution pointer: `plans/PLAN_STATUS.md`
+- Preserved feature status: `docs/feature-history.md`
+- Product and engineering opportunities: `IDEAS.md`
 - Current MCP onboarding spec: `features/mcp_onboarding/FEATURE_SPEC.md`
 - Canonical user flows: `docs/product/user-flows.md`
 - High-level technical overview: `docs/architecture.md`

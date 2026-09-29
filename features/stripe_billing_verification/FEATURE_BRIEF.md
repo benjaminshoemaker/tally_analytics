@@ -2,7 +2,8 @@
 
 ## Status
 
-Initial harness implemented. `plans/PLAN_STATUS.md` is an orientation manifest, not a single-plan execution lock.
+Implemented 2026-05-11. This brief is retained as context for the verification
+harness, not as an active work queue.
 
 ## Product Intent
 

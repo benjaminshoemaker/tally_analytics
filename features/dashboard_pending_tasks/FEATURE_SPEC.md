@@ -6,7 +6,8 @@ Dashboard-created pending analytics tasks let a user ask Tally a product analyti
 
 This feature extends Tally's MCP-first product direction. The dashboard remains the account, analytics, and control-plane surface. The coding agent remains the repo-editing surface. Tally stores the pending task, exposes it through MCP, accepts implementation status from the local agent, and marks the task verified only when the expected production event or property appears after deployment.
 
-This feature is planned work. It does not replace the primary active `features/mcp_onboarding/` workstream unless `plans/PLAN_STATUS.md` is later updated to promote it.
+This feature was completed on 2026-05-12. This specification preserves product
+and design context; it is not an active execution plan.
 
 ## Problem
 

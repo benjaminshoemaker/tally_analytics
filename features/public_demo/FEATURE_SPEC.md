@@ -1,5 +1,8 @@
 # Public Demo Feature Specification
 
+> Status: Completed on 2026-05-14. This specification preserves product and
+> technical context; it is not an active execution plan.
+
 ## Summary
 
 Add a public `/demo` route that lets prospective users experience the Tally

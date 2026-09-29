@@ -170,7 +170,8 @@ None found that solve the full problem. No researched product replaces the whole
 
 ## Deferred / Next Features
 
-- Prompt-configured analytics dashboards are a separate P0 next feature, tracked in `NEXT_FEATURES.md`.
+- Prompt-configured analytics dashboards are a separate opportunity retained in
+  `IDEAS.md`.
 - Agent-configured analytics alerts are deferred.
 - Cross-project analytics comparison is deferred and low priority.
 - Custom events and "track signups" should wait until the basic install-to-real-dashboard loop is working.
