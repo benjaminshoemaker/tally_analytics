@@ -2,7 +2,8 @@
 
 ## Status
 
-Initial workstream brief. Implement when the human explicitly requests it or `plans/PLAN_STATUS.md` marks this workstream active/approved.
+Implemented 2026-05-09. This brief is retained as product context, not as an
+active work queue.
 
 ## Product Intent
 

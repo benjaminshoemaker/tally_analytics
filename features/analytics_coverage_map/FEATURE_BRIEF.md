@@ -2,7 +2,8 @@
 
 ## Status
 
-Innovation note. Implement when the human explicitly requests it or `plans/PLAN_STATUS.md` marks this workstream active/approved.
+Idea-stage innovation note. Revalidate and explicitly approve it before treating
+it as implementation work; see `IDEAS.md` for the current opportunity list.
 
 ## Product Intent
 

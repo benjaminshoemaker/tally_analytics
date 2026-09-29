@@ -2,9 +2,8 @@
 
 ## Status
 
-Planned feature work.
-
-This spec does not supersede other active work in `plans/PLAN_STATUS.md`. The manifest is an orientation aid, not a single-plan execution lock; implement this feature when the human explicitly requests it or marks the workstream active/approved.
+Completed on 2026-05-11. This specification preserves product and technical
+context; it is not an active execution plan.
 
 ## Overview
 

@@ -1,6 +1,8 @@
 # User Flows
 
-This document describes the canonical product flows for Tally Analytics. It is product guidance, not an execution plan. Workstream status is tracked in `plans/PLAN_STATUS.md`.
+This document describes the canonical product flows for Tally Analytics. It is
+product guidance, not an execution plan. Historical feature status is summarized
+in `docs/feature-history.md`.
 
 ## 1. First-Time MCP Install
 

@@ -2,8 +2,8 @@
 
 ## Status
 
-Planned. This is a scoped feature brief for a public, usable demo experience. It
-does not supersede any active workstream until explicitly selected.
+Completed on 2026-05-14. This brief preserves product context; it is not an
+active execution plan.
 
 ## Goal
 

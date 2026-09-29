@@ -1,6 +1,6 @@
 # Feature Technical Spec: Dashboard-Created Pending Analytics Tasks
 
-Status: Planned technical direction. This does not supersede the active workstream in `plans/PLAN_STATUS.md`.
+Status: Completed 2026-05-12. Retained as technical context.
 
 ## Existing Code Analysis
 
@@ -59,7 +59,6 @@ Recommendation: hybrid approach. Reuse the dashboard, auth, MCP, project fingerp
 | `apps/web/lib/mcp/tools/analytics-tasks.ts`                      | Medium | MCP tool tests and harness                | List/context/status reporting. Must enforce authenticated ownership.                                      |
 | `apps/web/lib/oauth/validation.ts`, `metadata.ts`                | High   | OAuth and MCP auth tests                  | Add an explicit task scope and preserve install-tool compatibility.                                       |
 | `apps/web/lib/db/queries/projects.ts`                            | Medium | `mcp-project-queries.test.ts`             | Add owned project resolution helper for explicit project ID or MCP fingerprint context.                   |
-| `plans/PLAN_STATUS.md`                                           | Low    | manual review                             | Update row metadata only. Do not change primary active workstream.                                        |
 
 ### Codebase Maturity Assessment
 

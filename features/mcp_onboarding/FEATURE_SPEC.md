@@ -1,5 +1,8 @@
 # Feature Spec: MCP-First Analytics Onboarding
 
+> Status: Completed on 2026-05-11. This specification preserves product and
+> technical context; it is not an active execution plan.
+
 ## Overview
 
 MCP-first analytics onboarding lets a developer add Tally analytics from inside an AI coding agent instead of starting from the Tally website or installing the GitHub App.

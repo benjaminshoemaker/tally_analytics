@@ -24,7 +24,8 @@ The GitHub App is optional future/advanced automation for hosted PR workflows. I
 - [Agent testing harness](docs/agent-testing.md)
 - [Billing verification](docs/billing-verification.md)
 - [GitHub sandbox guidance](docs/github-sandbox.md)
-- [Workstream status](plans/PLAN_STATUS.md)
+- [Feature history](docs/feature-history.md)
+- [Product and engineering ideas](IDEAS.md)
 
 ## Development
 
@@ -54,8 +55,7 @@ packages/
   sdk/        → Client SDK (@tally-analytics/sdk)
 tinybird/     → Analytics data pipeline
 docs/         → Product, architecture, and verification docs
-features/     → Active and future feature plans/briefs
-plans/        → Workstream status and archived plans
+features/     → Retained product and technical context by feature
 ```
 
 ## License
